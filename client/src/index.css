@@ -80,4 +80,17 @@
   .faith-button-secondary {
     @apply border-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition-all;
   }
+  
+  /* Admin button fix for CTA section */
+  .admin-button-cta {
+    border: 2px solid white !important;
+    color: white !important;
+    background: transparent !important;
+    font-weight: 600 !important;
+  }
+  
+  .admin-button-cta:hover {
+    background: white !important;
+    color: hsl(207, 90%, 54%) !important;
+  }
 }

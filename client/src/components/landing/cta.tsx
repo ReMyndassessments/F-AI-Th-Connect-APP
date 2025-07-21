@@ -27,7 +27,7 @@ export default function CTA() {
           <Button
             onClick={() => setLocation("/admin")}
             variant="outline"
-            className="border-2 border-white text-white px-8 py-4 rounded-xl hover:bg-white hover:text-blue-500 transition-all font-semibold text-lg"
+            className="admin-button-cta px-8 py-4 rounded-xl transition-all font-semibold text-lg"
           >
             Admin Dashboard
           </Button>
