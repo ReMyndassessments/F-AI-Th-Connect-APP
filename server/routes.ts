@@ -124,6 +124,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Delete a chat session
+  app.delete("/api/chat/sessions/:sessionId", async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+      
+      const session = await storage.getChatSession(sessionId);
+      if (!session) {
+        return res.status(404).json({ message: "Chat session not found" });
+      }
+
+      // Delete all messages in the session
+      const messages = await storage.getMessagesBySession(sessionId);
+      for (const message of messages) {
+        await storage.deleteMessage(message.id);
+      }
+      
+      // Delete the session
+      await storage.deleteChatSession(sessionId);
+      
+      res.json({ message: "Chat session deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting chat session:", error);
+      res.status(500).json({ message: "Failed to delete chat session" });
+    }
+  });
+
   // File upload and processing endpoint
   app.post("/api/files/process", upload.single('file'), async (req: any, res: any) => {
     try {

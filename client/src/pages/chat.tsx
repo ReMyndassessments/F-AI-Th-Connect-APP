@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { chatApi } from "@/lib/chat-api";
 import ChatInterface from "@/components/chat/chat-interface";
+import ClearChatButton from "@/components/chat/clear-chat-button";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
-import { ArrowLeft, MessageCircle } from "lucide-react";
+import { ArrowLeft, MessageCircle, RotateCcw } from "lucide-react";
 
 export default function Chat() {
   const { sessionId } = useParams();
@@ -76,6 +77,29 @@ export default function Chat() {
     createSessionMutation.mutate();
   };
 
+  // Delete session mutation
+  const deleteSessionMutation = useMutation({
+    mutationFn: (sessionId: string) => chatApi.deleteSession(sessionId),
+    onSuccess: () => {
+      // Clear the query cache and start a new session
+      queryClient.clear();
+      handleStartNewChat();
+    },
+    onError: (error) => {
+      console.error('Failed to delete session:', error);
+      // Even if delete fails, start a new session
+      handleStartNewChat();
+    },
+  });
+
+  const handleClearChat = () => {
+    if (currentSessionId) {
+      deleteSessionMutation.mutate(currentSessionId);
+    } else {
+      handleStartNewChat();
+    }
+  };
+
   if (createSessionMutation.isPending) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -114,13 +138,20 @@ export default function Chat() {
               </div>
             </div>
 
-            <Button
-              onClick={handleStartNewChat}
-              className="faith-button-primary"
-              disabled={createSessionMutation.isPending}
-            >
-              New Conversation
-            </Button>
+            <div className="flex items-center space-x-3">
+              <ClearChatButton 
+                onClearChat={handleClearChat}
+                disabled={deleteSessionMutation.isPending || !currentSessionId}
+              />
+              <Button
+                onClick={handleStartNewChat}
+                className="faith-button-primary"
+                disabled={createSessionMutation.isPending}
+              >
+                <RotateCcw className="w-4 h-4 mr-2" />
+                New Chat
+              </Button>
+            </div>
           </div>
         </div>
       </header>

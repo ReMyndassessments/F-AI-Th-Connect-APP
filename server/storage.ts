@@ -7,9 +7,11 @@ export interface IStorage {
   
   createChatSession(session: InsertChatSession): Promise<ChatSession>;
   getChatSession(sessionId: string): Promise<ChatSession | undefined>;
+  deleteChatSession(sessionId: string): Promise<void>;
   
   createMessage(message: InsertMessage): Promise<Message>;
   getMessagesBySession(sessionId: string): Promise<Message[]>;
+  deleteMessage(id: number): Promise<void>;
 }
 
 export class MemStorage implements IStorage {
@@ -82,6 +84,23 @@ export class MemStorage implements IStorage {
 
   async getMessagesBySession(sessionId: string): Promise<Message[]> {
     return this.messages.get(sessionId) || [];
+  }
+
+  async deleteChatSession(sessionId: string): Promise<void> {
+    this.chatSessions.delete(sessionId);
+    this.messages.delete(sessionId);
+  }
+
+  async deleteMessage(id: number): Promise<void> {
+    // Find and remove message from all sessions
+    for (const [sessionId, messages] of this.messages.entries()) {
+      const index = messages.findIndex(m => m.id === id);
+      if (index !== -1) {
+        messages.splice(index, 1);
+        this.messages.set(sessionId, messages);
+        break;
+      }
+    }
   }
 }
 

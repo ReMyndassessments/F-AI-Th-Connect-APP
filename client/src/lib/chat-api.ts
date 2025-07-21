@@ -39,4 +39,9 @@ export const chatApi = {
     });
     return response.json();
   },
+
+  async deleteSession(sessionId: string): Promise<{ message: string }> {
+    const response = await apiRequest("DELETE", `/api/chat/sessions/${sessionId}`);
+    return response.json();
+  },
 };
