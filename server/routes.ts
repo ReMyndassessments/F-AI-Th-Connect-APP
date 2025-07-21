@@ -150,6 +150,93 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Feature Flags endpoints
+  app.get("/api/feature-flags", async (req, res) => {
+    try {
+      const flags = await storage.getFeatureFlags();
+      res.json({ flags });
+    } catch (error) {
+      console.error("Error fetching feature flags:", error);
+      res.status(500).json({ message: "Failed to fetch feature flags" });
+    }
+  });
+
+  app.patch("/api/feature-flags/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const flag = await storage.updateFeatureFlag(id, req.body);
+      res.json({ flag });
+    } catch (error) {
+      console.error("Error updating feature flag:", error);
+      res.status(500).json({ message: "Failed to update feature flag" });
+    }
+  });
+
+  // Advertisements endpoints
+  app.get("/api/advertisements", async (req, res) => {
+    try {
+      const { placement, active } = req.query;
+      let ads;
+      
+      if (active === 'true') {
+        ads = await storage.getActiveAdvertisements(placement as string);
+      } else {
+        ads = await storage.getAdvertisements();
+        if (placement) {
+          ads = ads.filter(ad => ad.placement === placement);
+        }
+      }
+      
+      res.json({ advertisements: ads });
+    } catch (error) {
+      console.error("Error fetching advertisements:", error);
+      res.status(500).json({ message: "Failed to fetch advertisements" });
+    }
+  });
+
+  app.post("/api/advertisements", async (req, res) => {
+    try {
+      const ad = await storage.createAdvertisement(req.body);
+      res.json({ advertisement: ad });
+    } catch (error) {
+      console.error("Error creating advertisement:", error);
+      res.status(500).json({ message: "Failed to create advertisement" });
+    }
+  });
+
+  app.patch("/api/advertisements/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const ad = await storage.updateAdvertisement(id, req.body);
+      res.json({ advertisement: ad });
+    } catch (error) {
+      console.error("Error updating advertisement:", error);
+      res.status(500).json({ message: "Failed to update advertisement" });
+    }
+  });
+
+  app.delete("/api/advertisements/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteAdvertisement(id);
+      res.json({ message: "Advertisement deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting advertisement:", error);
+      res.status(500).json({ message: "Failed to delete advertisement" });
+    }
+  });
+
+  app.post("/api/advertisements/:id/click", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.incrementAdClicks(id);
+      res.json({ message: "Click recorded" });
+    } catch (error) {
+      console.error("Error recording click:", error);
+      res.status(500).json({ message: "Failed to record click" });
+    }
+  });
+
   // File upload and processing endpoint
   app.post("/api/files/process", upload.single('file'), async (req: any, res: any) => {
     try {

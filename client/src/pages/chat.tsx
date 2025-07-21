@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { chatApi } from "@/lib/chat-api";
 import ChatInterface from "@/components/chat/chat-interface";
 import ClearChatButton from "@/components/chat/clear-chat-button";
+import AdvertisementDisplay from "@/components/ads/advertisement-display";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
 import { ArrowLeft, MessageCircle, RotateCcw } from "lucide-react";
@@ -157,13 +158,23 @@ export default function Chat() {
       </header>
 
       {/* Chat Interface */}
-      <main className="max-w-4xl mx-auto px-4 py-8">
-        <ChatInterface
-          messages={messagesData?.messages || []}
-          onSendMessage={handleSendMessage}
-          isLoading={isLoading}
-          isSending={sendMessageMutation.isPending}
-        />
+      <main className="max-w-6xl mx-auto px-4 py-8">
+        <div className="flex gap-6">
+          {/* Main Chat Area */}
+          <div className="flex-1">
+            <ChatInterface
+              messages={messagesData?.messages || []}
+              onSendMessage={handleSendMessage}
+              isLoading={isLoading}
+              isSending={sendMessageMutation.isPending}
+            />
+          </div>
+          
+          {/* Sidebar with Ads */}
+          <div className="w-80 space-y-4">
+            <AdvertisementDisplay placement="chat_sidebar" />
+          </div>
+        </div>
       </main>
     </div>
   );

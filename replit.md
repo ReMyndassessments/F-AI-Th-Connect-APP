@@ -63,6 +63,8 @@ The application uses three main entities:
 - **Speech Input**: Voice-to-text capability using browser's Speech Recognition API
 - **File Upload**: Support for text files, PDFs, and images (up to 5MB)
 - **Progress Indicators**: Visual feedback with progress bars for large content processing
+- **Feature Flag System**: Comprehensive system for managing advertisement display and feature rollouts
+- **Advertisement Management**: Tasteful faith-based promotion system with placement controls
 - **Responsive Design**: Mobile-first approach with adaptive layouts
 
 ## Data Flow

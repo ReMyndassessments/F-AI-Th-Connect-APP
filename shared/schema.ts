@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -45,3 +45,58 @@ export type ChatSession = typeof chatSessions.$inferSelect;
 export type Message = typeof messages.$inferSelect;
 export type InsertChatSession = z.infer<typeof insertChatSessionSchema>;
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
+
+// Feature Flags Schema
+export const featureFlags = pgTable("feature_flags", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull().unique(),
+  description: text("description"),
+  enabled: boolean("enabled").default(false).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Advertisements Schema
+export const advertisements = pgTable("advertisements", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  imageUrl: text("image_url"),
+  linkUrl: text("link_url"),
+  type: text("type", { enum: ["book", "course", "event", "ministry", "other"] }).notNull(),
+  placement: text("placement", { enum: ["chat_sidebar", "between_messages", "home_banner", "footer"] }).notNull(),
+  active: boolean("active").default(false).notNull(),
+  priority: integer("priority").default(0).notNull(),
+  targetAudience: text("target_audience"),
+  startDate: timestamp("start_date"),
+  endDate: timestamp("end_date"),
+  clickCount: integer("click_count").default(0).notNull(),
+  impressionCount: integer("impression_count").default(0).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const insertFeatureFlagSchema = createInsertSchema(featureFlags).pick({
+  name: true,
+  description: true,
+  enabled: true,
+});
+
+export const insertAdvertisementSchema = createInsertSchema(advertisements).pick({
+  title: true,
+  description: true,
+  imageUrl: true,
+  linkUrl: true,
+  type: true,
+  placement: true,
+  active: true,
+  priority: true,
+  targetAudience: true,
+  startDate: true,
+  endDate: true,
+});
+
+export type InsertFeatureFlag = z.infer<typeof insertFeatureFlagSchema>;
+export type FeatureFlag = typeof featureFlags.$inferSelect;
+export type InsertAdvertisement = z.infer<typeof insertAdvertisementSchema>;
+export type Advertisement = typeof advertisements.$inferSelect;

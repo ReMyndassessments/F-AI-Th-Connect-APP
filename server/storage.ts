@@ -1,4 +1,9 @@
-import { users, chatSessions, messages, type User, type InsertUser, type ChatSession, type InsertChatSession, type Message, type InsertMessage } from "@shared/schema";
+import { 
+  users, chatSessions, messages, featureFlags, advertisements,
+  type User, type InsertUser, type ChatSession, type InsertChatSession, 
+  type Message, type InsertMessage, type FeatureFlag, type InsertFeatureFlag,
+  type Advertisement, type InsertAdvertisement 
+} from "@shared/schema";
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
@@ -12,23 +17,93 @@ export interface IStorage {
   createMessage(message: InsertMessage): Promise<Message>;
   getMessagesBySession(sessionId: string): Promise<Message[]>;
   deleteMessage(id: number): Promise<void>;
+  
+  // Feature Flags
+  getFeatureFlags(): Promise<FeatureFlag[]>;
+  getFeatureFlag(name: string): Promise<FeatureFlag | undefined>;
+  createFeatureFlag(flag: InsertFeatureFlag): Promise<FeatureFlag>;
+  updateFeatureFlag(id: number, updates: Partial<FeatureFlag>): Promise<FeatureFlag>;
+  deleteFeatureFlag(id: number): Promise<void>;
+  
+  // Advertisements
+  getAdvertisements(): Promise<Advertisement[]>;
+  getActiveAdvertisements(placement?: string): Promise<Advertisement[]>;
+  getAdvertisement(id: number): Promise<Advertisement | undefined>;
+  createAdvertisement(ad: InsertAdvertisement): Promise<Advertisement>;
+  updateAdvertisement(id: number, updates: Partial<Advertisement>): Promise<Advertisement>;
+  deleteAdvertisement(id: number): Promise<void>;
+  incrementAdClicks(id: number): Promise<void>;
+  incrementAdImpressions(id: number): Promise<void>;
 }
 
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
   private chatSessions: Map<string, ChatSession>;
   private messages: Map<string, Message[]>;
+  private featureFlags: Map<number, FeatureFlag>;
+  private advertisements: Map<number, Advertisement>;
   private currentUserId: number;
   private currentSessionId: number;
   private currentMessageId: number;
+  private currentFeatureFlagId: number;
+  private currentAdvertisementId: number;
 
   constructor() {
     this.users = new Map();
     this.chatSessions = new Map();
     this.messages = new Map();
+    this.featureFlags = new Map();
+    this.advertisements = new Map();
     this.currentUserId = 1;
     this.currentSessionId = 1;
     this.currentMessageId = 1;
+    this.currentFeatureFlagId = 1;
+    this.currentAdvertisementId = 1;
+    
+    // Initialize default feature flags
+    this.initializeDefaultFeatureFlags();
+  }
+
+  private initializeDefaultFeatureFlags(): void {
+    const defaultFlags: FeatureFlag[] = [
+      {
+        id: 1,
+        name: "advertisements_enabled",
+        description: "Enable tasteful faith-based advertisements",
+        enabled: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        id: 2,
+        name: "chat_sidebar_ads",
+        description: "Show ads in chat sidebar",
+        enabled: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        id: 3,
+        name: "home_banner_ads",
+        description: "Show banner ads on home page",
+        enabled: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        id: 4,
+        name: "between_messages_ads",
+        description: "Show ads between chat messages",
+        enabled: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }
+    ];
+
+    defaultFlags.forEach(flag => {
+      this.featureFlags.set(flag.id, flag);
+    });
+    this.currentFeatureFlagId = 5;
   }
 
   async getUser(id: number): Promise<User | undefined> {
@@ -100,6 +175,131 @@ export class MemStorage implements IStorage {
         this.messages.set(sessionId, messages);
         break;
       }
+    }
+  }
+
+  // Feature Flags implementation
+  async getFeatureFlags(): Promise<FeatureFlag[]> {
+    return Array.from(this.featureFlags.values());
+  }
+
+  async getFeatureFlag(name: string): Promise<FeatureFlag | undefined> {
+    return Array.from(this.featureFlags.values()).find(flag => flag.name === name);
+  }
+
+  async createFeatureFlag(insertFlag: InsertFeatureFlag): Promise<FeatureFlag> {
+    const id = this.currentFeatureFlagId++;
+    const flag: FeatureFlag = {
+      id,
+      name: insertFlag.name,
+      description: insertFlag.description || null,
+      enabled: insertFlag.enabled || false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.featureFlags.set(id, flag);
+    return flag;
+  }
+
+  async updateFeatureFlag(id: number, updates: Partial<FeatureFlag>): Promise<FeatureFlag> {
+    const flag = this.featureFlags.get(id);
+    if (!flag) {
+      throw new Error(`Feature flag with id ${id} not found`);
+    }
+    
+    const updatedFlag: FeatureFlag = {
+      ...flag,
+      ...updates,
+      updatedAt: new Date(),
+    };
+    this.featureFlags.set(id, updatedFlag);
+    return updatedFlag;
+  }
+
+  async deleteFeatureFlag(id: number): Promise<void> {
+    this.featureFlags.delete(id);
+  }
+
+  // Advertisements implementation
+  async getAdvertisements(): Promise<Advertisement[]> {
+    return Array.from(this.advertisements.values());
+  }
+
+  async getActiveAdvertisements(placement?: string): Promise<Advertisement[]> {
+    const now = new Date();
+    return Array.from(this.advertisements.values())
+      .filter(ad => {
+        if (!ad.active) return false;
+        if (ad.startDate && ad.startDate > now) return false;
+        if (ad.endDate && ad.endDate < now) return false;
+        if (placement && ad.placement !== placement) return false;
+        return true;
+      })
+      .sort((a, b) => b.priority - a.priority);
+  }
+
+  async getAdvertisement(id: number): Promise<Advertisement | undefined> {
+    return this.advertisements.get(id);
+  }
+
+  async createAdvertisement(insertAd: InsertAdvertisement): Promise<Advertisement> {
+    const id = this.currentAdvertisementId++;
+    const ad: Advertisement = {
+      id,
+      title: insertAd.title,
+      description: insertAd.description,
+      imageUrl: insertAd.imageUrl || null,
+      linkUrl: insertAd.linkUrl || null,
+      type: insertAd.type,
+      placement: insertAd.placement,
+      active: insertAd.active || false,
+      priority: insertAd.priority || 0,
+      targetAudience: insertAd.targetAudience || null,
+      startDate: insertAd.startDate || null,
+      endDate: insertAd.endDate || null,
+      clickCount: 0,
+      impressionCount: 0,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.advertisements.set(id, ad);
+    return ad;
+  }
+
+  async updateAdvertisement(id: number, updates: Partial<Advertisement>): Promise<Advertisement> {
+    const ad = this.advertisements.get(id);
+    if (!ad) {
+      throw new Error(`Advertisement with id ${id} not found`);
+    }
+    
+    const updatedAd: Advertisement = {
+      ...ad,
+      ...updates,
+      updatedAt: new Date(),
+    };
+    this.advertisements.set(id, updatedAd);
+    return updatedAd;
+  }
+
+  async deleteAdvertisement(id: number): Promise<void> {
+    this.advertisements.delete(id);
+  }
+
+  async incrementAdClicks(id: number): Promise<void> {
+    const ad = this.advertisements.get(id);
+    if (ad) {
+      ad.clickCount += 1;
+      ad.updatedAt = new Date();
+      this.advertisements.set(id, ad);
+    }
+  }
+
+  async incrementAdImpressions(id: number): Promise<void> {
+    const ad = this.advertisements.get(id);
+    if (ad) {
+      ad.impressionCount += 1;
+      ad.updatedAt = new Date();
+      this.advertisements.set(id, ad);
     }
   }
 }

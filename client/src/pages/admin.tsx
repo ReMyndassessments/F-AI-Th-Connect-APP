@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import FeatureFlagsTab from "@/components/admin/feature-flags-tab";
+import AdvertisementsTab from "@/components/admin/advertisements-tab";
 import { 
   Users, 
   MessageSquare, 
@@ -17,7 +19,9 @@ import {
   Shield,
   Settings,
   Home,
-  Download
+  Download,
+  Flag,
+  Eye
 } from "lucide-react";
 import { useLocation } from "wouter";
 
@@ -191,10 +195,18 @@ export default function AdminDashboard() {
         </div>
 
         <Tabs defaultValue="overview" className="space-y-4">
-          <TabsList>
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="sessions">Recent Sessions</TabsTrigger>
-            <TabsTrigger value="topics">Popular Topics</TabsTrigger>
+            <TabsTrigger value="sessions">Sessions</TabsTrigger>
+            <TabsTrigger value="topics">Topics</TabsTrigger>
+            <TabsTrigger value="feature-flags" className="flex items-center">
+              <Flag className="w-4 h-4 mr-1" />
+              Features
+            </TabsTrigger>
+            <TabsTrigger value="advertisements" className="flex items-center">
+              <Eye className="w-4 h-4 mr-1" />
+              Ads
+            </TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
           
@@ -317,6 +329,14 @@ export default function AdminDashboard() {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+          
+          <TabsContent value="feature-flags" className="space-y-4">
+            <FeatureFlagsTab />
+          </TabsContent>
+          
+          <TabsContent value="advertisements" className="space-y-4">
+            <AdvertisementsTab />
           </TabsContent>
           
           <TabsContent value="settings" className="space-y-4">
