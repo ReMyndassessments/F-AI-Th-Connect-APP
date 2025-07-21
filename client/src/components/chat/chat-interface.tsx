@@ -46,7 +46,8 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
 
   const handleFileContent = (content: string, fileName: string) => {
     setFileContent(content);
-    setInputValue(prev => prev + (prev ? '\n\n' : '') + `Please help me with this ${fileName.endsWith('.pdf') ? 'document' : 'content'}:`);
+    // Clear any existing input and set a helpful prompt
+    setInputValue(`Please create a comprehensive Bible study based on this ${fileName.endsWith('.pdf') ? 'document' : fileName.endsWith('.docx') ? 'Word document' : 'content'}. Include discussion questions and practical applications.`);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {

@@ -23,10 +23,21 @@ export default function Chat() {
   });
 
   // Get messages for current session
-  const { data: messagesData, isLoading } = useQuery({
+  const { data: messagesData, isLoading, error: messagesError } = useQuery({
     queryKey: ["/api/chat/sessions", currentSessionId, "messages"],
     enabled: !!currentSessionId,
-  }) as { data: { messages: any[] } | undefined; isLoading: boolean };
+    retry: (failureCount, error: any) => {
+      // If session not found, don't retry - we'll create a new one
+      if (error?.status === 404) return false;
+      return failureCount < 3;
+    },
+  }) as { data: { messages: any[] } | undefined; isLoading: boolean; error: any };
+
+  // Handle session not found error
+  if (messagesError?.status === 404 && currentSessionId) {
+    console.log('Session not found, creating new session...');
+    setCurrentSessionId(null);
+  }
 
   // Send message mutation
   const sendMessageMutation = useMutation({
@@ -37,9 +48,14 @@ export default function Chat() {
         queryKey: ["/api/chat/sessions", currentSessionId, "messages"],
       });
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.error('Failed to send message:', error);
-      // The error will be shown in the UI through the mutation state
+      // If session not found (404), create a new session
+      if (error?.message?.includes('404') || error?.status === 404) {
+        console.log('Session not found, creating new session...');
+        setCurrentSessionId(null);
+        createSessionMutation.mutate();
+      }
     },
   });
 
