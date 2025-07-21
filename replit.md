@@ -53,6 +53,7 @@ The application uses three main entities:
 
 ### UI Components
 - **Landing Page**: Multi-section marketing site with hero, features, testimonials
+- **Interactive Demo**: Animated walkthrough modal showcasing app features
 - **Chat Interface**: Real-time conversation UI with message bubbles
 - **Scripture Display**: Formatted biblical references with proper citations
 - **Responsive Design**: Mobile-first approach with adaptive layouts

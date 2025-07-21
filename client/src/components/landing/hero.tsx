@@ -1,12 +1,19 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Check, Play } from "lucide-react";
 import { useLocation } from "wouter";
+import DemoVideoModal from "@/components/demo/demo-video-modal";
 
 export default function Hero() {
   const [, setLocation] = useLocation();
+  const [isDemoOpen, setIsDemoOpen] = useState(false);
 
   const startChat = () => {
     setLocation("/chat");
+  };
+
+  const openDemo = () => {
+    setIsDemoOpen(true);
   };
 
   return (
@@ -42,6 +49,7 @@ export default function Hero() {
                 Start Free Conversation
               </Button>
               <Button
+                onClick={openDemo}
                 variant="outline"
                 className="faith-button-secondary px-8 py-4 rounded-xl font-semibold text-lg"
               >
@@ -90,6 +98,11 @@ export default function Hero() {
           </div>
         </div>
       </div>
+      
+      <DemoVideoModal 
+        isOpen={isDemoOpen} 
+        onClose={() => setIsDemoOpen(false)} 
+      />
     </section>
   );
 }
