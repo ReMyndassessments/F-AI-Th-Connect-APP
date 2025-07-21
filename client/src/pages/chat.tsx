@@ -26,7 +26,7 @@ export default function Chat() {
   const { data: messagesData, isLoading } = useQuery({
     queryKey: ["/api/chat/sessions", currentSessionId, "messages"],
     enabled: !!currentSessionId,
-  });
+  }) as { data: { messages: any[] } | undefined; isLoading: boolean };
 
   // Send message mutation
   const sendMessageMutation = useMutation({

@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Send, Loader2 } from "lucide-react";
-import MessageBubble from "./message-bubble";
+import MessageBubble from "@/components/chat/message-bubble";
 import type { Message } from "@/lib/chat-api";
 
 interface ChatInterfaceProps {

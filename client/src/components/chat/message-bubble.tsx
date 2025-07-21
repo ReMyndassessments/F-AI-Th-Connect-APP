@@ -1,5 +1,5 @@
 import type { Message } from "@/lib/chat-api";
-import ScriptureReference from "./scripture-reference";
+import ScriptureReference from "@/components/chat/scripture-reference";
 
 interface MessageBubbleProps {
   message: Message;
