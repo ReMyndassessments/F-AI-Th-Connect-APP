@@ -7,6 +7,7 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Chat from "@/pages/chat";
 import AdminDashboard from "@/pages/admin";
+import AdminLogin from "@/pages/admin-login";
 
 function Router() {
   return (
@@ -15,6 +16,7 @@ function Router() {
       <Route path="/chat" component={Chat} />
       <Route path="/chat/:sessionId" component={Chat} />
       <Route path="/admin" component={AdminDashboard} />
+      <Route path="/admin/login" component={AdminLogin} />
       <Route component={NotFound} />
     </Switch>
   );

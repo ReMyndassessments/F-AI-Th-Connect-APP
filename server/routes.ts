@@ -1,13 +1,38 @@
-import type { Express } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import multer from "multer";
+import bcrypt from "bcryptjs";
+import crypto from "crypto";
 import { storage } from "./storage";
 import { DeepseekAI } from "./services/deepseek-ai";
 import { FileProcessor } from "./services/file-processor";
 import { z } from "zod";
-import { insertMessageSchema, insertChatSessionSchema } from "@shared/schema";
+import { insertMessageSchema, insertChatSessionSchema, adminLoginSchema, insertFeatureFlagSchema, insertAdvertisementSchema } from "@shared/schema";
 
 const deepseekAI = new DeepseekAI();
+
+// Admin Authentication Middleware
+const requireAdmin = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const sessionId = req.headers['x-admin-session'] as string;
+    
+    if (!sessionId) {
+      return res.status(401).json({ error: "Admin session required" });
+    }
+
+    const session = await storage.getAdminSession(sessionId);
+    if (!session) {
+      return res.status(401).json({ error: "Invalid or expired admin session" });
+    }
+
+    // Add admin user to request for use in handlers
+    (req as any).adminUser = session.user;
+    next();
+  } catch (error) {
+    console.error("Admin auth error:", error);
+    res.status(500).json({ error: "Authentication error" });
+  }
+};
 
 // Configure multer for file uploads
 const upload = multer({
@@ -150,25 +175,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Feature Flags endpoints
-  app.get("/api/feature-flags", async (req, res) => {
+  // Public feature flags endpoint (for checking if features are enabled)
+  app.get("/api/feature-flags/public", async (req, res) => {
     try {
       const flags = await storage.getFeatureFlags();
-      res.json({ flags });
+      const publicFlags = flags.filter(flag => flag.enabled).map(flag => ({
+        name: flag.name,
+        enabled: flag.enabled
+      }));
+      res.json({ flags: publicFlags });
     } catch (error) {
       console.error("Error fetching feature flags:", error);
       res.status(500).json({ message: "Failed to fetch feature flags" });
-    }
-  });
-
-  app.patch("/api/feature-flags/:id", async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      const flag = await storage.updateFeatureFlag(id, req.body);
-      res.json({ flag });
-    } catch (error) {
-      console.error("Error updating feature flag:", error);
-      res.status(500).json({ message: "Failed to update feature flag" });
     }
   });
 
@@ -234,6 +252,168 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error recording click:", error);
       res.status(500).json({ message: "Failed to record click" });
+    }
+  });
+
+  // Admin Authentication Routes
+  app.post("/api/admin/login", async (req, res) => {
+    try {
+      const loginData = adminLoginSchema.parse(req.body);
+      
+      // Find admin user
+      const adminUser = await storage.getAdminUserByUsername(loginData.username);
+      if (!adminUser) {
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
+
+      // Verify password
+      const isValidPassword = await bcrypt.compare(loginData.password, adminUser.passwordHash);
+      if (!isValidPassword) {
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
+
+      // Create session
+      const sessionId = crypto.randomUUID();
+      const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+      
+      await storage.createAdminSession(sessionId, adminUser.id, expiresAt);
+      await storage.updateAdminUserLastLogin(adminUser.id);
+
+      res.json({
+        sessionId,
+        user: {
+          id: adminUser.id,
+          username: adminUser.username,
+          email: adminUser.email,
+          role: adminUser.role,
+          lastLogin: new Date(),
+        },
+        expiresAt,
+      });
+    } catch (error) {
+      console.error("Admin login error:", error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid request data" });
+      }
+      res.status(500).json({ error: "Login failed" });
+    }
+  });
+
+  app.post("/api/admin/logout", requireAdmin, async (req, res) => {
+    try {
+      const sessionId = req.headers['x-admin-session'] as string;
+      await storage.deleteAdminSession(sessionId);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Admin logout error:", error);
+      res.status(500).json({ error: "Logout failed" });
+    }
+  });
+
+  app.get("/api/admin/verify", requireAdmin, async (req, res) => {
+    try {
+      const adminUser = (req as any).adminUser;
+      res.json({
+        user: {
+          id: adminUser.id,
+          username: adminUser.username,
+          email: adminUser.email,
+          role: adminUser.role,
+          lastLogin: adminUser.lastLogin,
+        }
+      });
+    } catch (error) {
+      console.error("Admin verify error:", error);
+      res.status(500).json({ error: "Verification failed" });
+    }
+  });
+
+  // Feature flags endpoints (now require admin authentication)
+  app.get("/api/feature-flags", requireAdmin, async (req, res) => {
+    try {
+      const flags = await storage.getFeatureFlags();
+      res.json({ flags });
+    } catch (error) {
+      console.error("Error fetching feature flags:", error);
+      res.status(500).json({ message: "Failed to fetch feature flags" });
+    }
+  });
+
+  app.post("/api/feature-flags", requireAdmin, async (req, res) => {
+    try {
+      const flagData = insertFeatureFlagSchema.parse(req.body);
+      const flag = await storage.createFeatureFlag(flagData);
+      res.json({ flag });
+    } catch (error) {
+      console.error("Error creating feature flag:", error);
+      res.status(500).json({ message: "Failed to create feature flag" });
+    }
+  });
+
+  app.patch("/api/feature-flags/:id", requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const flag = await storage.updateFeatureFlag(id, req.body);
+      res.json({ flag });
+    } catch (error) {
+      console.error("Error updating feature flag:", error);
+      res.status(500).json({ message: "Failed to update feature flag" });
+    }
+  });
+
+  app.delete("/api/feature-flags/:id", requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteFeatureFlag(id);
+      res.json({ message: "Feature flag deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting feature flag:", error);
+      res.status(500).json({ message: "Failed to delete feature flag" });
+    }
+  });
+
+  // Advertisement endpoints (now require admin authentication)
+  app.get("/api/advertisements", requireAdmin, async (req, res) => {
+    try {
+      const { placement } = req.query;
+      const ads = await storage.getActiveAdvertisements(placement as string);
+      res.json({ advertisements: ads });
+    } catch (error) {
+      console.error("Error fetching advertisements:", error);
+      res.status(500).json({ message: "Failed to fetch advertisements" });
+    }
+  });
+
+  app.post("/api/advertisements", requireAdmin, async (req, res) => {
+    try {
+      const adData = insertAdvertisementSchema.parse(req.body);
+      const ad = await storage.createAdvertisement(adData);
+      res.json({ advertisement: ad });
+    } catch (error) {
+      console.error("Error creating advertisement:", error);
+      res.status(500).json({ message: "Failed to create advertisement" });
+    }
+  });
+
+  app.patch("/api/advertisements/:id", requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const ad = await storage.updateAdvertisement(id, req.body);
+      res.json({ advertisement: ad });
+    } catch (error) {
+      console.error("Error updating advertisement:", error);
+      res.status(500).json({ message: "Failed to update advertisement" });
+    }
+  });
+
+  app.delete("/api/advertisements/:id", requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.deleteAdvertisement(id);
+      res.json({ message: "Advertisement deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting advertisement:", error);
+      res.status(500).json({ message: "Failed to delete advertisement" });
     }
   });
 

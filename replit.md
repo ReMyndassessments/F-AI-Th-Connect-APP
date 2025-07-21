@@ -35,15 +35,35 @@ The application follows a modern full-stack architecture with clear separation b
 ## Key Components
 
 ### Database Schema
-The application uses three main entities:
+The application uses these main entities:
 - **Users**: Basic user authentication (id, username, password)
 - **Chat Sessions**: Conversation containers with unique session IDs
 - **Messages**: Individual messages with role (user/assistant), content, and optional scripture references
+- **Admin Users**: Secure admin authentication with bcrypt password hashing and role-based access
+- **Admin Sessions**: Session management for admin dashboard access with expiration
+- **Feature Flags**: System for controlling feature rollouts and advertisements
+- **Advertisements**: Faith-based promotional content with placement and targeting controls
 
 ### API Endpoints
+
+**Chat Endpoints:**
 - `POST /api/chat/sessions` - Create new chat sessions
 - `GET /api/chat/sessions/:sessionId/messages` - Retrieve conversation history  
 - `POST /api/chat/sessions/:sessionId/messages` - Send messages and receive AI responses
+
+**Admin Authentication Endpoints:**
+- `POST /api/admin/login` - Admin login with username/password
+- `POST /api/admin/logout` - Admin logout and session cleanup
+- `GET /api/admin/verify` - Verify admin session validity
+
+**Protected Admin Endpoints:**
+- `GET /api/feature-flags` - Manage application feature flags
+- `GET /api/advertisements` - Manage promotional content
+- All admin endpoints require `x-admin-session` header
+
+**Public Endpoints:**
+- `GET /api/feature-flags/public` - Check enabled features
+- `GET /api/advertisements/public` - Fetch active advertisements for display
 
 ### AI Integration
 - **Provider**: DeepSeek AI API integration

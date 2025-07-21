@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import FeatureFlagsTab from "@/components/admin/feature-flags-tab";
 import AdvertisementsTab from "@/components/admin/advertisements-tab";
 import DailyVerseCard from "@/components/daily-verse/daily-verse-card";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Users, 
   MessageSquare, 
@@ -77,7 +80,16 @@ const mockRecentSessions = [
 
 export default function AdminDashboard() {
   const [, setLocation] = useLocation();
+  const { toast } = useToast();
   const [selectedTimeRange, setSelectedTimeRange] = useState("7d");
+  const { user, isLoading, isAuthenticated, logout } = useAdminAuth();
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      setLocation("/admin/login");
+    }
+  }, [isLoading, isAuthenticated, setLocation]);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString();
@@ -104,6 +116,48 @@ export default function AdminDashboard() {
     URL.revokeObjectURL(url);
   };
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+      toast({
+        title: "Logged out",
+        description: "You have been successfully logged out.",
+      });
+      setLocation("/");
+    } catch (error) {
+      toast({
+        title: "Logout failed",
+        description: "There was an error logging out.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Show loading spinner while checking authentication
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-amber-500 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Checking authentication...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show message if not authenticated (while redirecting)
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Alert className="max-w-md">
+          <AlertDescription>
+            Access denied. Redirecting to login...
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -129,10 +183,18 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            <Button onClick={exportData} variant="outline" size="sm">
-              <Download className="w-4 h-4 mr-2" />
-              Export Data
-            </Button>
+            <div className="flex items-center space-x-3">
+              <span className="text-sm text-gray-600">
+                Welcome, <span className="font-medium">{user?.username}</span>
+              </span>
+              <Button onClick={exportData} variant="outline" size="sm">
+                <Download className="w-4 h-4 mr-2" />
+                Export Data
+              </Button>
+              <Button onClick={handleLogout} variant="outline" size="sm">
+                Logout
+              </Button>
+            </div>
           </div>
         </div>
       </header>
