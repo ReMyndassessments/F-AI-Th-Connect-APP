@@ -25,10 +25,11 @@ export default function CTA() {
             Start Free Conversation
           </Button>
           <Button
+            onClick={() => setLocation("/admin")}
             variant="outline"
             className="border-2 border-white text-white px-8 py-4 rounded-xl hover:bg-white hover:text-blue-500 transition-all font-semibold text-lg"
           >
-            Learn More
+            Admin Dashboard
           </Button>
         </div>
         
