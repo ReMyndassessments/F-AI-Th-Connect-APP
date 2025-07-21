@@ -1,11 +1,35 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import multer from "multer";
 import { storage } from "./storage";
 import { DeepseekAI } from "./services/deepseek-ai";
+import { FileProcessor } from "./services/file-processor";
 import { z } from "zod";
 import { insertMessageSchema, insertChatSessionSchema } from "@shared/schema";
 
 const deepseekAI = new DeepseekAI();
+
+// Configure multer for file uploads
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB limit
+  },
+  fileFilter: (req: any, file: any, cb: any) => {
+    const allowedMimes = [
+      'text/plain',
+      'application/pdf',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/msword'
+    ];
+    
+    if (allowedMimes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Unsupported file type. Please upload PDF, Word, or text files.'));
+    }
+  }
+});
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Create a new chat session
@@ -97,6 +121,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error processing message:", error);
       res.status(500).json({ message: "Failed to process message" });
+    }
+  });
+
+  // File upload and processing endpoint
+  app.post("/api/files/process", upload.single('file'), async (req: any, res: any) => {
+    try {
+      const file = req.file;
+      if (!file) {
+        return res.status(400).json({ message: "No file uploaded" });
+      }
+
+      const { buffer, originalname, mimetype } = file;
+      
+      // Process the file content
+      const processedFile = await FileProcessor.processFile(buffer, originalname, mimetype);
+      const formattedContent = FileProcessor.formatFileContent(processedFile);
+
+      res.json({
+        success: true,
+        fileName: originalname,
+        fileType: processedFile.fileType,
+        wordCount: processedFile.wordCount,
+        content: formattedContent,
+      });
+
+    } catch (error) {
+      console.error("File processing error:", error);
+      const errorMessage = error instanceof Error ? error.message : "File processing failed";
+      res.status(400).json({ 
+        success: false, 
+        message: errorMessage 
+      });
     }
   });
 

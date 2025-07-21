@@ -38,62 +38,64 @@ export default function FileUpload({ onFileContent, disabled = false }: FileUplo
       return;
     }
 
-    // Check file type
-    const allowedTypes = ['text/plain', 'application/pdf', 'image/jpeg', 'image/png', 'image/gif'];
+    // Check file type - now supporting PDF, Word docs, and text files
+    const allowedTypes = [
+      'text/plain', 
+      'application/pdf', 
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
+      'application/msword' // .doc
+    ];
+    
     if (!allowedTypes.includes(file.type)) {
       toast({
         title: "Unsupported file type",
-        description: "Please select a text file, PDF, or image.",
+        description: "Please select a text file, PDF, or Word document (.docx).",
         variant: "destructive",
       });
       return;
     }
 
     try {
-      let content = '';
-      
-      if (file.type === 'text/plain') {
-        content = await file.text();
-      } else if (file.type === 'application/pdf') {
-        // For PDF files, we'll show a placeholder message
-        content = `[PDF Document: ${file.name}]\n\nThis is a PDF file. Please copy and paste the text content you'd like to analyze, as PDF processing requires additional setup.`;
-      } else if (file.type.startsWith('image/')) {
-        // For images, we'll create a data URL and ask for description
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          content = `[Image: ${file.name}]\n\nPlease describe what you see in this image or what spiritual guidance you're seeking related to it.`;
-          setUploadedFile({
-            name: file.name,
-            size: file.size,
-            type: file.type,
-            content
-          });
-          onFileContent(content, file.name);
-        };
-        reader.readAsDataURL(file);
-        return;
+      toast({
+        title: "Processing file...",
+        description: "Extracting text content from your document.",
+      });
+
+      // Upload and process file on server
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/files/process', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'File processing failed');
       }
 
       const uploadedFile = {
-        name: file.name,
+        name: result.fileName,
         size: file.size,
-        type: file.type,
-        content
+        type: result.fileType,
+        content: result.content
       };
 
       setUploadedFile(uploadedFile);
-      onFileContent(content, file.name);
+      onFileContent(result.content, result.fileName);
 
       toast({
-        title: "File uploaded",
-        description: `${file.name} has been processed and added to your message.`,
+        title: "File processed successfully",
+        description: `Extracted ${result.wordCount.toLocaleString()} words from ${result.fileName}`,
       });
 
     } catch (error) {
       console.error('Error processing file:', error);
       toast({
-        title: "Upload failed",
-        description: "Could not process the file. Please try again.",
+        title: "Processing failed",
+        description: error instanceof Error ? error.message : "Could not process the file. Please try again.",
         variant: "destructive",
       });
     }
@@ -151,7 +153,7 @@ export default function FileUpload({ onFileContent, disabled = false }: FileUplo
         onClick={handleFileSelect}
         disabled={disabled}
         className="hover:bg-gray-50 transition-colors"
-        title="Attach a file (text, PDF, or image)"
+        title="Attach a file (text, PDF, or Word document)"
       >
         <Paperclip className="w-4 h-4 mr-2" />
         {uploadedFile ? 'Change File' : 'Attach File'}
@@ -161,7 +163,7 @@ export default function FileUpload({ onFileContent, disabled = false }: FileUplo
         ref={fileInputRef}
         type="file"
         onChange={handleFileChange}
-        accept=".txt,.pdf,.jpg,.jpeg,.png,.gif"
+        accept=".txt,.pdf,.docx,.doc"
         className="hidden"
       />
     </div>
