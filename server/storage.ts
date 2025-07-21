@@ -128,7 +128,7 @@ export class MemStorage implements IStorage {
     const defaultAdmin: AdminUser = {
       id: 1,
       username: "admin",
-      passwordHash: "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewEI53BnzQFT0WN6", // bcrypt hash of "admin123"
+      passwordHash: "$2b$12$uFB6Gi.Cj8TmDC45WUym9OpYgwffjOfi1oJFMo3FsRmrdc3NL1xIW", // bcrypt hash of "admin123"
       email: null,
       role: "owner",
       lastLogin: null,
