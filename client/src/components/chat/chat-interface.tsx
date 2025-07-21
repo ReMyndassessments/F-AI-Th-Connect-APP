@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Send, Loader2 } from "lucide-react";
 import MessageBubble from "@/components/chat/message-bubble";
 import type { Message } from "@/lib/chat-api";
@@ -32,7 +32,7 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSubmit(e);
@@ -116,6 +116,7 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
                 <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
                 <span className="text-sm text-gray-600">Seeking biblical guidance...</span>
               </div>
+              <p className="text-xs text-gray-400 mt-1">This may take a moment</p>
             </div>
           </div>
         )}
@@ -126,14 +127,14 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
       {/* Chat Input */}
       <form onSubmit={handleSubmit} className="border-t border-gray-200 p-4">
         <div className="flex items-end space-x-3">
-          <Input
-            type="text"
-            placeholder="Ask about faith, prayer, or biblical guidance..."
+          <Textarea
+            placeholder="Ask about faith, prayer, or biblical guidance... (Press Enter to send, Shift+Enter for new line)"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            onKeyPress={handleKeyPress}
-            className="flex-1 border border-gray-300 rounded-xl px-4 py-3 min-h-[48px] resize-none"
+            onKeyDown={handleKeyDown}
+            className="flex-1 border border-gray-300 rounded-xl px-4 py-3 min-h-[48px] max-h-32 resize-none"
             disabled={isSending}
+            rows={1}
           />
           <Button
             type="submit"

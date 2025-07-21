@@ -37,6 +37,10 @@ export default function Chat() {
         queryKey: ["/api/chat/sessions", currentSessionId, "messages"],
       });
     },
+    onError: (error) => {
+      console.error('Failed to send message:', error);
+      // The error will be shown in the UI through the mutation state
+    },
   });
 
   useEffect(() => {

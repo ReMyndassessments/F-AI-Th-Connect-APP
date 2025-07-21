@@ -53,6 +53,9 @@ Format Scripture references clearly, for example: "Matthew 6:26-27 (NIV): 'Look 
         { role: 'user', content: userMessage }
       ];
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
       const response = await fetch(`${this.baseUrl}/chat/completions`, {
         method: 'POST',
         headers: {
@@ -63,9 +66,13 @@ Format Scripture references clearly, for example: "Matthew 6:26-27 (NIV): 'Look 
           model: 'deepseek-chat',
           messages,
           temperature: 0.7,
-          max_tokens: 800,
+          max_tokens: 600,
+          stream: false,
         }),
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         throw new Error(`Deepseek API error: ${response.status} ${response.statusText}`);
@@ -83,8 +90,22 @@ Format Scripture references clearly, for example: "Matthew 6:26-27 (NIV): 'Look 
       };
     } catch (error) {
       console.error('Error calling Deepseek AI:', error);
+      
+      // Handle different types of errors
+      let errorMessage = 'I apologize, but I\'m having trouble connecting right now. Please try again in a moment.';
+      
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          errorMessage = 'The request took too long to process. Please try asking a shorter question or try again.';
+        } else if (error.message.includes('401')) {
+          errorMessage = 'There seems to be an authentication issue. Please check the API key configuration.';
+        } else if (error.message.includes('429')) {
+          errorMessage = 'The service is currently busy. Please wait a moment and try again.';
+        }
+      }
+      
       return {
-        response: 'I apologize, but I\'m having trouble connecting right now. Please try again in a moment. In the meantime, remember that God is always with you: "Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go." - Joshua 1:9',
+        response: `${errorMessage} In the meantime, remember that God is always with you: "Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go." - Joshua 1:9`,
         scriptureReferences: [{
           verse: 'Joshua 1:9',
           book: 'Joshua',
