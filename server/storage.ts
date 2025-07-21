@@ -358,6 +358,15 @@ export class MemStorage implements IStorage {
     return undefined;
   }
 
+  async updateAdminPassword(id: number, passwordHash: string): Promise<void> {
+    const user = this.adminUsers.get(id);
+    if (user) {
+      user.passwordHash = passwordHash;
+      user.updatedAt = new Date();
+      this.adminUsers.set(id, user);
+    }
+  }
+
   async createAdminSession(sessionId: string, adminUserId: number, expiresAt: Date): Promise<AdminSession> {
     const session: AdminSession = {
       id: this.currentAdminSessionId++,

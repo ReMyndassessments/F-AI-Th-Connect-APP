@@ -328,6 +328,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Change admin password
+  app.post("/api/admin/change-password", requireAdmin, async (req, res) => {
+    try {
+      const { currentPassword, newPassword } = req.body;
+      const adminUser = (req as any).adminUser;
+      
+      if (!currentPassword || !newPassword) {
+        return res.status(400).json({ error: "Current password and new password are required" });
+      }
+      
+      if (newPassword.length < 6) {
+        return res.status(400).json({ error: "New password must be at least 6 characters long" });
+      }
+      
+      // Verify current password
+      const isValidPassword = await bcrypt.compare(currentPassword, adminUser.passwordHash);
+      if (!isValidPassword) {
+        return res.status(400).json({ error: "Current password is incorrect" });
+      }
+      
+      // Hash new password
+      const newPasswordHash = await bcrypt.hash(newPassword, 12);
+      
+      // Update password
+      await storage.updateAdminPassword(adminUser.id, newPasswordHash);
+      
+      res.json({ message: "Password updated successfully" });
+    } catch (error) {
+      console.error("Change password error:", error);
+      res.status(500).json({ error: "Failed to change password" });
+    }
+  });
+
   // Feature flags endpoints (now require admin authentication)
   app.get("/api/feature-flags", requireAdmin, async (req, res) => {
     try {

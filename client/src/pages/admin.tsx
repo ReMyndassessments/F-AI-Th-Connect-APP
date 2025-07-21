@@ -8,6 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import FeatureFlagsTab from "@/components/admin/feature-flags-tab";
 import AdvertisementsTab from "@/components/admin/advertisements-tab";
+import { PasswordChangeTab } from "@/components/admin/password-change-tab";
 import DailyVerseCard from "@/components/daily-verse/daily-verse-card";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -410,41 +411,7 @@ export default function AdminDashboard() {
           </TabsContent>
           
           <TabsContent value="settings" className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>System Settings</CardTitle>
-                <CardDescription>Configure your F-AI-TH-Connect application</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div>
-                  <h4 className="text-sm font-medium mb-2">AI Configuration</h4>
-                  <div className="text-sm text-gray-600 space-y-1">
-                    <div>DeepSeek API: Connected ✓</div>
-                    <div>Token Limit: 1200 for large content, 600 for regular</div>
-                    <div>Timeout: 60 seconds for processing</div>
-                  </div>
-                </div>
-                
-                <div>
-                  <h4 className="text-sm font-medium mb-2">File Processing</h4>
-                  <div className="text-sm text-gray-600 space-y-1">
-                    <div>Max File Size: 5MB</div>
-                    <div>Supported: PDF, DOCX, TXT</div>
-                    <div>PDF Parser: pdf-parse library</div>
-                    <div>Word Parser: mammoth library</div>
-                  </div>
-                </div>
-                
-                <div>
-                  <h4 className="text-sm font-medium mb-2">Database</h4>
-                  <div className="text-sm text-gray-600 space-y-1">
-                    <div>Storage: In-memory (development)</div>
-                    <div>Sessions: Auto-cleanup enabled</div>
-                    <div>Messages: Stored per session</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <PasswordChangeTab />
           </TabsContent>
         </Tabs>
       </div>
