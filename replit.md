@@ -48,23 +48,33 @@ The application uses three main entities:
 ### AI Integration
 - **Provider**: DeepSeek AI API integration
 - **Specialization**: Christian-focused system prompts for biblical guidance
+- **Performance**: Optimized for large content (sermons, studies) with 60-second timeouts
+- **Dynamic Token Allocation**: 1200 tokens for extensive content, 600 for regular messages
+- **Context Optimization**: Reduced conversation history for large message processing
 - **Features**: Scripture reference extraction and theological accuracy
 - **Fallback**: Scripture service for common verses when API unavailable
 
 ### UI Components
 - **Landing Page**: Multi-section marketing site with hero, features, testimonials
 - **Interactive Demo**: Animated walkthrough modal showcasing app features
-- **Chat Interface**: Real-time conversation UI with message bubbles
+- **Chat Interface**: Real-time conversation UI with message bubbles and advanced input options
 - **Scripture Display**: Formatted biblical references with proper citations
+- **Message Actions**: Copy, download, and share functionality for all messages
+- **Speech Input**: Voice-to-text capability using browser's Speech Recognition API
+- **File Upload**: Support for text files, PDFs, and images (up to 5MB)
+- **Progress Indicators**: Visual feedback with progress bars for large content processing
 - **Responsive Design**: Mobile-first approach with adaptive layouts
 
 ## Data Flow
 
 1. **Session Creation**: Users start conversations by creating new chat sessions
-2. **Message Flow**: User messages trigger AI API calls with conversation context
-3. **Response Processing**: AI responses include both text content and scripture references
-4. **State Management**: React Query handles caching and synchronization
-5. **Real-time Updates**: Optimistic updates provide immediate user feedback
+2. **Input Processing**: Support for text input, voice transcription, and file uploads
+3. **Content Optimization**: Large content triggers optimized processing with reduced context
+4. **Message Flow**: User messages trigger AI API calls with conversation context
+5. **Response Processing**: AI responses include both text content and scripture references
+6. **Message Actions**: Users can copy, download, or share any message content
+7. **State Management**: React Query handles caching and synchronization
+8. **Real-time Updates**: Optimistic updates with progress indicators provide immediate feedback
 
 ## External Dependencies
 

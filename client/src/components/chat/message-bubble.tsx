@@ -1,5 +1,6 @@
 import type { Message } from "@/lib/chat-api";
 import ScriptureReference from "@/components/chat/scripture-reference";
+import MessageActions from "@/components/chat/message-actions";
 
 interface MessageBubbleProps {
   message: Message;
@@ -14,19 +15,26 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
 
   if (isUser) {
     return (
-      <div className="flex justify-end">
+      <div className="flex justify-end group">
         <div className="bg-blue-500 text-white rounded-2xl rounded-br-md px-4 py-3 max-w-xs lg:max-w-md">
           <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-          <p className="text-xs text-blue-100 mt-1">
-            {new Date(message.timestamp).toLocaleTimeString()}
-          </p>
+          <div className="flex items-center justify-between mt-2">
+            <p className="text-xs text-blue-100">
+              {new Date(message.timestamp).toLocaleTimeString()}
+            </p>
+            <MessageActions 
+              content={message.content} 
+              messageId={message.id}
+              isAiMessage={false}
+            />
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex items-start space-x-3">
+    <div className="flex items-start space-x-3 group">
       <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
         <span className="text-white font-semibold text-sm">AI</span>
       </div>
@@ -43,9 +51,17 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
           </div>
         )}
         
-        <p className="text-xs text-gray-500 mt-2">
-          F-AI-TH-Connect • {new Date(message.timestamp).toLocaleTimeString()}
-        </p>
+        <div className="flex items-center justify-between mt-2">
+          <p className="text-xs text-gray-500">
+            F-AI-TH-Connect • {new Date(message.timestamp).toLocaleTimeString()}
+          </p>
+        </div>
+        
+        <MessageActions 
+          content={message.content} 
+          messageId={message.id}
+          isAiMessage={true}
+        />
       </div>
     </div>
   );
