@@ -176,16 +176,7 @@ export default function AdminLogin() {
               </Button>
             </form>
 
-            <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
-              <h4 className="font-medium text-blue-900 mb-2">Default Credentials</h4>
-              <p className="text-sm text-blue-700">
-                <strong>Username:</strong> admin<br />
-                <strong>Password:</strong> admin123
-              </p>
-              <p className="text-xs text-blue-600 mt-2">
-                Please change these credentials after your first login for security.
-              </p>
-            </div>
+
           </CardContent>
         </Card>
       </div>

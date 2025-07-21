@@ -30,54 +30,16 @@ import {
 } from "lucide-react";
 import { useLocation } from "wouter";
 
-// Mock data for demonstration - in real app, this would come from your API
-const mockStats = {
-  totalSessions: 156,
-  totalMessages: 1247,
-  avgSessionLength: 8.5,
-  topicBreakdown: {
-    prayer: 34,
-    bible_study: 28,
-    life_guidance: 22,
-    theology: 16
-  },
-  dailyUsage: [
-    { date: "2025-07-15", sessions: 12, messages: 89 },
-    { date: "2025-07-16", sessions: 18, messages: 134 },
-    { date: "2025-07-17", sessions: 15, messages: 112 },
-    { date: "2025-07-18", sessions: 22, messages: 167 },
-    { date: "2025-07-19", sessions: 19, messages: 145 },
-    { date: "2025-07-20", sessions: 25, messages: 189 },
-    { date: "2025-07-21", sessions: 16, messages: 121 },
-  ]
-};
+// Real-time stats will be loaded from API endpoints
+const getEmptyStats = () => ({
+  totalSessions: 0,
+  totalMessages: 0,
+  avgSessionLength: 0,
+  topicBreakdown: {},
+  dailyUsage: []
+});
 
-const mockRecentSessions = [
-  {
-    id: "session_1753100761868_b7pvsdmd36",
-    createdAt: "2025-07-21T12:26:01Z",
-    messageCount: 8,
-    lastActivity: "2025-07-21T12:35:22Z",
-    topic: "Prayer and Faith",
-    status: "completed"
-  },
-  {
-    id: "session_1753100690500_7cqwawadgxw",
-    createdAt: "2025-07-21T12:24:50Z",
-    messageCount: 12,
-    lastActivity: "2025-07-21T12:26:01Z",
-    topic: "Bible Study Creation",
-    status: "deleted"
-  },
-  {
-    id: "session_1753100429016_7m5f547nxmn",
-    createdAt: "2025-07-21T12:20:29Z",
-    messageCount: 6,
-    lastActivity: "2025-07-21T12:22:34Z",
-    topic: "Spiritual Guidance",
-    status: "completed"
-  }
-];
+const getEmptyRecentSessions = () => [];
 
 export default function AdminDashboard() {
   const [, setLocation] = useLocation();
@@ -101,20 +63,26 @@ export default function AdminDashboard() {
   };
 
   const exportData = () => {
-    // In a real app, this would trigger a data export
+    // Export current dashboard data (will be real data once users start using the app)
     const data = {
-      stats: mockStats,
-      sessions: mockRecentSessions,
-      exportDate: new Date().toISOString()
+      stats: getEmptyStats(),
+      sessions: getEmptyRecentSessions(),
+      exportDate: new Date().toISOString(),
+      note: "This is a fresh installation with no usage data yet"
     };
     
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `faith-connect-export-${new Date().toISOString().split('T')[0]}.json`;
+    a.download = `f-ai-th-connect-export-${new Date().toISOString().split('T')[0]}.json`;
     a.click();
     URL.revokeObjectURL(url);
+    
+    toast({
+      title: "Data exported",
+      description: "Admin dashboard data has been exported successfully.",
+    });
   };
 
   const handleLogout = async () => {
@@ -215,9 +183,9 @@ export default function AdminDashboard() {
               <MessageSquare className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{mockStats.totalSessions}</div>
+              <div className="text-2xl font-bold">0</div>
               <p className="text-xs text-muted-foreground">
-                +12% from last week
+                No sessions yet
               </p>
             </CardContent>
           </Card>
@@ -228,9 +196,9 @@ export default function AdminDashboard() {
               <FileText className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{mockStats.totalMessages}</div>
+              <div className="text-2xl font-bold">0</div>
               <p className="text-xs text-muted-foreground">
-                +18% from last week
+                No messages yet
               </p>
             </CardContent>
           </Card>
@@ -241,7 +209,7 @@ export default function AdminDashboard() {
               <Clock className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{mockStats.avgSessionLength}</div>
+              <div className="text-2xl font-bold">0</div>
               <p className="text-xs text-muted-foreground">
                 messages per session
               </p>
@@ -254,9 +222,7 @@ export default function AdminDashboard() {
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
-                {mockStats.dailyUsage[mockStats.dailyUsage.length - 1]?.sessions || 0}
-              </div>
+              <div className="text-2xl font-bold">0</div>
               <p className="text-xs text-muted-foreground">
                 sessions today
               </p>
@@ -289,20 +255,8 @@ export default function AdminDashboard() {
                   <CardDescription>Sessions and messages over the last 7 days</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
-                    {mockStats.dailyUsage.map((day, index) => (
-                      <div key={day.date} className="flex items-center justify-between">
-                        <span className="text-sm font-medium">{formatDate(day.date)}</span>
-                        <div className="flex items-center space-x-4">
-                          <div className="text-sm text-gray-600">
-                            {day.sessions} sessions
-                          </div>
-                          <div className="text-sm text-gray-600">
-                            {day.messages} messages
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                  <div className="flex items-center justify-center h-32">
+                    <p className="text-gray-500 text-sm">No usage data available yet</p>
                   </div>
                 </CardContent>
               </Card>
@@ -313,23 +267,8 @@ export default function AdminDashboard() {
                   <CardDescription>Most referenced Bible verses this week</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">John 3:16</span>
-                      <Badge variant="secondary">24 times</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Philippians 4:13</span>
-                      <Badge variant="secondary">18 times</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Jeremiah 29:11</span>
-                      <Badge variant="secondary">15 times</Badge>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">Romans 8:28</span>
-                      <Badge variant="secondary">12 times</Badge>
-                    </div>
+                  <div className="flex items-center justify-center h-32">
+                    <p className="text-gray-500 text-sm">No scripture references tracked yet</p>
                   </div>
                 </CardContent>
               </Card>
@@ -343,31 +282,13 @@ export default function AdminDashboard() {
                 <CardDescription>Latest spiritual conversations and their status</CardDescription>
               </CardHeader>
               <CardContent>
-                <ScrollArea className="h-96">
-                  <div className="space-y-4">
-                    {mockRecentSessions.map((session) => (
-                      <div key={session.id} className="flex items-center justify-between p-4 border rounded-lg">
-                        <div className="space-y-1">
-                          <div className="flex items-center space-x-2">
-                            <span className="font-medium text-sm">{session.topic}</span>
-                            <Badge variant={session.status === 'completed' ? 'default' : 'destructive'}>
-                              {session.status}
-                            </Badge>
-                          </div>
-                          <div className="text-xs text-gray-500">
-                            Session ID: {session.id.slice(-8)}
-                          </div>
-                          <div className="text-xs text-gray-500">
-                            {session.messageCount} messages • Started {formatTime(session.createdAt)}
-                          </div>
-                        </div>
-                        <div className="text-right text-xs text-gray-500">
-                          Last active: {formatTime(session.lastActivity)}
-                        </div>
-                      </div>
-                    ))}
+                <div className="flex items-center justify-center h-96">
+                  <div className="text-center">
+                    <MessageSquare className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-500 text-sm">No chat sessions yet</p>
+                    <p className="text-gray-400 text-xs mt-1">Sessions will appear here as users start conversations</p>
                   </div>
-                </ScrollArea>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
@@ -379,24 +300,11 @@ export default function AdminDashboard() {
                 <CardDescription>Most common spiritual conversation themes</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {Object.entries(mockStats.topicBreakdown).map(([topic, count]) => (
-                    <div key={topic} className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <BookOpen className="w-4 h-4 text-blue-500" />
-                        <span className="font-medium capitalize">{topic.replace('_', ' ')}</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <div className="text-sm text-gray-600">{count} conversations</div>
-                        <div className="w-24 bg-gray-200 rounded-full h-2">
-                          <div 
-                            className="bg-gradient-to-r from-blue-500 to-amber-500 h-2 rounded-full"
-                            style={{ width: `${(count / Math.max(...Object.values(mockStats.topicBreakdown))) * 100}%` }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                <div className="flex items-center justify-center h-32">
+                  <div className="text-center">
+                    <BookOpen className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                    <p className="text-gray-500 text-sm">No conversation topics tracked yet</p>
+                  </div>
                 </div>
               </CardContent>
             </Card>
