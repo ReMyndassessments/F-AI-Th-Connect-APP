@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Send, Loader2 } from "lucide-react";
 import MessageBubble from "@/components/chat/message-bubble";
+import TypingIndicator from "@/components/chat/typing-indicator";
 import type { Message } from "@/lib/chat-api";
 
 interface ChatInterfaceProps {
@@ -11,6 +12,8 @@ interface ChatInterfaceProps {
   isLoading: boolean;
   isSending: boolean;
 }
+
+const LARGE_CONTENT_THRESHOLD = 1000;
 
 export default function ChatInterface({ messages, onSendMessage, isLoading, isSending }: ChatInterfaceProps) {
   const [inputValue, setInputValue] = useState("");
@@ -106,20 +109,10 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
           ))
         )}
         
-        {isSending && (
-          <div className="flex items-start space-x-3">
-            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
-              <span className="text-white font-semibold text-sm">AI</span>
-            </div>
-            <div className="bg-gray-100 rounded-2xl rounded-bl-md px-4 py-3">
-              <div className="flex items-center space-x-2">
-                <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
-                <span className="text-sm text-gray-600">Seeking biblical guidance...</span>
-              </div>
-              <p className="text-xs text-gray-400 mt-1">This may take a moment</p>
-            </div>
-          </div>
-        )}
+        <TypingIndicator 
+          isVisible={isSending}
+          message={inputValue.length > LARGE_CONTENT_THRESHOLD ? "Processing extensive content" : "Seeking biblical guidance"}
+        />
         
         <div ref={messagesEndRef} />
       </div>

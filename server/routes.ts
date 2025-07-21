@@ -65,13 +65,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         content,
       });
 
-      // Get conversation history for context
+      // Get conversation history for context (optimize for long messages)
       const previousMessages = await storage.getMessagesBySession(sessionId);
+      const contextLimit = content.length > 1000 ? 3 : 10; // Fewer context messages for long input
       const conversationHistory = previousMessages
-        .slice(-10) // Keep last 10 messages for context
+        .slice(-contextLimit)
         .map(msg => ({
           role: msg.role,
-          content: msg.content
+          content: msg.content.length > 500 ? msg.content.substring(0, 500) + "..." : msg.content
         }));
 
       // Generate AI response

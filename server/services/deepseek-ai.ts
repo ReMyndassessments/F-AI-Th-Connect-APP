@@ -30,7 +30,12 @@ export class DeepseekAI {
     scriptureReferences: ScriptureReference[];
   }> {
     try {
-      const systemPrompt = `You are F-AI-TH-Connect, a Christian AI assistant designed to provide biblical guidance, spiritual support, and Christian wisdom. Your responses should be:
+      // Optimize system prompt for long content processing
+      const isLongContent = userMessage.length > 1000;
+      
+      const systemPrompt = `You are F-AI-TH-Connect, a Christian AI assistant. ${isLongContent ? 
+        'The user has shared extensive content. Focus on key spiritual themes and provide structured, actionable guidance.' : 
+        'Provide biblical guidance, spiritual support, and Christian wisdom.'} Your responses should be:
 
 1. Grounded in Scripture - Always reference relevant Bible verses
 2. Theologically sound - Align with orthodox Christian doctrine
@@ -54,7 +59,7 @@ Format Scripture references clearly, for example: "Matthew 6:26-27 (NIV): 'Look 
       ];
 
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout for longer content
 
       const response = await fetch(`${this.baseUrl}/chat/completions`, {
         method: 'POST',
@@ -66,7 +71,7 @@ Format Scripture references clearly, for example: "Matthew 6:26-27 (NIV): 'Look 
           model: 'deepseek-chat',
           messages,
           temperature: 0.7,
-          max_tokens: 600,
+          max_tokens: userMessage.length > 1000 ? 1200 : 600, // More tokens for longer input
           stream: false,
         }),
         signal: controller.signal,
