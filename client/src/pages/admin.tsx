@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import FeatureFlagsTab from "@/components/admin/feature-flags-tab";
 import AdvertisementsTab from "@/components/admin/advertisements-tab";
+import DailyVerseCard from "@/components/daily-verse/daily-verse-card";
 import { 
   Users, 
   MessageSquare, 
@@ -137,8 +138,14 @@ export default function AdminDashboard() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {/* Daily Verse and Stats */}
+        <div className="mb-8">
+          <div className="mb-6">
+            <DailyVerseCard variant="compact" />
+          </div>
+          
+          {/* Stats Overview */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Sessions</CardTitle>
@@ -192,6 +199,7 @@ export default function AdminDashboard() {
               </p>
             </CardContent>
           </Card>
+          </div>
         </div>
 
         <Tabs defaultValue="overview" className="space-y-4">

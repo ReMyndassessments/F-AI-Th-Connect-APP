@@ -65,6 +65,7 @@ The application uses three main entities:
 - **Progress Indicators**: Visual feedback with progress bars for large content processing
 - **Feature Flag System**: Comprehensive system for managing advertisement display and feature rollouts
 - **Advertisement Management**: Tasteful faith-based promotion system with placement controls
+- **Daily Memory Verses**: Rotating scripture verses that change daily across all pages
 - **Responsive Design**: Mobile-first approach with adaptive layouts
 
 ## Data Flow

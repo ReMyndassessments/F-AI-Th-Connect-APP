@@ -5,6 +5,7 @@ import { chatApi } from "@/lib/chat-api";
 import ChatInterface from "@/components/chat/chat-interface";
 import ClearChatButton from "@/components/chat/clear-chat-button";
 import AdvertisementDisplay from "@/components/ads/advertisement-display";
+import DailyVerseCard from "@/components/daily-verse/daily-verse-card";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
 import { ArrowLeft, MessageCircle, RotateCcw } from "lucide-react";
@@ -170,8 +171,9 @@ export default function Chat() {
             />
           </div>
           
-          {/* Sidebar with Ads */}
+          {/* Sidebar with Daily Verse and Ads */}
           <div className="w-80 space-y-4">
+            <DailyVerseCard variant="compact" />
             <AdvertisementDisplay placement="chat_sidebar" />
           </div>
         </div>
