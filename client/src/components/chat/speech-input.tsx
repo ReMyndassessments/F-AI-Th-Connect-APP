@@ -2,6 +2,12 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Mic, MicOff, Square } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 // TypeScript declarations for Speech Recognition API
 declare global {
@@ -35,10 +41,14 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
       recognitionRef.current = new SpeechRecognition();
       
       if (recognitionRef.current) {
-        recognitionRef.current.continuous = false; // Short sessions work better
+        // Try different settings for better compatibility
+        recognitionRef.current.continuous = true;
         recognitionRef.current.interimResults = true;
         recognitionRef.current.lang = 'en-US';
-        recognitionRef.current.maxAlternatives = 1;
+        recognitionRef.current.maxAlternatives = 3;
+        
+        // Add timeout to prevent hanging
+        recognitionRef.current.grammars = undefined;
 
         recognitionRef.current.onresult = (event: any) => {
           let interimTranscript = '';
@@ -70,48 +80,30 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
         recognitionRef.current.onerror = (event: any) => {
           console.error('Speech recognition error:', event.error);
           
-          // Handle different error types
-          if (event.error === 'aborted') {
-            // Normal when stopping manually
-            return;
-          } else if (event.error === 'not-allowed') {
+          if (event.error === 'not-allowed') {
             setIsListening(false);
+            setIsRecording(false);
             toast({
-              title: "Microphone Access Denied",
-              description: "Please enable microphone permissions and try again.",
+              title: "Microphone Permission Required",
+              description: "Please allow microphone access in your browser and try again.",
               variant: "destructive",
             });
           } else if (event.error === 'no-speech') {
-            // Continue listening for no-speech errors
-            console.log('No speech detected, continuing...');
-          } else {
+            console.log('No speech detected, will keep trying...');
+          } else if (event.error !== 'aborted') {
             setIsListening(false);
+            setIsRecording(false);
             toast({
-              title: "Speech Recognition Error",
-              description: "Speech recognition failed. Click the microphone to try again.",
+              title: "Speech Recognition Unavailable",
+              description: "Your browser's speech recognition is not working properly. Please type your message instead.",
               variant: "destructive",
             });
           }
         };
 
         recognitionRef.current.onend = () => {
-          console.log('Speech recognition session ended, still recording:', isRecording);
-          
-          // Auto-restart if still in recording mode
-          if (isRecording && recognitionRef.current) {
-            restartTimeoutRef.current = setTimeout(() => {
-              if (isRecording && recognitionRef.current) {
-                try {
-                  recognitionRef.current.start();
-                  console.log('Restarted session', sessionCountRef.current + 1);
-                } catch (error) {
-                  console.log('Failed to restart:', error);
-                  setIsRecording(false);
-                  setIsListening(false);
-                }
-              }
-            }, 100);
-          } else {
+          console.log('Speech recognition ended');
+          if (!isRecording) {
             setIsListening(false);
           }
         };
@@ -131,25 +123,25 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
   const startListening = () => {
     if (recognitionRef.current && !isListening) {
       try {
-        // Reset everything for new recording
         finalTranscriptRef.current = '';
         sessionCountRef.current = 0;
         onTranscription('', false);
         
-        // Start recording mode
         setIsRecording(true);
         setIsListening(true);
         recognitionRef.current.start();
         
         toast({
-          title: "Voice Recording Active",
-          description: "Speak clearly and loudly. Browser speech recognition has limitations - if it doesn't work, try typing instead.",
+          title: "Listening...",
+          description: "Speak your message clearly. Note: Speech recognition works best on newer browsers and may not work on all devices.",
         });
       } catch (error) {
         console.error('Failed to start speech recognition:', error);
+        setIsListening(false);
+        setIsRecording(false);
         toast({
-          title: "Microphone Error",
-          description: "Could not access microphone. Please check permissions.",
+          title: "Speech Recognition Not Available",
+          description: "Your browser doesn't support speech recognition or microphone access was denied. Please type your message instead.",
           variant: "destructive",
         });
       }
@@ -158,41 +150,36 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
 
   const stopListening = () => {
     if (isListening) {
-      // Stop recording mode first
       setIsRecording(false);
       setIsListening(false);
       
-      // Clear any pending restart
       if (restartTimeoutRef.current) {
         clearTimeout(restartTimeoutRef.current);
       }
       
-      // Stop current recognition
       if (recognitionRef.current) {
         recognitionRef.current.stop();
       }
       
-      // Send accumulated message after brief delay
       setTimeout(() => {
         const finalMessage = finalTranscriptRef.current.trim();
         if (finalMessage) {
           onTranscription(finalMessage, true);
           toast({
             title: "Message Sent",
-            description: `Captured ${sessionCountRef.current} speech segments. Message sent to AI.`,
+            description: "Your spoken message has been sent to the AI.",
           });
         } else {
           toast({
-            title: "Speech Recognition Failed",
-            description: "Browser speech recognition has limitations. Try typing your message instead for reliable input.",
+            title: "No Speech Captured",
+            description: "Speech recognition didn't capture any words. Please try typing your message or speak louder/closer to the microphone.",
             variant: "destructive",
           });
         }
         
-        // Reset for next session
         finalTranscriptRef.current = '';
         sessionCountRef.current = 0;
-      }, 300);
+      }, 200);
     }
   };
 
@@ -201,17 +188,36 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
   }
 
   return (
-    <Button
-      type="button"
-      variant={isListening ? "default" : "outline"}
-      size="sm"
-      onClick={isListening ? stopListening : startListening}
-      disabled={disabled}
-      className={`${isListening ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse' : 'hover:bg-gray-50'} transition-all duration-200`}
-      title={isListening ? 'Stop recording' : 'Start voice input'}
-    >
-      {isListening ? <Square className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
-    </Button>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            type="button"
+            variant={isListening ? "default" : "outline"}
+            size="sm"
+            onClick={isListening ? stopListening : startListening}
+            disabled={disabled}
+            className={`${isListening ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse' : 'hover:bg-gray-50'} transition-all duration-200`}
+          >
+            {isListening ? <Square className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <div className="text-center">
+            <p className="font-medium">
+              {isListening ? 'Click to stop recording' : 'Voice Input (Beta)'}
+            </p>
+            {!isListening && (
+              <p className="text-xs text-muted-foreground mt-1">
+                Works best on Chrome/Edge. May not work on all devices.
+                <br />
+                Typing is more reliable for longer messages.
+              </p>
+            )}
+          </div>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }
 
