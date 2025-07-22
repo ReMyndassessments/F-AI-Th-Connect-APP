@@ -33,85 +33,95 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
       recognitionRef.current = new SpeechRecognition();
       
       if (recognitionRef.current) {
-        recognitionRef.current.continuous = true;
+        recognitionRef.current.continuous = false; // Single session, manual control
         recognitionRef.current.interimResults = true;
         recognitionRef.current.lang = 'en-US';
         recognitionRef.current.maxAlternatives = 1;
-        
-        // Add speech timeout settings for better control
-        if ('webkitSpeechRecognition' in window) {
-          // Webkit-specific settings for better speech detection
-          recognitionRef.current.continuous = true;
-          recognitionRef.current.interimResults = true;
-        }
 
         recognitionRef.current.onresult = (event: any) => {
           console.log('Speech recognition result:', event);
           
-          // Get the current transcript
-          let currentTranscript = '';
-          for (let i = event.resultIndex; i < event.results.length; i++) {
-            if (event.results[i][0]) {
-              currentTranscript += event.results[i][0].transcript;
-            }
-          }
+          // Get the latest transcript
+          const transcript = Array.from(event.results)
+            .map((result: any) => result[0])
+            .map((result: any) => result.transcript)
+            .join('');
+
+          console.log('Current transcript:', transcript);
           
-          // Combine with accumulated text
-          const fullTranscript = accumulatedText + currentTranscript;
-          console.log('Full transcript:', fullTranscript);
+          // Combine with any accumulated text
+          const fullTranscript = accumulatedText + transcript;
           
           // Always show current text in input field
           onTranscription(fullTranscript, false);
           
-          // If final result, add to accumulated text
+          // If final result, add to accumulated text for next session
           const isFinal = event.results[event.results.length - 1].isFinal;
-          if (isFinal && currentTranscript.trim()) {
-            setAccumulatedText(prev => prev + currentTranscript + ' ');
-            console.log('Added to accumulated text:', currentTranscript);
+          if (isFinal && transcript.trim()) {
+            setAccumulatedText(prev => prev + transcript + ' ');
+            console.log('Added to accumulated text:', transcript);
           }
         };
 
         recognitionRef.current.onerror = (event: any) => {
           console.error('Speech recognition error:', event.error);
-          setIsListening(false);
           
-          // Don't show error for 'aborted' - that's normal when user stops manually
+          // Handle different error types
           if (event.error === 'aborted') {
+            // Normal when stopping manually
             return;
-          }
-          
-          let errorMessage = 'Speech recognition failed. Please try again.';
-          if (event.error === 'not-allowed') {
-            errorMessage = 'Microphone access denied. Please enable microphone permissions.';
+          } else if (event.error === 'not-allowed') {
+            setIsListening(false);
+            toast({
+              title: "Microphone Access Denied",
+              description: "Please enable microphone permissions and try again.",
+              variant: "destructive",
+            });
           } else if (event.error === 'no-speech') {
-            errorMessage = 'No speech detected. Please try speaking again.';
+            // Continue listening for no-speech errors
+            console.log('No speech detected, continuing...');
+          } else {
+            setIsListening(false);
+            toast({
+              title: "Speech Recognition Error",
+              description: "Speech recognition failed. Click the microphone to try again.",
+              variant: "destructive",
+            });
           }
-          
-          toast({
-            title: "Speech Recognition Error",
-            description: errorMessage,
-            variant: "destructive",
-          });
         };
 
         recognitionRef.current.onend = () => {
-          console.log('Speech recognition ended');
+          console.log('Speech recognition ended, isListening:', isListening);
           
-          // Auto-restart if still listening (to keep continuous recording)
-          if (isListening && recognitionRef.current) {
+          // Auto-restart if still in listening mode
+          if (isListening) {
             try {
               console.log('Auto-restarting speech recognition');
               restartTimeoutRef.current = setTimeout(() => {
                 if (isListening && recognitionRef.current) {
-                  recognitionRef.current.start();
+                  try {
+                    recognitionRef.current.start();
+                  } catch (restartError) {
+                    console.log('Restart failed, stopping:', restartError);
+                    setIsListening(false);
+                    
+                    // Send whatever we have accumulated
+                    const finalMessage = accumulatedText.trim();
+                    if (finalMessage) {
+                      onTranscription(finalMessage, true);
+                      toast({
+                        title: "Message Sent",
+                        description: "Your message has been sent to the AI.",
+                      });
+                      setAccumulatedText('');
+                    }
+                  }
                 }
-              }, 100);
+              }, 300);
             } catch (error) {
-              console.log('Could not restart recognition:', error);
+              console.log('Could not setup restart:', error);
               setIsListening(false);
             }
-          } else {
-            setIsListening(false);
           }
         };
       }
@@ -120,6 +130,9 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
     return () => {
       if (recognitionRef.current) {
         recognitionRef.current.abort();
+      }
+      if (restartTimeoutRef.current) {
+        clearTimeout(restartTimeoutRef.current);
       }
     };
   }, [onTranscription, toast]);
@@ -133,7 +146,7 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
         setIsListening(true);
         toast({
           title: "Recording Started",
-          description: "Speak your message. Click the microphone again to stop and send.",
+          description: "Speak now. Click the red microphone to stop and send your message.",
         });
       } catch (error) {
         console.error('Failed to start speech recognition:', error);
