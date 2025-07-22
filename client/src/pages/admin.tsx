@@ -30,22 +30,35 @@ import {
 } from "lucide-react";
 import { useLocation } from "wouter";
 
-// Real-time stats will be loaded from API endpoints
-const getEmptyStats = () => ({
-  totalSessions: 0,
-  totalMessages: 0,
-  avgSessionLength: 0,
-  topicBreakdown: {},
-  dailyUsage: []
-});
+// Analytics interface
+interface Analytics {
+  totalSessions: number;
+  totalMessages: number;
+  avgMessagesPerSession: number;
+  activeSessionsToday: number;
+  totalAdImpressions: number;
+  totalAdClicks: number;
+  avgCTR: number;
+  topPlacements: Array<{placement: string; impressions: number; clicks: number; ctr: number}>;
+  dailyStats: Array<{date: string; sessions: number; messages: number; impressions: number; clicks: number}>;
+  sessionDurations: Array<number>;
+  messageVolumeTrends: Array<{hour: number; count: number}>;
+}
 
-const getEmptyRecentSessions = () => [];
+// Analytics data fetching
+const useAnalytics = () => {
+  return useQuery<Analytics>({
+    queryKey: ["/api/analytics"],
+    refetchInterval: 30000, // Refresh every 30 seconds
+  });
+};
 
 export default function AdminDashboard() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [selectedTimeRange, setSelectedTimeRange] = useState("7d");
   const { user, isLoading, isAuthenticated, logout } = useAdminAuth();
+  const { data: analytics, isLoading: analyticsLoading } = useAnalytics();
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -63,12 +76,11 @@ export default function AdminDashboard() {
   };
 
   const exportData = () => {
-    // Export current dashboard data (will be real data once users start using the app)
+    // Export current dashboard data
     const data = {
-      stats: getEmptyStats(),
-      sessions: getEmptyRecentSessions(),
+      analytics: analytics || null,
       exportDate: new Date().toISOString(),
-      note: "This is a fresh installation with no usage data yet"
+      note: analytics?.totalSessions > 0 ? "Live analytics data" : "Fresh installation with no usage data yet"
     };
     
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -183,9 +195,11 @@ export default function AdminDashboard() {
               <MessageSquare className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">0</div>
+              <div className="text-2xl font-bold">
+                {analyticsLoading ? "..." : (analytics?.totalSessions || 0)}
+              </div>
               <p className="text-xs text-muted-foreground">
-                No sessions yet
+                {analytics?.totalSessions > 0 ? "Active user conversations" : "No sessions yet"}
               </p>
             </CardContent>
           </Card>
@@ -196,9 +210,11 @@ export default function AdminDashboard() {
               <FileText className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">0</div>
+              <div className="text-2xl font-bold">
+                {analyticsLoading ? "..." : (analytics?.totalMessages || 0)}
+              </div>
               <p className="text-xs text-muted-foreground">
-                No messages yet
+                {analytics?.totalMessages > 0 ? "User engagement messages" : "No messages yet"}
               </p>
             </CardContent>
           </Card>
@@ -209,7 +225,9 @@ export default function AdminDashboard() {
               <Clock className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">0</div>
+              <div className="text-2xl font-bold">
+                {analyticsLoading ? "..." : (analytics?.avgMessagesPerSession || 0)}
+              </div>
               <p className="text-xs text-muted-foreground">
                 messages per session
               </p>
@@ -222,13 +240,192 @@ export default function AdminDashboard() {
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">0</div>
+              <div className="text-2xl font-bold">
+                {analyticsLoading ? "..." : (analytics?.activeSessionsToday || 0)}
+              </div>
               <p className="text-xs text-muted-foreground">
-                sessions today
+                sessions in last 24h
               </p>
             </CardContent>
           </Card>
           </div>
+
+          {/* Advertisement Analytics for Potential Advertisers */}
+          <div className="mt-8 mb-6">
+            <h2 className="text-lg font-semibold mb-4 flex items-center">
+              <Eye className="w-5 h-5 mr-2" />
+              Advertisement Analytics
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Impressions</CardTitle>
+                  <Eye className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-blue-600">
+                    {analyticsLoading ? "..." : (analytics?.totalAdImpressions || 0)}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Ad views across all placements
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Clicks</CardTitle>
+                  <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-green-600">
+                    {analyticsLoading ? "..." : (analytics?.totalAdClicks || 0)}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    User engagement with ads
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Average CTR</CardTitle>
+                  <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-amber-600">
+                    {analyticsLoading ? "..." : `${analytics?.avgCTR || 0}%`}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Click-through rate
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Active Placements</CardTitle>
+                  <Flag className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-purple-600">
+                    {analyticsLoading ? "..." : (analytics?.topPlacements?.length || 0)}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Available ad positions
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+
+          {/* Top Performing Placements */}
+          {analytics?.topPlacements && analytics.topPlacements.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-md font-semibold mb-3">Top Performing Ad Placements</h3>
+              <div className="grid gap-3">
+                {analytics.topPlacements.slice(0, 3).map((placement, index) => (
+                  <Card key={placement.placement}>
+                    <CardContent className="pt-4">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <p className="font-medium capitalize">
+                            {placement.placement.replace('_', ' ')} 
+                            {index === 0 && <Badge className="ml-2 text-xs">Best Performer</Badge>}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            {placement.impressions} impressions • {placement.clicks} clicks
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-lg font-bold text-green-600">{placement.ctr}%</div>
+                          <div className="text-xs text-gray-500">CTR</div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Value Proposition for Potential Advertisers */}
+          {analytics && (analytics.totalSessions > 0 || analytics.totalMessages > 0) && (
+            <Card className="mb-6 bg-gradient-to-r from-blue-50 to-amber-50 border-blue-200">
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center">
+                  <TrendingUp className="w-5 h-5 mr-2 text-blue-600" />
+                  Advertiser Value Proposition
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <h4 className="font-semibold mb-2">Engaged Audience</h4>
+                    <ul className="text-sm space-y-1">
+                      <li>• {analytics.totalSessions} total conversation sessions</li>
+                      <li>• {analytics.avgMessagesPerSession} messages per session average</li>
+                      <li>• {analytics.activeSessionsToday} active users in last 24h</li>
+                      <li>• 100% Christian-focused audience seeking spiritual guidance</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-2">Performance Metrics</h4>
+                    <ul className="text-sm space-y-1">
+                      <li>• {analytics.avgCTR}% average click-through rate</li>
+                      <li>• {analytics.totalAdImpressions} total ad impressions</li>
+                      <li>• {analytics.topPlacements.length} strategic placement options</li>
+                      <li>• Real-time analytics and performance tracking</li>
+                    </ul>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Daily Performance Chart */}
+          {analytics?.dailyStats && analytics.dailyStats.some(day => day.sessions > 0) && (
+            <Card className="mb-6">
+              <CardHeader>
+                <CardTitle>7-Day Performance Overview</CardTitle>
+                <CardDescription>User activity and advertisement performance trends</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-64 w-full">
+                  {/* Simple bar chart representation */}
+                  <div className="flex items-end justify-between h-48 border-b">
+                    {analytics.dailyStats.map((day, index) => {
+                      const maxSessions = Math.max(...analytics.dailyStats.map(d => d.sessions));
+                      const height = maxSessions > 0 ? (day.sessions / maxSessions) * 180 : 0;
+                      return (
+                        <div key={day.date} className="flex flex-col items-center flex-1 mx-1">
+                          <div className="flex flex-col items-center mb-2">
+                            <div 
+                              className="bg-blue-500 w-8 rounded-t"
+                              style={{ height: `${height}px` }}
+                              title={`${day.sessions} sessions, ${day.messages} messages`}
+                            ></div>
+                            <div className="text-xs mt-1 text-center">
+                              <div className="font-semibold">{day.sessions}</div>
+                              <div className="text-gray-500">
+                                {new Date(day.date).toLocaleDateString(undefined, { weekday: 'short' })}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="mt-4 flex justify-center space-x-6 text-sm">
+                    <div className="flex items-center">
+                      <div className="w-3 h-3 bg-blue-500 rounded mr-2"></div>
+                      Sessions per day
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
 
         <Tabs defaultValue="overview" className="space-y-4">

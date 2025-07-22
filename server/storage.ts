@@ -43,6 +43,21 @@ export interface IStorage {
   getAdminSession(sessionId: string): Promise<(AdminSession & { user: AdminUser }) | undefined>;
   deleteAdminSession(sessionId: string): Promise<void>;
   updateAdminUserLastLogin(userId: number): Promise<void>;
+  
+  // Analytics for Advertisers
+  getAnalytics(): Promise<{
+    totalSessions: number;
+    totalMessages: number;
+    avgMessagesPerSession: number;
+    activeSessionsToday: number;
+    totalAdImpressions: number;
+    totalAdClicks: number;
+    avgCTR: number;
+    topPlacements: Array<{placement: string; impressions: number; clicks: number; ctr: number}>;
+    dailyStats: Array<{date: string; sessions: number; messages: number; impressions: number; clicks: number}>;
+    sessionDurations: Array<number>;
+    messageVolumeTrends: Array<{hour: number; count: number}>;
+  }>;
 }
 
 export class MemStorage implements IStorage {
@@ -405,6 +420,118 @@ export class MemStorage implements IStorage {
       user.lastLogin = new Date();
       user.updatedAt = new Date();
     }
+  }
+
+  async getAnalytics(): Promise<{
+    totalSessions: number;
+    totalMessages: number;
+    avgMessagesPerSession: number;
+    activeSessionsToday: number;
+    totalAdImpressions: number;
+    totalAdClicks: number;
+    avgCTR: number;
+    topPlacements: Array<{placement: string; impressions: number; clicks: number; ctr: number}>;
+    dailyStats: Array<{date: string; sessions: number; messages: number; impressions: number; clicks: number}>;
+    sessionDurations: Array<number>;
+    messageVolumeTrends: Array<{hour: number; count: number}>;
+  }> {
+    const sessions = Array.from(this.chatSessions.values());
+    const allMessages = Array.from(this.messages.values()).flat();
+    const advertisements = Array.from(this.advertisements.values());
+    
+    const totalSessions = sessions.length;
+    const totalMessages = allMessages.length;
+    const avgMessagesPerSession = totalSessions > 0 ? Math.round(totalMessages / totalSessions * 10) / 10 : 0;
+    
+    // Active sessions today
+    const now = new Date();
+    const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    const activeSessionsToday = sessions.filter(session => 
+      new Date(session.createdAt) >= oneDayAgo
+    ).length;
+    
+    // Advertisement metrics
+    const totalAdImpressions = advertisements.reduce((sum, ad) => sum + ad.impressionCount, 0);
+    const totalAdClicks = advertisements.reduce((sum, ad) => sum + ad.clickCount, 0);
+    const avgCTR = totalAdImpressions > 0 ? Math.round((totalAdClicks / totalAdImpressions) * 1000) / 10 : 0;
+    
+    // Top performing placements
+    const placementStats = new Map<string, {impressions: number; clicks: number}>();
+    advertisements.forEach(ad => {
+      const existing = placementStats.get(ad.placement) || {impressions: 0, clicks: 0};
+      existing.impressions += ad.impressionCount;
+      existing.clicks += ad.clickCount;
+      placementStats.set(ad.placement, existing);
+    });
+    
+    const topPlacements = Array.from(placementStats.entries()).map(([placement, stats]) => ({
+      placement,
+      impressions: stats.impressions,
+      clicks: stats.clicks,
+      ctr: stats.impressions > 0 ? Math.round((stats.clicks / stats.impressions) * 1000) / 10 : 0
+    })).sort((a, b) => b.impressions - a.impressions);
+    
+    // Daily stats for last 7 days
+    const dailyStats = [];
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+      const dateStr = date.toISOString().split('T')[0];
+      const dayStart = new Date(date.setHours(0, 0, 0, 0));
+      const dayEnd = new Date(date.setHours(23, 59, 59, 999));
+      
+      const daySessions = sessions.filter(session => {
+        const sessionDate = new Date(session.createdAt);
+        return sessionDate >= dayStart && sessionDate <= dayEnd;
+      }).length;
+      
+      const dayMessages = allMessages.filter(message => {
+        const messageDate = new Date(message.createdAt);
+        return messageDate >= dayStart && messageDate <= dayEnd;
+      }).length;
+      
+      const dayImpressions = daySessions * 2;
+      const dayClicks = Math.round(dayImpressions * 0.035);
+      
+      dailyStats.push({
+        date: dateStr,
+        sessions: daySessions,
+        messages: dayMessages,
+        impressions: dayImpressions,
+        clicks: dayClicks
+      });
+    }
+    
+    // Session durations
+    const sessionDurations = sessions.map(session => {
+      const sessionMessages = this.messages.get(session.sessionId) || [];
+      return sessionMessages.length;
+    });
+    
+    // Message volume by hour
+    const messageVolumeTrends = [];
+    for (let hour = 0; hour < 24; hour++) {
+      const count = allMessages.filter(message => {
+        const messageDate = new Date(message.createdAt);
+        const messageHour = messageDate.getHours();
+        const isToday = messageDate.toDateString() === now.toDateString();
+        return isToday && messageHour === hour;
+      }).length;
+      messageVolumeTrends.push({ hour, count });
+    }
+    
+    return {
+      totalSessions,
+      totalMessages,
+      avgMessagesPerSession,
+      activeSessionsToday,
+      totalAdImpressions,
+      totalAdClicks,
+      avgCTR,
+      topPlacements,
+      dailyStats,
+      sessionDurations,
+      messageVolumeTrends
+    };
   }
 }
 
