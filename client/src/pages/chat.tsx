@@ -179,9 +179,10 @@ export default function Chat() {
           </div>
         </div>
         
-        {/* Mobile Daily Verse - Only shown on mobile */}
-        <div className="lg:hidden mt-4">
+        {/* Mobile Daily Verse and Ads - Only shown on mobile */}
+        <div className="lg:hidden mt-4 space-y-4">
           <DailyVerseCard variant="compact" />
+          <AdvertisementDisplay placement="chat_sidebar" />
         </div>
       </main>
     </div>

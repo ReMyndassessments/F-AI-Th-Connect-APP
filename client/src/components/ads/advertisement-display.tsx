@@ -81,7 +81,7 @@ export default function AdvertisementDisplay({ placement, onDismiss, className =
   const getPlacementStyle = () => {
     switch (placement) {
       case 'chat_sidebar':
-        return "max-w-xs";
+        return "w-full lg:max-w-xs"; // Full width on mobile, constrained on desktop
       case 'between_messages':
         return "max-w-2xl mx-auto my-4";
       case 'home_banner':
