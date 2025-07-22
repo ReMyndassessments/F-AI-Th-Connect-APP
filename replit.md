@@ -86,6 +86,7 @@ The application uses these main entities:
 - **Feature Flag System**: Comprehensive system for managing advertisement display and feature rollouts
 - **Advertisement Management**: Complete CRUD system for faith-based promotions with placement controls and edit functionality
 - **Daily Memory Verses**: Rotating scripture verses that change daily across all pages
+- **Seasonal Photo Rotation**: Automatic high-definition seasonal photos that rotate based on Christian calendar (Christmas, Easter, Lent, Advent, Thanksgiving, monthly themes)
 - **Ministry Support Integration**: GiveSendGo donation button prominently featured in navigation and hero section
 - **Tasteful Support Reminders**: Optional ministry support messages every 3rd AI response (feature flag controlled) - ACTIVE
 - **Responsive Design**: Mobile-first approach with adaptive layouts
@@ -143,3 +144,4 @@ The architecture prioritizes developer experience with fast iteration cycles whi
 - **Speech Recognition Removed**: After extensive testing, removed speech-to-text functionality due to browser API limitations and reliability issues across devices
 - **Legal Pages Added**: Created comprehensive Help Center, Contact Us, Privacy Policy, and Terms of Service pages with proper navigation links
 - **Mobile Advertisement Display**: Fixed mobile layout to show advertisements below daily verse for consistent monetization across all device sizes
+- **Seasonal Photo System**: Implemented automatic rotating seasonal photos based on Christian calendar with 8 beautiful themes (Christmas, Easter, Lent, Advent, Thanksgiving, monthly seasons)
