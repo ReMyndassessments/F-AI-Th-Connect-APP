@@ -19,9 +19,11 @@ interface SpeechInputProps {
 export default function SpeechInput({ onTranscription, disabled = false }: SpeechInputProps) {
   const [isListening, setIsListening] = useState(false);
   const [isSupported, setIsSupported] = useState(false);
-  const [hasStarted, setHasStarted] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
   const recognitionRef = useRef<any>(null);
   const finalTranscriptRef = useRef('');
+  const sessionCountRef = useRef(0);
+  const restartTimeoutRef = useRef<NodeJS.Timeout>();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -33,7 +35,7 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
       recognitionRef.current = new SpeechRecognition();
       
       if (recognitionRef.current) {
-        recognitionRef.current.continuous = true;
+        recognitionRef.current.continuous = false; // Short sessions work better
         recognitionRef.current.interimResults = true;
         recognitionRef.current.lang = 'en-US';
         recognitionRef.current.maxAlternatives = 1;
@@ -42,26 +44,27 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
           let interimTranscript = '';
           let finalTranscript = '';
 
-          for (let i = event.resultIndex; i < event.results.length; ++i) {
+          for (let i = 0; i < event.results.length; ++i) {
+            const transcript = event.results[i][0].transcript;
             if (event.results[i].isFinal) {
-              finalTranscript += event.results[i][0].transcript;
+              finalTranscript += transcript;
             } else {
-              interimTranscript += event.results[i][0].transcript;
+              interimTranscript += transcript;
             }
           }
 
-          // Update final transcript reference
-          if (finalTranscript) {
+          // Always accumulate final results
+          if (finalTranscript.trim()) {
             finalTranscriptRef.current += finalTranscript + ' ';
+            sessionCountRef.current++;
+            console.log('Session', sessionCountRef.current, 'captured:', finalTranscript);
           }
 
-          // Show current progress to user
+          // Show current progress including interim
           const currentText = finalTranscriptRef.current + interimTranscript;
           if (currentText.trim()) {
             onTranscription(currentText, false);
           }
-
-          console.log('Final:', finalTranscript, 'Interim:', interimTranscript, 'Total:', currentText);
         };
 
         recognitionRef.current.onerror = (event: any) => {
@@ -92,9 +95,25 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
         };
 
         recognitionRef.current.onend = () => {
-          console.log('Speech recognition ended');
-          setIsListening(false);
-          setHasStarted(false);
+          console.log('Speech recognition session ended, still recording:', isRecording);
+          
+          // Auto-restart if still in recording mode
+          if (isRecording && recognitionRef.current) {
+            restartTimeoutRef.current = setTimeout(() => {
+              if (isRecording && recognitionRef.current) {
+                try {
+                  recognitionRef.current.start();
+                  console.log('Restarted session', sessionCountRef.current + 1);
+                } catch (error) {
+                  console.log('Failed to restart:', error);
+                  setIsRecording(false);
+                  setIsListening(false);
+                }
+              }
+            }, 100);
+          } else {
+            setIsListening(false);
+          }
         };
       }
     }
@@ -103,20 +122,28 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
       if (recognitionRef.current) {
         recognitionRef.current.abort();
       }
+      if (restartTimeoutRef.current) {
+        clearTimeout(restartTimeoutRef.current);
+      }
     };
   }, [onTranscription, toast]);
 
   const startListening = () => {
     if (recognitionRef.current && !isListening) {
       try {
+        // Reset everything for new recording
         finalTranscriptRef.current = '';
-        onTranscription('', false); // Clear the input
-        recognitionRef.current.start();
+        sessionCountRef.current = 0;
+        onTranscription('', false);
+        
+        // Start recording mode
+        setIsRecording(true);
         setIsListening(true);
-        setHasStarted(true);
+        recognitionRef.current.start();
+        
         toast({
           title: "Recording Started",
-          description: "Speak your message. Click the microphone again to stop.",
+          description: "Keep talking! The system will capture everything. Click again to stop and send.",
         });
       } catch (error) {
         console.error('Failed to start speech recognition:', error);
@@ -130,28 +157,42 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
   };
 
   const stopListening = () => {
-    if (recognitionRef.current && isListening) {
+    if (isListening) {
+      // Stop recording mode first
+      setIsRecording(false);
       setIsListening(false);
-      recognitionRef.current.stop();
       
-      // Send the message with a small delay to catch final words
+      // Clear any pending restart
+      if (restartTimeoutRef.current) {
+        clearTimeout(restartTimeoutRef.current);
+      }
+      
+      // Stop current recognition
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+      
+      // Send accumulated message after brief delay
       setTimeout(() => {
         const finalMessage = finalTranscriptRef.current.trim();
         if (finalMessage) {
           onTranscription(finalMessage, true);
           toast({
             title: "Message Sent",
-            description: "Your spoken message has been sent to the AI.",
+            description: `Captured ${sessionCountRef.current} speech segments. Message sent to AI.`,
           });
         } else {
           toast({
             title: "No Speech Detected",
-            description: "Please try speaking again.",
+            description: "Please try speaking louder or closer to the microphone.",
             variant: "destructive",
           });
         }
+        
+        // Reset for next session
         finalTranscriptRef.current = '';
-      }, 500);
+        sessionCountRef.current = 0;
+      }, 300);
     }
   };
 
