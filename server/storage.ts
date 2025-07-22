@@ -5,6 +5,8 @@ import {
   type Advertisement, type InsertAdvertisement, type AdminUser, type InsertAdminUser,
   type AdminSession
 } from "@shared/schema";
+import fs from "fs";
+import path from "path";
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
@@ -68,6 +70,7 @@ export class MemStorage implements IStorage {
   private advertisements: Map<number, Advertisement>;
   private adminUsers: Map<number, AdminUser>;
   private adminSessions: Map<string, AdminSession>;
+  private adminDataFile: string;
   private currentUserId: number;
   private currentSessionId: number;
   private currentMessageId: number;
@@ -84,6 +87,7 @@ export class MemStorage implements IStorage {
     this.advertisements = new Map();
     this.adminUsers = new Map();
     this.adminSessions = new Map();
+    this.adminDataFile = path.join(process.cwd(), '.admin-data.json');
     this.currentUserId = 1;
     this.currentSessionId = 1;
     this.currentMessageId = 1;
@@ -92,8 +96,42 @@ export class MemStorage implements IStorage {
     this.currentAdminUserId = 1;
     this.currentAdminSessionId = 1;
     
-    // Initialize default feature flags and admin user
+    // Load persisted admin data and initialize defaults
+    this.loadAdminData();
     this.initializeDefaults();
+  }
+
+  private loadAdminData(): void {
+    try {
+      if (fs.existsSync(this.adminDataFile)) {
+        const data = JSON.parse(fs.readFileSync(this.adminDataFile, 'utf8'));
+        if (data.adminUser) {
+          // Restore dates
+          data.adminUser.createdAt = new Date(data.adminUser.createdAt);
+          data.adminUser.updatedAt = new Date(data.adminUser.updatedAt);
+          data.adminUser.lastLogin = data.adminUser.lastLogin ? new Date(data.adminUser.lastLogin) : null;
+          
+          this.adminUsers.set(data.adminUser.id, data.adminUser);
+          this.currentAdminUserId = data.adminUser.id + 1;
+          console.log('✓ Admin credentials loaded from persistent storage');
+        }
+      }
+    } catch (error) {
+      console.log('No persistent admin data found, will use defaults');
+    }
+  }
+
+  private saveAdminData(): void {
+    try {
+      const adminUser = this.adminUsers.get(1);
+      if (adminUser) {
+        const data = { adminUser };
+        fs.writeFileSync(this.adminDataFile, JSON.stringify(data, null, 2));
+        console.log('✓ Admin credentials saved to persistent storage');
+      }
+    } catch (error) {
+      console.error('Failed to save admin data:', error);
+    }
   }
 
   private initializeDefaults(): void {
@@ -201,20 +239,23 @@ export class MemStorage implements IStorage {
     });
     this.currentAdvertisementId = 4;
 
-    // Initialize default admin user (owner)
-    // Password: "admin123" (you should change this immediately after first login)
-    const defaultAdmin: AdminUser = {
-      id: 1,
-      username: "admin",
-      passwordHash: "$2b$12$uFB6Gi.Cj8TmDC45WUym9OpYgwffjOfi1oJFMo3FsRmrdc3NL1xIW", // bcrypt hash of "admin123"
-      email: null,
-      role: "owner",
-      lastLogin: null,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    this.adminUsers.set(1, defaultAdmin);
-    this.currentAdminUserId = 2;
+    // Initialize default admin user only if not loaded from persistent storage
+    if (!this.adminUsers.has(1)) {
+      // Password: "admin123" (you should change this immediately after first login)
+      const defaultAdmin: AdminUser = {
+        id: 1,
+        username: "admin",
+        passwordHash: "$2b$12$uFB6Gi.Cj8TmDC45WUym9OpYgwffjOfi1oJFMo3FsRmrdc3NL1xIW", // bcrypt hash of "admin123"
+        email: null,
+        role: "owner",
+        lastLogin: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      this.adminUsers.set(1, defaultAdmin);
+      this.currentAdminUserId = 2;
+      console.log('✓ Default admin user created (admin/admin123)');
+    }
   }
 
   async getUser(id: number): Promise<User | undefined> {
@@ -441,6 +482,8 @@ export class MemStorage implements IStorage {
       user.passwordHash = passwordHash;
       user.updatedAt = new Date();
       this.adminUsers.set(id, user);
+      this.saveAdminData(); // Persist the password change
+      console.log('✓ Admin password updated and saved to persistent storage');
     }
   }
 
