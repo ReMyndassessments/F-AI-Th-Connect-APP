@@ -3,8 +3,16 @@ import { Button } from "@/components/ui/button";
 import { Mic, MicOff, Square } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
+// TypeScript declarations for Speech Recognition API
+declare global {
+  interface Window {
+    SpeechRecognition: typeof SpeechRecognition;
+    webkitSpeechRecognition: typeof SpeechRecognition;
+  }
+}
+
 interface SpeechInputProps {
-  onTranscription: (text: string) => void;
+  onTranscription: (text: string, isComplete?: boolean) => void;
   disabled?: boolean;
 }
 
@@ -27,18 +35,19 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
         recognitionRef.current.interimResults = true;
         recognitionRef.current.lang = 'en-US';
 
-        recognitionRef.current.onresult = (event) => {
+        recognitionRef.current.onresult = (event: any) => {
           const transcript = Array.from(event.results)
-            .map(result => result[0])
-            .map(result => result.transcript)
+            .map((result: any) => result[0])
+            .map((result: any) => result.transcript)
             .join('');
 
-          if (event.results[event.results.length - 1].isFinal) {
-            onTranscription(transcript);
-          }
+          const isFinal = event.results[event.results.length - 1].isFinal;
+          
+          // Show interim results in the input field, send when final
+          onTranscription(transcript, isFinal);
         };
 
-        recognitionRef.current.onerror = (event) => {
+        recognitionRef.current.onerror = (event: any) => {
           console.error('Speech recognition error:', event.error);
           setIsListening(false);
           
@@ -58,6 +67,10 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
 
         recognitionRef.current.onend = () => {
           setIsListening(false);
+          toast({
+            title: "Recording Complete",
+            description: "Your message has been sent to the AI.",
+          });
         };
       }
     }

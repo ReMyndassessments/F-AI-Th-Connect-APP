@@ -40,8 +40,22 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
     }
   };
 
-  const handleSpeechTranscription = (transcript: string) => {
-    setInputValue(prev => prev + (prev ? ' ' : '') + transcript);
+  const handleSpeechTranscription = (transcript: string, isComplete: boolean = false) => {
+    const newText = transcript.trim();
+    if (newText) {
+      if (isComplete) {
+        // Automatically send the message when speech recognition completes
+        const fullMessage = fileContent ? `${fileContent}\n\n${newText}` : newText;
+        if (!isSending) {
+          onSendMessage(fullMessage);
+          setInputValue("");
+          setFileContent("");
+        }
+      } else {
+        // Show interim results in input field (replace, don't append)
+        setInputValue(newText);
+      }
+    }
   };
 
   const handleFileContent = (content: string, fileName: string) => {
