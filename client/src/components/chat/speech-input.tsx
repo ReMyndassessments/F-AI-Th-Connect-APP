@@ -31,9 +31,10 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
       recognitionRef.current = new SpeechRecognition();
       
       if (recognitionRef.current) {
-        recognitionRef.current.continuous = false; // Change to false for better control
+        recognitionRef.current.continuous = true; // Keep listening for longer phrases
         recognitionRef.current.interimResults = true;
         recognitionRef.current.lang = 'en-US';
+        recognitionRef.current.maxAlternatives = 1;
 
         recognitionRef.current.onresult = (event: any) => {
           console.log('Speech recognition result:', event);
@@ -45,13 +46,29 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
           const isFinal = event.results[event.results.length - 1].isFinal;
           console.log('Transcript:', transcript, 'isFinal:', isFinal);
           
-          // Show interim results in the input field, send when final
-          onTranscription(transcript, isFinal);
+          // Always show interim results in the input field
+          onTranscription(transcript, false);
+          
+          // Only auto-send if it's final AND we have meaningful content
+          if (isFinal && transcript.trim().length > 0) {
+            setTimeout(() => {
+              onTranscription(transcript, true);
+              toast({
+                title: "Message Sent",
+                description: "Your spoken message has been sent to the AI.",
+              });
+            }, 100); // Small delay to ensure UI updates
+          }
         };
 
         recognitionRef.current.onerror = (event: any) => {
           console.error('Speech recognition error:', event.error);
           setIsListening(false);
+          
+          // Don't show error for 'aborted' - that's normal when user stops manually
+          if (event.error === 'aborted') {
+            return;
+          }
           
           let errorMessage = 'Speech recognition failed. Please try again.';
           if (event.error === 'not-allowed') {
@@ -89,7 +106,7 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
         setIsListening(true);
         toast({
           title: "Listening...",
-          description: "Speak now. Click the microphone again to stop.",
+          description: "Speak now. The microphone will turn red. Click to stop recording.",
         });
       } catch (error) {
         console.error('Failed to start speech recognition:', error);
