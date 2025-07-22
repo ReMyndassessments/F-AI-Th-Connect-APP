@@ -134,8 +134,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Add tasteful ministry support reminder occasionally (every 5th assistant message)
       let finalResponse = aiResult.response;
       if (ministryReminderEnabled) {
-        const messageCount = previousMessages.filter(m => m.role === 'assistant').length;
-        if (messageCount > 0 && messageCount % 5 === 0) {
+        const assistantMessageCount = previousMessages.filter(m => m.role === 'assistant').length;
+        // Add 1 because we're about to create the next assistant message
+        const nextAssistantCount = assistantMessageCount + 1;
+        console.log(`Ministry reminder check: ${nextAssistantCount} assistant messages, reminder enabled: ${ministryReminderEnabled}`);
+        
+        if (nextAssistantCount >= 3 && nextAssistantCount % 3 === 0) {
+          console.log(`Adding ministry support reminder on message ${nextAssistantCount}`);
           finalResponse += "\n\n---\n\n*💙 Blessings! If F-AI-TH-Connect helps your spiritual journey, please consider [supporting our ministry](https://www.givesendgo.com/CodeandCoffeeforChrist). Your partnership helps us serve more believers.*";
         }
       }
