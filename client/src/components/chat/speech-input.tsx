@@ -142,8 +142,8 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
         recognitionRef.current.start();
         
         toast({
-          title: "Recording Started",
-          description: "Keep talking! The system will capture everything. Click again to stop and send.",
+          title: "Voice Recording Active",
+          description: "Speak clearly and loudly. Browser speech recognition has limitations - if it doesn't work, try typing instead.",
         });
       } catch (error) {
         console.error('Failed to start speech recognition:', error);
@@ -183,8 +183,8 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
           });
         } else {
           toast({
-            title: "No Speech Detected",
-            description: "Please try speaking louder or closer to the microphone.",
+            title: "Speech Recognition Failed",
+            description: "Browser speech recognition has limitations. Try typing your message instead for reliable input.",
             variant: "destructive",
           });
         }

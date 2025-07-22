@@ -140,3 +140,4 @@ The architecture prioritizes developer experience with fast iteration cycles whi
 - **Ministry Support Reminders Activated**: Successfully implemented and enabled tasteful ministry support messages that appear every 3rd AI response
 - **Feature Flag System**: Verified working properly with server restart capability for configuration updates  
 - **GiveSendGo Integration**: Complete ministry support system with navigation buttons and automated reminders
+- **Speech Recognition Challenges**: Extensively tested multiple approaches to browser speech recognition - browser APIs have inherent limitations causing early cutoffs and unreliable performance across different devices and browsers
