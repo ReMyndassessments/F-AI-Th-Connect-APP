@@ -41,14 +41,11 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
       recognitionRef.current = new SpeechRecognition();
       
       if (recognitionRef.current) {
-        // Try different settings for better compatibility
+        // Configure speech recognition settings
         recognitionRef.current.continuous = true;
         recognitionRef.current.interimResults = true;
         recognitionRef.current.lang = 'en-US';
-        recognitionRef.current.maxAlternatives = 3;
-        
-        // Add timeout to prevent hanging
-        recognitionRef.current.grammars = undefined;
+        recognitionRef.current.maxAlternatives = 1;
 
         recognitionRef.current.onresult = (event: any) => {
           let interimTranscript = '';
