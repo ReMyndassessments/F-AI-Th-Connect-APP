@@ -50,7 +50,7 @@ export default function HowItWorks() {
         
         <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
           <div className="grid lg:grid-cols-2 gap-8 items-center">
-            <div>
+            <div className="text-center lg:text-left">
               <h3 className="text-3xl font-bold text-gray-900 mb-4">Powered by Advanced AI Technology</h3>
               <p className="text-gray-600 mb-6">
                 F-AI-TH-Connect utilizes Deepseek AI's sophisticated language models, specifically trained on Christian theological knowledge, biblical studies, and pastoral care principles.
