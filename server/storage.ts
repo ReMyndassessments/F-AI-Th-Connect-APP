@@ -168,13 +168,21 @@ export class MemStorage implements IStorage {
         enabled: true,
         createdAt: new Date(),
         updatedAt: new Date(),
+      },
+      {
+        id: 5,
+        name: "ministry_support_reminders",
+        description: "Occasionally adds tasteful ministry support reminders to AI responses (every 5th message). Helps sustain the ministry while maintaining a spiritual focus.",
+        enabled: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       }
     ];
 
     defaultFlags.forEach(flag => {
       this.featureFlags.set(flag.id, flag);
     });
-    this.currentFeatureFlagId = 5;
+    this.currentFeatureFlagId = 6;
 
     // Initialize sample advertisements for testing
     const sampleAds: Advertisement[] = [

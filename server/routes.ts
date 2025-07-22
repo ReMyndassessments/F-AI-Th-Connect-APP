@@ -127,11 +127,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Generate AI response
       const aiResult = await deepseekAI.generateChristianResponse(content, conversationHistory);
       
+      // Check feature flags for ministry support reminders
+      const flags = await storage.getFeatureFlags();
+      const ministryReminderEnabled = flags.find(f => f.name === 'ministry_support_reminders')?.enabled || false;
+      
+      // Add tasteful ministry support reminder occasionally (every 5th assistant message)
+      let finalResponse = aiResult.response;
+      if (ministryReminderEnabled) {
+        const messageCount = previousMessages.filter(m => m.role === 'assistant').length;
+        if (messageCount > 0 && messageCount % 5 === 0) {
+          finalResponse += "\n\n---\n\n*💙 Blessings! If F-AI-TH-Connect helps your spiritual journey, please consider [supporting our ministry](https://www.givesendgo.com/CodeandCoffeeforChrist). Your partnership helps us serve more believers.*";
+        }
+      }
+      
       // Save AI response
       const aiMessage = await storage.createMessage({
         sessionId,
         role: 'assistant',
-        content: aiResult.response,
+        content: finalResponse,
         scriptureReferences: JSON.stringify(aiResult.scriptureReferences),
       });
 
