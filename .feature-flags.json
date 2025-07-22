@@ -1,0 +1,44 @@
+{
+  "featureFlags": [
+    {
+      "id": 1,
+      "name": "advertisements_enabled",
+      "description": "Master switch for all advertisements. When disabled, no ads will show anywhere on the platform.",
+      "enabled": false,
+      "createdAt": "2025-07-22T09:17:49.258Z",
+      "updatedAt": "2025-07-22T09:17:49.258Z"
+    },
+    {
+      "id": 2,
+      "name": "chat_sidebar_ads",
+      "description": "Controls tasteful faith-based ads in the chat sidebar. Only shows when master ad switch is enabled.",
+      "enabled": false,
+      "createdAt": "2025-07-22T09:17:49.258Z",
+      "updatedAt": "2025-07-22T09:17:49.258Z"
+    },
+    {
+      "id": 3,
+      "name": "home_banner_ads",
+      "description": "Controls banner ads on the main landing page. Perfect for ministry partnerships and announcements.",
+      "enabled": false,
+      "createdAt": "2025-07-22T09:17:49.258Z",
+      "updatedAt": "2025-07-22T09:17:49.258Z"
+    },
+    {
+      "id": 4,
+      "name": "between_messages_ads",
+      "description": "Shows relevant Christian content between chat messages while maintaining conversation flow.",
+      "enabled": false,
+      "createdAt": "2025-07-22T09:17:49.258Z",
+      "updatedAt": "2025-07-22T09:17:49.258Z"
+    },
+    {
+      "id": 5,
+      "name": "ministry_support_reminders",
+      "description": "Occasionally adds tasteful ministry support reminders to AI responses (every 5th message). Helps sustain the ministry while maintaining a spiritual focus.",
+      "enabled": true,
+      "createdAt": "2025-07-22T09:17:49.258Z",
+      "updatedAt": "2025-07-22T09:17:49.258Z"
+    }
+  ]
+}

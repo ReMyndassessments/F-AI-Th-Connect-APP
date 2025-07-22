@@ -71,6 +71,7 @@ export class MemStorage implements IStorage {
   private adminUsers: Map<number, AdminUser>;
   private adminSessions: Map<string, AdminSession>;
   private adminDataFile: string;
+  private flagsDataFile: string;
   private currentUserId: number;
   private currentSessionId: number;
   private currentMessageId: number;
@@ -88,6 +89,7 @@ export class MemStorage implements IStorage {
     this.adminUsers = new Map();
     this.adminSessions = new Map();
     this.adminDataFile = path.join(process.cwd(), '.admin-data.json');
+    this.flagsDataFile = path.join(process.cwd(), '.feature-flags.json');
     this.currentUserId = 1;
     this.currentSessionId = 1;
     this.currentMessageId = 1;
@@ -96,8 +98,9 @@ export class MemStorage implements IStorage {
     this.currentAdminUserId = 1;
     this.currentAdminSessionId = 1;
     
-    // Load persisted admin data and initialize defaults
+    // Load persisted admin data and feature flags, then initialize defaults
     this.loadAdminData();
+    this.loadFeatureFlags();
     this.initializeDefaults();
   }
 
@@ -134,55 +137,89 @@ export class MemStorage implements IStorage {
     }
   }
 
-  private initializeDefaults(): void {
-    // Initialize default feature flags
-    const defaultFlags: FeatureFlag[] = [
-      {
-        id: 1,
-        name: "advertisements_enabled",
-        description: "Master switch for all advertisements. When disabled, no ads will show anywhere on the platform.",
-        enabled: false,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        id: 2,
-        name: "chat_sidebar_ads",
-        description: "Controls tasteful faith-based ads in the chat sidebar. Only shows when master ad switch is enabled.",
-        enabled: false,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        id: 3,
-        name: "home_banner_ads",
-        description: "Controls banner ads on the main landing page. Perfect for ministry partnerships and announcements.",
-        enabled: false,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        id: 4,
-        name: "between_messages_ads",
-        description: "Shows relevant Christian content between chat messages while maintaining conversation flow.",
-        enabled: false,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        id: 5,
-        name: "ministry_support_reminders",
-        description: "Occasionally adds tasteful ministry support reminders to AI responses (every 5th message). Helps sustain the ministry while maintaining a spiritual focus.",
-        enabled: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+  private loadFeatureFlags(): void {
+    try {
+      if (fs.existsSync(this.flagsDataFile)) {
+        const data = JSON.parse(fs.readFileSync(this.flagsDataFile, 'utf8'));
+        if (data.featureFlags && Array.isArray(data.featureFlags)) {
+          // Restore dates
+          data.featureFlags.forEach((flag: any) => {
+            flag.createdAt = new Date(flag.createdAt);
+            flag.updatedAt = new Date(flag.updatedAt);
+            this.featureFlags.set(flag.id, flag);
+          });
+          this.currentFeatureFlagId = Math.max(...data.featureFlags.map((f: any) => f.id)) + 1;
+          console.log('✓ Feature flags loaded from persistent storage');
+        }
       }
-    ];
+    } catch (error) {
+      console.log('No persistent feature flags found, will use defaults');
+    }
+  }
 
-    defaultFlags.forEach(flag => {
-      this.featureFlags.set(flag.id, flag);
-    });
-    this.currentFeatureFlagId = 6;
+  private saveFeatureFlags(): void {
+    try {
+      const featureFlags = Array.from(this.featureFlags.values());
+      const data = { featureFlags };
+      fs.writeFileSync(this.flagsDataFile, JSON.stringify(data, null, 2));
+      console.log('✓ Feature flags saved to persistent storage');
+    } catch (error) {
+      console.error('Failed to save feature flags:', error);
+    }
+  }
+
+  private initializeDefaults(): void {
+    // Only initialize default feature flags if none exist (first time setup)
+    if (this.featureFlags.size === 0) {
+      const defaultFlags: FeatureFlag[] = [
+        {
+          id: 1,
+          name: "advertisements_enabled",
+          description: "Master switch for all advertisements. When disabled, no ads will show anywhere on the platform.",
+          enabled: false,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: 2,
+          name: "chat_sidebar_ads",
+          description: "Controls tasteful faith-based ads in the chat sidebar. Only shows when master ad switch is enabled.",
+          enabled: false,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: 3,
+          name: "home_banner_ads",
+          description: "Controls banner ads on the main landing page. Perfect for ministry partnerships and announcements.",
+          enabled: false,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: 4,
+          name: "between_messages_ads",
+          description: "Shows relevant Christian content between chat messages while maintaining conversation flow.",
+          enabled: false,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: 5,
+          name: "ministry_support_reminders",
+          description: "Occasionally adds tasteful ministry support reminders to AI responses (every 5th message). Helps sustain the ministry while maintaining a spiritual focus.",
+          enabled: true,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }
+      ];
+
+      defaultFlags.forEach(flag => {
+        this.featureFlags.set(flag.id, flag);
+      });
+      this.currentFeatureFlagId = 6;
+      this.saveFeatureFlags(); // Save the initial defaults
+    }
 
     // Initialize sample advertisements for testing
     const sampleAds: Advertisement[] = [
@@ -358,6 +395,7 @@ export class MemStorage implements IStorage {
       updatedAt: new Date(),
     };
     this.featureFlags.set(id, flag);
+    this.saveFeatureFlags(); // Persist changes immediately
     return flag;
   }
 
@@ -373,11 +411,13 @@ export class MemStorage implements IStorage {
       updatedAt: new Date(),
     };
     this.featureFlags.set(id, updatedFlag);
+    this.saveFeatureFlags(); // Persist changes immediately
     return updatedFlag;
   }
 
   async deleteFeatureFlag(id: number): Promise<void> {
     this.featureFlags.delete(id);
+    this.saveFeatureFlags(); // Persist changes immediately
   }
 
   // Advertisements implementation
