@@ -6,7 +6,6 @@ import ChatInterface from "@/components/chat/chat-interface";
 import ClearChatButton from "@/components/chat/clear-chat-button";
 import AdvertisementDisplay from "@/components/ads/advertisement-display";
 import DailyVerseCard from "@/components/daily-verse/daily-verse-card";
-import { SeasonalHeroCompact } from "@/components/seasonal/seasonal-hero";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
 import { ArrowLeft, MessageCircle, RotateCcw } from "lucide-react";
@@ -175,7 +174,6 @@ export default function Chat() {
           
           {/* Sidebar with Daily Verse and Ads - Hidden on mobile */}
           <div className="hidden lg:block w-80 space-y-4 flex-shrink-0">
-            <SeasonalHeroCompact />
             <DailyVerseCard variant="compact" />
             <AdvertisementDisplay placement="chat_sidebar" />
           </div>
@@ -183,7 +181,6 @@ export default function Chat() {
         
         {/* Mobile Daily Verse and Ads - Only shown on mobile */}
         <div className="lg:hidden mt-4 space-y-4">
-          <SeasonalHeroCompact />
           <DailyVerseCard variant="compact" />
           <AdvertisementDisplay placement="chat_sidebar" />
         </div>

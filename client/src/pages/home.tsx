@@ -8,7 +8,6 @@ import CTA from "@/components/landing/cta";
 import Footer from "@/components/landing/footer";
 import AdvertisementDisplay from "@/components/ads/advertisement-display";
 import DailyVerseCard from "@/components/daily-verse/daily-verse-card";
-import SeasonalHero from "@/components/seasonal/seasonal-hero";
 
 export default function Home() {
   return (
@@ -19,17 +18,6 @@ export default function Home() {
         
         {/* Daily Memory Verse Banner */}
         <DailyVerseCard variant="banner" />
-        
-        {/* Seasonal Hero Section */}
-        <section className="py-8 bg-gray-50">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Celebrating the Season</h2>
-              <p className="text-gray-600">Experience the Christian calendar through beautiful, rotating seasonal themes</p>
-            </div>
-            <SeasonalHero className="h-64 md:h-80" />
-          </div>
-        </section>
         
         <div className="px-4 sm:px-6 lg:px-8 py-4">
           <AdvertisementDisplay placement="home_banner" />
