@@ -1,6 +1,9 @@
 import { MessageCircle } from "lucide-react";
+import { useLocation } from "wouter";
 
 export default function Footer() {
+  const [, setLocation] = useLocation();
+
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -63,7 +66,9 @@ export default function Footer() {
                 </button>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">FAQ</a>
+                <button onClick={() => setLocation("/help")} className="hover:text-white transition-colors">
+                  Help Center
+                </button>
               </li>
             </ul>
           </div>
@@ -72,10 +77,26 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">Support</h3>
             <ul className="space-y-2 text-gray-400">
-              <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+              <li>
+                <button onClick={() => setLocation("/help")} className="hover:text-white transition-colors">
+                  Help Center
+                </button>
+              </li>
+              <li>
+                <button onClick={() => setLocation("/contact")} className="hover:text-white transition-colors">
+                  Contact Us
+                </button>
+              </li>
+              <li>
+                <button onClick={() => setLocation("/privacy")} className="hover:text-white transition-colors">
+                  Privacy Policy
+                </button>
+              </li>
+              <li>
+                <button onClick={() => setLocation("/terms")} className="hover:text-white transition-colors">
+                  Terms of Service
+                </button>
+              </li>
             </ul>
           </div>
         </div>

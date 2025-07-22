@@ -141,3 +141,5 @@ The architecture prioritizes developer experience with fast iteration cycles whi
 - **Feature Flag System**: Verified working properly with server restart capability for configuration updates  
 - **GiveSendGo Integration**: Complete ministry support system with navigation buttons and automated reminders
 - **Speech Recognition Removed**: After extensive testing, removed speech-to-text functionality due to browser API limitations and reliability issues across devices
+- **Legal Pages Added**: Created comprehensive Help Center, Contact Us, Privacy Policy, and Terms of Service pages with proper navigation links
+- **Mobile Advertisement Display**: Fixed mobile layout to show advertisements below daily verse for consistent monetization across all device sizes
