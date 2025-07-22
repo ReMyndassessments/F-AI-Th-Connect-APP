@@ -86,6 +86,7 @@ The application uses these main entities:
 - **Feature Flag System**: Comprehensive system for managing advertisement display and feature rollouts
 - **Advertisement Management**: Complete CRUD system for faith-based promotions with placement controls and edit functionality
 - **Daily Memory Verses**: Rotating scripture verses that change daily across all pages
+- **Ministry Support Integration**: GiveSendGo donation button prominently featured in navigation and hero section
 - **Responsive Design**: Mobile-first approach with adaptive layouts
 
 ## Data Flow

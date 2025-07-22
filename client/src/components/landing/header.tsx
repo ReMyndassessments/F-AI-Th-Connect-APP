@@ -50,6 +50,15 @@ export default function Header() {
               Testimonials
             </button>
             <Button
+              asChild
+              variant="outline"
+              className="px-4 py-2 rounded-lg font-medium border-amber-300 text-amber-700 hover:bg-amber-50 hover:border-amber-400"
+            >
+              <a href="https://www.givesendgo.com/CodeandCoffeeforChrist" target="_blank" rel="noopener noreferrer">
+                💝 Support
+              </a>
+            </Button>
+            <Button
               onClick={startChat}
               className="faith-button-primary px-6 py-2 rounded-lg font-medium"
             >
@@ -92,6 +101,15 @@ export default function Header() {
               >
                 Testimonials
               </button>
+              <Button
+                asChild
+                variant="outline"
+                className="w-full border-amber-300 text-amber-700 hover:bg-amber-50 hover:border-amber-400"
+              >
+                <a href="https://www.givesendgo.com/CodeandCoffeeforChrist" target="_blank" rel="noopener noreferrer">
+                  💝 Support This Ministry
+                </a>
+              </Button>
               <Button
                 onClick={startChat}
                 className="faith-button-primary w-full"

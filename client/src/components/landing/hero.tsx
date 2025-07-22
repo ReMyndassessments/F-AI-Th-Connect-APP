@@ -58,6 +58,19 @@ export default function Hero() {
               </Button>
             </div>
             
+            {/* Support Ministry Button */}
+            <div className="mt-6 flex justify-center lg:justify-start">
+              <Button
+                asChild
+                variant="outline"
+                className="px-6 py-3 rounded-lg font-medium border-amber-300 text-amber-700 hover:bg-amber-50 hover:border-amber-400"
+              >
+                <a href="https://www.givesendgo.com/CodeandCoffeeforChrist" target="_blank" rel="noopener noreferrer">
+                  💝 Support This Ministry
+                </a>
+              </Button>
+            </div>
+            
             <div className="mt-8 flex items-center justify-center lg:justify-start space-x-6 text-sm text-gray-500">
               <div className="flex items-center space-x-2">
                 <Check className="w-5 h-5 text-green-500" />
