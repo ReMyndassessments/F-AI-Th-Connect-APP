@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { adminApiRequest } from "@/lib/admin-api";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -30,16 +31,21 @@ export default function FeatureFlagsTab() {
   // Fetch feature flags
   const { data: flagsData, isLoading } = useQuery({
     queryKey: ["/api/feature-flags"],
+    queryFn: async () => {
+      const response = await adminApiRequest("/api/feature-flags");
+      return response.json();
+    },
   }) as { data: { flags: FeatureFlag[] } | undefined; isLoading: boolean };
 
   // Update feature flag mutation
   const updateFlagMutation = useMutation({
-    mutationFn: ({ id, enabled }: { id: number; enabled: boolean }) =>
-      fetch(`/api/feature-flags/${id}`, {
+    mutationFn: async ({ id, enabled }: { id: number; enabled: boolean }) => {
+      const response = await adminApiRequest(`/api/feature-flags/${id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ enabled }),
-      }).then(res => res.json()),
+      });
+      return response.json();
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/feature-flags"] });
       toast({
@@ -146,9 +152,9 @@ export default function FeatureFlagsTab() {
                         {flag.description || "No description provided"}
                       </p>
                       {flag.name.includes('ads') && (
-                        <div className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded-md mt-1 inline-block">
+                        <span className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded-md mt-1 inline-block">
                           💡 Advertisement Control: This affects revenue generation
-                        </div>
+                        </span>
                       )}
                       <p className="text-xs text-gray-400">
                         Last updated: {new Date(flag.updatedAt).toLocaleDateString()}
