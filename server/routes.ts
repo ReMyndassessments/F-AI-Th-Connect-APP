@@ -179,7 +179,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/feature-flags/public", async (req, res) => {
     try {
       const flags = await storage.getFeatureFlags();
-      const publicFlags = flags.filter(flag => flag.enabled).map(flag => ({
+      // Return all flags (both enabled and disabled) for frontend logic
+      const publicFlags = flags.map(flag => ({
         name: flag.name,
         enabled: flag.enabled
       }));

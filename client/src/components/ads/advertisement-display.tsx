@@ -25,9 +25,9 @@ interface AdvertisementDisplayProps {
 }
 
 export default function AdvertisementDisplay({ placement, onDismiss, className = "" }: AdvertisementDisplayProps) {
-  // Check if advertisements are enabled
+  // Check if advertisements are enabled (using public endpoint)
   const { data: flagData } = useQuery({
-    queryKey: ["/api/feature-flags"],
+    queryKey: ["/api/feature-flags/public"],
   }) as { data: { flags: Array<{ name: string; enabled: boolean }> } | undefined };
 
   // Fetch active advertisements for this placement
