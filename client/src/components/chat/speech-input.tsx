@@ -6,8 +6,8 @@ import { useToast } from "@/hooks/use-toast";
 // TypeScript declarations for Speech Recognition API
 declare global {
   interface Window {
-    SpeechRecognition: typeof SpeechRecognition;
-    webkitSpeechRecognition: typeof SpeechRecognition;
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
   }
 }
 
@@ -19,7 +19,7 @@ interface SpeechInputProps {
 export default function SpeechInput({ onTranscription, disabled = false }: SpeechInputProps) {
   const [isListening, setIsListening] = useState(false);
   const [isSupported, setIsSupported] = useState(false);
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<any>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -31,17 +31,19 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
       recognitionRef.current = new SpeechRecognition();
       
       if (recognitionRef.current) {
-        recognitionRef.current.continuous = true;
+        recognitionRef.current.continuous = false; // Change to false for better control
         recognitionRef.current.interimResults = true;
         recognitionRef.current.lang = 'en-US';
 
         recognitionRef.current.onresult = (event: any) => {
+          console.log('Speech recognition result:', event);
           const transcript = Array.from(event.results)
             .map((result: any) => result[0])
             .map((result: any) => result.transcript)
             .join('');
 
           const isFinal = event.results[event.results.length - 1].isFinal;
+          console.log('Transcript:', transcript, 'isFinal:', isFinal);
           
           // Show interim results in the input field, send when final
           onTranscription(transcript, isFinal);
@@ -66,11 +68,8 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
         };
 
         recognitionRef.current.onend = () => {
+          console.log('Speech recognition ended');
           setIsListening(false);
-          toast({
-            title: "Recording Complete",
-            description: "Your message has been sent to the AI.",
-          });
         };
       }
     }
@@ -83,19 +82,20 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
   }, [onTranscription, toast]);
 
   const startListening = () => {
+    console.log('Attempting to start listening, isSupported:', isSupported, 'recognitionRef:', recognitionRef.current);
     if (recognitionRef.current && !isListening) {
       try {
         recognitionRef.current.start();
         setIsListening(true);
         toast({
           title: "Listening...",
-          description: "Speak now. Click stop when finished.",
+          description: "Speak now. Click the microphone again to stop.",
         });
       } catch (error) {
         console.error('Failed to start speech recognition:', error);
         toast({
           title: "Failed to start",
-          description: "Could not start speech recognition.",
+          description: "Could not start speech recognition. Check microphone permissions.",
           variant: "destructive",
         });
       }
@@ -128,10 +128,3 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
   );
 }
 
-// Extend Window interface for TypeScript
-declare global {
-  interface Window {
-    SpeechRecognition: any;
-    webkitSpeechRecognition: any;
-  }
-}
