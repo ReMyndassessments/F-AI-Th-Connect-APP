@@ -145,6 +145,11 @@ export default function FeatureFlagsTab() {
                       <p className="text-sm text-gray-600">
                         {flag.description || "No description provided"}
                       </p>
+                      {flag.name.includes('ads') && (
+                        <div className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded-md mt-1 inline-block">
+                          💡 Advertisement Control: This affects revenue generation
+                        </div>
+                      )}
                       <p className="text-xs text-gray-400">
                         Last updated: {new Date(flag.updatedAt).toLocaleDateString()}
                       </p>

@@ -102,7 +102,7 @@ export class MemStorage implements IStorage {
       {
         id: 1,
         name: "advertisements_enabled",
-        description: "Enable tasteful faith-based advertisements",
+        description: "Master switch for all advertisements. When disabled, no ads will show anywhere on the platform.",
         enabled: false,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -110,7 +110,7 @@ export class MemStorage implements IStorage {
       {
         id: 2,
         name: "chat_sidebar_ads",
-        description: "Show ads in chat sidebar",
+        description: "Controls tasteful faith-based ads in the chat sidebar. Only shows when master ad switch is enabled.",
         enabled: false,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -118,7 +118,7 @@ export class MemStorage implements IStorage {
       {
         id: 3,
         name: "home_banner_ads",
-        description: "Show banner ads on home page",
+        description: "Controls banner ads on the main landing page. Perfect for ministry partnerships and announcements.",
         enabled: false,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -126,7 +126,7 @@ export class MemStorage implements IStorage {
       {
         id: 4,
         name: "between_messages_ads",
-        description: "Show ads between chat messages",
+        description: "Shows relevant Christian content between chat messages while maintaining conversation flow.",
         enabled: false,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -137,6 +137,63 @@ export class MemStorage implements IStorage {
       this.featureFlags.set(flag.id, flag);
     });
     this.currentFeatureFlagId = 5;
+
+    // Initialize sample advertisements for testing
+    const sampleAds: Advertisement[] = [
+      {
+        id: 1,
+        title: "Daily Devotional Book",
+        description: "Start your day with inspiring biblical reflections and prayers",
+        imageUrl: null,
+        linkUrl: "https://example.com/devotional",
+        type: "book",
+        placement: "chat_sidebar",
+        active: true,
+        priority: 1,
+        targetAudience: "Christian adults seeking daily spiritual growth",
+        impressionCount: 0,
+        clickCount: 0,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        id: 2,
+        title: "Christian Life Conference 2025",
+        description: "Join thousands of believers for worship, teaching, and fellowship",
+        imageUrl: null,
+        linkUrl: "https://example.com/conference",
+        type: "event",
+        placement: "home_banner",
+        active: true,
+        priority: 1,
+        targetAudience: "Christians interested in conferences and events",
+        impressionCount: 0,
+        clickCount: 0,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        id: 3,
+        title: "Online Bible Study Course",
+        description: "Deepen your understanding of Scripture with expert guidance",
+        imageUrl: null,
+        linkUrl: "https://example.com/bible-study",
+        type: "course",
+        placement: "between_messages",
+        active: true,
+        priority: 1,
+        targetAudience: "Christians seeking biblical education",
+        impressionCount: 0,
+        clickCount: 0,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }
+    ];
+
+    sampleAds.forEach(ad => {
+      this.advertisements.set(ad.id, ad);
+    });
+    this.currentAdvertisementId = 4;
 
     // Initialize default admin user (owner)
     // Password: "admin123" (you should change this immediately after first login)
