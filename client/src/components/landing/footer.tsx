@@ -65,11 +65,6 @@ export default function Footer() {
                   Testimonials
                 </button>
               </li>
-              <li>
-                <button onClick={() => setLocation("/help")} className="hover:text-white transition-colors">
-                  Help Center
-                </button>
-              </li>
             </ul>
           </div>
           
