@@ -68,9 +68,9 @@ The application uses these main entities:
 ### AI Integration
 - **Provider**: DeepSeek AI API integration
 - **Specialization**: Christian-focused system prompts for biblical guidance
-- **Performance**: Optimized for large content (sermons, studies) with 60-second timeouts
-- **Dynamic Token Allocation**: 1200 tokens for extensive content, 600 for regular messages
-- **Context Optimization**: Reduced conversation history for large message processing
+- **Performance**: Optimized for speed with 30-second timeouts and reduced token limits
+- **Dynamic Token Allocation**: 800 tokens for extensive content, 400 for regular messages
+- **Context Optimization**: Limited conversation history (2-6 messages) and 300-character truncation for faster responses
 - **Features**: Scripture reference extraction and theological accuracy
 - **Fallback**: Scripture service for common verses when API unavailable
 

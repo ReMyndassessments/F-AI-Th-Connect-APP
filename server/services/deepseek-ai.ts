@@ -30,36 +30,24 @@ export class DeepseekAI {
     scriptureReferences: ScriptureReference[];
   }> {
     try {
-      // Optimize system prompt for long content processing
+      // Optimize system prompt for faster responses
       const isLongContent = userMessage.length > 1000;
       
       const systemPrompt = `You are F-AI-TH-Connect, a Christian AI assistant. ${isLongContent ? 
-        'The user has shared extensive content. Focus on key spiritual themes and provide structured, actionable guidance.' : 
-        'Provide biblical guidance, spiritual support, and Christian wisdom.'} Your responses should be:
+        'Focus on key spiritual themes and provide concise, actionable guidance.' : 
+        'Provide biblical guidance and Christian wisdom.'} Be concise yet meaningful. Always include 1-2 relevant Scripture references with book, chapter, and verse numbers. Keep responses helpful but brief.`;
 
-1. Grounded in Scripture - Always reference relevant Bible verses
-2. Theologically sound - Align with orthodox Christian doctrine
-3. Compassionate and encouraging - Show Christ's love in your responses
-4. Practical - Offer actionable guidance for Christian living
-5. Respectful - Honor different Christian traditions while staying biblical
-
-When responding:
-- Include relevant Scripture verses with book, chapter, and verse numbers
-- Provide both the reference and the actual text when helpful
-- Offer practical prayer suggestions when appropriate
-- Encourage users to seek pastoral care for serious issues
-- Always point users toward God and His Word
-
-Format Scripture references clearly, for example: "Matthew 6:26-27 (NIV): 'Look at the birds of the air; they do not sow or reap...'"`;
-
+      // Optimize conversation history for speed - limit to last 4 messages for context
+      const recentHistory = conversationHistory.slice(-4);
+      
       const messages = [
         { role: 'system', content: systemPrompt },
-        ...conversationHistory,
+        ...recentHistory,
         { role: 'user', content: userMessage }
       ];
 
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout for longer content
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // Reduced to 30 seconds for faster responses
 
       const response = await fetch(`${this.baseUrl}/chat/completions`, {
         method: 'POST',
@@ -70,9 +58,10 @@ Format Scripture references clearly, for example: "Matthew 6:26-27 (NIV): 'Look 
         body: JSON.stringify({
           model: 'deepseek-chat',
           messages,
-          temperature: 0.7,
-          max_tokens: userMessage.length > 1000 ? 1200 : 600, // More tokens for longer input
+          temperature: 0.6, // Slightly lower temperature for faster, more focused responses
+          max_tokens: userMessage.length > 1000 ? 800 : 400, // Reduced token limits for faster generation
           stream: false,
+          top_p: 0.9, // Add nucleus sampling for more efficient generation
         }),
         signal: controller.signal,
       });
@@ -101,7 +90,7 @@ Format Scripture references clearly, for example: "Matthew 6:26-27 (NIV): 'Look 
       
       if (error instanceof Error) {
         if (error.name === 'AbortError') {
-          errorMessage = 'The request took too long to process. Please try asking a shorter question or try again.';
+          errorMessage = 'Response generation took longer than expected. Please try again.';
         } else if (error.message.includes('401')) {
           errorMessage = 'There seems to be an authentication issue. Please check the API key configuration.';
         } else if (error.message.includes('429')) {
