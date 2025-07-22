@@ -153,7 +153,7 @@ export default function FileUpload({ onFileContent, disabled = false }: FileUplo
         onClick={handleFileSelect}
         disabled={disabled}
         className="hover:bg-gray-50 transition-colors"
-        title="Attach a file (text, PDF, or Word document)"
+        title="Attach a file (text, PDF, or Word document, e.g. 4W's, sermons, Bible studies, devotionals)"
       >
         <Paperclip className="w-4 h-4 mr-2" />
         {uploadedFile ? 'Change File' : 'Attach File'}
