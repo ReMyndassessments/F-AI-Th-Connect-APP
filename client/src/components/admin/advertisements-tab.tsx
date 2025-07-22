@@ -145,6 +145,21 @@ export default function AdvertisementsTab() {
     updateAdMutation.mutate({ id, data: { active } });
   };
 
+  const handleUpdateAd = (id: number, formData: FormData) => {
+    const data = {
+      title: formData.get('title') as string,
+      description: formData.get('description') as string,
+      imageUrl: formData.get('imageUrl') as string || null,
+      linkUrl: formData.get('linkUrl') as string || null,
+      type: formData.get('type') as string,
+      placement: formData.get('placement') as string,
+      priority: parseInt(formData.get('priority') as string) || 1,
+      targetAudience: formData.get('targetAudience') as string || null,
+    };
+
+    updateAdMutation.mutate({ id, data });
+  };
+
   const getTypeIcon = (type: string) => {
     switch (type) {
       case 'book': return <BookOpen className="w-4 h-4" />;
@@ -296,6 +311,92 @@ export default function AdvertisementsTab() {
                 </form>
               </DialogContent>
             </Dialog>
+
+            {/* Edit Advertisement Dialog */}
+            <Dialog open={!!editingAd} onOpenChange={() => setEditingAd(null)}>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>Edit Advertisement</DialogTitle>
+                  <DialogDescription>
+                    Update this faith-based promotion
+                  </DialogDescription>
+                </DialogHeader>
+                <form onSubmit={(e) => {
+                  e.preventDefault();
+                  if (editingAd) {
+                    handleUpdateAd(editingAd.id, new FormData(e.target as HTMLFormElement));
+                  }
+                }} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium">Title</label>
+                      <Input name="title" defaultValue={editingAd?.title || ""} placeholder="Christian Book Title" required />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium">Type</label>
+                      <Select name="type" defaultValue={editingAd?.type || ""} required>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="book">Book</SelectItem>
+                          <SelectItem value="course">Course</SelectItem>
+                          <SelectItem value="event">Event</SelectItem>
+                          <SelectItem value="ministry">Ministry</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Description</label>
+                    <Textarea name="description" defaultValue={editingAd?.description || ""} placeholder="Brief description of this faith-based resource..." required />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium">Image URL (Optional)</label>
+                      <Input name="imageUrl" type="url" defaultValue={editingAd?.imageUrl || ""} placeholder="https://..." />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium">Link URL (Optional)</label>
+                      <Input name="linkUrl" type="url" defaultValue={editingAd?.linkUrl || ""} placeholder="https://..." />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium">Placement</label>
+                      <Select name="placement" defaultValue={editingAd?.placement || ""} required>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select placement" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="chat_sidebar">Chat Sidebar</SelectItem>
+                          <SelectItem value="home_banner">Home Banner</SelectItem>
+                          <SelectItem value="between_messages">Between Messages</SelectItem>
+                          <SelectItem value="footer">Footer</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium">Priority</label>
+                      <Input name="priority" type="number" min="1" defaultValue={editingAd?.priority || 1} placeholder="1" required />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Target Audience (Optional)</label>
+                    <Input name="targetAudience" defaultValue={editingAd?.targetAudience || ""} placeholder="Christians interested in..." />
+                  </div>
+                  <div className="flex justify-end space-x-2">
+                    <Button type="button" variant="outline" onClick={() => setEditingAd(null)}>
+                      Cancel
+                    </Button>
+                    <Button type="submit" className="faith-button-primary" disabled={updateAdMutation.isPending}>
+                      {updateAdMutation.isPending ? "Updating..." : "Update Advertisement"}
+                    </Button>
+                  </div>
+                </form>
+              </DialogContent>
+            </Dialog>
           </div>
         </CardHeader>
         <CardContent>
@@ -339,6 +440,13 @@ export default function AdvertisementsTab() {
                           onCheckedChange={(active) => handleToggleActive(ad.id, active)}
                           disabled={updateAdMutation.isPending}
                         />
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setEditingAd(ad)}
+                        >
+                          <Edit className="w-4 h-4" />
+                        </Button>
                         <Button
                           variant="outline"
                           size="sm"

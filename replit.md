@@ -84,7 +84,7 @@ The application uses these main entities:
 - **File Upload**: Support for text files, PDFs, and images (up to 5MB)
 - **Progress Indicators**: Visual feedback with progress bars for large content processing
 - **Feature Flag System**: Comprehensive system for managing advertisement display and feature rollouts
-- **Advertisement Management**: Tasteful faith-based promotion system with placement controls
+- **Advertisement Management**: Complete CRUD system for faith-based promotions with placement controls and edit functionality
 - **Daily Memory Verses**: Rotating scripture verses that change daily across all pages
 - **Responsive Design**: Mobile-first approach with adaptive layouts
 
