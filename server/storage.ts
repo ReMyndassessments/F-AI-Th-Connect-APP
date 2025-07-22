@@ -173,7 +173,7 @@ export class MemStorage implements IStorage {
         id: 5,
         name: "ministry_support_reminders",
         description: "Occasionally adds tasteful ministry support reminders to AI responses (every 5th message). Helps sustain the ministry while maintaining a spiritual focus.",
-        enabled: false,
+        enabled: true,
         createdAt: new Date(),
         updatedAt: new Date(),
       }
