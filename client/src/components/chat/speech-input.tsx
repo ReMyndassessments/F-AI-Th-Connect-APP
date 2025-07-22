@@ -31,10 +31,17 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
       recognitionRef.current = new SpeechRecognition();
       
       if (recognitionRef.current) {
-        recognitionRef.current.continuous = true; // Keep listening for longer phrases
+        recognitionRef.current.continuous = true;
         recognitionRef.current.interimResults = true;
         recognitionRef.current.lang = 'en-US';
         recognitionRef.current.maxAlternatives = 1;
+        
+        // Add speech timeout settings for better control
+        if ('webkitSpeechRecognition' in window) {
+          // Webkit-specific settings for better speech detection
+          recognitionRef.current.continuous = true;
+          recognitionRef.current.interimResults = true;
+        }
 
         recognitionRef.current.onresult = (event: any) => {
           console.log('Speech recognition result:', event);
@@ -87,6 +94,20 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
         recognitionRef.current.onend = () => {
           console.log('Speech recognition ended');
           setIsListening(false);
+          
+          // Auto-restart if still listening (to keep continuous recording)
+          if (isListening && recognitionRef.current) {
+            try {
+              console.log('Auto-restarting speech recognition');
+              setTimeout(() => {
+                if (isListening && recognitionRef.current) {
+                  recognitionRef.current.start();
+                }
+              }, 100);
+            } catch (error) {
+              console.log('Could not restart recognition:', error);
+            }
+          }
         };
       }
     }
@@ -121,8 +142,12 @@ export default function SpeechInput({ onTranscription, disabled = false }: Speec
 
   const stopListening = () => {
     if (recognitionRef.current && isListening) {
+      setIsListening(false); // Set this first to prevent auto-restart
       recognitionRef.current.stop();
-      setIsListening(false);
+      toast({
+        title: "Recording Stopped",
+        description: "Processing your message...",
+      });
     }
   };
 
