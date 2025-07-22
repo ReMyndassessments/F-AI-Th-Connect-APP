@@ -80,7 +80,7 @@ The application uses these main entities:
 - **Chat Interface**: Real-time conversation UI with message bubbles and advanced input options
 - **Scripture Display**: Formatted biblical references with proper citations
 - **Message Actions**: Copy, download, and share functionality for all messages
-- **Speech Input**: Voice-to-text capability using browser's Speech Recognition API
+
 - **File Upload**: Support for text files, PDFs, and images (up to 5MB)
 - **Progress Indicators**: Visual feedback with progress bars for large content processing
 - **Feature Flag System**: Comprehensive system for managing advertisement display and feature rollouts
@@ -140,4 +140,4 @@ The architecture prioritizes developer experience with fast iteration cycles whi
 - **Ministry Support Reminders Activated**: Successfully implemented and enabled tasteful ministry support messages that appear every 3rd AI response
 - **Feature Flag System**: Verified working properly with server restart capability for configuration updates  
 - **GiveSendGo Integration**: Complete ministry support system with navigation buttons and automated reminders
-- **Speech Recognition Challenges**: Extensively tested multiple approaches to browser speech recognition - browser APIs have inherent limitations causing early cutoffs and unreliable performance across different devices and browsers
+- **Speech Recognition Removed**: After extensive testing, removed speech-to-text functionality due to browser API limitations and reliability issues across devices

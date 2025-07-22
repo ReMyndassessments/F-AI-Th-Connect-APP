@@ -4,7 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Send, Loader2 } from "lucide-react";
 import MessageBubble from "@/components/chat/message-bubble";
 import TypingIndicator from "@/components/chat/typing-indicator";
-import SpeechInput from "@/components/chat/speech-input";
+
 import FileUpload from "@/components/chat/file-upload";
 import type { Message } from "@/lib/chat-api";
 
@@ -40,23 +40,7 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
     }
   };
 
-  const handleSpeechTranscription = (transcript: string, isComplete: boolean = false) => {
-    const newText = transcript.trim();
-    if (newText) {
-      if (isComplete) {
-        // Automatically send the message when speech recognition completes
-        const fullMessage = fileContent ? `${fileContent}\n\n${newText}` : newText;
-        if (!isSending) {
-          onSendMessage(fullMessage);
-          setInputValue("");
-          setFileContent("");
-        }
-      } else {
-        // Show interim results in input field (replace, don't append)
-        setInputValue(newText);
-      }
-    }
-  };
+
 
   const handleFileContent = (content: string, fileName: string) => {
     setFileContent(content);
@@ -168,10 +152,6 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
           </div>
           
           <div className="flex items-center space-x-1 sm:space-x-2">
-            <SpeechInput 
-              onTranscription={handleSpeechTranscription}
-              disabled={isSending}
-            />
             
             <Button
               type="submit"
