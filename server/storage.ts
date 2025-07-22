@@ -153,6 +153,8 @@ export class MemStorage implements IStorage {
         targetAudience: "Christian adults seeking daily spiritual growth",
         impressionCount: 0,
         clickCount: 0,
+        startDate: null,
+        endDate: null,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -169,6 +171,8 @@ export class MemStorage implements IStorage {
         targetAudience: "Christians interested in conferences and events",
         impressionCount: 0,
         clickCount: 0,
+        startDate: null,
+        endDate: null,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -185,6 +189,8 @@ export class MemStorage implements IStorage {
         targetAudience: "Christians seeking biblical education",
         impressionCount: 0,
         clickCount: 0,
+        startDate: null,
+        endDate: null,
         createdAt: new Date(),
         updatedAt: new Date(),
       }
@@ -412,7 +418,10 @@ export class MemStorage implements IStorage {
   async createAdminUser(userData: InsertAdminUser): Promise<AdminUser> {
     const adminUser: AdminUser = {
       id: this.currentAdminUserId++,
-      ...userData,
+      username: userData.username,
+      passwordHash: userData.passwordHash,
+      role: userData.role || "admin",
+      email: userData.email || null,
       lastLogin: null,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -422,12 +431,8 @@ export class MemStorage implements IStorage {
   }
 
   async getAdminUserByUsername(username: string): Promise<AdminUser | undefined> {
-    for (const [, user] of this.adminUsers) {
-      if (user.username === username) {
-        return user;
-      }
-    }
-    return undefined;
+    const users = Array.from(this.adminUsers.values());
+    return users.find(user => user.username === username);
   }
 
   async updateAdminPassword(id: number, passwordHash: string): Promise<void> {
