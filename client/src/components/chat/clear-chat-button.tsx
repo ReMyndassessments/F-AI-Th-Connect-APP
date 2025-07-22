@@ -39,11 +39,11 @@ export default function ClearChatButton({ onClearChat, disabled = false }: Clear
           variant="outline"
           size="sm"
           disabled={disabled}
-          className="text-gray-600 hover:text-red-600 hover:bg-red-50 transition-colors"
+          className="text-gray-600 hover:text-red-600 hover:bg-red-50 transition-colors text-xs sm:text-sm px-2 sm:px-4"
           title="Clear conversation and start new"
         >
-          <Trash2 className="w-4 h-4 mr-2" />
-          Clear Chat
+          <Trash2 className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
+          <span className="hidden sm:inline">Clear Chat</span>
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>

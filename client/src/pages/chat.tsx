@@ -119,39 +119,40 @@ export default function Chat() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-4">
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
+          <div className="flex justify-between items-center h-14 sm:h-16">
+            <div className="flex items-center space-x-2 sm:space-x-4">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setLocation("/")}
-                className="flex items-center space-x-2"
+                className="flex items-center space-x-1 sm:space-x-2 p-2 sm:px-3"
               >
                 <ArrowLeft className="w-4 h-4" />
-                <span>Back to Home</span>
+                <span className="hidden sm:inline">Back to Home</span>
               </Button>
               
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-amber-500 rounded-lg flex items-center justify-center">
-                  <MessageCircle className="w-5 h-5 text-white" />
+                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-500 to-amber-500 rounded-lg flex items-center justify-center">
+                  <MessageCircle className="w-3 h-3 sm:w-5 sm:h-5 text-white" />
                 </div>
-                <span className="text-xl font-bold faith-gradient-text">F-AI-TH-Connect</span>
+                <span className="text-lg sm:text-xl font-bold faith-gradient-text">F-AI-TH-Connect</span>
               </div>
             </div>
 
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2 sm:space-x-3">
               <ClearChatButton 
                 onClearChat={handleClearChat}
                 disabled={deleteSessionMutation.isPending || !currentSessionId}
               />
               <Button
                 onClick={handleStartNewChat}
-                className="faith-button-primary"
+                className="faith-button-primary text-xs sm:text-sm px-2 sm:px-4"
                 disabled={createSessionMutation.isPending}
+                size="sm"
               >
-                <RotateCcw className="w-4 h-4 mr-2" />
-                New Chat
+                <RotateCcw className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
+                <span className="hidden sm:inline">New Chat</span>
               </Button>
             </div>
           </div>
@@ -159,10 +160,10 @@ export default function Chat() {
       </header>
 
       {/* Chat Interface */}
-      <main className="max-w-6xl mx-auto px-4 py-8">
-        <div className="flex gap-6">
+      <main className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8">
+        <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
           {/* Main Chat Area */}
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <ChatInterface
               messages={messagesData?.messages || []}
               onSendMessage={handleSendMessage}
@@ -171,11 +172,16 @@ export default function Chat() {
             />
           </div>
           
-          {/* Sidebar with Daily Verse and Ads */}
-          <div className="w-80 space-y-4">
+          {/* Sidebar with Daily Verse and Ads - Hidden on mobile */}
+          <div className="hidden lg:block w-80 space-y-4 flex-shrink-0">
             <DailyVerseCard variant="compact" />
             <AdvertisementDisplay placement="chat_sidebar" />
           </div>
+        </div>
+        
+        {/* Mobile Daily Verse - Only shown on mobile */}
+        <div className="lg:hidden mt-4">
+          <DailyVerseCard variant="compact" />
         </div>
       </main>
     </div>
