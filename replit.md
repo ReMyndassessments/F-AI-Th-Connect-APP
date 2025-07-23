@@ -147,3 +147,4 @@ The architecture prioritizes developer experience with fast iteration cycles whi
 
 ### January 23, 2025
 - **Text Highlighting System Completed**: Successfully implemented and tested comprehensive highlighting system for AI responses with 5 study categories (Key Verse, Prayer Point, Study Note, Action Item, Discussion), persistent storage, inline toolbar interface, and export functionality for Bible study preparation - CONFIRMED WORKING
+- **Enhanced Export Feature**: Upgraded highlighting export to include both original content and formatted content with visual highlight markers, plus comprehensive summaries by category for complete Bible study preparation

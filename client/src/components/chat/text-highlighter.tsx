@@ -139,13 +139,46 @@ export default function TextHighlighter({ content, messageId }: TextHighlighterP
   const exportHighlights = () => {
     if (highlights.length === 0) return;
     
+    // Create formatted text with highlights marked
+    const sortedHighlights = [...highlights].sort((a, b) => a.start - b.start);
+    let formattedContent = "";
+    let lastIndex = 0;
+
+    sortedHighlights.forEach((highlight) => {
+      // Add text before highlight
+      if (highlight.start > lastIndex) {
+        formattedContent += content.slice(lastIndex, highlight.start);
+      }
+      
+      // Add highlighted text with category marker
+      formattedContent += `**[${highlight.category.toUpperCase()}]** ${highlight.text} **[/${highlight.category.toUpperCase()}]**`;
+      
+      lastIndex = highlight.end;
+    });
+
+    // Add remaining text
+    if (lastIndex < content.length) {
+      formattedContent += content.slice(lastIndex);
+    }
+    
     const exportData = {
-      messageId,
-      content,
+      title: "F-AI-TH-Connect Bible Study Notes",
+      messageId: messageId,
+      exportDate: new Date().toLocaleDateString(),
+      originalContent: content,
+      highlightedContent: formattedContent,
+      highlightSummary: {
+        totalHighlights: highlights.length,
+        categories: HIGHLIGHT_CATEGORIES.map(cat => ({
+          name: cat.name,
+          count: highlights.filter(h => h.color === cat.color).length,
+          highlights: highlights.filter(h => h.color === cat.color).map(h => h.text)
+        })).filter(cat => cat.count > 0)
+      },
       highlights: highlights.map(h => ({
         text: h.text,
         category: h.category,
-        note: `${h.category}: "${h.text}"`
+        position: { start: h.start, end: h.end }
       }))
     };
     
@@ -153,7 +186,7 @@ export default function TextHighlighter({ content, messageId }: TextHighlighterP
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `bible-study-highlights-${messageId}.json`;
+    a.download = `bible-study-notes-${messageId}-${new Date().toISOString().split('T')[0]}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
