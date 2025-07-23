@@ -89,7 +89,7 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
       </div>
       
       {/* Chat Messages */}
-      <div className="h-80 sm:h-96 overflow-y-auto p-3 sm:p-6 space-y-3 sm:space-y-4">
+      <div className="h-80 sm:h-96 overflow-y-auto mobile-scroll p-3 sm:p-6 space-y-3 sm:space-y-4">
         {messages.length === 0 ? (
           <div className="text-center py-4 sm:py-8">
             <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
@@ -103,19 +103,19 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
             <div className="flex flex-wrap gap-2 justify-center px-2">
               <button
                 onClick={() => onSendMessage("I'm feeling anxious about my future. What does the Bible say about worry?")}
-                className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors"
+                className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
               >
                 Anxiety and worry
               </button>
               <button
                 onClick={() => onSendMessage("How can I deepen my relationship with God?")}
-                className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors"
+                className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
               >
                 Spiritual growth
               </button>
               <button
                 onClick={() => onSendMessage("Can you help me with a prayer for my family?")}
-                className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors"
+                className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
               >
                 Prayer requests
               </button>
@@ -150,7 +150,7 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="w-full border border-gray-300 rounded-xl px-3 sm:px-4 py-2 sm:py-3 min-h-[44px] sm:min-h-[48px] max-h-32 resize-none text-sm sm:text-base"
+              className="w-full border border-gray-300 rounded-xl px-3 sm:px-4 py-2 sm:py-3 min-h-[44px] sm:min-h-[48px] max-h-32 resize-none text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               disabled={isSending}
               rows={1}
             />
@@ -161,7 +161,7 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
               <Button
                 type="button"
                 variant="outline"
-                className="p-2 sm:p-3 rounded-xl border-gray-300 hover:border-blue-400 hover:bg-blue-50 transition-colors"
+                className="p-2 sm:p-3 rounded-xl border-gray-300 hover:border-blue-400 hover:bg-blue-50 transition-colors touch-target mobile-tap"
                 size="sm"
                 disabled={isSending}
                 title="Prompt Library"
@@ -173,7 +173,7 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
             <Button
               type="submit"
               disabled={(!inputValue.trim() && !fileContent) || isSending}
-              className="bg-blue-500 text-white p-2 sm:p-3 rounded-xl hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-blue-500 text-white p-2 sm:p-3 rounded-xl hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed touch-target mobile-tap"
               size="sm"
             >
               {isSending ? (

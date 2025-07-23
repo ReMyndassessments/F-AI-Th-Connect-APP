@@ -70,7 +70,7 @@ export function PromptLibrary({ onSelectPrompt, children }: PromptLibraryProps) 
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="max-w-4xl max-h-[80vh] flex flex-col" aria-describedby="prompt-library-description">
+      <DialogContent className="max-w-4xl max-h-[90vh] sm:max-h-[80vh] w-[95vw] sm:w-full flex flex-col" aria-describedby="prompt-library-description">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
             <BookOpen className="w-5 h-5 text-blue-600" />
@@ -98,7 +98,7 @@ export function PromptLibrary({ onSelectPrompt, children }: PromptLibraryProps) 
 
           {/* Category Tabs */}
           <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="flex-1 flex flex-col">
-            <TabsList className="grid grid-cols-4 lg:grid-cols-9 w-full">
+            <TabsList className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-9 w-full h-auto p-1 gap-1">
               <TabsTrigger value="all" className="text-xs">All</TabsTrigger>
               {promptLibrary.map((category) => {
                 const IconComponent = categoryIcons[category.id] || BookOpen;
@@ -106,11 +106,11 @@ export function PromptLibrary({ onSelectPrompt, children }: PromptLibraryProps) 
                   <TabsTrigger 
                     key={category.id} 
                     value={category.id}
-                    className="text-xs flex items-center space-x-1"
+                    className="text-xs flex items-center justify-center space-x-1 min-h-[40px] px-1 sm:px-2"
                     title={category.description}
                   >
                     <IconComponent className="w-3 h-3" />
-                    <span className="hidden sm:inline">{category.name.split(' ')[0]}</span>
+                    <span className="hidden xs:inline text-xs truncate">{category.name.split(' ')[0]}</span>
                   </TabsTrigger>
                 );
               })}
@@ -179,7 +179,7 @@ function PromptGrid({
 
   return (
     <ScrollArea className="flex-1">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
         {prompts.map((prompt) => {
           const category = promptLibrary.find(cat => 
             cat.prompts.some(p => p.id === prompt.id)
