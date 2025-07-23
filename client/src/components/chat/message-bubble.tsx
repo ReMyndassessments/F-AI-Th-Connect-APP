@@ -1,6 +1,7 @@
 import type { Message } from "@/lib/chat-api";
 import ScriptureReference from "@/components/chat/scripture-reference";
 import MessageActions from "@/components/chat/message-actions";
+import TextHighlighter from "@/components/chat/text-highlighter";
 
 interface MessageBubbleProps {
   message: Message;
@@ -39,9 +40,7 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
         <span className="text-white font-semibold text-sm">AI</span>
       </div>
       <div className="bg-gray-100 rounded-2xl rounded-bl-md px-4 py-3 max-w-md lg:max-w-lg">
-        <div className="text-sm text-gray-900 whitespace-pre-wrap mb-2">
-          {message.content}
-        </div>
+        <TextHighlighter content={message.content} messageId={message.id} />
         
         {scriptureReferences.length > 0 && (
           <div className="space-y-2 mt-3">

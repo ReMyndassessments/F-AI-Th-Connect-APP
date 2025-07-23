@@ -78,6 +78,7 @@ The application uses these main entities:
 - **Landing Page**: Multi-section marketing site with hero, features, testimonials
 - **Interactive Demo**: Animated walkthrough modal showcasing app features
 - **Chat Interface**: Real-time conversation UI with message bubbles and advanced input options
+- **Text Highlighting System**: Advanced highlighting for Bible study preparation with 5 categories (Key Verse, Prayer Point, Study Note, Action Item, Discussion)
 - **Scripture Display**: Formatted biblical references with proper citations
 - **Message Actions**: Copy, download, and share functionality for all messages
 
@@ -143,3 +144,4 @@ The architecture prioritizes developer experience with fast iteration cycles whi
 - **Speech Recognition Removed**: After extensive testing, removed speech-to-text functionality due to browser API limitations and reliability issues across devices
 - **Legal Pages Added**: Created comprehensive Help Center, Contact Us, Privacy Policy, and Terms of Service pages with proper navigation links
 - **Mobile Advertisement Display**: Fixed mobile layout to show advertisements below daily verse for consistent monetization across all device sizes
+- **Text Highlighting System**: Implemented comprehensive highlighting system for AI responses with 5 study categories, persistent storage, and export functionality for Bible study preparation
