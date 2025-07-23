@@ -13,7 +13,8 @@ import {
   ChevronUp,
   Highlighter,
   Star,
-  Bookmark
+  Bookmark,
+  BookOpen
 } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "wouter";
@@ -64,6 +65,22 @@ const faqs: FAQItem[] = [
   {
     question: "How can I support this ministry?",
     answer: "F-AI-TH-Connect is supported through faithful partnerships. You can contribute through our GiveSendGo campaign linked in the navigation. Your support helps us serve more believers with biblical guidance."
+  },
+  {
+    question: "Where is the prompt library and how do I use it?",
+    answer: "Click the book icon (📖) next to the send button in any chat session to open the prompt library with 30+ pre-written questions organized by ministry categories. Browse categories like 'Ministry Leadership' or 'Personal Growth', then click any prompt to automatically fill your message box."
+  },
+  {
+    question: "I'm new to AI - what should I ask?",
+    answer: "Perfect! The prompt library is designed exactly for this. Browse categories like 'Ministry Leadership' or 'Personal Growth' to see professionally written examples. Simply click any prompt to use it, then customize it for your specific needs."
+  },
+  {
+    question: "Can I modify the pre-written prompts?",
+    answer: "Absolutely! When you click a prompt, it fills your message box where you can edit it before sending. Add specific details, change the topic, or customize it for your ministry context."
+  },
+  {
+    question: "How do I search for specific ministry topics in the prompt library?",
+    answer: "Use the search bar at the top of the prompt library. Type keywords like 'prayer,' 'evangelism,' 'youth,' or 'Bible study' to find relevant prompts across all categories."
   }
 ];
 
@@ -156,6 +173,95 @@ export default function Help() {
                       <p className="text-sm text-gray-600">Each conversation is tailored to provide relevant biblical wisdom for your situation.</p>
                     </div>
                   </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Prompt Library Feature */}
+            <Card className="mb-8">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <BookOpen className="w-5 h-5 text-blue-500" />
+                  <span>Prompt Library - Your AI Guide</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-gray-600 leading-relaxed">
+                  New to AI? The Prompt Library provides 30+ professionally written questions organized by ministry areas, 
+                  making it easy to discover what you can ask F-AI-TH-Connect.
+                </p>
+                
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-gray-800">How to Use:</h4>
+                    <ol className="text-sm text-gray-600 space-y-2">
+                      <li className="flex items-start space-x-2">
+                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">1</span>
+                        <span>Click the book icon (📖) next to the send button in the chat</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">2</span>
+                        <span>Browse prompts by ministry category or use the search bar</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">3</span>
+                        <span>Click any prompt to automatically fill your message box</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">4</span>
+                        <span>Edit the prompt if needed, then send your message</span>
+                      </li>
+                    </ol>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-gray-800">Available Categories:</h4>
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div className="bg-blue-50 p-2 rounded">
+                        <span className="font-medium text-blue-800">👥 Ministry Leadership</span>
+                        <p className="text-blue-600 text-xs">Sermon prep, team guidance</p>
+                      </div>
+                      <div className="bg-purple-50 p-2 rounded">
+                        <span className="font-medium text-purple-800">💪 Men's Ministry</span>
+                        <p className="text-purple-600 text-xs">Biblical manhood, fatherhood</p>
+                      </div>
+                      <div className="bg-pink-50 p-2 rounded">
+                        <span className="font-medium text-pink-800">🌸 Women's Ministry</span>
+                        <p className="text-pink-600 text-xs">Godly womanhood, mentoring</p>
+                      </div>
+                      <div className="bg-green-50 p-2 rounded">
+                        <span className="font-medium text-green-800">🌍 Missions & Outreach</span>
+                        <p className="text-green-600 text-xs">Evangelism, community service</p>
+                      </div>
+                      <div className="bg-yellow-50 p-2 rounded">
+                        <span className="font-medium text-yellow-800">🏛️ Church Planting</span>
+                        <p className="text-yellow-600 text-xs">Biblical foundation, leadership</p>
+                      </div>
+                      <div className="bg-red-50 p-2 rounded">
+                        <span className="font-medium text-red-800">🙏 Health & Wellness</span>
+                        <p className="text-red-600 text-xs">Biblical perspective on health</p>
+                      </div>
+                      <div className="bg-indigo-50 p-2 rounded">
+                        <span className="font-medium text-indigo-800">📖 Personal Growth</span>
+                        <p className="text-indigo-600 text-xs">Prayer, Bible study, stewardship</p>
+                      </div>
+                      <div className="bg-orange-50 p-2 rounded">
+                        <span className="font-medium text-orange-800">🎯 Youth Ministry</span>
+                        <p className="text-orange-600 text-xs">Discipling young people</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-green-50 p-4 rounded-lg">
+                  <h5 className="font-semibold text-green-900 mb-2">Perfect for Beginners:</h5>
+                  <ul className="text-sm text-green-800 space-y-1">
+                    <li>• No need to think of questions - we've prepared them for you</li>
+                    <li>• See examples of what the AI can help with in your ministry area</li>
+                    <li>• All prompts are written by ministry professionals</li>
+                    <li>• Search by topic to find exactly what you need</li>
+                    <li>• Save favorites for quick access to your most-used prompts</li>
+                  </ul>
                 </div>
               </CardContent>
             </Card>

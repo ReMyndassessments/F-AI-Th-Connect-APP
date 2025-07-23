@@ -70,7 +70,7 @@ export function PromptLibrary({ onSelectPrompt, children }: PromptLibraryProps) 
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="max-w-4xl max-h-[80vh] flex flex-col">
+      <DialogContent className="max-w-4xl max-h-[80vh] flex flex-col" aria-describedby="prompt-library-description">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
             <BookOpen className="w-5 h-5 text-blue-600" />
@@ -79,6 +79,9 @@ export function PromptLibrary({ onSelectPrompt, children }: PromptLibraryProps) 
               {filteredPrompts.length} prompts
             </Badge>
           </DialogTitle>
+          <p id="prompt-library-description" className="text-sm text-gray-600">
+            Browse pre-written prompts organized by ministry categories to discover what you can ask the AI.
+          </p>
         </DialogHeader>
         
         <div className="flex-1 flex flex-col space-y-4">
