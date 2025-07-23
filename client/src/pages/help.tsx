@@ -10,7 +10,10 @@ import {
   Mail, 
   HelpCircle,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Highlighter,
+  Star,
+  Bookmark
 } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "wouter";
@@ -45,6 +48,14 @@ const faqs: FAQItem[] = [
   {
     question: "Can I save or share my conversations?",
     answer: "Yes! Each message has copy, download, and share buttons. You can save meaningful conversations for later reflection or share encouraging messages with fellow believers."
+  },
+  {
+    question: "How do I highlight text for Bible study preparation?",
+    answer: "F-AI-TH-Connect includes a powerful highlighting system perfect for Bible study preparation. Simply select any text in an AI response with your mouse, and a toolbar will appear with 5 color-coded categories: Key Verse (yellow), Prayer Point (blue), Study Note (green), Action Item (orange), and Discussion (purple). Your highlights are saved automatically and you can export them as study notes."
+  },
+  {
+    question: "Can I remove highlights or export my study notes?",
+    answer: "Yes! Click any highlighted text to remove the highlight. When you have multiple highlights in a message, you'll see a summary showing counts by category. Use the 'Export Notes' button to download your highlighted study materials as a JSON file for use in other Bible study tools or sharing with your study group."
   },
   {
     question: "What if the AI provides guidance I'm unsure about?",
@@ -145,6 +156,87 @@ export default function Help() {
                       <p className="text-sm text-gray-600">Each conversation is tailored to provide relevant biblical wisdom for your situation.</p>
                     </div>
                   </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Bible Study Highlighting Feature */}
+            <Card className="mb-8">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Highlighter className="w-5 h-5 text-amber-500" />
+                  <span>Bible Study Highlighting</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-gray-600 leading-relaxed">
+                  F-AI-TH-Connect includes a powerful highlighting system designed specifically for Bible study preparation, 
+                  sermon writing, and group discussion planning.
+                </p>
+                
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-gray-800">How to Use:</h4>
+                    <ol className="text-sm text-gray-600 space-y-2">
+                      <li className="flex items-start space-x-2">
+                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">1</span>
+                        <span>Ask the AI a biblical question or request spiritual guidance</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">2</span>
+                        <span>Select any text in the AI response with your mouse</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">3</span>
+                        <span>Choose from 5 study categories in the toolbar that appears</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">4</span>
+                        <span>Your highlights save automatically for future reference</span>
+                      </li>
+                    </ol>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-gray-800">Highlight Categories:</h4>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center space-x-2">
+                        <Star className="w-4 h-4 text-yellow-600" />
+                        <span className="bg-yellow-200 px-2 py-1 rounded text-xs font-medium">Key Verse</span>
+                        <span className="text-gray-600">Important Scripture passages</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Heart className="w-4 h-4 text-blue-600" />
+                        <span className="bg-blue-200 px-2 py-1 rounded text-xs font-medium">Prayer Point</span>
+                        <span className="text-gray-600">Prayer requests & topics</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Bookmark className="w-4 h-4 text-green-600" />
+                        <span className="bg-green-200 px-2 py-1 rounded text-xs font-medium">Study Note</span>
+                        <span className="text-gray-600">Study insights & observations</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <MessageCircle className="w-4 h-4 text-orange-600" />
+                        <span className="bg-orange-200 px-2 py-1 rounded text-xs font-medium">Action Item</span>
+                        <span className="text-gray-600">Things to do or apply</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Settings className="w-4 h-4 text-purple-600" />
+                        <span className="bg-purple-200 px-2 py-1 rounded text-xs font-medium">Discussion</span>
+                        <span className="text-gray-600">Group discussion points</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <h5 className="font-semibold text-blue-900 mb-2">Advanced Features:</h5>
+                  <ul className="text-sm text-blue-800 space-y-1">
+                    <li>• Click any highlighted text to remove the highlight</li>
+                    <li>• View highlight summary with counts by category</li>
+                    <li>• Export all highlights as study notes for sharing or printing</li>
+                    <li>• Highlights persist across sessions for long-term study projects</li>
+                  </ul>
                 </div>
               </CardContent>
             </Card>
