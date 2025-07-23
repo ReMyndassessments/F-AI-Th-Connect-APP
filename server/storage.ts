@@ -592,6 +592,8 @@ export class MemStorage implements IStorage {
     const allMessages = Array.from(this.messages.values()).flat();
     const advertisements = Array.from(this.advertisements.values());
     
+
+    
     const totalSessions = sessions.length;
     const totalMessages = allMessages.length;
     const avgMessagesPerSession = totalSessions > 0 ? Math.round(totalMessages / totalSessions * 10) / 10 : 0;
@@ -638,7 +640,7 @@ export class MemStorage implements IStorage {
       }).length;
       
       const dayMessages = allMessages.filter(message => {
-        const messageDate = new Date(message.createdAt);
+        const messageDate = new Date(message.timestamp);
         return messageDate >= dayStart && messageDate <= dayEnd;
       }).length;
       
@@ -664,7 +666,7 @@ export class MemStorage implements IStorage {
     const messageVolumeTrends = [];
     for (let hour = 0; hour < 24; hour++) {
       const count = allMessages.filter(message => {
-        const messageDate = new Date(message.createdAt);
+        const messageDate = new Date(message.timestamp);
         const messageHour = messageDate.getHours();
         const isToday = messageDate.toDateString() === now.toDateString();
         return isToday && messageHour === hour;
