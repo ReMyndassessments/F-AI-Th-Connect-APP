@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Highlighter, Palette, Bookmark, Heart, Star, MessageCircle } from "lucide-react";
+import { Highlighter, Palette, Bookmark, Heart, Star, MessageCircle, Download } from "lucide-react";
 
 interface HighlightData {
   id: string;
@@ -48,27 +47,24 @@ export default function TextHighlighter({ content, messageId }: TextHighlighterP
   }, [highlights, messageId]);
 
   const handleTextSelection = () => {
-    const selection = window.getSelection();
-    if (selection && selection.toString().trim().length > 0) {
-      const range = selection.getRangeAt(0);
-      const contentElement = contentRef.current;
-      
-      if (contentElement && contentElement.contains(range.commonAncestorContainer)) {
-        // Calculate text positions relative to the content
-        const tempElement = document.createElement('div');
-        tempElement.innerHTML = content;
-        const textContent = tempElement.textContent || '';
+    setTimeout(() => {
+      const selection = window.getSelection();
+      if (selection && selection.toString().trim().length > 0) {
+        const range = selection.getRangeAt(0);
+        const contentElement = contentRef.current;
         
-        const selectedText = selection.toString();
-        const startPos = textContent.indexOf(selectedText);
-        
-        if (startPos !== -1) {
-          setSelectedText(selectedText);
-          setSelectionRange({ start: startPos, end: startPos + selectedText.length });
-          setShowPopover(true);
+        if (contentElement && contentElement.contains(range.commonAncestorContainer)) {
+          const selectedText = selection.toString().trim();
+          const startPos = content.indexOf(selectedText);
+          
+          if (startPos !== -1) {
+            setSelectedText(selectedText);
+            setSelectionRange({ start: startPos, end: startPos + selectedText.length });
+            setShowPopover(true);
+          }
         }
       }
-    }
+    }, 10);
   };
 
   const addHighlight = (category: string, color: string) => {
@@ -168,9 +164,41 @@ export default function TextHighlighter({ content, messageId }: TextHighlighterP
         ref={contentRef}
         className="text-sm text-gray-900 whitespace-pre-wrap mb-2 select-text cursor-text leading-relaxed"
         onMouseUp={handleTextSelection}
+        onTouchEnd={handleTextSelection}
       >
         {renderHighlightedContent()}
       </div>
+      
+      {/* Show highlighting toolbar when text is selected */}
+      {selectedText && showPopover && (
+        <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="flex items-center gap-2 mb-2">
+            <Highlighter className="w-4 h-4 text-blue-600" />
+            <span className="text-sm font-medium text-blue-900">Highlight for Bible Study</span>
+          </div>
+          <p className="text-xs text-gray-600 mb-3">
+            Selected: "{selectedText.slice(0, 40)}{selectedText.length > 40 ? '...' : ''}"
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {HIGHLIGHT_CATEGORIES.map((category) => {
+              const Icon = category.icon;
+              return (
+                <Button
+                  key={category.name}
+                  variant="outline"
+                  size="sm"
+                  onClick={() => addHighlight(category.name, category.color)}
+                  className="text-xs h-8"
+                  title={category.description}
+                >
+                  <Icon className="w-3 h-3 mr-1" />
+                  {category.name}
+                </Button>
+              );
+            })}
+          </div>
+        </div>
+      )}
       
       {highlights.length > 0 && (
         <div className="mt-3 p-3 bg-gray-50 rounded-lg">
@@ -182,7 +210,8 @@ export default function TextHighlighter({ content, messageId }: TextHighlighterP
               onClick={exportHighlights}
               className="text-xs"
             >
-              Export Study Notes
+              <Download className="w-3 h-3 mr-1" />
+              Export Notes
             </Button>
           </div>
           <div className="space-y-1">
@@ -204,43 +233,6 @@ export default function TextHighlighter({ content, messageId }: TextHighlighterP
           </div>
         </div>
       )}
-
-      <Popover open={showPopover} onOpenChange={setShowPopover}>
-        <PopoverTrigger asChild>
-          <div className="hidden" />
-        </PopoverTrigger>
-        <PopoverContent className="w-80 p-4" align="start">
-          <div className="space-y-3">
-            <div className="flex items-center space-x-2">
-              <Highlighter className="w-4 h-4 text-blue-500" />
-              <h3 className="font-medium text-sm">Highlight for Bible Study</h3>
-            </div>
-            <p className="text-xs text-gray-600">
-              Selected: "{selectedText.slice(0, 50)}{selectedText.length > 50 ? '...' : ''}"
-            </p>
-            <div className="grid grid-cols-1 gap-2">
-              {HIGHLIGHT_CATEGORIES.map((category) => {
-                const Icon = category.icon;
-                return (
-                  <Button
-                    key={category.name}
-                    variant="outline"
-                    size="sm"
-                    onClick={() => addHighlight(category.name, category.color)}
-                    className="justify-start text-left h-auto p-2"
-                  >
-                    <Icon className="w-4 h-4 mr-2 flex-shrink-0" />
-                    <div>
-                      <div className="font-medium text-xs">{category.name}</div>
-                      <div className="text-xs text-gray-500">{category.description}</div>
-                    </div>
-                  </Button>
-                );
-              })}
-            </div>
-          </div>
-        </PopoverContent>
-      </Popover>
     </div>
   );
 }
