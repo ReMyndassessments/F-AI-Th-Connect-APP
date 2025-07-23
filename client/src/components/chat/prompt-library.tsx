@@ -84,9 +84,9 @@ export function PromptLibrary({ onSelectPrompt, children }: PromptLibraryProps) 
           </DialogDescription>
         </DialogHeader>
         
-        <div className="flex-1 flex flex-col space-y-4">
+        <div className="flex-1 flex flex-col space-y-4 min-h-0">
           {/* Search Bar */}
-          <div className="relative">
+          <div className="relative flex-shrink-0">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <Input
               placeholder="Search prompts by topic, category, or keywords..."
@@ -116,7 +116,7 @@ export function PromptLibrary({ onSelectPrompt, children }: PromptLibraryProps) 
               })}
             </TabsList>
 
-            <TabsContent value="all" className="flex-1">
+            <TabsContent value="all" className="mt-4">
               <PromptGrid 
                 prompts={filteredPrompts}
                 onSelectPrompt={handleSelectPrompt}
@@ -128,7 +128,7 @@ export function PromptLibrary({ onSelectPrompt, children }: PromptLibraryProps) 
             </TabsContent>
 
             {promptLibrary.map((category) => (
-              <TabsContent key={category.id} value={category.id} className="flex-1">
+              <TabsContent key={category.id} value={category.id} className="mt-4">
                 <div className="mb-4 p-4 bg-blue-50 rounded-lg">
                   <h3 className="font-semibold text-blue-900 mb-1">{category.name}</h3>
                   <p className="text-sm text-blue-700">{category.description}</p>
@@ -178,8 +178,8 @@ function PromptGrid({
   }
 
   return (
-    <ScrollArea className="flex-1">
-      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+    <ScrollArea className="h-[400px] w-full pr-3">
+      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 pb-4">
         {prompts.map((prompt) => {
           const category = promptLibrary.find(cat => 
             cat.prompts.some(p => p.id === prompt.id)
