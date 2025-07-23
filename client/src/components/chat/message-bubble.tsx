@@ -17,8 +17,8 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
   if (isUser) {
     return (
       <div className="flex justify-end group">
-        <div className="bg-blue-500 text-white rounded-2xl rounded-br-md px-4 py-3 max-w-xs lg:max-w-md">
-          <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+        <div className="bg-blue-500 text-white rounded-2xl rounded-br-md px-3 sm:px-4 py-2 sm:py-3 max-w-[280px] sm:max-w-xs lg:max-w-md">
+          <p className="text-sm sm:text-base whitespace-pre-wrap break-words">{message.content}</p>
           <div className="flex items-center justify-between mt-2">
             <p className="text-xs text-blue-100">
               {new Date(message.timestamp).toLocaleTimeString()}
@@ -35,11 +35,11 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
   }
 
   return (
-    <div className="flex items-start space-x-3 group">
-      <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
-        <span className="text-white font-semibold text-sm">AI</span>
+    <div className="flex items-start space-x-2 sm:space-x-3 group">
+      <div className="w-7 h-7 sm:w-8 sm:h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+        <span className="text-white font-semibold text-xs sm:text-sm">AI</span>
       </div>
-      <div className="bg-gray-100 rounded-2xl rounded-bl-md px-4 py-3 max-w-md lg:max-w-lg">
+      <div className="bg-gray-100 rounded-2xl rounded-bl-md px-3 sm:px-4 py-2 sm:py-3 max-w-[280px] sm:max-w-md lg:max-w-lg">
         <TextHighlighter content={message.content} messageId={message.id} />
         
         {scriptureReferences.length > 0 && (

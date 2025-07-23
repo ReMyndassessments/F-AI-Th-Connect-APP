@@ -126,7 +126,7 @@ export default function Chat() {
                 variant="ghost"
                 size="sm"
                 onClick={() => setLocation("/")}
-                className="flex items-center space-x-1 sm:space-x-2 p-2 sm:px-3"
+                className="flex items-center space-x-1 sm:space-x-2 p-2 sm:px-3 touch-target mobile-tap"
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span className="hidden sm:inline">Back to Home</span>
@@ -147,7 +147,7 @@ export default function Chat() {
               />
               <Button
                 onClick={handleStartNewChat}
-                className="faith-button-primary text-xs sm:text-sm px-2 sm:px-4"
+                className="faith-button-primary text-xs sm:text-sm px-2 sm:px-4 touch-target mobile-tap"
                 disabled={createSessionMutation.isPending}
                 size="sm"
               >

@@ -17,7 +17,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative bg-gradient-to-br from-blue-50 via-white to-amber-50 py-20 lg:py-32 overflow-hidden">
+    <section className="relative bg-gradient-to-br from-blue-50 via-white to-amber-50 py-12 sm:py-16 lg:py-32 overflow-hidden">
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-5">
         <div 
@@ -29,41 +29,41 @@ export default function Hero() {
       </div>
       
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div className="text-center lg:text-left">
-            <h1 className="text-5xl lg:text-6xl font-bold leading-tight mb-6">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight mb-4 sm:mb-6">
               <span className="text-gray-900">Find</span>
               <span className="faith-gradient-text"> Biblical Wisdom</span>
               <span className="text-gray-900"> Through AI</span>
             </h1>
             
-            <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+            <p className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 leading-relaxed px-4 sm:px-0">
               Experience personalized Christian guidance, Scripture-based answers, and spiritual support powered by advanced AI. Connect with your faith in meaningful conversations.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start px-4 sm:px-0">
               <Button
                 onClick={startChat}
-                className="faith-button-primary px-8 py-4 rounded-xl font-semibold text-lg shadow-lg"
+                className="faith-button-primary px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg shadow-lg touch-target mobile-tap"
               >
                 Start Free Conversation
               </Button>
               <Button
                 onClick={openDemo}
                 variant="outline"
-                className="faith-button-secondary px-8 py-4 rounded-xl font-semibold text-lg"
+                className="faith-button-secondary px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg touch-target mobile-tap"
               >
-                <Play className="w-5 h-5 mr-2" />
+                <Play className="w-4 sm:w-5 h-4 sm:h-5 mr-2" />
                 Watch Demo
               </Button>
             </div>
             
             {/* Support Ministry Button */}
-            <div className="mt-6 flex justify-center lg:justify-start">
+            <div className="mt-4 sm:mt-6 flex justify-center lg:justify-start px-4 sm:px-0">
               <Button
                 asChild
                 variant="outline"
-                className="px-6 py-3 rounded-lg font-medium border-amber-300 text-amber-700 hover:bg-amber-50 hover:border-amber-400"
+                className="px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium border-amber-300 text-amber-700 hover:bg-amber-50 hover:border-amber-400 touch-target mobile-tap text-sm sm:text-base"
               >
                 <a href="https://www.givesendgo.com/CodeandCoffeeforChrist" target="_blank" rel="noopener noreferrer">
                   💝 Support This Ministry

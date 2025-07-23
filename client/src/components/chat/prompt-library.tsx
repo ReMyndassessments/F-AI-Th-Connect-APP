@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -70,7 +70,7 @@ export function PromptLibrary({ onSelectPrompt, children }: PromptLibraryProps) 
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="max-w-4xl max-h-[90vh] sm:max-h-[80vh] w-[95vw] sm:w-full flex flex-col" aria-describedby="prompt-library-description">
+      <DialogContent className="max-w-4xl max-h-[90vh] sm:max-h-[80vh] w-[95vw] sm:w-full flex flex-col">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
             <BookOpen className="w-5 h-5 text-blue-600" />
@@ -79,9 +79,9 @@ export function PromptLibrary({ onSelectPrompt, children }: PromptLibraryProps) 
               {filteredPrompts.length} prompts
             </Badge>
           </DialogTitle>
-          <p id="prompt-library-description" className="text-sm text-gray-600">
+          <DialogDescription className="text-sm text-gray-600">
             Browse pre-written prompts organized by ministry categories to discover what you can ask the AI.
-          </p>
+          </DialogDescription>
         </DialogHeader>
         
         <div className="flex-1 flex flex-col space-y-4">
