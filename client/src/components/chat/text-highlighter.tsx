@@ -137,7 +137,12 @@ export default function TextHighlighter({ content, messageId }: TextHighlighterP
   };
 
   const exportHighlights = () => {
-    if (highlights.length === 0) return;
+    if (highlights.length === 0) {
+      alert('No highlights found to export. Please highlight some text first.');
+      return;
+    }
+    
+    console.log('Exporting highlights:', highlights); // Debug log
     
     // Create formatted text with highlights marked
     const sortedHighlights = [...highlights].sort((a, b) => a.start - b.start);
@@ -161,32 +166,39 @@ export default function TextHighlighter({ content, messageId }: TextHighlighterP
       formattedContent += content.slice(lastIndex);
     }
     
-    const exportData = {
-      title: "F-AI-TH-Connect Bible Study Notes",
-      messageId: messageId,
-      exportDate: new Date().toLocaleDateString(),
-      originalContent: content,
-      highlightedContent: formattedContent,
-      highlightSummary: {
-        totalHighlights: highlights.length,
-        categories: HIGHLIGHT_CATEGORIES.map(cat => ({
-          name: cat.name,
-          count: highlights.filter(h => h.color === cat.color).length,
-          highlights: highlights.filter(h => h.color === cat.color).map(h => h.text)
-        })).filter(cat => cat.count > 0)
-      },
-      highlights: highlights.map(h => ({
-        text: h.text,
-        category: h.category,
-        position: { start: h.start, end: h.end }
-      }))
-    };
+    // Create a readable text format
+    const readableContent = `
+F-AI-TH-CONNECT BIBLE STUDY NOTES
+==================================
+Export Date: ${new Date().toLocaleDateString()}
+Message ID: ${messageId}
+Total Highlights: ${highlights.length}
+
+ORIGINAL AI RESPONSE:
+${content}
+
+HIGHLIGHTED VERSION:
+${formattedContent}
+
+HIGHLIGHT SUMMARY:
+${HIGHLIGHT_CATEGORIES.map(cat => {
+  const catHighlights = highlights.filter(h => h.color === cat.color);
+  if (catHighlights.length === 0) return '';
+  return `
+${cat.name.toUpperCase()} (${catHighlights.length} items):
+${catHighlights.map(h => `  • ${h.text}`).join('\n')}`;
+}).filter(section => section !== '').join('\n')}
+
+DETAILED HIGHLIGHTS:
+${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join('\n')}
+    `;
     
-    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    // Export as text file for easier reading
+    const blob = new Blob([readableContent], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `bible-study-notes-${messageId}-${new Date().toISOString().split('T')[0]}.json`;
+    a.download = `bible-study-notes-${messageId}-${new Date().toISOString().split('T')[0]}.txt`;
     a.click();
     URL.revokeObjectURL(url);
   };
