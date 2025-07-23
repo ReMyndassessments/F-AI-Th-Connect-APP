@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Loader2 } from "lucide-react";
+import { Send, Loader2, BookOpen } from "lucide-react";
 import MessageBubble from "@/components/chat/message-bubble";
 import TypingIndicator from "@/components/chat/typing-indicator";
+import { PromptLibrary } from "@/components/chat/prompt-library";
 
 import FileUpload from "@/components/chat/file-upload";
 import type { Message } from "@/lib/chat-api";
@@ -46,6 +47,10 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
     setFileContent(content);
     // Clear any existing input and set a helpful prompt
     setInputValue(`Please create a comprehensive Bible study based on this ${fileName.endsWith('.pdf') ? 'document' : fileName.endsWith('.docx') ? 'Word document' : 'content'}. Include discussion questions and practical applications.`);
+  };
+
+  const handlePromptSelect = (promptText: string) => {
+    setInputValue(promptText);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -152,6 +157,18 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
           </div>
           
           <div className="flex items-center space-x-1 sm:space-x-2">
+            <PromptLibrary onSelectPrompt={handlePromptSelect}>
+              <Button
+                type="button"
+                variant="outline"
+                className="p-2 sm:p-3 rounded-xl border-gray-300 hover:border-blue-400 hover:bg-blue-50 transition-colors"
+                size="sm"
+                disabled={isSending}
+                title="Prompt Library"
+              >
+                <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
+              </Button>
+            </PromptLibrary>
             
             <Button
               type="submit"

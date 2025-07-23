@@ -89,6 +89,7 @@ The application uses these main entities:
 - **Daily Memory Verses**: Rotating scripture verses that change daily across all pages
 - **Ministry Support Integration**: GiveSendGo donation button prominently featured in navigation and hero section
 - **Tasteful Support Reminders**: Optional ministry support messages every 3rd AI response (feature flag controlled) - ACTIVE
+- **Prompt Library**: Comprehensive pre-written prompt collection organized by ministry categories with search functionality, favorites, and one-click insertion - designed specifically for older users unfamiliar with AI
 - **Responsive Design**: Mobile-first approach with adaptive layouts
 
 ## Data Flow
@@ -148,3 +149,4 @@ The architecture prioritizes developer experience with fast iteration cycles whi
 ### January 23, 2025
 - **Text Highlighting System Completed**: Successfully implemented and tested comprehensive highlighting system for AI responses with 5 study categories (Key Verse, Prayer Point, Study Note, Action Item, Discussion), persistent storage, inline toolbar interface, and export functionality for Bible study preparation - CONFIRMED WORKING
 - **Enhanced Export Feature**: Upgraded highlighting export to include both original content and formatted content with visual highlight markers, plus comprehensive summaries by category for complete Bible study preparation
+- **Prompt Library Implementation**: Added comprehensive prompt library with 8 ministry categories (Leadership, Men's Ministry, Women's Ministry, Missions & Outreach, Church Planting, Health & Wellness, Personal Growth, Youth Ministry) containing 30+ pre-written prompts to help older users discover AI capabilities and reduce intimidation
