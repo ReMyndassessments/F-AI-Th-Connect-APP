@@ -70,8 +70,8 @@ export function PromptLibrary({ onSelectPrompt, children }: PromptLibraryProps) 
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="max-w-4xl max-h-[90vh] sm:max-h-[80vh] w-[95vw] sm:w-full flex flex-col">
-        <DialogHeader>
+      <DialogContent className="max-w-4xl h-[85vh] w-[95vw] sm:w-full flex flex-col p-0">
+        <DialogHeader className="px-6 py-4 border-b">
           <DialogTitle className="flex items-center space-x-2">
             <BookOpen className="w-5 h-5 text-blue-600" />
             <span>Prompt Library</span>
@@ -84,9 +84,9 @@ export function PromptLibrary({ onSelectPrompt, children }: PromptLibraryProps) 
           </DialogDescription>
         </DialogHeader>
         
-        <div className="flex-1 flex flex-col space-y-4 min-h-0">
+        <div className="flex-1 flex flex-col px-6 py-4 min-h-0">
           {/* Search Bar */}
-          <div className="relative flex-shrink-0">
+          <div className="relative mb-4">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <Input
               placeholder="Search prompts by topic, category, or keywords..."
@@ -97,8 +97,8 @@ export function PromptLibrary({ onSelectPrompt, children }: PromptLibraryProps) 
           </div>
 
           {/* Category Tabs */}
-          <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="flex-1 flex flex-col">
-            <TabsList className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-9 w-full h-auto p-1 gap-1">
+          <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="flex-1 flex flex-col min-h-0">
+            <TabsList className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-9 w-full h-auto p-1 gap-1 mb-4">
               <TabsTrigger value="all" className="text-xs">All</TabsTrigger>
               {promptLibrary.map((category) => {
                 const IconComponent = categoryIcons[category.id] || BookOpen;
@@ -116,33 +116,37 @@ export function PromptLibrary({ onSelectPrompt, children }: PromptLibraryProps) 
               })}
             </TabsList>
 
-            <TabsContent value="all" className="mt-4">
-              <PromptGrid 
-                prompts={filteredPrompts}
-                onSelectPrompt={handleSelectPrompt}
-                onToggleFavorite={toggleFavorite}
-                onCopyPrompt={copyPrompt}
-                favorites={favorites}
-                showCategory={true}
-              />
-            </TabsContent>
-
-            {promptLibrary.map((category) => (
-              <TabsContent key={category.id} value={category.id} className="mt-4">
-                <div className="mb-4 p-4 bg-blue-50 rounded-lg">
-                  <h3 className="font-semibold text-blue-900 mb-1">{category.name}</h3>
-                  <p className="text-sm text-blue-700">{category.description}</p>
-                </div>
+            <div className="flex-1 min-h-0">
+              <TabsContent value="all" className="h-full m-0">
                 <PromptGrid 
                   prompts={filteredPrompts}
                   onSelectPrompt={handleSelectPrompt}
                   onToggleFavorite={toggleFavorite}
                   onCopyPrompt={copyPrompt}
                   favorites={favorites}
-                  showCategory={false}
+                  showCategory={true}
                 />
               </TabsContent>
-            ))}
+
+              {promptLibrary.map((category) => (
+                <TabsContent key={category.id} value={category.id} className="h-full m-0">
+                  <div className="mb-4 p-4 bg-blue-50 rounded-lg">
+                    <h3 className="font-semibold text-blue-900 mb-1">{category.name}</h3>
+                    <p className="text-sm text-blue-700">{category.description}</p>
+                  </div>
+                  <div className="h-[calc(100%-120px)]">
+                    <PromptGrid 
+                      prompts={filteredPrompts}
+                      onSelectPrompt={handleSelectPrompt}
+                      onToggleFavorite={toggleFavorite}
+                      onCopyPrompt={copyPrompt}
+                      favorites={favorites}
+                      showCategory={false}
+                    />
+                  </div>
+                </TabsContent>
+              ))}
+            </div>
           </Tabs>
         </div>
       </DialogContent>
@@ -178,8 +182,8 @@ function PromptGrid({
   }
 
   return (
-    <ScrollArea className="h-[400px] w-full pr-3">
-      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 pb-4">
+    <ScrollArea className="h-full w-full">
+      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 p-1">
         {prompts.map((prompt) => {
           const category = promptLibrary.find(cat => 
             cat.prompts.some(p => p.id === prompt.id)
