@@ -165,4 +165,30 @@
     background: white !important;
     color: hsl(207, 90%, 54%) !important;
   }
+  
+  /* Mobile textarea placeholder styling */
+  @media (max-width: 640px) {
+    textarea::placeholder {
+      font-size: 14px;
+      line-height: 1.2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    .mobile-scroll {
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    
+    .mobile-scroll::-webkit-scrollbar {
+      display: none;
+    }
+    
+    .touch-target {
+      min-width: 44px;
+      min-height: 44px;
+    }
+  }
 }

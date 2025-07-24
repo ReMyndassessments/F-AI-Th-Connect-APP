@@ -146,11 +146,11 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
         <div className="flex items-end space-x-2 sm:space-x-3">
           <div className="flex-1 space-y-2">
             <Textarea
-              placeholder="Ask about faith, prayer, or biblical guidance..."
+              placeholder="Ask about faith, prayer, or guidance..."
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="w-full border border-gray-300 rounded-xl px-3 sm:px-4 py-2 sm:py-3 min-h-[44px] sm:min-h-[48px] max-h-32 resize-none text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full border border-gray-300 rounded-xl px-3 sm:px-4 py-2 sm:py-3 min-h-[44px] sm:min-h-[48px] max-h-32 resize-none text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               disabled={isSending}
               rows={1}
             />
