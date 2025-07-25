@@ -217,7 +217,8 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
     alert('📄 For colored highlights in print:\n\n1. In the print dialog, click "More settings"\n2. Enable "Background graphics" or "Print backgrounds"\n3. This will show the highlight colors when printing');
     
     // Create HTML version with colored highlights for printing
-    let htmlContent = content;
+    // Clean up excessive whitespace and normalize content
+    let htmlContent = content.replace(/\n\s*\n\s*\n/g, '\n\n').trim();
     
     // Sort highlights by start position (descending) to avoid index issues
     const sortedHighlights = [...highlights].sort((a, b) => b.start - a.start);
@@ -256,9 +257,11 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
         }
         body { 
             font-family: Georgia, serif; 
-            line-height: 1.6; 
+            line-height: 1.5; 
             color: #333;
             max-width: 100%;
+            margin: 0;
+            padding: 20px;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
         }
@@ -286,9 +289,10 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
         .highlight-purple { color: #a855f7; font-weight: 900; text-decoration: underline; }
         .highlight-orange { color: #f97316; font-weight: 900; text-decoration: underline; }
         .content { 
-            white-space: pre-wrap; 
-            line-height: 1.8;
+            line-height: 1.6;
             margin-bottom: 15px;
+            word-wrap: break-word;
+            max-width: 100%;
         }
         .legend { 
             display: flex; 
@@ -390,7 +394,7 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
 
     <div class="section">
         <div class="section-title">AI Response with Highlights</div>
-        <div class="content" style="padding: 15px; background: #fafafa !important; border-radius: 8px; border: 1px solid #e5e7eb !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;">${htmlContent}</div>
+        <div class="content" style="padding: 15px; background: #fafafa !important; border-radius: 8px; border: 1px solid #e5e7eb !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;">${htmlContent.replace(/\n/g, '<br>')}</div>
     </div>
 
     <div class="section">
