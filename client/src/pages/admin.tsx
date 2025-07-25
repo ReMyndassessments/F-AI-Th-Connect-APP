@@ -9,6 +9,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import FeatureFlagsTab from "@/components/admin/feature-flags-tab";
 import AdvertisementsTab from "@/components/admin/advertisements-tab";
 import { PasswordChangeTab } from "@/components/admin/password-change-tab";
+import { QRCodeGenerator } from "@/components/admin/qr-code-generator";
 import DailyVerseCard from "@/components/daily-verse/daily-verse-card";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -26,7 +27,8 @@ import {
   Home,
   Download,
   Flag,
-  Eye
+  Eye,
+  QrCode
 } from "lucide-react";
 import { useLocation } from "wouter";
 
@@ -80,7 +82,7 @@ export default function AdminDashboard() {
     const data = {
       analytics: analytics || null,
       exportDate: new Date().toISOString(),
-      note: analytics?.totalSessions > 0 ? "Live analytics data" : "Fresh installation with no usage data yet"
+      note: (analytics?.totalSessions ?? 0) > 0 ? "Live analytics data" : "Fresh installation with no usage data yet"
     };
     
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -199,7 +201,7 @@ export default function AdminDashboard() {
                 {analyticsLoading ? "..." : (analytics?.totalSessions || 0)}
               </div>
               <p className="text-xs text-muted-foreground">
-                {analytics?.totalSessions > 0 ? "Active user conversations" : "No sessions yet"}
+                {(analytics?.totalSessions ?? 0) > 0 ? "Active user conversations" : "No sessions yet"}
               </p>
             </CardContent>
           </Card>
@@ -214,7 +216,7 @@ export default function AdminDashboard() {
                 {analyticsLoading ? "..." : (analytics?.totalMessages || 0)}
               </div>
               <p className="text-xs text-muted-foreground">
-                {analytics?.totalMessages > 0 ? "User engagement messages" : "No messages yet"}
+                {(analytics?.totalMessages ?? 0) > 0 ? "User engagement messages" : "No messages yet"}
               </p>
             </CardContent>
           </Card>
@@ -374,7 +376,7 @@ export default function AdminDashboard() {
                     <ul className="text-sm space-y-1">
                       <li>• {analytics.avgCTR}% average click-through rate</li>
                       <li>• {analytics.totalAdImpressions} total ad impressions</li>
-                      <li>• {analytics.topPlacements.length} strategic placement options</li>
+                      <li>• {analytics.topPlacements?.length || 0} strategic placement options</li>
                       <li>• Real-time analytics and performance tracking</li>
                     </ul>
                   </div>
@@ -429,10 +431,14 @@ export default function AdminDashboard() {
         </div>
 
         <Tabs defaultValue="overview" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-6">
+          <TabsList className="grid w-full grid-cols-7">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="sessions">Sessions</TabsTrigger>
             <TabsTrigger value="topics">Topics</TabsTrigger>
+            <TabsTrigger value="qr-codes" className="flex items-center">
+              <QrCode className="w-4 h-4 mr-1" />
+              QR Codes
+            </TabsTrigger>
             <TabsTrigger value="feature-flags" className="flex items-center">
               <Flag className="w-4 h-4 mr-1" />
               Features
@@ -505,6 +511,10 @@ export default function AdminDashboard() {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+          
+          <TabsContent value="qr-codes" className="space-y-4">
+            <QRCodeGenerator />
           </TabsContent>
           
           <TabsContent value="feature-flags" className="space-y-4">
