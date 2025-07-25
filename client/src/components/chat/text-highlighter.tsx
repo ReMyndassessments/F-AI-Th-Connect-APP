@@ -229,20 +229,67 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
       const highlightedText = htmlContent.slice(highlight.start, highlight.end);
       const after = htmlContent.slice(highlight.end);
       
-      // Use stronger colors and multiple browser-specific properties for print
+      // Use block-level formatting for better print visibility
       const colorStyles = {
-        'bg-yellow-200': 'border: 3px solid #facc15 !important; background: linear-gradient(#fef08a, #fef08a) !important; background-color: #fef08a !important; color: #000000 !important; font-weight: 700 !important; box-shadow: inset 0 0 0 1000px #fef08a !important;',
-        'bg-blue-200': 'border: 3px solid #3b82f6 !important; background: linear-gradient(#dbeafe, #dbeafe) !important; background-color: #dbeafe !important; color: #000000 !important; font-weight: 700 !important; box-shadow: inset 0 0 0 1000px #dbeafe !important;',
-        'bg-green-200': 'border: 3px solid #22c55e !important; background: linear-gradient(#dcfce7, #dcfce7) !important; background-color: #dcfce7 !important; color: #000000 !important; font-weight: 700 !important; box-shadow: inset 0 0 0 1000px #dcfce7 !important;',
-        'bg-purple-200': 'border: 3px solid #a855f7 !important; background: linear-gradient(#e9d5ff, #e9d5ff) !important; background-color: #e9d5ff !important; color: #000000 !important; font-weight: 700 !important; box-shadow: inset 0 0 0 1000px #e9d5ff !important;',
-        'bg-orange-200': 'border: 3px solid #f97316 !important; background: linear-gradient(#fed7aa, #fed7aa) !important; background-color: #fed7aa !important; color: #000000 !important; font-weight: 700 !important; box-shadow: inset 0 0 0 1000px #fed7aa !important;'
+        'bg-yellow-200': { 
+          bg: '#fef08a', 
+          border: '#facc15', 
+          label: 'KEY VERSE',
+          shadow: 'inset 0 0 0 1000px #fef08a'
+        },
+        'bg-blue-200': { 
+          bg: '#dbeafe', 
+          border: '#3b82f6', 
+          label: 'PRAYER POINT',
+          shadow: 'inset 0 0 0 1000px #dbeafe'
+        },
+        'bg-green-200': { 
+          bg: '#dcfce7', 
+          border: '#22c55e', 
+          label: 'STUDY NOTE',
+          shadow: 'inset 0 0 0 1000px #dcfce7'
+        },
+        'bg-purple-200': { 
+          bg: '#e9d5ff', 
+          border: '#a855f7', 
+          label: 'DISCUSSION',
+          shadow: 'inset 0 0 0 1000px #e9d5ff'
+        },
+        'bg-orange-200': { 
+          bg: '#fed7aa', 
+          border: '#f97316', 
+          label: 'ACTION ITEM',
+          shadow: 'inset 0 0 0 1000px #fed7aa'
+        }
       };
       
-      const style = colorStyles[highlight.color as keyof typeof colorStyles] || 'border: 3px solid #6b7280 !important; background-color: #f9fafb !important; color: #000000 !important; font-weight: 700 !important;';
+      const colors = colorStyles[highlight.color as keyof typeof colorStyles] || { 
+        bg: '#f9fafb', 
+        border: '#6b7280', 
+        label: 'HIGHLIGHT',
+        shadow: 'inset 0 0 0 1000px #f9fafb'
+      };
       
-      // Create a visually distinct highlight that works in print
-      const categoryIcon = category ? `[${category.name.toUpperCase()}]` : '[HIGHLIGHT]';
-      htmlContent = `${before}<span style="${style} padding: 4px 6px !important; border-radius: 4px !important; margin: 0 2px !important; display: inline-block !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;">${categoryIcon} ${highlightedText}</span>${after}`;
+      const categoryLabel = category ? category.name.toUpperCase() : 'HIGHLIGHT';
+      
+      // Create a block-style highlight that's more print-friendly
+      htmlContent = `${before}<div style="
+        background: linear-gradient(${colors.bg}, ${colors.bg}) !important; 
+        background-color: ${colors.bg} !important; 
+        border: 3px solid ${colors.border} !important; 
+        border-left: 8px solid ${colors.border} !important;
+        padding: 12px !important; 
+        margin: 8px 0 !important; 
+        border-radius: 8px !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+        box-shadow: ${colors.shadow} !important;
+        page-break-inside: avoid !important;
+      ">
+        <div style="font-weight: 700 !important; color: ${colors.border} !important; font-size: 12px !important; margin-bottom: 4px !important;">[${categoryLabel}]</div>
+        <div style="color: #000000 !important; font-weight: 600 !important; line-height: 1.4 !important;">${highlightedText}</div>
+      </div>${after}`;
     });
 
     const printableHTML = `<!DOCTYPE html>
@@ -345,16 +392,19 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
                 filter: opacity(1) !important;
             }
             /* Force background colors in print */
-            span[style*="border"] {
-                border-width: 3px !important;
-                font-weight: 700 !important;
-                padding: 4px 6px !important;
-                margin: 0 2px !important;
+            div[style*="background"] {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
                 color-adjust: exact !important;
                 background-clip: padding-box !important;
                 background-origin: padding-box !important;
+                page-break-inside: avoid !important;
+            }
+            div[style*="border"] {
+                border-width: 3px !important;
+                border-left-width: 8px !important;
+                padding: 12px !important;
+                margin: 8px 0 !important;
             }
             /* Browser-specific print color forcing */
             @media print and (-webkit-min-device-pixel-ratio: 0) {
