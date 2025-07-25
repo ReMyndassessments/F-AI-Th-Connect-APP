@@ -229,20 +229,20 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
       const highlightedText = htmlContent.slice(highlight.start, highlight.end);
       const after = htmlContent.slice(highlight.end);
       
-      // Use the EXACT same technique as the working print tip box
+      // Use colored text like the working blue headings instead of backgrounds
       const colorStyles = {
-        'bg-yellow-200': 'background: #fef3c7; border: 2px solid #f59e0b;',
-        'bg-blue-200': 'background: #dbeafe; border: 2px solid #3b82f6;',
-        'bg-green-200': 'background: #dcfce7; border: 2px solid #22c55e;',
-        'bg-purple-200': 'background: #e9d5ff; border: 2px solid #a855f7;',
-        'bg-orange-200': 'background: #fed7aa; border: 2px solid #f97316;'
+        'bg-yellow-200': 'color: #ca8a04; font-weight: 900;', // Golden yellow
+        'bg-blue-200': 'color: #1d4ed8; font-weight: 900;',   // Blue like headings
+        'bg-green-200': 'color: #16a34a; font-weight: 900;',  // Green
+        'bg-purple-200': 'color: #9333ea; font-weight: 900;', // Purple  
+        'bg-orange-200': 'color: #ea580c; font-weight: 900;'  // Orange
       };
       
-      const style = colorStyles[highlight.color as keyof typeof colorStyles] || 'background: #f9fafb; border: 2px solid #6b7280;';
+      const style = colorStyles[highlight.color as keyof typeof colorStyles] || 'color: #374151; font-weight: 900;';
       const categoryLabel = category ? `[${category.name.toUpperCase()}] ` : '[HIGHLIGHT] ';
       
-      // Use the EXACT same styling pattern as the working print tip box
-      htmlContent = `${before}<span style="${style} padding: 10px; margin: 10px 0; border-radius: 8px; font-weight: 700; color: #000000; display: inline-block;" title="${category?.name || 'Highlight'}">${categoryLabel}${highlightedText}</span>${after}`;
+      // Use colored text with the same approach as the working blue headings
+      htmlContent = `${before}<span style="${style} text-decoration: underline; text-decoration-color: currentColor; text-decoration-thickness: 2px;" title="${category?.name || 'Highlight'}">${categoryLabel}${highlightedText}</span>${after}`;
     });
 
     const printableHTML = `<!DOCTYPE html>
