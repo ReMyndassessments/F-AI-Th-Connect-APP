@@ -212,6 +212,9 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
       alert('No highlights found to print. Please highlight some text first.');
       return;
     }
+
+    // Show instruction for enabling background colors
+    alert('📄 For colored highlights in print:\n\n1. In the print dialog, click "More settings"\n2. Enable "Background graphics" or "Print backgrounds"\n3. This will show the highlight colors when printing');
     
     // Create HTML version with colored highlights for printing
     let htmlContent = content;
@@ -226,13 +229,13 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
       const highlightedText = htmlContent.slice(highlight.start, highlight.end);
       const after = htmlContent.slice(highlight.end);
       
-      // Use thick colored borders and bold text for print-friendly highlighting
+      // Use stronger colors and multiple browser-specific properties for print
       const colorStyles = {
-        'bg-yellow-200': 'border: 3px solid #facc15 !important; background-color: #fffbeb !important; color: #000000 !important; font-weight: 700 !important;',
-        'bg-blue-200': 'border: 3px solid #3b82f6 !important; background-color: #eff6ff !important; color: #000000 !important; font-weight: 700 !important;',
-        'bg-green-200': 'border: 3px solid #22c55e !important; background-color: #f0fdf4 !important; color: #000000 !important; font-weight: 700 !important;',
-        'bg-purple-200': 'border: 3px solid #a855f7 !important; background-color: #faf5ff !important; color: #000000 !important; font-weight: 700 !important;',
-        'bg-orange-200': 'border: 3px solid #f97316 !important; background-color: #fff7ed !important; color: #000000 !important; font-weight: 700 !important;'
+        'bg-yellow-200': 'border: 3px solid #facc15 !important; background: linear-gradient(#fef08a, #fef08a) !important; background-color: #fef08a !important; color: #000000 !important; font-weight: 700 !important; box-shadow: inset 0 0 0 1000px #fef08a !important;',
+        'bg-blue-200': 'border: 3px solid #3b82f6 !important; background: linear-gradient(#dbeafe, #dbeafe) !important; background-color: #dbeafe !important; color: #000000 !important; font-weight: 700 !important; box-shadow: inset 0 0 0 1000px #dbeafe !important;',
+        'bg-green-200': 'border: 3px solid #22c55e !important; background: linear-gradient(#dcfce7, #dcfce7) !important; background-color: #dcfce7 !important; color: #000000 !important; font-weight: 700 !important; box-shadow: inset 0 0 0 1000px #dcfce7 !important;',
+        'bg-purple-200': 'border: 3px solid #a855f7 !important; background: linear-gradient(#e9d5ff, #e9d5ff) !important; background-color: #e9d5ff !important; color: #000000 !important; font-weight: 700 !important; box-shadow: inset 0 0 0 1000px #e9d5ff !important;',
+        'bg-orange-200': 'border: 3px solid #f97316 !important; background: linear-gradient(#fed7aa, #fed7aa) !important; background-color: #fed7aa !important; color: #000000 !important; font-weight: 700 !important; box-shadow: inset 0 0 0 1000px #fed7aa !important;'
       };
       
       const style = colorStyles[highlight.color as keyof typeof colorStyles] || 'border: 3px solid #6b7280 !important; background-color: #f9fafb !important; color: #000000 !important; font-weight: 700 !important;';
@@ -332,19 +335,33 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
                 font-size: 12pt; 
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
+                color-adjust: exact !important;
             }
             .no-print { display: none; }
             * {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
                 color-adjust: exact !important;
+                filter: opacity(1) !important;
             }
-            /* Ensure borders and text show clearly in print */
+            /* Force background colors in print */
             span[style*="border"] {
                 border-width: 3px !important;
                 font-weight: 700 !important;
                 padding: 4px 6px !important;
                 margin: 0 2px !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+                background-clip: padding-box !important;
+                background-origin: padding-box !important;
+            }
+            /* Browser-specific print color forcing */
+            @media print and (-webkit-min-device-pixel-ratio: 0) {
+                * { -webkit-print-color-adjust: exact !important; }
+            }
+            @media print and (min-resolution: .001dpcm) {
+                * { print-color-adjust: exact !important; }
             }
         }
     </style>
@@ -354,6 +371,9 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
         <h1 style="color: #1e40af; margin: 0;">F-AI-TH-Connect Bible Study Notes</h1>
         <p style="margin: 5px 0; color: #6b7280;">Generated: ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}</p>
         <div class="highlight-stats">Total Highlights: ${highlights.length}</div>
+        <div style="background: #fef3c7; border: 2px solid #f59e0b; padding: 10px; margin: 10px 0; border-radius: 8px; font-size: 12px;">
+            <strong>📄 Print Tip:</strong> To see colored highlights, enable "Background graphics" in your browser's print settings.
+        </div>
     </div>
 
     <div class="legend">
