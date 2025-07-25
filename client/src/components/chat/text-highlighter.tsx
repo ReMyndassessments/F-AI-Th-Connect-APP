@@ -229,67 +229,20 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
       const highlightedText = htmlContent.slice(highlight.start, highlight.end);
       const after = htmlContent.slice(highlight.end);
       
-      // Use block-level formatting for better print visibility
+      // Use simple inline highlighting with strong visual markers for print
       const colorStyles = {
-        'bg-yellow-200': { 
-          bg: '#fef08a', 
-          border: '#facc15', 
-          label: 'KEY VERSE',
-          shadow: 'inset 0 0 0 1000px #fef08a'
-        },
-        'bg-blue-200': { 
-          bg: '#dbeafe', 
-          border: '#3b82f6', 
-          label: 'PRAYER POINT',
-          shadow: 'inset 0 0 0 1000px #dbeafe'
-        },
-        'bg-green-200': { 
-          bg: '#dcfce7', 
-          border: '#22c55e', 
-          label: 'STUDY NOTE',
-          shadow: 'inset 0 0 0 1000px #dcfce7'
-        },
-        'bg-purple-200': { 
-          bg: '#e9d5ff', 
-          border: '#a855f7', 
-          label: 'DISCUSSION',
-          shadow: 'inset 0 0 0 1000px #e9d5ff'
-        },
-        'bg-orange-200': { 
-          bg: '#fed7aa', 
-          border: '#f97316', 
-          label: 'ACTION ITEM',
-          shadow: 'inset 0 0 0 1000px #fed7aa'
-        }
+        'bg-yellow-200': 'background-color: #fef08a !important; border: 2px solid #facc15 !important; box-shadow: 0 0 0 2px #fef08a !important;',
+        'bg-blue-200': 'background-color: #dbeafe !important; border: 2px solid #3b82f6 !important; box-shadow: 0 0 0 2px #dbeafe !important;',
+        'bg-green-200': 'background-color: #dcfce7 !important; border: 2px solid #22c55e !important; box-shadow: 0 0 0 2px #dcfce7 !important;',
+        'bg-purple-200': 'background-color: #e9d5ff !important; border: 2px solid #a855f7 !important; box-shadow: 0 0 0 2px #e9d5ff !important;',
+        'bg-orange-200': 'background-color: #fed7aa !important; border: 2px solid #f97316 !important; box-shadow: 0 0 0 2px #fed7aa !important;'
       };
       
-      const colors = colorStyles[highlight.color as keyof typeof colorStyles] || { 
-        bg: '#f9fafb', 
-        border: '#6b7280', 
-        label: 'HIGHLIGHT',
-        shadow: 'inset 0 0 0 1000px #f9fafb'
-      };
+      const style = colorStyles[highlight.color as keyof typeof colorStyles] || 'background-color: #f9fafb !important; border: 2px solid #6b7280 !important;';
+      const categoryLabel = category ? `[${category.name.toUpperCase()}] ` : '[HIGHLIGHT] ';
       
-      const categoryLabel = category ? category.name.toUpperCase() : 'HIGHLIGHT';
-      
-      // Create a block-style highlight that's more print-friendly
-      htmlContent = `${before}<div style="
-        background: linear-gradient(${colors.bg}, ${colors.bg}) !important; 
-        background-color: ${colors.bg} !important; 
-        border: 3px solid ${colors.border} !important; 
-        border-left: 8px solid ${colors.border} !important;
-        padding: 12px !important; 
-        margin: 8px 0 !important; 
-        border-radius: 8px !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-        color-adjust: exact !important;
-        box-shadow: ${colors.shadow} !important;
-        page-break-inside: avoid !important;
-      ">
-        <div style="font-weight: 700 !important; color: ${colors.border} !important; font-size: 12px !important; margin-bottom: 4px !important;">[${categoryLabel}]</div>
-        <div style="color: #000000 !important; font-weight: 600 !important; line-height: 1.4 !important;">${highlightedText}</div>
-      </div>${after}`;
+      // Keep it inline but with strong visual markers
+      htmlContent = `${before}<span style="${style} padding: 4px 6px !important; border-radius: 4px !important; font-weight: 700 !important; color: #000000 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; margin: 0 2px !important;" title="${category?.name || 'Highlight'}">${categoryLabel}${highlightedText}</span>${after}`;
     });
 
     const printableHTML = `<!DOCTYPE html>
@@ -392,19 +345,18 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
                 filter: opacity(1) !important;
             }
             /* Force background colors in print */
-            div[style*="background"] {
+            span[style*="background"] {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
                 color-adjust: exact !important;
                 background-clip: padding-box !important;
                 background-origin: padding-box !important;
-                page-break-inside: avoid !important;
             }
-            div[style*="border"] {
-                border-width: 3px !important;
-                border-left-width: 8px !important;
-                padding: 12px !important;
-                margin: 8px 0 !important;
+            span[style*="border"] {
+                border-width: 2px !important;
+                padding: 4px 6px !important;
+                font-weight: 700 !important;
+                margin: 0 2px !important;
             }
             /* Browser-specific print color forcing */
             @media print and (-webkit-min-device-pixel-ratio: 0) {
