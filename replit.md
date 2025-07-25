@@ -152,3 +152,7 @@ The architecture prioritizes developer experience with fast iteration cycles whi
 - **Prompt Library Implementation**: Added comprehensive prompt library with 8 ministry categories (Leadership, Men's Ministry, Women's Ministry, Missions & Outreach, Church Planting, Health & Wellness, Personal Growth, Youth Ministry) containing 30+ pre-written prompts to help older users discover AI capabilities and reduce intimidation
 - **Admin Dashboard Analytics Fixed**: Resolved issue where Overview, Sessions, and Topics stats were not displaying. Fixed timestamp field references in analytics calculations and verified all metrics are now working correctly (totalSessions, totalMessages, activeSessionsToday, dailyStats, sessionDurations, messageVolumeTrends)
 - **Prompt Library Scrolling Fixed**: Improved dialog layout with proper height constraints and scrollable areas to ensure all prompts are accessible on all devices
+
+### January 25, 2025
+- **Highlight Isolation Bug Fixed**: Resolved critical issue where highlights were contaminating across different chat sessions. Implemented session-specific storage using `sessionId + messageId` keys to ensure complete isolation between conversations
+- **Print Functionality Enhanced**: Redesigned print system for better browser compatibility using category labels (e.g., [KEY VERSE], [STUDY NOTE]) with thick colored borders and bold text formatting instead of relying solely on background colors that browsers strip during printing - CONFIRMED WORKING
