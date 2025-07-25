@@ -9,7 +9,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import FeatureFlagsTab from "@/components/admin/feature-flags-tab";
 import AdvertisementsTab from "@/components/admin/advertisements-tab";
 import { PasswordChangeTab } from "@/components/admin/password-change-tab";
-import { QRCodeGenerator } from "@/components/admin/qr-code-generator";
+
 import DailyVerseCard from "@/components/daily-verse/daily-verse-card";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -27,8 +27,7 @@ import {
   Home,
   Download,
   Flag,
-  Eye,
-  QrCode
+  Eye
 } from "lucide-react";
 import { useLocation } from "wouter";
 
@@ -431,14 +430,10 @@ export default function AdminDashboard() {
         </div>
 
         <Tabs defaultValue="overview" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-7">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="sessions">Sessions</TabsTrigger>
             <TabsTrigger value="topics">Topics</TabsTrigger>
-            <TabsTrigger value="qr-codes" className="flex items-center">
-              <QrCode className="w-4 h-4 mr-1" />
-              QR Codes
-            </TabsTrigger>
             <TabsTrigger value="feature-flags" className="flex items-center">
               <Flag className="w-4 h-4 mr-1" />
               Features
@@ -513,9 +508,7 @@ export default function AdminDashboard() {
             </Card>
           </TabsContent>
           
-          <TabsContent value="qr-codes" className="space-y-4">
-            <QRCodeGenerator />
-          </TabsContent>
+
           
           <TabsContent value="feature-flags" className="space-y-4">
             <FeatureFlagsTab />
