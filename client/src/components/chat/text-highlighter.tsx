@@ -229,20 +229,20 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
       const highlightedText = htmlContent.slice(highlight.start, highlight.end);
       const after = htmlContent.slice(highlight.end);
       
-      // Use the same background technique as the working print tip box
+      // Use the EXACT same technique as the working print tip box
       const colorStyles = {
-        'bg-yellow-200': 'background: #fef3c7 !important; border: 2px solid #f59e0b !important;',
-        'bg-blue-200': 'background: #dbeafe !important; border: 2px solid #3b82f6 !important;',
-        'bg-green-200': 'background: #dcfce7 !important; border: 2px solid #22c55e !important;',
-        'bg-purple-200': 'background: #e9d5ff !important; border: 2px solid #a855f7 !important;',
-        'bg-orange-200': 'background: #fed7aa !important; border: 2px solid #f97316 !important;'
+        'bg-yellow-200': 'background: #fef3c7; border: 2px solid #f59e0b;',
+        'bg-blue-200': 'background: #dbeafe; border: 2px solid #3b82f6;',
+        'bg-green-200': 'background: #dcfce7; border: 2px solid #22c55e;',
+        'bg-purple-200': 'background: #e9d5ff; border: 2px solid #a855f7;',
+        'bg-orange-200': 'background: #fed7aa; border: 2px solid #f97316;'
       };
       
-      const style = colorStyles[highlight.color as keyof typeof colorStyles] || 'background: #f9fafb !important; border: 2px solid #6b7280 !important;';
+      const style = colorStyles[highlight.color as keyof typeof colorStyles] || 'background: #f9fafb; border: 2px solid #6b7280;';
       const categoryLabel = category ? `[${category.name.toUpperCase()}] ` : '[HIGHLIGHT] ';
       
-      // Use the same styling pattern as the working print tip box
-      htmlContent = `${before}<span style="${style} padding: 8px 10px !important; border-radius: 8px !important; font-weight: 700 !important; color: #000000 !important; margin: 2px !important; display: inline-block !important;" title="${category?.name || 'Highlight'}">${categoryLabel}${highlightedText}</span>${after}`;
+      // Use the EXACT same styling pattern as the working print tip box
+      htmlContent = `${before}<span style="${style} padding: 10px; margin: 10px 0; border-radius: 8px; font-weight: 700; color: #000000; display: inline-block;" title="${category?.name || 'Highlight'}">${categoryLabel}${highlightedText}</span>${after}`;
     });
 
     const printableHTML = `<!DOCTYPE html>
@@ -344,15 +344,7 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
                 color-adjust: exact !important;
                 filter: opacity(1) !important;
             }
-            /* Use simple background property like the working print tip */
-            span[style*="background"] {
-                background: inherit !important;
-                border: inherit !important;
-                padding: 8px 10px !important;
-                font-weight: 700 !important;
-                margin: 2px !important;
-                display: inline-block !important;
-            }
+            /* Let the highlights use their natural styling like the print tip box */
             /* Browser-specific print color forcing */
             @media print and (-webkit-min-device-pixel-ratio: 0) {
                 * { -webkit-print-color-adjust: exact !important; }
