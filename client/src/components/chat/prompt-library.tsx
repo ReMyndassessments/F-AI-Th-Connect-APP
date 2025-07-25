@@ -47,7 +47,9 @@ export function PromptLibrary({ onSelectPrompt, children }: PromptLibraryProps) 
     if (selectedCategory === "all") {
       return promptLibrary.flatMap(cat => cat.prompts);
     }
-    return promptLibrary.find(cat => cat.id === selectedCategory)?.prompts || [];
+    const category = promptLibrary.find(cat => cat.id === selectedCategory);
+    console.log(`Category "${selectedCategory}" found:`, category?.name, `with ${category?.prompts?.length || 0} prompts`);
+    return category?.prompts || [];
   };
 
   // Apply search filter to the category prompts
@@ -128,42 +130,30 @@ export function PromptLibrary({ onSelectPrompt, children }: PromptLibraryProps) 
             </TabsList>
 
             <div className="flex-1 min-h-0 overflow-hidden">
-              <TabsContent value="all" className="h-full m-0 overflow-hidden">
-                <ScrollArea className="h-full">
-                  <PromptGrid 
-                    prompts={filteredPrompts}
-                    onSelectPrompt={handleSelectPrompt}
-                    onToggleFavorite={toggleFavorite}
-                    onCopyPrompt={copyPrompt}
-                    favorites={favorites}
-                    showCategory={true}
-                  />
-                </ScrollArea>
-              </TabsContent>
-
-              {promptLibrary.map((category) => (
-                <TabsContent key={category.id} value={category.id} className="h-full m-0 overflow-hidden flex flex-col">
-                  <div className="mb-4 p-4 bg-blue-50 rounded-lg flex-shrink-0">
-                    <h3 className="font-semibold text-blue-900 mb-1">{category.name}</h3>
-                    <p className="text-sm text-blue-700">{category.description}</p>
+              {/* Show prompts for selected category */}
+              <ScrollArea className="h-full">
+                {selectedCategory !== "all" && (
+                  <div className="mb-4 p-4 bg-blue-50 rounded-lg">
+                    {(() => {
+                      const category = promptLibrary.find(cat => cat.id === selectedCategory);
+                      return category ? (
+                        <>
+                          <h3 className="font-semibold text-blue-900 mb-1">{category.name}</h3>
+                          <p className="text-sm text-blue-700">{category.description}</p>
+                        </>
+                      ) : null;
+                    })()}
                   </div>
-                  <div className="flex-1 overflow-hidden">
-                    <ScrollArea className="h-full">
-                      <PromptGrid 
-                        prompts={category.prompts.filter(prompt => {
-                          if (!searchQuery.trim()) return true;
-                          return searchPrompts(searchQuery).some(p => p.id === prompt.id);
-                        })}
-                        onSelectPrompt={handleSelectPrompt}
-                        onToggleFavorite={toggleFavorite}
-                        onCopyPrompt={copyPrompt}
-                        favorites={favorites}
-                        showCategory={false}
-                      />
-                    </ScrollArea>
-                  </div>
-                </TabsContent>
-              ))}
+                )}
+                <PromptGrid 
+                  prompts={filteredPrompts}
+                  onSelectPrompt={handleSelectPrompt}
+                  onToggleFavorite={toggleFavorite}
+                  onCopyPrompt={copyPrompt}
+                  favorites={favorites}
+                  showCategory={selectedCategory === "all"}
+                />
+              </ScrollArea>
             </div>
           </Tabs>
         </div>
