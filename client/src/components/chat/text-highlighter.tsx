@@ -231,11 +231,11 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
       
       // Use CSS classes like the working blue headings
       const colorClasses = {
-        'bg-yellow-200': 'highlight-yellow',
-        'bg-blue-200': 'highlight-blue',
-        'bg-green-200': 'highlight-green',
-        'bg-purple-200': 'highlight-purple',
-        'bg-orange-200': 'highlight-orange'
+        'bg-yellow-200 border-yellow-300': 'highlight-yellow',
+        'bg-blue-200 border-blue-300': 'highlight-blue',
+        'bg-green-200 border-green-300': 'highlight-green',
+        'bg-purple-200 border-purple-300': 'highlight-purple',
+        'bg-orange-200 border-orange-300': 'highlight-orange'
       };
       
       const cssClass = colorClasses[highlight.color as keyof typeof colorClasses] || 'highlight-blue';
@@ -374,11 +374,11 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
         <strong>Highlight Categories:</strong>
         ${HIGHLIGHT_CATEGORIES.map(cat => {
           const colorMap = {
-            'bg-yellow-200': '#eab308',
-            'bg-blue-200': '#3b82f6', 
-            'bg-green-200': '#22c55e',
-            'bg-purple-200': '#a855f7',
-            'bg-orange-200': '#f97316'
+            'bg-yellow-200 border-yellow-300': '#eab308',
+            'bg-blue-200 border-blue-300': '#3b82f6', 
+            'bg-green-200 border-green-300': '#22c55e',
+            'bg-purple-200 border-purple-300': '#a855f7',
+            'bg-orange-200 border-orange-300': '#f97316'
           };
           const color = colorMap[cat.color as keyof typeof colorMap] || '#6b7280';
           return `<div class="legend-item">
