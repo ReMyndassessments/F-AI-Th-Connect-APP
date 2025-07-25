@@ -251,131 +251,50 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
 <head>
     <title>F-AI-TH-Connect Bible Study Notes</title>
     <style>
-        @page { 
-            margin: 1in; 
-            size: letter;
-        }
         body { 
-            font-family: Georgia, serif; 
-            line-height: 1.4; 
+            font-family: Arial, sans-serif; 
+            line-height: 1.3; 
             color: #333;
-            max-width: 100%;
             margin: 0;
-            padding: 15px;
+            padding: 12px;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
         }
-        .header { 
-            text-align: center; 
-            border-bottom: 2px solid #3b82f6; 
-            padding-bottom: 10px; 
-            margin-bottom: 15px;
+        .highlight-yellow { color: #eab308; font-weight: 900; }
+        .highlight-blue { color: #3b82f6; font-weight: 900; }
+        .highlight-green { color: #22c55e; font-weight: 900; }
+        .highlight-purple { color: #a855f7; font-weight: 900; }
+        .highlight-orange { color: #f97316; font-weight: 900; }
+        h2 { color: #1e40af; margin: 8px 0; font-size: 16px; }
+        h3 { color: #1e40af; margin: 6px 0; font-size: 14px; border-left: 3px solid #3b82f6; padding-left: 8px; }
+        .content-box { 
+            padding: 8px;
+            background: #fafafa !important;
+            border: 1px solid #ddd !important;
+            margin: 6px 0;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
-        .section { 
-            margin-bottom: 15px; 
-            page-break-inside: avoid;
-        }
-        .section-title { 
-            font-weight: bold; 
-            font-size: 16px; 
-            margin-bottom: 10px; 
-            color: #1e40af;
-            border-left: 4px solid #3b82f6;
-            padding-left: 10px;
-        }
-        .highlight-yellow { color: #eab308; font-weight: 900; text-decoration: underline; }
-        .highlight-blue { color: #3b82f6; font-weight: 900; text-decoration: underline; }
-        .highlight-green { color: #22c55e; font-weight: 900; text-decoration: underline; }
-        .highlight-purple { color: #a855f7; font-weight: 900; text-decoration: underline; }
-        .highlight-orange { color: #f97316; font-weight: 900; text-decoration: underline; }
-        .content { 
-            line-height: 1.6;
-            margin-bottom: 15px;
-            word-wrap: break-word;
-            max-width: 100%;
-        }
-        .legend { 
-            display: flex; 
-            flex-wrap: wrap; 
-            gap: 10px; 
-            margin: 10px 0;
-            padding: 10px;
+        .legend-box { 
             background: #f8fafc !important;
-            border: 1px solid #e2e8f0 !important;
-            border-radius: 8px;
+            border: 1px solid #ddd !important;
+            padding: 6px;
+            margin: 6px 0;
+            font-size: 12px;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
         }
-        .legend-item { 
-            display: flex; 
-            align-items: center; 
-            gap: 8px;
-        }
-        .legend-color { 
-            width: 20px; 
-            height: 15px; 
-            border-radius: 4px;
-            border: 3px solid #333 !important;
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-            font-weight: bold;
-        }
-        .summary { 
-            background: #f8fafc !important; 
-            padding: 15px; 
-            border-radius: 8px;
-            border: 1px solid #e2e8f0 !important;
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-            margin-top: 20px;
-        }
-        .summary ul { 
-            margin: 10px 0; 
-            padding-left: 20px;
-        }
-        .highlight-stats {
-            text-align: center;
-            font-style: italic;
-            color: #6b7280;
-            margin: 15px 0;
-        }
-        @media print {
-            body { 
-                font-size: 12pt; 
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-                color-adjust: exact !important;
-            }
-            .no-print { display: none; }
-            * {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-                color-adjust: exact !important;
-                filter: opacity(1) !important;
-            }
-            /* Let the highlights use their natural styling like the print tip box */
-            /* Browser-specific print color forcing */
-            @media print and (-webkit-min-device-pixel-ratio: 0) {
-                * { -webkit-print-color-adjust: exact !important; }
-            }
-            @media print and (min-resolution: .001dpcm) {
-                * { print-color-adjust: exact !important; }
-            }
-        }
+        ul { margin: 4px 0; padding-left: 16px; }
+        li { margin: 2px 0; }
+        p { margin: 4px 0; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1 style="color: #1e40af; margin: 0;">F-AI-TH-Connect Bible Study Notes</h1>
-        <p style="margin: 5px 0; color: #6b7280;">Generated: ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}</p>
-        <div class="highlight-stats">Total Highlights: ${highlights.length}</div>
-        <div style="background: #fef3c7; border: 2px solid #f59e0b; padding: 10px; margin: 10px 0; border-radius: 8px; font-size: 12px;">
-            <strong>📄 Print Tip:</strong> To see colored highlights, enable "Background graphics" in your browser's print settings.
-        </div>
-    </div>
-
-    <div class="legend">
-        <strong>Highlight Categories:</strong>
+    <h2>F-AI-TH-Connect Bible Study Notes</h2>
+    <p style="color: #6b7280; font-size: 12px;">Generated: ${new Date().toLocaleDateString()} • Highlights: ${highlights.length}</p>
+    
+    <div class="legend-box">
+        <strong>Categories:</strong><br>
         ${HIGHLIGHT_CATEGORIES.map(cat => {
           const colorMap = {
             'bg-yellow-200 border-yellow-300': '#eab308',
@@ -385,44 +304,30 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
             'bg-orange-200 border-orange-300': '#f97316'
           };
           const color = colorMap[cat.color as keyof typeof colorMap] || '#6b7280';
-          return `<div class="legend-item">
-            <div class="legend-color" style="background-color: ${color} !important; border: 2px solid ${color} !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;"></div>
-            <span style="color: ${color}; font-weight: 900;"><strong>[${cat.name.toUpperCase()}]</strong> ${cat.name}</span>
-          </div>`;
+          return `<span style="color: ${color}; font-weight: 900;">■ [${cat.name.toUpperCase()}] ${cat.name}</span><br>`;
         }).join('')}
     </div>
 
-    <div class="section">
-        <div class="section-title">AI Response with Highlights</div>
-        <div class="content" style="padding: 10px; background: #fafafa !important; border-radius: 8px; border: 1px solid #e5e7eb !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;">${htmlContent.replace(/\n/g, '<br>')}</div>
-    </div>
+    <h3>AI Response with Highlights</h3>
+    <div class="content-box">${htmlContent.replace(/\n/g, '<br>')}</div>
 
-    <div class="section">
-        <div class="section-title">Highlight Summary by Category</div>
-        <div class="summary">
-            ${HIGHLIGHT_CATEGORIES.map(cat => {
-              const catHighlights = highlights.filter(h => h.color === cat.color);
-              if (catHighlights.length === 0) return '';
-              return `<div style="margin-bottom: 15px;">
-                <strong>${cat.name} (${catHighlights.length} items):</strong>
-                <ul>${catHighlights.map(h => `<li>"${h.text}"</li>`).join('')}</ul>
-              </div>`;
-            }).filter(section => section !== '').join('')}
-        </div>
-    </div>
+    ${HIGHLIGHT_CATEGORIES.map(cat => {
+      const catHighlights = highlights.filter(h => h.color === cat.color);
+      if (catHighlights.length === 0) return '';
+      const colorMap = {
+        'bg-yellow-200 border-yellow-300': '#eab308',
+        'bg-blue-200 border-blue-300': '#3b82f6', 
+        'bg-green-200 border-green-300': '#22c55e',
+        'bg-purple-200 border-purple-300': '#a855f7',
+        'bg-orange-200 border-orange-300': '#f97316'
+      };
+      const color = colorMap[cat.color as keyof typeof colorMap] || '#6b7280';
+      return `<h3 style="color: ${color};">${cat.name} (${catHighlights.length})</h3>
+        <div class="content-box">
+          <ul>${catHighlights.map(h => `<li>"${h.text}"</li>`).join('')}</ul>
+        </div>`;
+    }).filter(section => section !== '').join('')}
 
-    <div class="section">
-        <div class="section-title">Complete Highlight List</div>
-        <div class="summary">
-            <ol>
-                ${highlights.map(h => `<li><strong>[${h.category}]</strong> "${h.text}"</li>`).join('')}
-            </ol>
-        </div>
-    </div>
-
-    <div class="no-print" style="text-align: center; margin-top: 30px; padding: 20px; background: #f1f5f9; border-radius: 8px;">
-        <p style="margin: 0; color: #64748b;">Use your browser's Print function (Ctrl+P or Cmd+P) to print this document</p>
-    </div>
 </body>
 </html>`;
 
