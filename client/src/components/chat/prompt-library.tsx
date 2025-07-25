@@ -70,7 +70,7 @@ export function PromptLibrary({ onSelectPrompt, children }: PromptLibraryProps) 
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="max-w-4xl h-[85vh] w-[95vw] sm:w-full flex flex-col p-0">
+      <DialogContent className="max-w-4xl h-[90vh] w-[95vw] sm:w-full flex flex-col p-0 mobile-keyboard-safe">
         <DialogHeader className="px-6 py-4 border-b">
           <DialogTitle className="flex items-center space-x-2">
             <BookOpen className="w-5 h-5 text-blue-600" />
@@ -98,7 +98,7 @@ export function PromptLibrary({ onSelectPrompt, children }: PromptLibraryProps) 
 
           {/* Category Tabs */}
           <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="flex-1 flex flex-col min-h-0">
-            <TabsList className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-9 w-full h-auto p-1 gap-1 mb-4">
+            <TabsList className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 lg:grid-cols-9 w-full h-auto p-1 gap-1 mb-4 mobile-scroll">
               <TabsTrigger value="all" className="text-xs">All</TabsTrigger>
               {promptLibrary.map((category) => {
                 const IconComponent = categoryIcons[category.id] || BookOpen;

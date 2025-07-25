@@ -9,6 +9,7 @@ import DailyVerseCard from "@/components/daily-verse/daily-verse-card";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
 import { ArrowLeft, MessageCircle, RotateCcw } from "lucide-react";
+import LoadingSpinner, { MessageSkeleton } from "@/components/loading-spinner";
 
 export default function Chat() {
   const { sessionId } = useParams();
@@ -104,12 +105,32 @@ export default function Chat() {
 
   if (createSessionMutation.isPending) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
-            <MessageCircle className="w-8 h-8 text-white" />
+      <div className="min-h-screen bg-gray-50 mobile-safe-area">
+        <div className="max-w-4xl mx-auto p-4 sm:p-6">
+          {/* Header Skeleton */}
+          <div className="flex items-center justify-between mb-6 animate-pulse">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gray-300 rounded-lg"></div>
+              <div className="space-y-2">
+                <div className="h-4 bg-gray-300 rounded w-24"></div>
+                <div className="h-3 bg-gray-300 rounded w-16"></div>
+              </div>
+            </div>
+            <div className="w-8 h-8 bg-gray-300 rounded"></div>
           </div>
-          <p className="text-gray-600">Starting your spiritual conversation...</p>
+          
+          {/* Loading Center */}
+          <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+            <div className="bg-gradient-to-r from-blue-500 to-amber-500 h-16"></div>
+            <div className="p-6 flex items-center justify-center min-h-[300px]">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <MessageCircle className="w-8 h-8 text-white" />
+                </div>
+                <p className="text-gray-600">Starting your spiritual conversation...</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );

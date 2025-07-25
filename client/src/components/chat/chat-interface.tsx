@@ -89,7 +89,7 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
       </div>
       
       {/* Chat Messages */}
-      <div className="h-80 sm:h-96 overflow-y-auto mobile-scroll p-3 sm:p-6 space-y-3 sm:space-y-4">
+      <div className="h-80 sm:h-96 overflow-y-auto mobile-scroll mobile-keyboard-safe p-3 sm:p-6 space-y-3 sm:space-y-4">
         {messages.length === 0 ? (
           <div className="text-center py-4 sm:py-8">
             <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">

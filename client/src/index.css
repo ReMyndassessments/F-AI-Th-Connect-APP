@@ -145,13 +145,7 @@
     }
   }
 
-  .faith-button-primary {
-    @apply bg-blue-500 text-white hover:bg-blue-600 transition-all transform hover:scale-105;
-  }
 
-  .faith-button-secondary {
-    @apply border-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition-all;
-  }
   
   /* Admin button fix for CTA section */
   .admin-button-cta {
@@ -173,22 +167,50 @@
       line-height: 1.2;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;
     }
-    
-    .mobile-scroll {
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
+  }
+  
+  /* Mobile keyboard handling */
+  @media (max-width: 768px) {
+    .mobile-keyboard-safe {
+      padding-bottom: env(keyboard-inset-height, 0px);
     }
-    
-    .mobile-scroll::-webkit-scrollbar {
-      display: none;
+  }
+  
+  /* Enhanced mobile touch targets */
+  button, a, input, textarea, select {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  @media (max-width: 640px) {
+    button, a {
+      min-height: 48px;
+      min-width: 48px;
     }
-    
-    .touch-target {
-      min-width: 44px;
-      min-height: 44px;
-    }
+  }
+  
+  /* Prevent mobile scrolling issues */
+  .mobile-fixed {
+    position: fixed;
+    width: 100%;
+    touch-action: manipulation;
+  }
+  
+  /* Enhanced mobile scrolling */
+  .mobile-scroll {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .mobile-scroll::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Additional touch target styling */
+  .touch-target-large {
+    min-width: 48px;
+    min-height: 48px;
   }
 }
