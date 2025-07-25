@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Highlighter, Palette, Bookmark, Heart, Star, MessageCircle, Download } from "lucide-react";
+import { Highlighter, Palette, Bookmark, Heart, Star, MessageCircle, Download, Printer } from "lucide-react";
 
 interface HighlightData {
   id: string;
@@ -203,6 +203,191 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
     URL.revokeObjectURL(url);
   };
 
+  const exportForPrinting = () => {
+    if (highlights.length === 0) {
+      alert('No highlights found to print. Please highlight some text first.');
+      return;
+    }
+    
+    // Create HTML version with colored highlights for printing
+    let htmlContent = content;
+    
+    // Sort highlights by start position (descending) to avoid index issues
+    const sortedHighlights = [...highlights].sort((a, b) => b.start - a.start);
+    
+    // Add HTML spans with colored backgrounds
+    sortedHighlights.forEach(highlight => {
+      const category = HIGHLIGHT_CATEGORIES.find(c => c.color === highlight.color);
+      const before = htmlContent.slice(0, highlight.start);
+      const highlightedText = htmlContent.slice(highlight.start, highlight.end);
+      const after = htmlContent.slice(highlight.end);
+      
+      // Convert Tailwind classes to inline styles for printing
+      const colorStyles = {
+        'bg-yellow-200': 'background-color: #fef08a; border: 2px solid #facc15;',
+        'bg-blue-200': 'background-color: #dbeafe; border: 2px solid #3b82f6;',
+        'bg-green-200': 'background-color: #dcfce7; border: 2px solid #22c55e;',
+        'bg-purple-200': 'background-color: #e9d5ff; border: 2px solid #a855f7;',
+        'bg-orange-200': 'background-color: #fed7aa; border: 2px solid #f97316;'
+      };
+      
+      const style = colorStyles[highlight.color] || 'background-color: #f3f4f6; border: 2px solid #6b7280;';
+      htmlContent = `${before}<span style="${style} padding: 2px 4px; border-radius: 4px; font-weight: 500;" title="${category?.name || 'Highlight'}">${highlightedText}</span>${after}`;
+    });
+
+    const printableHTML = `<!DOCTYPE html>
+<html>
+<head>
+    <title>F-AI-TH-Connect Bible Study Notes</title>
+    <style>
+        @page { 
+            margin: 1in; 
+            size: letter;
+        }
+        body { 
+            font-family: Georgia, serif; 
+            line-height: 1.6; 
+            color: #333;
+            max-width: 100%;
+        }
+        .header { 
+            text-align: center; 
+            border-bottom: 2px solid #3b82f6; 
+            padding-bottom: 10px; 
+            margin-bottom: 20px;
+        }
+        .section { 
+            margin-bottom: 25px; 
+            page-break-inside: avoid;
+        }
+        .section-title { 
+            font-weight: bold; 
+            font-size: 16px; 
+            margin-bottom: 10px; 
+            color: #1e40af;
+            border-left: 4px solid #3b82f6;
+            padding-left: 10px;
+        }
+        .content { 
+            white-space: pre-wrap; 
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        .legend { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 15px; 
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+        .legend-item { 
+            display: flex; 
+            align-items: center; 
+            gap: 8px;
+        }
+        .legend-color { 
+            width: 20px; 
+            height: 15px; 
+            border-radius: 4px;
+            border: 2px solid #333;
+        }
+        .summary { 
+            background: #f8fafc; 
+            padding: 15px; 
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        .summary ul { 
+            margin: 10px 0; 
+            padding-left: 20px;
+        }
+        .highlight-stats {
+            text-align: center;
+            font-style: italic;
+            color: #6b7280;
+            margin: 15px 0;
+        }
+        @media print {
+            body { font-size: 12pt; }
+            .no-print { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 style="color: #1e40af; margin: 0;">F-AI-TH-Connect Bible Study Notes</h1>
+        <p style="margin: 5px 0; color: #6b7280;">Generated: ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}</p>
+        <div class="highlight-stats">Total Highlights: ${highlights.length}</div>
+    </div>
+
+    <div class="legend">
+        <strong>Highlight Categories:</strong>
+        ${HIGHLIGHT_CATEGORIES.map(cat => {
+          const colorMap = {
+            'bg-yellow-200': '#fef08a',
+            'bg-blue-200': '#dbeafe', 
+            'bg-green-200': '#dcfce7',
+            'bg-purple-200': '#e9d5ff',
+            'bg-orange-200': '#fed7aa'
+          };
+          return `<div class="legend-item">
+            <div class="legend-color" style="background-color: ${colorMap[cat.color] || '#f3f4f6'};"></div>
+            <span>${cat.name}</span>
+          </div>`;
+        }).join('')}
+    </div>
+
+    <div class="section">
+        <div class="section-title">AI Response with Highlights</div>
+        <div class="content">${htmlContent}</div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Highlight Summary by Category</div>
+        <div class="summary">
+            ${HIGHLIGHT_CATEGORIES.map(cat => {
+              const catHighlights = highlights.filter(h => h.color === cat.color);
+              if (catHighlights.length === 0) return '';
+              return `<div style="margin-bottom: 15px;">
+                <strong>${cat.name} (${catHighlights.length} items):</strong>
+                <ul>${catHighlights.map(h => `<li>"${h.text}"</li>`).join('')}</ul>
+              </div>`;
+            }).filter(section => section !== '').join('')}
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Complete Highlight List</div>
+        <div class="summary">
+            <ol>
+                ${highlights.map(h => `<li><strong>[${h.category}]</strong> "${h.text}"</li>`).join('')}
+            </ol>
+        </div>
+    </div>
+
+    <div class="no-print" style="text-align: center; margin-top: 30px; padding: 20px; background: #f1f5f9; border-radius: 8px;">
+        <p style="margin: 0; color: #64748b;">Use your browser's Print function (Ctrl+P or Cmd+P) to print this document</p>
+    </div>
+</body>
+</html>`;
+
+    // Create and open HTML in new window for printing
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(printableHTML);
+      printWindow.document.close();
+      
+      // Auto-focus and show print dialog after a brief delay
+      setTimeout(() => {
+        printWindow.focus();
+        printWindow.print();
+      }, 500);
+    }
+  };
+
   return (
     <div className="relative">
       <div 
@@ -249,15 +434,28 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
         <div className="mt-3 p-3 bg-gray-50 rounded-lg">
           <div className="flex items-center justify-between mb-2">
             <h4 className="text-sm font-medium text-gray-700">Study Highlights ({highlights.length})</h4>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={exportHighlights}
-              className="text-xs"
-            >
-              <Download className="w-3 h-3 mr-1" />
-              Export Notes
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={exportHighlights}
+                className="text-xs"
+                title="Download as text file"
+              >
+                <Download className="w-3 h-3 mr-1" />
+                Export Notes
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={exportForPrinting}
+                className="text-xs"
+                title="Print with colored highlights"
+              >
+                <Printer className="w-3 h-3 mr-1" />
+                Print
+              </Button>
+            </div>
           </div>
           <div className="space-y-1">
             {HIGHLIGHT_CATEGORIES.map(category => {
