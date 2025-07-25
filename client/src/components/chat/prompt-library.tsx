@@ -42,11 +42,22 @@ export function PromptLibrary({ onSelectPrompt, children }: PromptLibraryProps) 
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [favorites, setFavorites] = useState<string[]>([]);
 
+  // Get prompts for the selected category
+  const getCategoryPrompts = () => {
+    if (selectedCategory === "all") {
+      return promptLibrary.flatMap(cat => cat.prompts);
+    }
+    return promptLibrary.find(cat => cat.id === selectedCategory)?.prompts || [];
+  };
+
+  // Apply search filter to the category prompts
   const filteredPrompts = searchQuery.trim() 
-    ? searchPrompts(searchQuery)
-    : selectedCategory === "all" 
-      ? promptLibrary.flatMap(cat => cat.prompts)
-      : promptLibrary.find(cat => cat.id === selectedCategory)?.prompts || [];
+    ? searchPrompts(searchQuery).filter(prompt => {
+        if (selectedCategory === "all") return true;
+        const categoryPrompts = getCategoryPrompts();
+        return categoryPrompts.some(p => p.id === prompt.id);
+      })
+    : getCategoryPrompts();
 
   const handleSelectPrompt = (prompt: Prompt) => {
     onSelectPrompt(prompt.text);
@@ -139,7 +150,10 @@ export function PromptLibrary({ onSelectPrompt, children }: PromptLibraryProps) 
                   <div className="flex-1 overflow-hidden">
                     <ScrollArea className="h-full">
                       <PromptGrid 
-                        prompts={filteredPrompts}
+                        prompts={category.prompts.filter(prompt => {
+                          if (!searchQuery.trim()) return true;
+                          return searchPrompts(searchQuery).some(p => p.id === prompt.id);
+                        })}
                         onSelectPrompt={handleSelectPrompt}
                         onToggleFavorite={toggleFavorite}
                         onCopyPrompt={copyPrompt}
