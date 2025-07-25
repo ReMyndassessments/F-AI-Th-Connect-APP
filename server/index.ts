@@ -71,13 +71,13 @@ app.use((req, res, next) => {
   // this serves both the API and the client.
   // It is the only port that is not firewalled.
   const port = parseInt(process.env.PORT || '5000', 10);
-  const host = process.env.NODE_ENV === 'development' ? '0.0.0.0' : '0.0.0.0';
   
-  server.listen(port, host, () => {
-    log(`serving on ${host}:${port}`);
+  server.listen(port, '0.0.0.0', () => {
+    log(`serving on 0.0.0.0:${port}`);
     log(`Environment: ${process.env.NODE_ENV}`);
+    log(`REPL_ID: ${process.env.REPL_ID}`);
     if (process.env.REPLIT_DOMAINS) {
-      log(`Replit domains: ${process.env.REPLIT_DOMAINS}`);
+      log(`Available at: https://${process.env.REPLIT_DOMAINS}`);
     }
   });
 })();
