@@ -280,11 +280,11 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
             border-left: 4px solid #3b82f6;
             padding-left: 10px;
         }
-        .highlight-yellow { color: #ca8a04; font-weight: 900; text-decoration: underline; }
-        .highlight-blue { color: #1d4ed8; font-weight: 900; text-decoration: underline; }
-        .highlight-green { color: #16a34a; font-weight: 900; text-decoration: underline; }
-        .highlight-purple { color: #9333ea; font-weight: 900; text-decoration: underline; }
-        .highlight-orange { color: #ea580c; font-weight: 900; text-decoration: underline; }
+        .highlight-yellow { color: #eab308; font-weight: 900; text-decoration: underline; }
+        .highlight-blue { color: #3b82f6; font-weight: 900; text-decoration: underline; }
+        .highlight-green { color: #22c55e; font-weight: 900; text-decoration: underline; }
+        .highlight-purple { color: #a855f7; font-weight: 900; text-decoration: underline; }
+        .highlight-orange { color: #f97316; font-weight: 900; text-decoration: underline; }
         .content { 
             white-space: pre-wrap; 
             line-height: 1.8;
@@ -374,16 +374,16 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
         <strong>Highlight Categories:</strong>
         ${HIGHLIGHT_CATEGORIES.map(cat => {
           const colorMap = {
-            'bg-yellow-200': { bg: '#fffbeb', border: '#facc15' },
-            'bg-blue-200': { bg: '#eff6ff', border: '#3b82f6' }, 
-            'bg-green-200': { bg: '#f0fdf4', border: '#22c55e' },
-            'bg-purple-200': { bg: '#faf5ff', border: '#a855f7' },
-            'bg-orange-200': { bg: '#fff7ed', border: '#f97316' }
+            'bg-yellow-200': '#eab308',
+            'bg-blue-200': '#3b82f6', 
+            'bg-green-200': '#22c55e',
+            'bg-purple-200': '#a855f7',
+            'bg-orange-200': '#f97316'
           };
-          const colors = colorMap[cat.color as keyof typeof colorMap] || { bg: '#f9fafb', border: '#6b7280' };
+          const color = colorMap[cat.color as keyof typeof colorMap] || '#6b7280';
           return `<div class="legend-item">
-            <div class="legend-color" style="background-color: ${colors.bg} !important; border-color: ${colors.border} !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;"></div>
-            <span><strong>[${cat.name.toUpperCase()}]</strong> ${cat.name}</span>
+            <div class="legend-color" style="background-color: ${color} !important; border: 2px solid ${color} !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;"></div>
+            <span style="color: ${color}; font-weight: 900;"><strong>[${cat.name.toUpperCase()}]</strong> ${cat.name}</span>
           </div>`;
         }).join('')}
     </div>
