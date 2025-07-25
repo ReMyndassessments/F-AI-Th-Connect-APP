@@ -116,33 +116,37 @@ export function PromptLibrary({ onSelectPrompt, children }: PromptLibraryProps) 
               })}
             </TabsList>
 
-            <div className="flex-1 min-h-0">
-              <TabsContent value="all" className="h-full m-0">
-                <PromptGrid 
-                  prompts={filteredPrompts}
-                  onSelectPrompt={handleSelectPrompt}
-                  onToggleFavorite={toggleFavorite}
-                  onCopyPrompt={copyPrompt}
-                  favorites={favorites}
-                  showCategory={true}
-                />
+            <div className="flex-1 min-h-0 overflow-hidden">
+              <TabsContent value="all" className="h-full m-0 overflow-hidden">
+                <ScrollArea className="h-full">
+                  <PromptGrid 
+                    prompts={filteredPrompts}
+                    onSelectPrompt={handleSelectPrompt}
+                    onToggleFavorite={toggleFavorite}
+                    onCopyPrompt={copyPrompt}
+                    favorites={favorites}
+                    showCategory={true}
+                  />
+                </ScrollArea>
               </TabsContent>
 
               {promptLibrary.map((category) => (
-                <TabsContent key={category.id} value={category.id} className="h-full m-0">
-                  <div className="mb-4 p-4 bg-blue-50 rounded-lg">
+                <TabsContent key={category.id} value={category.id} className="h-full m-0 overflow-hidden flex flex-col">
+                  <div className="mb-4 p-4 bg-blue-50 rounded-lg flex-shrink-0">
                     <h3 className="font-semibold text-blue-900 mb-1">{category.name}</h3>
                     <p className="text-sm text-blue-700">{category.description}</p>
                   </div>
-                  <div className="h-[calc(100%-120px)]">
-                    <PromptGrid 
-                      prompts={filteredPrompts}
-                      onSelectPrompt={handleSelectPrompt}
-                      onToggleFavorite={toggleFavorite}
-                      onCopyPrompt={copyPrompt}
-                      favorites={favorites}
-                      showCategory={false}
-                    />
+                  <div className="flex-1 overflow-hidden">
+                    <ScrollArea className="h-full">
+                      <PromptGrid 
+                        prompts={filteredPrompts}
+                        onSelectPrompt={handleSelectPrompt}
+                        onToggleFavorite={toggleFavorite}
+                        onCopyPrompt={copyPrompt}
+                        favorites={favorites}
+                        showCategory={false}
+                      />
+                    </ScrollArea>
                   </div>
                 </TabsContent>
               ))}
@@ -182,9 +186,8 @@ function PromptGrid({
   }
 
   return (
-    <ScrollArea className="h-full w-full">
-      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 p-1">
-        {prompts.map((prompt) => {
+    <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 p-1">
+      {prompts.map((prompt) => {
           const category = promptLibrary.find(cat => 
             cat.prompts.some(p => p.id === prompt.id)
           );
@@ -257,7 +260,6 @@ function PromptGrid({
             </div>
           );
         })}
-      </div>
-    </ScrollArea>
+    </div>
   );
 }
