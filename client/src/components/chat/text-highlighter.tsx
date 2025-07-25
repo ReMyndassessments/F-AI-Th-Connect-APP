@@ -229,20 +229,20 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
       const highlightedText = htmlContent.slice(highlight.start, highlight.end);
       const after = htmlContent.slice(highlight.end);
       
-      // Use colored text like the working blue headings instead of backgrounds
-      const colorStyles = {
-        'bg-yellow-200': 'color: #ca8a04; font-weight: 900;', // Golden yellow
-        'bg-blue-200': 'color: #1d4ed8; font-weight: 900;',   // Blue like headings
-        'bg-green-200': 'color: #16a34a; font-weight: 900;',  // Green
-        'bg-purple-200': 'color: #9333ea; font-weight: 900;', // Purple  
-        'bg-orange-200': 'color: #ea580c; font-weight: 900;'  // Orange
+      // Use CSS classes like the working blue headings
+      const colorClasses = {
+        'bg-yellow-200': 'highlight-yellow',
+        'bg-blue-200': 'highlight-blue',
+        'bg-green-200': 'highlight-green',
+        'bg-purple-200': 'highlight-purple',
+        'bg-orange-200': 'highlight-orange'
       };
       
-      const style = colorStyles[highlight.color as keyof typeof colorStyles] || 'color: #374151; font-weight: 900;';
+      const cssClass = colorClasses[highlight.color as keyof typeof colorClasses] || 'highlight-blue';
       const categoryLabel = category ? `[${category.name.toUpperCase()}] ` : '[HIGHLIGHT] ';
       
-      // Use colored text with the same approach as the working blue headings
-      htmlContent = `${before}<span style="${style} text-decoration: underline; text-decoration-color: currentColor; text-decoration-thickness: 2px;" title="${category?.name || 'Highlight'}">${categoryLabel}${highlightedText}</span>${after}`;
+      // Use CSS classes exactly like the working blue headings
+      htmlContent = `${before}<span class="${cssClass}" title="${category?.name || 'Highlight'}">${categoryLabel}${highlightedText}</span>${after}`;
     });
 
     const printableHTML = `<!DOCTYPE html>
@@ -280,6 +280,11 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
             border-left: 4px solid #3b82f6;
             padding-left: 10px;
         }
+        .highlight-yellow { color: #ca8a04; font-weight: 900; text-decoration: underline; }
+        .highlight-blue { color: #1d4ed8; font-weight: 900; text-decoration: underline; }
+        .highlight-green { color: #16a34a; font-weight: 900; text-decoration: underline; }
+        .highlight-purple { color: #9333ea; font-weight: 900; text-decoration: underline; }
+        .highlight-orange { color: #ea580c; font-weight: 900; text-decoration: underline; }
         .content { 
             white-space: pre-wrap; 
             line-height: 1.8;
