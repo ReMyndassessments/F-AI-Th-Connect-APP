@@ -257,11 +257,11 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
         }
         body { 
             font-family: Georgia, serif; 
-            line-height: 1.5; 
+            line-height: 1.4; 
             color: #333;
             max-width: 100%;
             margin: 0;
-            padding: 20px;
+            padding: 15px;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
         }
@@ -269,10 +269,10 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
             text-align: center; 
             border-bottom: 2px solid #3b82f6; 
             padding-bottom: 10px; 
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         .section { 
-            margin-bottom: 25px; 
+            margin-bottom: 15px; 
             page-break-inside: avoid;
         }
         .section-title { 
@@ -297,9 +297,9 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
         .legend { 
             display: flex; 
             flex-wrap: wrap; 
-            gap: 15px; 
-            margin: 20px 0;
-            padding: 15px;
+            gap: 10px; 
+            margin: 10px 0;
+            padding: 10px;
             background: #f8fafc !important;
             border: 1px solid #e2e8f0 !important;
             border-radius: 8px;
@@ -394,7 +394,7 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
 
     <div class="section">
         <div class="section-title">AI Response with Highlights</div>
-        <div class="content" style="padding: 15px; background: #fafafa !important; border-radius: 8px; border: 1px solid #e5e7eb !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;">${htmlContent.replace(/\n/g, '<br>')}</div>
+        <div class="content" style="padding: 10px; background: #fafafa !important; border-radius: 8px; border: 1px solid #e5e7eb !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;">${htmlContent.replace(/\n/g, '<br>')}</div>
     </div>
 
     <div class="section">
