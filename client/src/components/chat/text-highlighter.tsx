@@ -229,20 +229,20 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
       const highlightedText = htmlContent.slice(highlight.start, highlight.end);
       const after = htmlContent.slice(highlight.end);
       
-      // Use simple inline highlighting with strong visual markers for print
+      // Use the same background technique as the working print tip box
       const colorStyles = {
-        'bg-yellow-200': 'background-color: #fef08a !important; border: 2px solid #facc15 !important; box-shadow: 0 0 0 2px #fef08a !important;',
-        'bg-blue-200': 'background-color: #dbeafe !important; border: 2px solid #3b82f6 !important; box-shadow: 0 0 0 2px #dbeafe !important;',
-        'bg-green-200': 'background-color: #dcfce7 !important; border: 2px solid #22c55e !important; box-shadow: 0 0 0 2px #dcfce7 !important;',
-        'bg-purple-200': 'background-color: #e9d5ff !important; border: 2px solid #a855f7 !important; box-shadow: 0 0 0 2px #e9d5ff !important;',
-        'bg-orange-200': 'background-color: #fed7aa !important; border: 2px solid #f97316 !important; box-shadow: 0 0 0 2px #fed7aa !important;'
+        'bg-yellow-200': 'background: #fef3c7 !important; border: 2px solid #f59e0b !important;',
+        'bg-blue-200': 'background: #dbeafe !important; border: 2px solid #3b82f6 !important;',
+        'bg-green-200': 'background: #dcfce7 !important; border: 2px solid #22c55e !important;',
+        'bg-purple-200': 'background: #e9d5ff !important; border: 2px solid #a855f7 !important;',
+        'bg-orange-200': 'background: #fed7aa !important; border: 2px solid #f97316 !important;'
       };
       
-      const style = colorStyles[highlight.color as keyof typeof colorStyles] || 'background-color: #f9fafb !important; border: 2px solid #6b7280 !important;';
+      const style = colorStyles[highlight.color as keyof typeof colorStyles] || 'background: #f9fafb !important; border: 2px solid #6b7280 !important;';
       const categoryLabel = category ? `[${category.name.toUpperCase()}] ` : '[HIGHLIGHT] ';
       
-      // Keep it inline but with strong visual markers
-      htmlContent = `${before}<span style="${style} padding: 4px 6px !important; border-radius: 4px !important; font-weight: 700 !important; color: #000000 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; margin: 0 2px !important;" title="${category?.name || 'Highlight'}">${categoryLabel}${highlightedText}</span>${after}`;
+      // Use the same styling pattern as the working print tip box
+      htmlContent = `${before}<span style="${style} padding: 8px 10px !important; border-radius: 8px !important; font-weight: 700 !important; color: #000000 !important; margin: 2px !important; display: inline-block !important;" title="${category?.name || 'Highlight'}">${categoryLabel}${highlightedText}</span>${after}`;
     });
 
     const printableHTML = `<!DOCTYPE html>
@@ -344,19 +344,14 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
                 color-adjust: exact !important;
                 filter: opacity(1) !important;
             }
-            /* Force background colors in print */
+            /* Use simple background property like the working print tip */
             span[style*="background"] {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-                color-adjust: exact !important;
-                background-clip: padding-box !important;
-                background-origin: padding-box !important;
-            }
-            span[style*="border"] {
-                border-width: 2px !important;
-                padding: 4px 6px !important;
+                background: inherit !important;
+                border: inherit !important;
+                padding: 8px 10px !important;
                 font-weight: 700 !important;
-                margin: 0 2px !important;
+                margin: 2px !important;
+                display: inline-block !important;
             }
             /* Browser-specific print color forcing */
             @media print and (-webkit-min-device-pixel-ratio: 0) {
