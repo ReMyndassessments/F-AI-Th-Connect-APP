@@ -226,17 +226,20 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
       const highlightedText = htmlContent.slice(highlight.start, highlight.end);
       const after = htmlContent.slice(highlight.end);
       
-      // Convert Tailwind classes to inline styles for printing with !important to force colors
+      // Use thick colored borders and bold text for print-friendly highlighting
       const colorStyles = {
-        'bg-yellow-200': 'background-color: #fef08a !important; border: 2px solid #facc15 !important; color: #000000 !important;',
-        'bg-blue-200': 'background-color: #dbeafe !important; border: 2px solid #3b82f6 !important; color: #000000 !important;',
-        'bg-green-200': 'background-color: #dcfce7 !important; border: 2px solid #22c55e !important; color: #000000 !important;',
-        'bg-purple-200': 'background-color: #e9d5ff !important; border: 2px solid #a855f7 !important; color: #000000 !important;',
-        'bg-orange-200': 'background-color: #fed7aa !important; border: 2px solid #f97316 !important; color: #000000 !important;'
+        'bg-yellow-200': 'border: 3px solid #facc15 !important; background-color: #fffbeb !important; color: #000000 !important; font-weight: 700 !important;',
+        'bg-blue-200': 'border: 3px solid #3b82f6 !important; background-color: #eff6ff !important; color: #000000 !important; font-weight: 700 !important;',
+        'bg-green-200': 'border: 3px solid #22c55e !important; background-color: #f0fdf4 !important; color: #000000 !important; font-weight: 700 !important;',
+        'bg-purple-200': 'border: 3px solid #a855f7 !important; background-color: #faf5ff !important; color: #000000 !important; font-weight: 700 !important;',
+        'bg-orange-200': 'border: 3px solid #f97316 !important; background-color: #fff7ed !important; color: #000000 !important; font-weight: 700 !important;'
       };
       
-      const style = colorStyles[highlight.color as keyof typeof colorStyles] || 'background-color: #f3f4f6 !important; border: 2px solid #6b7280 !important; color: #000000 !important;';
-      htmlContent = `${before}<span style="${style} padding: 2px 4px !important; border-radius: 4px !important; font-weight: 500 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;" title="${category?.name || 'Highlight'}">${highlightedText}</span>${after}`;
+      const style = colorStyles[highlight.color as keyof typeof colorStyles] || 'border: 3px solid #6b7280 !important; background-color: #f9fafb !important; color: #000000 !important; font-weight: 700 !important;';
+      
+      // Create a visually distinct highlight that works in print
+      const categoryIcon = category ? `[${category.name.toUpperCase()}]` : '[HIGHLIGHT]';
+      htmlContent = `${before}<span style="${style} padding: 4px 6px !important; border-radius: 4px !important; margin: 0 2px !important; display: inline-block !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;">${categoryIcon} ${highlightedText}</span>${after}`;
     });
 
     const printableHTML = `<!DOCTYPE html>
@@ -300,9 +303,10 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
             width: 20px; 
             height: 15px; 
             border-radius: 4px;
-            border: 2px solid #333 !important;
+            border: 3px solid #333 !important;
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
+            font-weight: bold;
         }
         .summary { 
             background: #f8fafc !important; 
@@ -324,11 +328,23 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
             margin: 15px 0;
         }
         @media print {
-            body { font-size: 12pt; }
+            body { 
+                font-size: 12pt; 
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
             .no-print { display: none; }
             * {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            /* Ensure borders and text show clearly in print */
+            span[style*="border"] {
+                border-width: 3px !important;
+                font-weight: 700 !important;
+                padding: 4px 6px !important;
+                margin: 0 2px !important;
             }
         }
     </style>
@@ -344,15 +360,16 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
         <strong>Highlight Categories:</strong>
         ${HIGHLIGHT_CATEGORIES.map(cat => {
           const colorMap = {
-            'bg-yellow-200': '#fef08a',
-            'bg-blue-200': '#dbeafe', 
-            'bg-green-200': '#dcfce7',
-            'bg-purple-200': '#e9d5ff',
-            'bg-orange-200': '#fed7aa'
+            'bg-yellow-200': { bg: '#fffbeb', border: '#facc15' },
+            'bg-blue-200': { bg: '#eff6ff', border: '#3b82f6' }, 
+            'bg-green-200': { bg: '#f0fdf4', border: '#22c55e' },
+            'bg-purple-200': { bg: '#faf5ff', border: '#a855f7' },
+            'bg-orange-200': { bg: '#fff7ed', border: '#f97316' }
           };
+          const colors = colorMap[cat.color as keyof typeof colorMap] || { bg: '#f9fafb', border: '#6b7280' };
           return `<div class="legend-item">
-            <div class="legend-color" style="background-color: ${colorMap[cat.color as keyof typeof colorMap] || '#f3f4f6'} !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;"></div>
-            <span>${cat.name}</span>
+            <div class="legend-color" style="background-color: ${colors.bg} !important; border-color: ${colors.border} !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;"></div>
+            <span><strong>[${cat.name.toUpperCase()}]</strong> ${cat.name}</span>
           </div>`;
         }).join('')}
     </div>
