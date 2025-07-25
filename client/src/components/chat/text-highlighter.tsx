@@ -14,6 +14,7 @@ interface HighlightData {
 interface TextHighlighterProps {
   content: string;
   messageId: number;
+  sessionId: string;
 }
 
 const HIGHLIGHT_CATEGORIES = [
@@ -24,27 +25,30 @@ const HIGHLIGHT_CATEGORIES = [
   { name: "Discussion", color: "bg-purple-200 border-purple-300", icon: Palette, description: "Group discussion points" },
 ];
 
-export default function TextHighlighter({ content, messageId }: TextHighlighterProps) {
+export default function TextHighlighter({ content, messageId, sessionId }: TextHighlighterProps) {
   const [highlights, setHighlights] = useState<HighlightData[]>([]);
   const [selectedText, setSelectedText] = useState("");
   const [selectionRange, setSelectionRange] = useState<{ start: number; end: number } | null>(null);
   const [showPopover, setShowPopover] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  // Load highlights from localStorage on component mount
+  // Load highlights from localStorage on component mount (session-specific)
   useEffect(() => {
-    const savedHighlights = localStorage.getItem(`highlights-${messageId}`);
+    const savedHighlights = localStorage.getItem(`highlights-${sessionId}-${messageId}`);
     if (savedHighlights) {
       setHighlights(JSON.parse(savedHighlights));
     }
-  }, [messageId]);
+  }, [sessionId, messageId]);
 
-  // Save highlights to localStorage whenever highlights change
+  // Save highlights to localStorage whenever highlights change (session-specific)
   useEffect(() => {
     if (highlights.length > 0) {
-      localStorage.setItem(`highlights-${messageId}`, JSON.stringify(highlights));
+      localStorage.setItem(`highlights-${sessionId}-${messageId}`, JSON.stringify(highlights));
+    } else {
+      // Clean up localStorage when no highlights remain
+      localStorage.removeItem(`highlights-${sessionId}-${messageId}`);
     }
-  }, [highlights, messageId]);
+  }, [highlights, sessionId, messageId]);
 
   const handleTextSelection = () => {
     setTimeout(() => {
@@ -198,7 +202,7 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `bible-study-notes-${messageId}-${new Date().toISOString().split('T')[0]}.txt`;
+    a.download = `bible-study-notes-${sessionId}-msg${messageId}-${new Date().toISOString().split('T')[0]}.txt`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -231,7 +235,7 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
         'bg-orange-200': 'background-color: #fed7aa; border: 2px solid #f97316;'
       };
       
-      const style = colorStyles[highlight.color] || 'background-color: #f3f4f6; border: 2px solid #6b7280;';
+      const style = colorStyles[highlight.color as keyof typeof colorStyles] || 'background-color: #f3f4f6; border: 2px solid #6b7280;';
       htmlContent = `${before}<span style="${style} padding: 2px 4px; border-radius: 4px; font-weight: 500;" title="${category?.name || 'Highlight'}">${highlightedText}</span>${after}`;
     });
 
@@ -334,7 +338,7 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
             'bg-orange-200': '#fed7aa'
           };
           return `<div class="legend-item">
-            <div class="legend-color" style="background-color: ${colorMap[cat.color] || '#f3f4f6'};"></div>
+            <div class="legend-color" style="background-color: ${colorMap[cat.color as keyof typeof colorMap] || '#f3f4f6'};"></div>
             <span>${cat.name}</span>
           </div>`;
         }).join('')}
