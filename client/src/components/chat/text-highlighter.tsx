@@ -226,17 +226,17 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
       const highlightedText = htmlContent.slice(highlight.start, highlight.end);
       const after = htmlContent.slice(highlight.end);
       
-      // Convert Tailwind classes to inline styles for printing
+      // Convert Tailwind classes to inline styles for printing with !important to force colors
       const colorStyles = {
-        'bg-yellow-200': 'background-color: #fef08a; border: 2px solid #facc15;',
-        'bg-blue-200': 'background-color: #dbeafe; border: 2px solid #3b82f6;',
-        'bg-green-200': 'background-color: #dcfce7; border: 2px solid #22c55e;',
-        'bg-purple-200': 'background-color: #e9d5ff; border: 2px solid #a855f7;',
-        'bg-orange-200': 'background-color: #fed7aa; border: 2px solid #f97316;'
+        'bg-yellow-200': 'background-color: #fef08a !important; border: 2px solid #facc15 !important; color: #000000 !important;',
+        'bg-blue-200': 'background-color: #dbeafe !important; border: 2px solid #3b82f6 !important; color: #000000 !important;',
+        'bg-green-200': 'background-color: #dcfce7 !important; border: 2px solid #22c55e !important; color: #000000 !important;',
+        'bg-purple-200': 'background-color: #e9d5ff !important; border: 2px solid #a855f7 !important; color: #000000 !important;',
+        'bg-orange-200': 'background-color: #fed7aa !important; border: 2px solid #f97316 !important; color: #000000 !important;'
       };
       
-      const style = colorStyles[highlight.color as keyof typeof colorStyles] || 'background-color: #f3f4f6; border: 2px solid #6b7280;';
-      htmlContent = `${before}<span style="${style} padding: 2px 4px; border-radius: 4px; font-weight: 500;" title="${category?.name || 'Highlight'}">${highlightedText}</span>${after}`;
+      const style = colorStyles[highlight.color as keyof typeof colorStyles] || 'background-color: #f3f4f6 !important; border: 2px solid #6b7280 !important; color: #000000 !important;';
+      htmlContent = `${before}<span style="${style} padding: 2px 4px !important; border-radius: 4px !important; font-weight: 500 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;" title="${category?.name || 'Highlight'}">${highlightedText}</span>${after}`;
     });
 
     const printableHTML = `<!DOCTYPE html>
@@ -253,6 +253,8 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
             line-height: 1.6; 
             color: #333;
             max-width: 100%;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
         .header { 
             text-align: center; 
@@ -283,9 +285,11 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
             gap: 15px; 
             margin: 20px 0;
             padding: 15px;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
+            background: #f8fafc !important;
+            border: 1px solid #e2e8f0 !important;
             border-radius: 8px;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
         .legend-item { 
             display: flex; 
@@ -296,13 +300,18 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
             width: 20px; 
             height: 15px; 
             border-radius: 4px;
-            border: 2px solid #333;
+            border: 2px solid #333 !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
         .summary { 
-            background: #f8fafc; 
+            background: #f8fafc !important; 
             padding: 15px; 
             border-radius: 8px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid #e2e8f0 !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            margin-top: 20px;
         }
         .summary ul { 
             margin: 10px 0; 
@@ -317,6 +326,10 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
         @media print {
             body { font-size: 12pt; }
             .no-print { display: none; }
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
         }
     </style>
 </head>
@@ -338,7 +351,7 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
             'bg-orange-200': '#fed7aa'
           };
           return `<div class="legend-item">
-            <div class="legend-color" style="background-color: ${colorMap[cat.color as keyof typeof colorMap] || '#f3f4f6'};"></div>
+            <div class="legend-color" style="background-color: ${colorMap[cat.color as keyof typeof colorMap] || '#f3f4f6'} !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;"></div>
             <span>${cat.name}</span>
           </div>`;
         }).join('')}
@@ -346,7 +359,7 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
 
     <div class="section">
         <div class="section-title">AI Response with Highlights</div>
-        <div class="content">${htmlContent}</div>
+        <div class="content" style="padding: 15px; background: #fafafa !important; border-radius: 8px; border: 1px solid #e5e7eb !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;">${htmlContent}</div>
     </div>
 
     <div class="section">
