@@ -1,0 +1,21 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e40af"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="64" fill="url(#bg)"/>
+  <g transform="translate(256,256)">
+    <!-- Chat bubble icon -->
+    <circle cx="0" cy="-32" r="80" fill="white" opacity="0.9"/>
+    <circle cx="0" cy="-32" r="68" fill="none" stroke="white" stroke-width="8"/>
+    <!-- Cross symbol -->
+    <line x1="0" y1="-72" x2="0" y2="8" stroke="white" stroke-width="10" stroke-linecap="round"/>
+    <line x1="-40" y1="-32" x2="40" y2="-32" stroke="white" stroke-width="10" stroke-linecap="round"/>
+    <!-- Small message dots -->
+    <circle cx="-30" cy="-32" r="6" fill="#1e40af"/>
+    <circle cx="0" cy="-32" r="6" fill="#1e40af"/>
+    <circle cx="30" cy="-32" r="6" fill="#1e40af"/>
+  </g>
+</svg>
