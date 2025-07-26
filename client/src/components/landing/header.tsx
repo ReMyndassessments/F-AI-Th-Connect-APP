@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageCircle, Menu, X } from "lucide-react";
+import { MessageCircle, Menu, X, Share } from "lucide-react";
 import { useLocation } from "wouter";
 
 export default function Header() {
@@ -49,6 +49,15 @@ export default function Header() {
             >
               Testimonials
             </button>
+            <Button
+              onClick={() => setLocation("/share")}
+              variant="ghost"
+              size="sm"
+              className="p-2 hover:bg-gray-100"
+              title="Share App - Get QR Code"
+            >
+              <Share className="w-5 h-5 text-gray-600" />
+            </Button>
             <Button
               asChild
               variant="outline"
@@ -102,6 +111,14 @@ export default function Header() {
               >
                 Testimonials
               </button>
+              <Button
+                onClick={() => setLocation("/share")}
+                variant="ghost"
+                className="w-full justify-start text-gray-600 hover:text-blue-500"
+              >
+                <Share className="w-4 h-4 mr-2" />
+                Share App
+              </Button>
               <Button
                 asChild
                 variant="outline"

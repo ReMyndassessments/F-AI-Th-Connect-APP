@@ -13,6 +13,7 @@ import Help from "@/pages/help";
 import Contact from "@/pages/contact";
 import Privacy from "@/pages/privacy";
 import Terms from "@/pages/terms";
+import Share from "@/pages/share";
 
 function Router() {
   return (
@@ -26,6 +27,7 @@ function Router() {
       <Route path="/contact" component={Contact} />
       <Route path="/privacy" component={Privacy} />
       <Route path="/terms" component={Terms} />
+      <Route path="/share" component={Share} />
       <Route component={NotFound} />
     </Switch>
   );
