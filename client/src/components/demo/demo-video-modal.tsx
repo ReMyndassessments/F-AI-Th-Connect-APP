@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Play, Pause, X, MessageCircle, Book, Heart } from "lucide-react";
+import { Play, Pause, MessageCircle, Book, Heart } from "lucide-react";
 
 interface DemoVideoModalProps {
   isOpen: boolean;
@@ -110,12 +110,7 @@ export default function DemoVideoModal({ isOpen, onClose }: DemoVideoModalProps)
         <div className="relative">
           {/* Header */}
           <DialogHeader className="p-6 pb-4">
-            <div className="flex items-center justify-between">
-              <DialogTitle className="text-2xl font-bold">F-AI-TH-Connect Demo</DialogTitle>
-              <Button variant="ghost" size="sm" onClick={handleClose}>
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
+            <DialogTitle className="text-2xl font-bold">F-AI-TH-Connect Demo</DialogTitle>
           </DialogHeader>
 
           {/* Demo Content */}
