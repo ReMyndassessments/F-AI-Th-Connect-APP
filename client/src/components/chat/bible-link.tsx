@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Book, ExternalLink, Copy } from "lucide-react";
+import { Book, ExternalLink, Copy, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 
 interface BibleLinkProps {
   reference: string;
@@ -16,6 +17,7 @@ interface VerseData {
   book: string;
   chapter: number;
   verse: string;
+  version?: string;
 }
 
 // Sample verse data - in production this could come from a Bible API
@@ -80,9 +82,50 @@ const SAMPLE_VERSES: Record<string, VerseData> = {
 
 export default function BibleLink({ reference, children, className = "" }: BibleLinkProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [verseData, setVerseData] = useState<VerseData | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
-  
-  const verseData = SAMPLE_VERSES[reference];
+
+  // Fetch verse data when dialog opens
+  useEffect(() => {
+    if (isOpen && !verseData && !isLoading) {
+      fetchVerseData();
+    }
+  }, [isOpen, reference]);
+
+  const fetchVerseData = async () => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      // First try the live API
+      const response = await apiRequest('GET', `/api/bible/verse/${encodeURIComponent(reference)}`);
+      const data = await response.json();
+      
+      if (response.ok) {
+        setVerseData(data);
+      } else {
+        // Fallback to sample verses
+        const fallback = SAMPLE_VERSES[reference];
+        if (fallback) {
+          setVerseData(fallback);
+        } else {
+          setError(data.message || 'Verse not found');
+        }
+      }
+    } catch (err) {
+      // Try fallback verses first
+      const fallback = SAMPLE_VERSES[reference];
+      if (fallback) {
+        setVerseData(fallback);
+      } else {
+        setError('Unable to load verse at this time');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -135,14 +178,30 @@ export default function BibleLink({ reference, children, className = "" }: Bible
           </DialogHeader>
           
           <div className="space-y-4">
-            {verseData ? (
+            {isLoading ? (
+              <div className="text-center py-8">
+                <Loader2 className="w-8 h-8 animate-spin mx-auto text-blue-600 mb-3" />
+                <p className="text-gray-600">Loading verse...</p>
+              </div>
+            ) : error ? (
+              <div className="text-center py-4">
+                <p className="text-gray-600 mb-4">{error}</p>
+                <Button
+                  onClick={openBibleGateway}
+                  className="faith-button-primary"
+                >
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  Read {reference} on Bible Gateway
+                </Button>
+              </div>
+            ) : verseData ? (
               <>
                 <div className="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
                   <p className="text-gray-800 italic leading-relaxed">
                     "{verseData.text}"
                   </p>
                   <p className="text-sm text-gray-600 mt-2 font-medium">
-                    - {verseData.reference}
+                    - {verseData.reference} {verseData.version ? `(${verseData.version})` : ''}
                   </p>
                 </div>
                 
@@ -168,20 +227,7 @@ export default function BibleLink({ reference, children, className = "" }: Bible
                   </Button>
                 </div>
               </>
-            ) : (
-              <div className="text-center py-4">
-                <p className="text-gray-600 mb-4">
-                  Verse text not available locally. You can read it online:
-                </p>
-                <Button
-                  onClick={openBibleGateway}
-                  className="faith-button-primary"
-                >
-                  <ExternalLink className="w-4 h-4 mr-2" />
-                  Read {reference} on Bible Gateway
-                </Button>
-              </div>
-            )}
+            ) : null}
           </div>
         </DialogContent>
       </Dialog>

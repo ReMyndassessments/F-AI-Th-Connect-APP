@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { storage } from "./storage";
 import { DeepseekAI } from "./services/deepseek-ai";
+import { bibleAPI } from "./services/bible-api";
 import { FileProcessor } from "./services/file-processor";
 import { z } from "zod";
 import { insertMessageSchema, insertChatSessionSchema, adminLoginSchema, insertFeatureFlagSchema, insertAdvertisementSchema } from "@shared/schema";
@@ -395,6 +396,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Change password error:", error);
       res.status(500).json({ error: "Failed to change password" });
+    }
+  });
+
+  // Bible verse API route
+  app.get('/api/bible/verse/:reference', async (req, res) => {
+    try {
+      const reference = decodeURIComponent(req.params.reference);
+      const verse = await bibleAPI.getVerse(reference);
+      
+      if (!verse) {
+        return res.status(404).json({ 
+          error: 'Verse not found',
+          message: `Could not find verse: ${reference}` 
+        });
+      }
+      
+      res.json(verse);
+    } catch (error) {
+      console.error('Bible API error:', error);
+      res.status(500).json({ 
+        error: 'Failed to fetch verse',
+        message: 'Unable to retrieve verse at this time' 
+      });
     }
   });
 
