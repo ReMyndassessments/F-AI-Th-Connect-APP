@@ -216,7 +216,7 @@ export default function BibleLookup() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-amber-50 dark:from-gray-900 dark:to-gray-800">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-8">
         <div className="max-w-4xl mx-auto">
           
           {/* Back to Home Button */}
@@ -232,12 +232,12 @@ export default function BibleLookup() {
           </div>
 
           {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold mb-4">
+          <div className="text-center mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">
               <span className="text-gray-900 dark:text-white">Quick </span>
               <span className="faith-gradient-text">Bible Lookup</span>
             </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
+            <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 mb-4 sm:mb-6 px-2">
               Fast verse lookup for Bible studies and ministry
             </p>
           </div>
@@ -252,7 +252,7 @@ export default function BibleLookup() {
             </CardHeader>
             <CardContent>
               <div className="relative">
-                <div className="flex gap-3">
+                <div className="flex flex-col sm:flex-row gap-3">
                   <div className="flex-1 relative">
                     <Input
                       ref={inputRef}
@@ -287,7 +287,7 @@ export default function BibleLookup() {
                   <Button 
                     onClick={() => handleSearch()} 
                     disabled={isLoading || !reference.trim()}
-                    className="faith-button-primary px-6"
+                    className="faith-button-primary w-full sm:w-auto px-6"
                   >
                     {isLoading ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
@@ -302,7 +302,7 @@ export default function BibleLookup() {
           </Card>
 
           {/* Recent Searches and Favorites */}
-          <div className="grid md:grid-cols-2 gap-6 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6">
             {/* Recent Searches */}
             {recentSearches.length > 0 && (
               <Card className="faith-card">
@@ -383,7 +383,7 @@ export default function BibleLookup() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
                 {/* Version Selection */}
                 <div>
                   <label className="text-sm font-medium mb-2 block">Version</label>
@@ -477,9 +477,9 @@ export default function BibleLookup() {
               </Button>
               
               {/* Popular Verses Quick Access */}
-              <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+              <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-gray-200 dark:border-gray-700">
                 <h4 className="text-sm font-medium mb-3 text-gray-700 dark:text-gray-300">Popular Verses (Quick Access)</h4>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                   {quickVerses.map((quickRef) => (
                     <Button
                       key={quickRef}
@@ -561,12 +561,12 @@ export default function BibleLookup() {
           )}
 
           {/* Usage Tips */}
-          <Card className="mt-8 faith-card">
+          <Card className="mt-6 sm:mt-8 faith-card">
             <CardHeader>
               <CardTitle className="text-gray-900 dark:text-white">Quick Tips</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid md:grid-cols-2 gap-4 text-sm">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <div>
                   <h4 className="font-semibold mb-2">Supported Formats:</h4>
                   <ul className="space-y-1 text-gray-600 dark:text-gray-300">
