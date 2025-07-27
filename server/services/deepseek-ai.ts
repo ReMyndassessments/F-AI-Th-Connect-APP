@@ -37,15 +37,7 @@ export class DeepseekAI {
         'Focus on key spiritual themes and provide concise, actionable guidance.' : 
         'Provide biblical guidance and Christian wisdom.'} Be concise yet meaningful. 
 
-CRITICAL REQUIREMENT: You MUST always display the complete Bible verse text directly in your response. Never just show verse references as links without the text. Follow this exact format:
-
-**[Romans 8:28](bible://Romans 8:28)**
-"And we know that in all things God works for the good of those who love him, who have been called according to his purpose."
-
-**[Jeremiah 29:11](bible://Jeremiah 29:11)**  
-"For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, to give you hope and a future."
-
-MANDATORY: Every single Bible verse reference you mention MUST be immediately followed by the complete verse text in quotes. This ensures users receive God's Word directly in your response without needing to click links. Include 1-3 relevant verses with their full text.`;
+Always include 1-2 relevant Scripture references with book, chapter, and verse numbers. When referencing verses, use the format [John 3:16](bible://John 3:16) to create clickable study links. For verse ranges, use formats like [Romans 3:23-24](bible://Romans 3:23-24). Keep responses helpful but brief.`;
 
       // Optimize conversation history for speed - limit to last 4 messages for context
       const recentHistory = conversationHistory.slice(-4);
