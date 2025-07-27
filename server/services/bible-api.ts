@@ -244,6 +244,30 @@ export class BibleAPIService {
         chapter: 6,
         verse: "9",
         version: "NIV"
+      },
+      "2 Corinthians 5:17-21": {
+        reference: "2 Corinthians 5:17-21",
+        text: "Therefore, if anyone is in Christ, the new creation has come: The old has gone, the new is here! All this is from God, who reconciled us to himself through Christ and gave us the ministry of reconciliation: that God was reconciling the world to himself in Christ, not counting people's sins against them. And he has committed to us the message of reconciliation. We are therefore Christ's ambassadors, as though God were making his appeal through us. We implore you on Christ's behalf: Be reconciled to God. God made him who had no sin to be sin for us, so that in him we might become the righteousness of God.",
+        book: "2 Corinthians",
+        chapter: 5,
+        verse: "17-21",
+        version: "NIV"
+      },
+      "Matthew 5:14-16": {
+        reference: "Matthew 5:14-16",
+        text: "You are the light of the world. A town built on a hill cannot be hidden. Neither do people light a lamp and put it under a bowl. Instead they put it on its stand, and it gives light to everyone in the house. In the same way, let your light shine before others, that they may see your good deeds and glorify your Father in heaven.",
+        book: "Matthew",
+        chapter: 5,
+        verse: "14-16",
+        version: "NIV"
+      },
+      "Colossians 3:12-14": {
+        reference: "Colossians 3:12-14",
+        text: "Therefore, as God's chosen people, holy and dearly loved, clothe yourselves with compassion, kindness, humility, gentleness and patience. Bear with each other and forgive one another if any of you has a grievance against someone. Forgive as the Lord forgave you. And over all these virtues put on love, which binds them all together in perfect unity.",
+        book: "Colossians",
+        chapter: 3,
+        verse: "12-14",
+        version: "NIV"
       }
     };
 
