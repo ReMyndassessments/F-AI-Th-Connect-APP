@@ -364,7 +364,7 @@ export default function BibleLookup() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Book className="h-5 w-5" />
-                Quick Selection (Mobile Friendly)
+                Quick Selection
               </CardTitle>
             </CardHeader>
             <CardContent>
