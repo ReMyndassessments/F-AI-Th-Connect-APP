@@ -41,6 +41,8 @@ export default function TextHighlighter({ content, messageId, sessionId }: TextH
   });
   
   const bibleLinkEnabled = (featureFlags as any)?.flags?.find((flag: any) => flag.name === 'clickable_bible_links')?.enabled || false;
+  
+  // console.log('Bible Links Debug:', bibleLinkEnabled);
 
   // Load highlights from localStorage on component mount (session-specific)
   useEffect(() => {

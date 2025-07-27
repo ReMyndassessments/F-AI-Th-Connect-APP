@@ -102,6 +102,7 @@ export class MemStorage implements IStorage {
     this.loadAdminData();
     this.loadFeatureFlags();
     this.initializeDefaults();
+    this.initializeAdvertisements();
   }
 
   private loadAdminData(): void {
@@ -169,9 +170,8 @@ export class MemStorage implements IStorage {
   }
 
   private initializeDefaults(): void {
-    // Only initialize default feature flags if none exist (first time setup)
-    if (this.featureFlags.size === 0) {
-      const defaultFlags: FeatureFlag[] = [
+    // Define all default feature flags
+    const defaultFlags: FeatureFlag[] = [
         {
           id: 1,
           name: "advertisements_enabled",
@@ -222,13 +222,34 @@ export class MemStorage implements IStorage {
         }
       ];
 
+    // Check for missing flags and add them
+    const existingFlagNames = new Set(Array.from(this.featureFlags.values()).map(f => f.name));
+    let maxId = this.featureFlags.size > 0 ? Math.max(...Array.from(this.featureFlags.values()).map(f => f.id)) : 0;
+    let flagsAdded = false;
+
+    defaultFlags.forEach(defaultFlag => {
+      if (!existingFlagNames.has(defaultFlag.name)) {
+        const newFlag = { ...defaultFlag, id: ++maxId };
+        this.featureFlags.set(newFlag.id, newFlag);
+        flagsAdded = true;
+        console.log(`✓ Added missing feature flag: ${newFlag.name}`);
+      }
+    });
+
+    if (flagsAdded) {
+      this.currentFeatureFlagId = maxId + 1;
+      this.saveFeatureFlags();
+    } else if (this.featureFlags.size === 0) {
+      // First time setup - add all defaults
       defaultFlags.forEach(flag => {
         this.featureFlags.set(flag.id, flag);
       });
       this.currentFeatureFlagId = 7;
-      this.saveFeatureFlags(); // Save the initial defaults
+      this.saveFeatureFlags();
     }
+  }
 
+  private initializeAdvertisements(): void {
     // Initialize sample advertisements for testing
     const sampleAds: Advertisement[] = [
       {
