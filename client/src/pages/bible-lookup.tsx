@@ -215,7 +215,7 @@ export default function BibleLookup() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-amber-50 dark:from-gray-900 dark:to-gray-800">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           
@@ -233,8 +233,9 @@ export default function BibleLookup() {
 
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              Quick Bible Lookup
+            <h1 className="text-4xl font-bold mb-4">
+              <span className="text-gray-900 dark:text-white">Quick </span>
+              <span className="faith-gradient-text">Bible Lookup</span>
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">
               Fast verse lookup for Bible studies and ministry
@@ -242,10 +243,10 @@ export default function BibleLookup() {
           </div>
 
           {/* Search Input with Autocomplete */}
-          <Card className="mb-6">
+          <Card className="mb-6 faith-card">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Book className="h-5 w-5" />
+              <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+                <Book className="h-5 w-5 text-blue-600" />
                 Enter Bible Reference
               </CardTitle>
             </CardHeader>
@@ -286,7 +287,7 @@ export default function BibleLookup() {
                   <Button 
                     onClick={() => handleSearch()} 
                     disabled={isLoading || !reference.trim()}
-                    className="px-6"
+                    className="faith-button-primary px-6"
                   >
                     {isLoading ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
@@ -304,10 +305,10 @@ export default function BibleLookup() {
           <div className="grid md:grid-cols-2 gap-6 mb-6">
             {/* Recent Searches */}
             {recentSearches.length > 0 && (
-              <Card>
+              <Card className="faith-card">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-sm">
-                    <History className="h-4 w-4" />
+                  <CardTitle className="flex items-center gap-2 text-sm text-gray-900 dark:text-white">
+                    <History className="h-4 w-4 text-blue-600" />
                     Recent Searches
                   </CardTitle>
                 </CardHeader>
@@ -332,10 +333,10 @@ export default function BibleLookup() {
 
             {/* Favorites */}
             {favorites.length > 0 && (
-              <Card>
+              <Card className="faith-card">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-sm">
-                    <Bookmark className="h-4 w-4" />
+                  <CardTitle className="flex items-center gap-2 text-sm text-gray-900 dark:text-white">
+                    <Bookmark className="h-4 w-4 text-amber-600" />
                     Favorites
                   </CardTitle>
                 </CardHeader>
@@ -360,10 +361,10 @@ export default function BibleLookup() {
           </div>
 
           {/* Dropdown Selection System */}
-          <Card className="mb-6">
+          <Card className="mb-6 faith-card">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Book className="h-5 w-5" />
+              <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+                <Book className="h-5 w-5 text-blue-600" />
                 Quick Selection
               </CardTitle>
             </CardHeader>
@@ -451,7 +452,7 @@ export default function BibleLookup() {
               <Button 
                 onClick={handleDropdownSearch}
                 disabled={!selectedBook || !selectedChapter || isLoading}
-                className="w-full sm:w-auto"
+                className="faith-button-primary w-full sm:w-auto"
               >
                 {isLoading ? (
                   <Loader2 className="h-4 w-4 animate-spin mr-2" />
@@ -483,16 +484,16 @@ export default function BibleLookup() {
 
           {/* Results */}
           {isLoading && (
-            <Card>
+            <Card className="faith-card">
               <CardContent className="flex items-center justify-center py-8">
-                <Loader2 className="h-8 w-8 animate-spin mr-2" />
-                <span>Looking up verse...</span>
+                <Loader2 className="h-8 w-8 animate-spin mr-2 text-blue-600" />
+                <span className="text-gray-700 dark:text-gray-300">Looking up verse...</span>
               </CardContent>
             </Card>
           )}
 
           {error && (
-            <Card className="border-red-200 dark:border-red-800">
+            <Card className="faith-card border-red-200 dark:border-red-800">
               <CardContent className="py-6">
                 <div className="text-center text-red-600 dark:text-red-400">
                   <p className="font-semibold">Verse not found</p>
@@ -503,10 +504,10 @@ export default function BibleLookup() {
           )}
 
           {verse && !isLoading && (
-            <Card className="border-green-200 dark:border-green-800">
+            <Card className="faith-card border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-900/20">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-xl text-green-700 dark:text-green-300">
+                  <CardTitle className="text-xl text-blue-700 dark:text-blue-300">
                     {verse.reference}
                   </CardTitle>
                   <div className="flex items-center gap-2">
@@ -515,7 +516,7 @@ export default function BibleLookup() {
                       variant="outline"
                       size="sm"
                       onClick={() => toggleFavorite(verse.reference)}
-                      className="flex items-center gap-1"
+                      className="flex items-center gap-1 border-amber-300 text-amber-700 hover:bg-amber-50"
                     >
                       <Bookmark className={`h-3 w-3 ${favorites.includes(verse.reference) ? 'fill-current' : ''}`} />
                       {favorites.includes(verse.reference) ? 'Favorited' : 'Favorite'}
@@ -524,7 +525,7 @@ export default function BibleLookup() {
                       variant="outline"
                       size="sm"
                       onClick={copyVerse}
-                      className="flex items-center gap-1"
+                      className="flex items-center gap-1 border-blue-300 text-blue-700 hover:bg-blue-50"
                     >
                       <Copy className="h-3 w-3" />
                       Copy
@@ -533,20 +534,22 @@ export default function BibleLookup() {
                 </div>
               </CardHeader>
               <CardContent>
-                <blockquote className="text-lg leading-relaxed text-gray-800 dark:text-gray-200 italic border-l-4 border-green-500 pl-4 mb-4">
-                  "{verse.text}"
-                </blockquote>
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                  {verse.book} {verse.chapter}:{verse.verse} - {verse.version}
+                <div className="bg-white dark:bg-gray-900 p-6 rounded-lg border border-blue-100 dark:border-blue-800">
+                  <blockquote className="text-lg leading-relaxed text-gray-800 dark:text-gray-200 italic font-serif border-l-4 border-blue-500 pl-4 mb-4">
+                    "{verse.text}"
+                  </blockquote>
+                  <div className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                    {verse.book} {verse.chapter}:{verse.verse} - {verse.version}
+                  </div>
                 </div>
               </CardContent>
             </Card>
           )}
 
           {/* Usage Tips */}
-          <Card className="mt-8">
+          <Card className="mt-8 faith-card">
             <CardHeader>
-              <CardTitle>Quick Tips</CardTitle>
+              <CardTitle className="text-gray-900 dark:text-white">Quick Tips</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid md:grid-cols-2 gap-4 text-sm">
