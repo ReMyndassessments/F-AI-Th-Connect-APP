@@ -164,3 +164,10 @@ The architecture prioritizes developer experience with fast iteration cycles whi
 - **Enhanced PWA Installation**: Upgraded QR code page with Progressive Web App installation capabilities including native install prompts, browser-specific instructions, and offline functionality benefits
 - **Service Worker Integration**: Successfully integrated service worker for offline caching and native app experience with automatic registration and PWA detection hooks
 - **Ministry Sharing Tools**: Complete sharing solution for church bulletins, flyers, and digital ministry outreach with step-by-step installation instructions for all major browsers
+
+### January 27, 2025
+- **Dynamic Bible Verse Loading**: Enhanced Bible verse links to fetch verses dynamically within the app instead of redirecting to external sites, keeping users engaged in F-AI-TH-Connect
+- **Bible API Service**: Implemented comprehensive Bible API service with fallback verses for reliability when external APIs are unavailable
+- **Enhanced Bible UX**: Added loading animations, error handling, and smart fallback system for seamless Scripture access
+- **Improved Reference Handling**: Enhanced system to parse various Bible reference formats including verse ranges (e.g., "2 Corinthians 5:9-10") and numbered books
+- **Updated AI System Prompt**: Modified AI to generate properly formatted Bible verse links using standard spacing and reference formats

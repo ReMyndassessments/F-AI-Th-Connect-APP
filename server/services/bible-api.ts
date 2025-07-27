@@ -72,16 +72,21 @@ export class BibleAPIService {
     }
   }
 
-  private parseReference(reference: string): { book: string; chapter: number; verse: number } | null {
-    // Handle various formats: "John 3:16", "1 Corinthians 13:4", "Psalm 23:1"
-    const match = reference.match(/^((?:\d+\s+)?[A-Za-z]+)\s+(\d+):(\d+)$/);
+  private parseReference(reference: string): { book: string; chapter: number; verse: string } | null {
+    // Clean up the reference and handle various formats
+    let cleanRef = reference.replace(/\./g, ' '); // Replace dots with spaces
+    
+    // Handle formats like:
+    // "John 3:16", "1 Corinthians 13:4", "Psalm 23:1"
+    // "2Corinthians 5:9-10", "Matthew 28:19-20"
+    const match = cleanRef.match(/^(\d*\s*[A-Za-z]+)\s+(\d+):(\d+(?:-\d+)?)$/);
     if (!match) return null;
 
     const [, book, chapter, verse] = match;
     return {
       book: book.trim(),
       chapter: parseInt(chapter, 10),
-      verse: parseInt(verse, 10),
+      verse: verse, // Keep as string to handle ranges like "9-10"
     };
   }
 
@@ -175,10 +180,53 @@ export class BibleAPIService {
         chapter: 40,
         verse: "31",
         version: "NIV"
+      },
+      "2 Corinthians 5:9-10": {
+        reference: "2 Corinthians 5:9-10",
+        text: "So we make it our goal to please him, whether we are at home in the body or away from it. For we must all appear before the judgment seat of Christ, so that each of us may receive what is due us for the things done while in the body, whether good or bad.",
+        book: "2 Corinthians",
+        chapter: 5,
+        verse: "9-10",
+        version: "NIV"
+      },
+      "Matthew 28:19-20": {
+        reference: "Matthew 28:19-20",
+        text: "Therefore go and make disciples of all nations, baptizing them in the name of the Father and of the Son and of the Holy Spirit, and teaching them to obey everything I have commanded you. And surely I am with you always, to the very end of the age.",
+        book: "Matthew",
+        chapter: 28,
+        verse: "19-20",
+        version: "NIV"
+      },
+      "Romans 3:23-24": {
+        reference: "Romans 3:23-24",
+        text: "for all have sinned and fall short of the glory of God, and all are justified freely by his grace through the redemption that came by Christ Jesus.",
+        book: "Romans",
+        chapter: 3,
+        verse: "23-24",
+        version: "NIV"
+      },
+      "Ephesians 2:8-9": {
+        reference: "Ephesians 2:8-9",
+        text: "For it is by grace you have been saved, through faith—and this is not from yourselves, it is the gift of God—not by works, so that no one can boast.",
+        book: "Ephesians",
+        chapter: 2,
+        verse: "8-9",
+        version: "NIV"
       }
     };
 
-    return fallbackVerses[reference] || null;
+    // Try exact match first
+    if (fallbackVerses[reference]) {
+      return fallbackVerses[reference];
+    }
+    
+    // Try normalized reference (handle different formats)
+    const normalizedRef = reference.replace(/\./g, ' ').replace(/(\d)([A-Za-z])/g, '$1 $2');
+    if (fallbackVerses[normalizedRef]) {
+      return fallbackVerses[normalizedRef];
+    }
+    
+    return null;
   }
 }
 

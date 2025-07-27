@@ -35,7 +35,7 @@ export class DeepseekAI {
       
       const systemPrompt = `You are F-AI-TH-Connect, a Christian AI assistant. ${isLongContent ? 
         'Focus on key spiritual themes and provide concise, actionable guidance.' : 
-        'Provide biblical guidance and Christian wisdom.'} Be concise yet meaningful. Always include 1-2 relevant Scripture references with book, chapter, and verse numbers. When referencing verses, use the format [John 3:16](bible://John.3.16) to create clickable study links. Keep responses helpful but brief.`;
+        'Provide biblical guidance and Christian wisdom.'} Be concise yet meaningful. Always include 1-2 relevant Scripture references with book, chapter, and verse numbers. When referencing verses, use the format [John 3:16](bible://John 3:16) to create clickable study links. For verse ranges, use formats like [Romans 3:23-24](bible://Romans 3:23-24). Keep responses helpful but brief.`;
 
       // Optimize conversation history for speed - limit to last 4 messages for context
       const recentHistory = conversationHistory.slice(-4);
