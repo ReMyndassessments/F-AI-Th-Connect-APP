@@ -9,13 +9,32 @@ async function throwIfResNotOk(res: Response) {
   }
 }
 
+// Function overloads
+export async function apiRequest(url: string): Promise<any>;
 export async function apiRequest(
   method: string,
   url: string,
   data?: unknown | undefined,
-): Promise<Response> {
+): Promise<Response>;
+
+export async function apiRequest(
+  methodOrUrl: string,
+  url?: string,
+  data?: unknown | undefined,
+): Promise<any> {
+  // If second parameter is undefined, first parameter is URL (GET request)
+  if (url === undefined) {
+    const res = await fetch(methodOrUrl, {
+      method: 'GET',
+      credentials: "include",
+    });
+    await throwIfResNotOk(res);
+    return await res.json();
+  }
+  
+  // Otherwise, first parameter is method
   const res = await fetch(url, {
-    method,
+    method: methodOrUrl,
     headers: data ? { "Content-Type": "application/json" } : {},
     body: data ? JSON.stringify(data) : undefined,
     credentials: "include",
