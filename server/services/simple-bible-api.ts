@@ -34,13 +34,14 @@ export class SimpleBibleAPIService {
     try {
       // Convert reference to API format (e.g., "John 3:16" -> "john+3:16")
       const apiReference = this.formatReferenceForAPI(reference);
+      const url = `${this.baseUrl}/${apiReference}`;
       
-      const response = await fetch(`${this.baseUrl}/${apiReference}`, {
+      const response = await fetch(url, {
         signal: AbortSignal.timeout(10000), // 10-second timeout
       });
 
       if (!response.ok) {
-        console.warn(`Simple Bible API error: ${response.status} for ${reference}`);
+        console.warn(`Bible API error: ${response.status} for ${reference}`);
         return this.getFallbackVerse(reference);
       }
 

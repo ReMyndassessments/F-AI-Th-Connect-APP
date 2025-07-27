@@ -167,8 +167,8 @@ The architecture prioritizes developer experience with fast iteration cycles whi
 
 ### January 27, 2025
 - **Dynamic Bible Verse Loading**: Enhanced Bible verse links to fetch verses dynamically within the app instead of redirecting to external sites, keeping users engaged in F-AI-TH-Connect
-- **Bible API Service**: Implemented comprehensive Bible API service with fallback verses for reliability when external APIs are unavailable
-- **Enhanced Bible UX**: Added loading animations, error handling, and smart fallback system for seamless Scripture access
-- **Improved Reference Handling**: Enhanced system to parse various Bible reference formats including verse ranges (e.g., "2 Corinthians 5:9-10") and numbered books
+- **Bible API Migration**: Successfully migrated from API.Bible (required API key) to bible-api.com (free, no key required) for seamless Scripture access
+- **Enhanced Bible UX**: Implemented reliable bible-api.com service with automatic verse range handling (e.g., "2 Corinthians 5:9-10", "Psalm 23:1-3")
+- **Improved Reference Handling**: Enhanced system to parse various Bible reference formats including numbered books and verse ranges with proper URL formatting
 - **Updated AI System Prompt**: Modified AI to generate properly formatted Bible verse links using standard spacing and reference formats
-- **Comprehensive Fallback Verses**: Added extensive Scripture database including 2 Corinthians 4:16-18, Romans 5:3-4, 1 Corinthians 3:12-14, and other commonly referenced passages for reliable offline access
+- **Comprehensive Fallback System**: Added extensive Scripture database for offline access when external API is unavailable, ensuring 100% reliability

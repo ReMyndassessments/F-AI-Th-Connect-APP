@@ -14,7 +14,6 @@ import Contact from "@/pages/contact";
 import Privacy from "@/pages/privacy";
 import Terms from "@/pages/terms";
 import Share from "@/pages/share";
-import BibleDemo from "@/pages/bible-demo";
 
 function Router() {
   return (
@@ -29,7 +28,6 @@ function Router() {
       <Route path="/privacy" component={Privacy} />
       <Route path="/terms" component={Terms} />
       <Route path="/share" component={Share} />
-      <Route path="/bible-demo" component={BibleDemo} />
       <Route component={NotFound} />
     </Switch>
   );
