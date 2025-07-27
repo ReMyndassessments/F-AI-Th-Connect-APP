@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useLocation } from 'wouter';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Book, Copy, Search } from 'lucide-react';
+import { Loader2, Book, Copy, Search, ArrowLeft, Home } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 
@@ -21,6 +22,7 @@ export default function BibleLookup() {
   const [reference, setReference] = useState('');
   const [searchTrigger, setSearchTrigger] = useState('');
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
 
   // Query for Bible verse
   const { data: verse, isLoading, error } = useQuery({
@@ -69,6 +71,18 @@ export default function BibleLookup() {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           
+          {/* Back to Home Button */}
+          <div className="mb-6">
+            <Button
+              variant="ghost"
+              onClick={() => setLocation("/")}
+              className="flex items-center gap-2 text-gray-600 hover:text-blue-500 transition-colors"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to Home
+            </Button>
+          </div>
+
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
