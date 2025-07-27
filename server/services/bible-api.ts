@@ -212,6 +212,38 @@ export class BibleAPIService {
         chapter: 2,
         verse: "8-9",
         version: "NIV"
+      },
+      "Romans 5:3-5": {
+        reference: "Romans 5:3-5",
+        text: "Not only so, but we also glory in our sufferings, because we know that suffering produces perseverance; perseverance, character; and character, hope. And hope does not put us to shame, because God's love has been poured out into our hearts through the Holy Spirit, who has been given to us.",
+        book: "Romans",
+        chapter: 5,
+        verse: "3-5",
+        version: "NIV"
+      },
+      "James 1:2-4": {
+        reference: "James 1:2-4",
+        text: "Consider it pure joy, my brothers and sisters, whenever you face trials of many kinds, because you know that the testing of your faith produces perseverance. Let perseverance finish its work so that you may be mature and complete, not lacking anything.",
+        book: "James",
+        chapter: 1,
+        verse: "2-4",
+        version: "NIV"
+      },
+      "1 Peter 5:7": {
+        reference: "1 Peter 5:7",
+        text: "Cast all your anxiety on him because he cares for you.",
+        book: "1 Peter",
+        chapter: 5,
+        verse: "7",
+        version: "NIV"
+      },
+      "Galatians 6:9": {
+        reference: "Galatians 6:9",
+        text: "Let us not become weary in doing good, for at the proper time we will reap a harvest if we do not give up.",
+        book: "Galatians",
+        chapter: 6,
+        verse: "9",
+        version: "NIV"
       }
     };
 
