@@ -32,6 +32,12 @@ export default function Header() {
           
           <nav className="hidden md:flex items-center space-x-8">
             <button
+              onClick={() => setLocation("/bible")}
+              className="text-gray-600 hover:text-blue-500 transition-colors font-medium"
+            >
+              Bible Lookup
+            </button>
+            <button
               onClick={() => scrollToSection("features")}
               className="text-gray-600 hover:text-blue-500 transition-colors"
             >
@@ -93,6 +99,15 @@ export default function Header() {
         {isMobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-gray-100">
             <div className="flex flex-col space-y-4">
+              <button
+                onClick={() => {
+                  setLocation("/bible");
+                  setIsMobileMenuOpen(false);
+                }}
+                className="text-gray-600 hover:text-blue-500 transition-colors text-left font-medium"
+              >
+                Bible Lookup
+              </button>
               <button
                 onClick={() => scrollToSection("features")}
                 className="text-gray-600 hover:text-blue-500 transition-colors text-left"
