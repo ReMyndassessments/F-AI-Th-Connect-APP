@@ -6,6 +6,7 @@ import crypto from "crypto";
 import { storage } from "./storage";
 import { DeepseekAI } from "./services/deepseek-ai";
 import { bibleAPI } from "./services/bible-api";
+import bibleComparisonRoutes from "./routes/bible-comparison";
 import { FileProcessor } from "./services/file-processor";
 import { z } from "zod";
 import { insertMessageSchema, insertChatSessionSchema, adminLoginSchema, insertFeatureFlagSchema, insertAdvertisementSchema } from "@shared/schema";
@@ -421,6 +422,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
   });
+
+  // Add Bible comparison routes
+  app.use('/api/bible', bibleComparisonRoutes);
 
   // Feature flags endpoints (now require admin authentication)
   app.get("/api/feature-flags", requireAdmin, async (req, res) => {
