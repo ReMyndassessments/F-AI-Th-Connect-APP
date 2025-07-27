@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLocation } from 'wouter';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Book, Copy, Search, ArrowLeft, Home } from 'lucide-react';
+import { Loader2, Book, Copy, Search, ArrowLeft, History, Clock, Bookmark } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 
@@ -18,11 +18,58 @@ interface BibleVerse {
   version: string;
 }
 
+// Bible books for autocomplete
+const BIBLE_BOOKS = [
+  'Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth',
+  '1 Samuel', '2 Samuel', '1 Kings', '2 Kings', '1 Chronicles', '2 Chronicles', 'Ezra', 'Nehemiah',
+  'Esther', 'Job', 'Psalms', 'Proverbs', 'Ecclesiastes', 'Song of Solomon', 'Isaiah', 'Jeremiah',
+  'Lamentations', 'Ezekiel', 'Daniel', 'Hosea', 'Joel', 'Amos', 'Obadiah', 'Jonah', 'Micah',
+  'Nahum', 'Habakkuk', 'Zephaniah', 'Haggai', 'Zechariah', 'Malachi',
+  'Matthew', 'Mark', 'Luke', 'John', 'Acts', 'Romans', '1 Corinthians', '2 Corinthians',
+  'Galatians', 'Ephesians', 'Philippians', 'Colossians', '1 Thessalonians', '2 Thessalonians',
+  '1 Timothy', '2 Timothy', 'Titus', 'Philemon', 'Hebrews', 'James', '1 Peter', '2 Peter',
+  '1 John', '2 John', '3 John', 'Jude', 'Revelation'
+];
+
 export default function BibleLookup() {
   const [reference, setReference] = useState('');
   const [searchTrigger, setSearchTrigger] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const [favorites, setFavorites] = useState<string[]>([]);
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Load saved data on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('bible-recent-searches');
+    if (saved) setRecentSearches(JSON.parse(saved));
+    
+    const savedFavorites = localStorage.getItem('bible-favorites');
+    if (savedFavorites) setFavorites(JSON.parse(savedFavorites));
+  }, []);
+
+  // Autocomplete suggestions
+  const suggestions = useMemo(() => {
+    if (!reference || reference.length < 2) return [];
+    
+    const input = reference.toLowerCase();
+    const bookSuggestions = BIBLE_BOOKS.filter(book => 
+      book.toLowerCase().includes(input)
+    ).slice(0, 8);
+    
+    // Add common chapter:verse patterns for matched books
+    const withChapters = bookSuggestions.flatMap(book => {
+      const suggestions = [book];
+      if (book.toLowerCase().startsWith(input)) {
+        suggestions.push(`${book} 1:1`, `${book} 1`);
+      }
+      return suggestions;
+    }).slice(0, 6);
+    
+    return withChapters;
+  }, [reference]);
 
   // Query for Bible verse
   const { data: verse, isLoading, error } = useQuery({
@@ -36,10 +83,40 @@ export default function BibleLookup() {
     retry: false
   });
 
-  const handleSearch = () => {
-    if (reference.trim()) {
-      setSearchTrigger(reference.trim());
+  const handleSearch = (searchRef?: string) => {
+    const refToSearch = searchRef || reference;
+    if (refToSearch.trim()) {
+      const cleanRef = refToSearch.trim();
+      setSearchTrigger(cleanRef);
+      setReference(cleanRef);
+      setShowSuggestions(false);
+      
+      // Add to recent searches
+      const newRecent = [cleanRef, ...recentSearches.filter(r => r !== cleanRef)].slice(0, 10);
+      setRecentSearches(newRecent);
+      localStorage.setItem('bible-recent-searches', JSON.stringify(newRecent));
     }
+  };
+
+  const toggleFavorite = (ref: string) => {
+    const newFavorites = favorites.includes(ref) 
+      ? favorites.filter(f => f !== ref)
+      : [ref, ...favorites].slice(0, 20);
+    
+    setFavorites(newFavorites);
+    localStorage.setItem('bible-favorites', JSON.stringify(newFavorites));
+    
+    toast({
+      description: favorites.includes(ref) 
+        ? "Removed from favorites" 
+        : "Added to favorites"
+    });
+  };
+
+  const selectSuggestion = (suggestion: string) => {
+    setReference(suggestion);
+    setShowSuggestions(false);
+    handleSearch(suggestion);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -93,7 +170,7 @@ export default function BibleLookup() {
             </p>
           </div>
 
-          {/* Search Input */}
+          {/* Search Input with Autocomplete */}
           <Card className="mb-6">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -102,32 +179,116 @@ export default function BibleLookup() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex gap-3">
-                <Input
-                  placeholder="e.g., John 3:16, Psalm 23:1-3, Romans 8:28"
-                  value={reference}
-                  onChange={(e) => setReference(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  className="flex-1 text-lg"
-                  autoFocus
-                />
-                <Button 
-                  onClick={handleSearch} 
-                  disabled={isLoading || !reference.trim()}
-                  className="px-6"
-                >
-                  {isLoading ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Search className="h-4 w-4" />
-                  )}
-                  Search
-                </Button>
+              <div className="relative">
+                <div className="flex gap-3">
+                  <div className="flex-1 relative">
+                    <Input
+                      ref={inputRef}
+                      placeholder="e.g., John 3:16, Psalm 23:1-3, Romans 8:28"
+                      value={reference}
+                      onChange={(e) => {
+                        setReference(e.target.value);
+                        setShowSuggestions(true);
+                      }}
+                      onKeyPress={handleKeyPress}
+                      onFocus={() => setShowSuggestions(true)}
+                      onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+                      className="text-lg"
+                      autoFocus
+                    />
+                    
+                    {/* Autocomplete Suggestions */}
+                    {showSuggestions && suggestions.length > 0 && (
+                      <div className="absolute top-full left-0 right-0 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-md shadow-lg z-10 max-h-60 overflow-y-auto">
+                        {suggestions.map((suggestion, index) => (
+                          <button
+                            key={index}
+                            onClick={() => selectSuggestion(suggestion)}
+                            className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border-b border-gray-100 dark:border-gray-700 last:border-b-0"
+                          >
+                            <span className="text-sm text-gray-900 dark:text-white">{suggestion}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <Button 
+                    onClick={() => handleSearch()} 
+                    disabled={isLoading || !reference.trim()}
+                    className="px-6"
+                  >
+                    {isLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Search className="h-4 w-4" />
+                    )}
+                    Search
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Quick Access Buttons */}
+          {/* Recent Searches and Favorites */}
+          <div className="grid md:grid-cols-2 gap-6 mb-6">
+            {/* Recent Searches */}
+            {recentSearches.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-sm">
+                    <History className="h-4 w-4" />
+                    Recent Searches
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {recentSearches.slice(0, 5).map((recent, index) => (
+                      <Button
+                        key={index}
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleSearch(recent)}
+                        className="w-full justify-start text-xs"
+                      >
+                        <Clock className="h-3 w-3 mr-2" />
+                        {recent}
+                      </Button>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Favorites */}
+            {favorites.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-sm">
+                    <Bookmark className="h-4 w-4" />
+                    Favorites
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {favorites.slice(0, 5).map((favorite, index) => (
+                      <Button
+                        key={index}
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleSearch(favorite)}
+                        className="w-full justify-start text-xs"
+                      >
+                        <Bookmark className="h-3 w-3 mr-2 fill-current" />
+                        {favorite}
+                      </Button>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+
+          {/* Popular Verses */}
           <Card className="mb-6">
             <CardHeader>
               <CardTitle>Popular Verses</CardTitle>
@@ -139,10 +300,7 @@ export default function BibleLookup() {
                     key={quickRef}
                     variant="outline"
                     size="sm"
-                    onClick={() => {
-                      setReference(quickRef);
-                      setSearchTrigger(quickRef);
-                    }}
+                    onClick={() => handleSearch(quickRef)}
                     className="text-xs justify-start"
                   >
                     {quickRef}
@@ -182,6 +340,15 @@ export default function BibleLookup() {
                   </CardTitle>
                   <div className="flex items-center gap-2">
                     <Badge variant="secondary">{verse.version}</Badge>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => toggleFavorite(verse.reference)}
+                      className="flex items-center gap-1"
+                    >
+                      <Bookmark className={`h-3 w-3 ${favorites.includes(verse.reference) ? 'fill-current' : ''}`} />
+                      {favorites.includes(verse.reference) ? 'Favorited' : 'Favorite'}
+                    </Button>
                     <Button
                       variant="outline"
                       size="sm"
