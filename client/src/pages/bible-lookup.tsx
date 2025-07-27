@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, Book, Copy, Search, ArrowLeft, History, Clock, Bookmark } from 'lucide-react';
+import { Loader2, Book, Copy, Search, ArrowLeft, History, Clock, Bookmark, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 
@@ -307,10 +307,24 @@ export default function BibleLookup() {
             {recentSearches.length > 0 && (
               <Card className="faith-card">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-sm text-gray-900 dark:text-white">
-                    <History className="h-4 w-4 text-blue-600" />
-                    Recent Searches
-                  </CardTitle>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center gap-2 text-sm text-gray-900 dark:text-white">
+                      <History className="h-4 w-4 text-blue-600" />
+                      Recent Searches
+                    </CardTitle>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        localStorage.removeItem('bible-recent-searches');
+                        setRecentSearches([]);
+                      }}
+                      className="h-6 w-6 p-0 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                      title="Clear recent searches"
+                    >
+                      <X className="h-3 w-3" />
+                    </Button>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
