@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2, Book, Copy, Search, ArrowLeft, History, Clock, Bookmark } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
@@ -31,12 +32,28 @@ const BIBLE_BOOKS = [
   '1 John', '2 John', '3 John', 'Jude', 'Revelation'
 ];
 
+// Bible versions available
+const BIBLE_VERSIONS = [
+  { value: 'kjv', label: 'King James Version (KJV)' },
+  { value: 'niv', label: 'New International Version (NIV)' },
+  { value: 'esv', label: 'English Standard Version (ESV)' },
+  { value: 'nlt', label: 'New Living Translation (NLT)' },
+  { value: 'nasb', label: 'New American Standard Bible (NASB)' }
+];
+
 export default function BibleLookup() {
   const [reference, setReference] = useState('');
   const [searchTrigger, setSearchTrigger] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
+  
+  // Dropdown states
+  const [selectedVersion, setSelectedVersion] = useState('kjv');
+  const [selectedBook, setSelectedBook] = useState('');
+  const [selectedChapter, setSelectedChapter] = useState('');
+  const [selectedVerse, setSelectedVerse] = useState('');
+  
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -117,6 +134,60 @@ export default function BibleLookup() {
     setReference(suggestion);
     setShowSuggestions(false);
     handleSearch(suggestion);
+  };
+
+  // Generate chapter numbers based on selected book
+  const availableChapters = useMemo(() => {
+    if (!selectedBook) return [];
+    
+    // Common chapter counts for Bible books (simplified version)
+    const chapterCounts: { [key: string]: number } = {
+      'Genesis': 50, 'Exodus': 40, 'Leviticus': 27, 'Numbers': 36, 'Deuteronomy': 34,
+      'Joshua': 24, 'Judges': 21, 'Ruth': 4, '1 Samuel': 31, '2 Samuel': 24,
+      '1 Kings': 22, '2 Kings': 25, '1 Chronicles': 29, '2 Chronicles': 36, 'Ezra': 10,
+      'Nehemiah': 13, 'Esther': 10, 'Job': 42, 'Psalms': 150, 'Proverbs': 31,
+      'Ecclesiastes': 12, 'Song of Solomon': 8, 'Isaiah': 66, 'Jeremiah': 52, 'Lamentations': 5,
+      'Ezekiel': 48, 'Daniel': 12, 'Hosea': 14, 'Joel': 3, 'Amos': 9, 'Obadiah': 1,
+      'Jonah': 4, 'Micah': 7, 'Nahum': 3, 'Habakkuk': 3, 'Zephaniah': 3, 'Haggai': 2,
+      'Zechariah': 14, 'Malachi': 4, 'Matthew': 28, 'Mark': 16, 'Luke': 24, 'John': 21,
+      'Acts': 28, 'Romans': 16, '1 Corinthians': 16, '2 Corinthians': 13, 'Galatians': 6,
+      'Ephesians': 6, 'Philippians': 4, 'Colossians': 4, '1 Thessalonians': 5, '2 Thessalonians': 3,
+      '1 Timothy': 6, '2 Timothy': 4, 'Titus': 3, 'Philemon': 1, 'Hebrews': 13, 'James': 5,
+      '1 Peter': 5, '2 Peter': 3, '1 John': 5, '2 John': 1, '3 John': 1, 'Jude': 1, 'Revelation': 22
+    };
+    
+    const count = chapterCounts[selectedBook] || 1;
+    return Array.from({ length: count }, (_, i) => (i + 1).toString());
+  }, [selectedBook]);
+
+  // Generate verse numbers (simplified - using max 50 for most chapters)
+  const availableVerses = useMemo(() => {
+    if (!selectedChapter) return [];
+    // Simplified verse count - in real implementation, this would be more accurate
+    const maxVerses = selectedBook === 'Psalms' && selectedChapter === '119' ? 176 : 50;
+    return Array.from({ length: maxVerses }, (_, i) => (i + 1).toString());
+  }, [selectedBook, selectedChapter]);
+
+  // Handle dropdown-based search
+  const handleDropdownSearch = () => {
+    if (selectedBook && selectedChapter) {
+      const reference = selectedVerse && selectedVerse !== 'all'
+        ? `${selectedBook} ${selectedChapter}:${selectedVerse}`
+        : `${selectedBook} ${selectedChapter}`;
+      handleSearch(reference);
+    }
+  };
+
+  // Reset dependent dropdowns when parent changes
+  const handleBookChange = (book: string) => {
+    setSelectedBook(book);
+    setSelectedChapter('');
+    setSelectedVerse('');
+  };
+
+  const handleChapterChange = (chapter: string) => {
+    setSelectedChapter(chapter);
+    setSelectedVerse('all');
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -288,24 +359,124 @@ export default function BibleLookup() {
             )}
           </div>
 
-          {/* Popular Verses */}
+          {/* Dropdown Selection System */}
           <Card className="mb-6">
             <CardHeader>
-              <CardTitle>Popular Verses</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <Book className="h-5 w-5" />
+                Quick Selection (Mobile Friendly)
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-                {quickVerses.map((quickRef) => (
-                  <Button
-                    key={quickRef}
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleSearch(quickRef)}
-                    className="text-xs justify-start"
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                {/* Version Selection */}
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Version</label>
+                  <Select value={selectedVersion} onValueChange={setSelectedVersion}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select version" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {BIBLE_VERSIONS.map((version) => (
+                        <SelectItem key={version.value} value={version.value}>
+                          {version.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Book Selection */}
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Book</label>
+                  <Select value={selectedBook} onValueChange={handleBookChange}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select book" />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-60">
+                      {BIBLE_BOOKS.map((book) => (
+                        <SelectItem key={book} value={book}>
+                          {book}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Chapter Selection */}
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Chapter</label>
+                  <Select 
+                    value={selectedChapter} 
+                    onValueChange={handleChapterChange}
+                    disabled={!selectedBook}
                   >
-                    {quickRef}
-                  </Button>
-                ))}
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select chapter" />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-60">
+                      {availableChapters.map((chapter) => (
+                        <SelectItem key={chapter} value={chapter}>
+                          Chapter {chapter}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Verse Selection */}
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Verse (Optional)</label>
+                  <Select 
+                    value={selectedVerse} 
+                    onValueChange={setSelectedVerse}
+                    disabled={!selectedChapter}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select verse" />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-60">
+                      <SelectItem value="all">Entire Chapter</SelectItem>
+                      {availableVerses.map((verse) => (
+                        <SelectItem key={verse} value={verse}>
+                          Verse {verse}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              {/* Lookup Button */}
+              <Button 
+                onClick={handleDropdownSearch}
+                disabled={!selectedBook || !selectedChapter || isLoading}
+                className="w-full sm:w-auto"
+              >
+                {isLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                ) : (
+                  <Search className="h-4 w-4 mr-2" />
+                )}
+                Look Up Verse
+              </Button>
+              
+              {/* Popular Verses Quick Access */}
+              <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                <h4 className="text-sm font-medium mb-3 text-gray-700 dark:text-gray-300">Popular Verses (Quick Access)</h4>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                  {quickVerses.map((quickRef) => (
+                    <Button
+                      key={quickRef}
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleSearch(quickRef)}
+                      className="text-xs justify-start h-8"
+                    >
+                      {quickRef}
+                    </Button>
+                  ))}
+                </div>
               </div>
             </CardContent>
           </Card>
