@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Highlighter, Palette, Bookmark, Heart, Star, MessageCircle, Download, Printer } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import MarkdownRenderer from "./markdown-renderer";
 
 interface HighlightData {
   id: string;
@@ -31,6 +33,14 @@ export default function TextHighlighter({ content, messageId, sessionId }: TextH
   const [selectionRange, setSelectionRange] = useState<{ start: number; end: number } | null>(null);
   const [showPopover, setShowPopover] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
+
+  // Check if clickable Bible links feature is enabled
+  const { data: featureFlags } = useQuery({
+    queryKey: ["/api/feature-flags/public"],
+    refetchInterval: 30000, // Refresh every 30 seconds
+  });
+  
+  const bibleLinkEnabled = (featureFlags as any)?.flags?.find((flag: any) => flag.name === 'clickable_bible_links')?.enabled || false;
 
   // Load highlights from localStorage on component mount (session-specific)
   useEffect(() => {
@@ -353,7 +363,11 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
         onMouseUp={handleTextSelection}
         onTouchEnd={handleTextSelection}
       >
-        {renderHighlightedContent()}
+        {bibleLinkEnabled ? (
+          <MarkdownRenderer content={content} enableBibleLinks={true} />
+        ) : (
+          renderHighlightedContent()
+        )}
       </div>
       
       {/* Show highlighting toolbar when text is selected */}

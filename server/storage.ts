@@ -211,13 +211,21 @@ export class MemStorage implements IStorage {
           enabled: true,
           createdAt: new Date(),
           updatedAt: new Date(),
+        },
+        {
+          id: 6,
+          name: "clickable_bible_links",
+          description: "Enable clickable Bible verse links in AI responses for enhanced Bible study experience.",
+          enabled: true,
+          createdAt: new Date(),
+          updatedAt: new Date(),
         }
       ];
 
       defaultFlags.forEach(flag => {
         this.featureFlags.set(flag.id, flag);
       });
-      this.currentFeatureFlagId = 6;
+      this.currentFeatureFlagId = 7;
       this.saveFeatureFlags(); // Save the initial defaults
     }
 

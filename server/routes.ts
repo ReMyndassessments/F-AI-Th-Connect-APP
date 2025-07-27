@@ -131,6 +131,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const flags = await storage.getFeatureFlags();
       const ministryReminderEnabled = flags.find(f => f.name === 'ministry_support_reminders')?.enabled || false;
       
+      // Check feature flags for clickable Bible links
+      const bibleLinkEnabled = flags.find(f => f.name === 'clickable_bible_links')?.enabled || false;
+      
       // Add tasteful ministry support reminder occasionally (every 5th assistant message)
       let finalResponse = aiResult.response;
       if (ministryReminderEnabled) {
@@ -141,7 +144,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         if (nextAssistantCount >= 3 && nextAssistantCount % 3 === 0) {
           console.log(`Adding ministry support reminder on message ${nextAssistantCount}`);
-          finalResponse += "\n\n---\n\n*💙 Blessings! If F-AI-TH-Connect helps your spiritual journey, please consider [supporting our ministry](https://www.givesendgo.com/CodeandCoffeeforChrist). Your partnership helps us serve more believers.*";
+          if (bibleLinkEnabled) {
+            finalResponse += "\n\n---\n\n*💙 Blessings! If F-AI-TH-Connect helps your spiritual journey, please consider [supporting our ministry](https://www.givesendgo.com/CodeandCoffeeforChrist). Your partnership helps us serve more believers.*";
+          } else {
+            finalResponse += "\n\n---\n\n*💙 Blessings! If F-AI-TH-Connect helps your spiritual journey, please consider supporting our ministry at https://www.givesendgo.com/CodeandCoffeeforChrist. Your partnership helps us serve more believers.*";
+          }
         }
       }
       
