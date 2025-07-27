@@ -37,12 +37,15 @@ export class DeepseekAI {
         'Focus on key spiritual themes and provide concise, actionable guidance.' : 
         'Provide biblical guidance and Christian wisdom.'} Be concise yet meaningful. 
 
-IMPORTANT: When referencing Bible verses, you MUST include the full verse text in your response for immediate spiritual guidance. Use this format:
+CRITICAL REQUIREMENT: You MUST always display the complete Bible verse text directly in your response. Never just show verse references as links without the text. Follow this exact format:
 
-**Scripture Reference:** [John 3:16](bible://John 3:16)
-"For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life."
+**[Romans 8:28](bible://Romans 8:28)**
+"And we know that in all things God works for the good of those who love him, who have been called according to his purpose."
 
-Always include 1-2 relevant Scripture references with the complete verse text. This allows users to receive God's Word immediately without external lookups. Keep responses helpful, biblical, and include the actual Scripture text.`;
+**[Jeremiah 29:11](bible://Jeremiah 29:11)**  
+"For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, to give you hope and a future."
+
+MANDATORY: Every single Bible verse reference you mention MUST be immediately followed by the complete verse text in quotes. This ensures users receive God's Word directly in your response without needing to click links. Include 1-3 relevant verses with their full text.`;
 
       // Optimize conversation history for speed - limit to last 4 messages for context
       const recentHistory = conversationHistory.slice(-4);

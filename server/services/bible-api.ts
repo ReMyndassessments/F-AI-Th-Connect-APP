@@ -268,6 +268,38 @@ export class BibleAPIService {
         chapter: 3,
         verse: "12-14",
         version: "NIV"
+      },
+      "2 Corinthians 4:16-18": {
+        reference: "2 Corinthians 4:16-18",
+        text: "Therefore we do not lose heart. Though outwardly we are wasting away, yet inwardly we are being renewed day by day. For our light and momentary troubles are achieving for us an eternal glory that far outweighs them all. So we fix our eyes not on what is seen, but on what is unseen, since what is seen is temporary, but what is unseen is eternal.",
+        book: "2 Corinthians",
+        chapter: 4,
+        verse: "16-18",
+        version: "NIV"
+      },
+      "2 Corinthians 11:24-28": {
+        reference: "2 Corinthians 11:24-28",
+        text: "Five times I received from the Jews the forty lashes minus one. Three times I was beaten with rods, once I was pelted with stones, three times I was shipwrecked, I spent a night and a day in the open sea, I have been constantly on the move. I have been in danger from rivers, in danger from bandits, in danger from my fellow Jews, in danger from Gentiles; in danger in the city, in danger in the country, in danger at sea; and in danger from false believers. I have labored and toiled and have often gone without sleep; I have known hunger and thirst and have often gone without food; I have been cold and naked. Besides everything else, I face daily the pressure of my concern for all the churches.",
+        book: "2 Corinthians",
+        chapter: 11,
+        verse: "24-28",
+        version: "NIV"
+      },
+      "Romans 5:3-4": {
+        reference: "Romans 5:3-4",
+        text: "Not only so, but we also glory in our sufferings, because we know that suffering produces perseverance; perseverance, character; and character, hope.",
+        book: "Romans",
+        chapter: 5,
+        verse: "3-4",
+        version: "NIV"
+      },
+      "1 Corinthians 3:12-14": {
+        reference: "1 Corinthians 3:12-14",
+        text: "If anyone builds on this foundation using gold, silver, costly stones, wood, hay or straw, their work will be shown for what it is, because the Day will bring it to light. It will be revealed with fire, and the fire will test the quality of each person's work. If what has been built survives, the builder will receive a reward.",
+        book: "1 Corinthians",
+        chapter: 3,
+        verse: "12-14",
+        version: "NIV"
       }
     };
 
