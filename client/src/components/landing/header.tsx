@@ -49,12 +49,7 @@ export default function Header() {
             >
               How It Works
             </button>
-            <button
-              onClick={() => scrollToSection("testimonials")}
-              className="text-gray-600 hover:text-blue-500 transition-colors"
-            >
-              Testimonials
-            </button>
+
             <Button
               onClick={() => setLocation("/share")}
               variant="ghost"
@@ -120,12 +115,7 @@ export default function Header() {
               >
                 How It Works
               </button>
-              <button
-                onClick={() => scrollToSection("testimonials")}
-                className="text-gray-600 hover:text-blue-500 transition-colors text-left"
-              >
-                Testimonials
-              </button>
+
               <Button
                 onClick={() => setLocation("/share")}
                 variant="ghost"
