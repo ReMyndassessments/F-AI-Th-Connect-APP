@@ -1,17 +1,17 @@
 import type { MonthlyPhoto } from "@shared/schema";
 
-// Monthly themed photo data with Christian/inspirational themes
-// Using high-quality stock photos from Unsplash with appropriate themes
+// Monthly themed photo data featuring modern young Christians in Bible study and faith activities
+// Using high-quality stock photos from Unsplash featuring young adults in Christian fellowship
 // Each month has 2 photos: one for hero, one for how-it-works section
 export const MONTHLY_HERO_PHOTOS: MonthlyPhoto[] = [
   {
     id: 1,
     month: 1, // January
-    title: "New Beginnings",
-    description: "Start the year with faith, hope, and renewed purpose",
-    imageUrl: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=2070&auto=format&fit=crop",
-    altText: "Person in prayer during sunrise, symbolizing new beginnings and spiritual renewal",
-    theme: "New Year Renewal",
+    title: "New Year Bible Study",
+    description: "Young Christians starting the year with intentional Scripture study",
+    imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2070&auto=format&fit=crop",
+    altText: "Group of young diverse Christians studying Bible together around table",
+    theme: "New Year Commitment",
     isActive: true,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -19,11 +19,11 @@ export const MONTHLY_HERO_PHOTOS: MonthlyPhoto[] = [
   {
     id: 2,
     month: 2, // February
-    title: "Love and Fellowship",
-    description: "Celebrating God's love and Christian community",
-    imageUrl: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=2070&auto=format&fit=crop",
-    altText: "Diverse group of people in fellowship, sharing love and community",
-    theme: "Christian Love",
+    title: "Young Adults in Fellowship",
+    description: "Modern Christian community building authentic relationships",
+    imageUrl: "https://images.unsplash.com/photo-1529390079861-591de354faf5?q=80&w=2070&auto=format&fit=crop",
+    altText: "Young adults laughing and studying together in contemporary church setting",
+    theme: "Christian Fellowship",
     isActive: true,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -31,11 +31,11 @@ export const MONTHLY_HERO_PHOTOS: MonthlyPhoto[] = [
   {
     id: 3,
     month: 3, // March
-    title: "Spring Renewal",
-    description: "God's creation awakening with new life and growth",
-    imageUrl: "https://images.unsplash.com/photo-1521651201144-634f700b36ef?q=80&w=2070&auto=format&fit=crop",
-    altText: "Beautiful spring landscape with blooming flowers, representing spiritual growth",
-    theme: "Spiritual Growth",
+    title: "Spring Campus Ministry",
+    description: "College students growing in faith during spring semester",
+    imageUrl: "https://images.unsplash.com/photo-1544027993-37dbfe43562a?q=80&w=2070&auto=format&fit=crop",
+    altText: "Young Christian students with Bibles on university campus",
+    theme: "Campus Faith",
     isActive: true,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -43,11 +43,11 @@ export const MONTHLY_HERO_PHOTOS: MonthlyPhoto[] = [
   {
     id: 4,
     month: 4, // April
-    title: "Easter Hope",
-    description: "Resurrection hope and the promise of eternal life",
-    imageUrl: "https://images.unsplash.com/photo-1585909695284-32d2985ac9c0?q=80&w=2070&auto=format&fit=crop",
-    altText: "Easter cross at sunrise, symbolizing hope and resurrection",
-    theme: "Resurrection Hope",
+    title: "Easter Celebration Study",
+    description: "Young believers exploring the resurrection story together",
+    imageUrl: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=2070&auto=format&fit=crop",
+    altText: "Young Christians celebrating Easter with Bible study and prayer",
+    theme: "Easter Joy",
     isActive: true,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -55,11 +55,11 @@ export const MONTHLY_HERO_PHOTOS: MonthlyPhoto[] = [
   {
     id: 5,
     month: 5, // May
-    title: "Faithful Service",
-    description: "Serving others with Christ's love and compassion",
-    imageUrl: "https://images.unsplash.com/photo-1559027615-cd4628902d4a?q=80&w=2070&auto=format&fit=crop",
-    altText: "Hands serving others in Christian ministry and outreach",
-    theme: "Christian Service",
+    title: "Young Women's Bible Study",
+    description: "Modern Christian women growing together in God's Word",
+    imageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2070&auto=format&fit=crop",
+    altText: "Young women gathered around table with open Bibles and coffee",
+    theme: "Women's Ministry",
     isActive: true,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -67,11 +67,11 @@ export const MONTHLY_HERO_PHOTOS: MonthlyPhoto[] = [
   {
     id: 6,
     month: 6, // June
-    title: "Family Faith",
-    description: "Building strong Christian families and marriages",
-    imageUrl: "https://images.unsplash.com/photo-1511895426328-dc8714191300?q=80&w=2070&auto=format&fit=crop",
-    altText: "Christian family praying together, showing unity in faith",
-    theme: "Family Unity",
+    title: "Summer Youth Ministry",
+    description: "Young people engaging deeply with Scripture in summer",
+    imageUrl: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?q=80&w=2070&auto=format&fit=crop",
+    altText: "Diverse group of young Christians with Bibles in outdoor setting",
+    theme: "Youth Engagement",
     isActive: true,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -79,10 +79,10 @@ export const MONTHLY_HERO_PHOTOS: MonthlyPhoto[] = [
   {
     id: 7,
     month: 7, // July
-    title: "Freedom in Christ",
-    description: "Celebrating spiritual freedom and liberty in faith",
-    imageUrl: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070&auto=format&fit=crop",
-    altText: "Person with arms raised in worship, expressing freedom and joy in Christ",
+    title: "Freedom in Christ Study",
+    description: "Young adults discovering spiritual liberty through Bible study",
+    imageUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop",
+    altText: "Young person reading Bible with peaceful expression in natural light",
     theme: "Spiritual Freedom",
     isActive: true,
     createdAt: new Date(),
@@ -91,11 +91,11 @@ export const MONTHLY_HERO_PHOTOS: MonthlyPhoto[] = [
   {
     id: 8,
     month: 8, // August
-    title: "Harvest Blessings",
-    description: "Grateful for God's abundant provision and harvest",
-    imageUrl: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=2070&auto=format&fit=crop",
-    altText: "Golden wheat field representing God's provision and harvest blessings",
-    theme: "Divine Provision",
+    title: "Harvest Season Fellowship",
+    description: "Young Christians gathering for Bible study and community",
+    imageUrl: "https://images.unsplash.com/photo-1497486751825-1233686d5d80?q=80&w=2070&auto=format&fit=crop",
+    altText: "Young adults with Bibles sitting in circle for group study",
+    theme: "Community Study",
     isActive: true,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -103,11 +103,11 @@ export const MONTHLY_HERO_PHOTOS: MonthlyPhoto[] = [
   {
     id: 9,
     month: 9, // September
-    title: "Back to Learning",
-    description: "Growing in wisdom and biblical understanding",
+    title: "Back to School Faith",
+    description: "Students beginning new semester with Bible study commitment",
     imageUrl: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=2070&auto=format&fit=crop",
-    altText: "Open Bible with warm lighting, representing learning and spiritual education",
-    theme: "Biblical Wisdom",
+    altText: "Young Christian students with Bible and school materials",
+    theme: "Academic Faith",
     isActive: true,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -115,11 +115,11 @@ export const MONTHLY_HERO_PHOTOS: MonthlyPhoto[] = [
   {
     id: 10,
     month: 10, // October
-    title: "Gratitude & Harvest",
-    description: "Thanksgiving for God's faithfulness through all seasons",
-    imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2070&auto=format&fit=crop",
-    altText: "Autumn landscape showing fall colors, representing gratitude and thanksgiving",
-    theme: "Thankful Hearts",
+    title: "Fall Discipleship Group",
+    description: "Young believers deepening their walk with Christ together",
+    imageUrl: "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?q=80&w=2070&auto=format&fit=crop",
+    altText: "Small group of young Christians in cozy fall Bible study setting",
+    theme: "Discipleship",
     isActive: true,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -127,11 +127,11 @@ export const MONTHLY_HERO_PHOTOS: MonthlyPhoto[] = [
   {
     id: 11,
     month: 11, // November
-    title: "Thanksgiving Joy",
-    description: "Gathering in gratitude for God's countless blessings",
-    imageUrl: "https://images.unsplash.com/photo-1571115764595-644a1f56a55c?q=80&w=2070&auto=format&fit=crop",
-    altText: "Family gathered around dinner table in prayer and thanksgiving",
-    theme: "Grateful Worship",
+    title: "Thanksgiving Bible Study",
+    description: "Young Christians expressing gratitude through Scripture",
+    imageUrl: "https://images.unsplash.com/photo-1574731672081-e5e5a651e8b5?q=80&w=2070&auto=format&fit=crop",
+    altText: "Young adults holding hands in prayer around Bible study table",
+    theme: "Grateful Hearts",
     isActive: true,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -139,10 +139,10 @@ export const MONTHLY_HERO_PHOTOS: MonthlyPhoto[] = [
   {
     id: 12,
     month: 12, // December
-    title: "Christmas Hope",
-    description: "Celebrating the birth of our Savior and God's greatest gift",
-    imageUrl: "https://images.unsplash.com/photo-1481833761820-0509d3217039?q=80&w=2070&auto=format&fit=crop",
-    altText: "Nativity scene representing the birth of Jesus and Christmas hope",
+    title: "Advent Study Group",
+    description: "Young believers preparing hearts for Christmas through Scripture",
+    imageUrl: "https://images.unsplash.com/photo-1482517967863-00e15c9b44be?q=80&w=2070&auto=format&fit=crop",
+    altText: "Young Christians gathered for Advent Bible study with candles",
     theme: "Christ's Birth",
     isActive: true,
     createdAt: new Date(),
@@ -150,16 +150,16 @@ export const MONTHLY_HERO_PHOTOS: MonthlyPhoto[] = [
   },
 ];
 
-// Secondary photos for "How It Works" section - Bible study, community, worship themes
+// Secondary photos for "How It Works" section - young Christians in Bible study activities
 export const MONTHLY_SECONDARY_PHOTOS: MonthlyPhoto[] = [
   {
     id: 101,
     month: 1, // January
-    title: "New Year Bible Study",
-    description: "Starting the year with intentional Scripture study and prayer",
-    imageUrl: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=2070&auto=format&fit=crop",
-    altText: "Open Bible with warm lighting, representing new year spiritual commitment",
-    theme: "Scripture Study",
+    title: "Young Adults Bible Study",
+    description: "Modern Christians discussing Scripture and prayer together",
+    imageUrl: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2070&auto=format&fit=crop",
+    altText: "Young diverse Christians in animated Bible study discussion",
+    theme: "Group Study",
     isActive: true,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -203,11 +203,11 @@ export const MONTHLY_SECONDARY_PHOTOS: MonthlyPhoto[] = [
   {
     id: 105,
     month: 5, // May
-    title: "Mother's Day Faith",
-    description: "Honoring godly mothers and their faithful legacy",
-    imageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2070&auto=format&fit=crop",
-    altText: "Mother reading Bible stories to children, passing on faith",
-    theme: "Family Faith",
+    title: "Men's Bible Study Group",
+    description: "Young Christian men growing together in discipleship",
+    imageUrl: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=2070&auto=format&fit=crop",
+    altText: "Young men with Bibles in focused study and prayer",
+    theme: "Men's Ministry",
     isActive: true,
     createdAt: new Date(),
     updatedAt: new Date(),
