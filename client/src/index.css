@@ -76,16 +76,44 @@
   body {
     min-height: 100vh;
     min-height: -webkit-fill-available;
+    position: relative;
+    overflow-x: hidden;
+  }
+  
+  /* Critical mobile fixes for production */
+  @media screen and (max-width: 768px) {
+    html, body {
+      width: 100%;
+      overflow-x: hidden;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+    
+    * {
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+    
+    .container {
+      width: 100% !important;
+      max-width: 100% !important;
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+    }
   }
   
   /* Better mobile input focus */
   input, textarea, select {
-    font-size: 16px; /* Prevents zoom on iOS */
+    font-size: 16px !important; /* Prevents zoom on iOS */
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
   }
   
   @media (max-width: 640px) {
     input, textarea, select {
       font-size: 16px !important;
+      -webkit-user-select: text;
+      user-select: text;
     }
   }
 }
@@ -168,6 +196,11 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+  }
+  
+  /* Faith-themed card styling */
+  .faith-card {
+    @apply bg-white dark:bg-gray-900 border border-gray-200/50 dark:border-gray-700/50 shadow-sm;
   }
   
   /* Mobile keyboard handling */
