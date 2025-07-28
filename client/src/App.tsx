@@ -37,16 +37,31 @@ function Router() {
 }
 
 function App() {
-  return (
-    <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
-      </QueryClientProvider>
-    </ErrorBoundary>
-  );
+  // Simple test to identify the issue
+  try {
+    return (
+      <div style={{ padding: '20px', backgroundColor: 'lightblue' }}>
+        <h1>F-AI-TH-Connect Test</h1>
+        <p>If you can see this, React is working!</p>
+        <QueryClientProvider client={queryClient}>
+          <TooltipProvider>
+            <div style={{ backgroundColor: 'lightgreen', padding: '10px', margin: '10px' }}>
+              <p>Query Client and Tooltip Provider loaded</p>
+              <Router />
+            </div>
+          </TooltipProvider>
+        </QueryClientProvider>
+      </div>
+    );
+  } catch (error) {
+    console.error("App render error:", error);
+    return (
+      <div style={{ padding: '20px', color: 'red', backgroundColor: 'pink' }}>
+        <h1>App Error</h1>
+        <p>Error: {String(error)}</p>
+      </div>
+    );
+  }
 }
 
 export default App;
