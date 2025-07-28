@@ -71,9 +71,17 @@ export class SimpleBibleAPIService {
         return this.getFallbackVerse(reference, version);
       }
 
-      // Search for the verse using API.Bible search endpoint
+      // Try direct verse ID lookup first (more reliable)
+      const verseId = this.buildVerseId(parsed.book, parsed.chapter, parsed.verse);
+      
+      if (verseId) {
+        const verseResult = await this.fetchVerseById(bibleId, verseId, reference, parsed);
+        if (verseResult) return verseResult;
+      }
+
+      // Fallback to search endpoint
       const searchQuery = `${parsed.book} ${parsed.chapter}:${parsed.verse}`;
-      const searchUrl = `${this.baseUrl}/bibles/${bibleId}/search?query=${encodeURIComponent(searchQuery)}&limit=1`;
+      const searchUrl = `${this.baseUrl}/bibles/${bibleId}/search?query=${encodeURIComponent(searchQuery)}&limit=5`;
       
       const searchResponse = await fetch(searchUrl, {
         headers: {
@@ -89,37 +97,29 @@ export class SimpleBibleAPIService {
 
       const searchData = await searchResponse.json();
       
-      if (!searchData.data?.verses || searchData.data.verses.length === 0) {
-        return this.getFallbackVerse(reference, version);
+      // Handle both passages and verses in search results
+      let content = null;
+      let resultId = null;
+
+      if (searchData.data?.passages && searchData.data.passages.length > 0) {
+        // Search returned passages
+        const passage = searchData.data.passages[0];
+        content = this.stripHtmlTags(passage.content);
+        resultId = passage.id;
+      } else if (searchData.data?.verses && searchData.data.verses.length > 0) {
+        // Search returned verses - fetch the verse content
+        const verseResult = searchData.data.verses[0];
+        const verseData = await this.fetchVerseById(bibleId, verseResult.id, reference, parsed);
+        if (verseData) return verseData;
       }
 
-      // Get the first matching verse
-      const verseResult = searchData.data.verses[0];
-      
-      // Fetch the full verse content
-      const verseUrl = `${this.baseUrl}/bibles/${bibleId}/verses/${verseResult.id}?content-type=text&include-notes=false&include-titles=false&include-chapter-numbers=false&include-verse-numbers=false`;
-      
-      const verseResponse = await fetch(verseUrl, {
-        headers: {
-          'api-key': this.apiKey,
-        },
-        signal: AbortSignal.timeout(10000),
-      });
-
-      if (!verseResponse.ok) {
-        console.warn(`API.Bible verse error: ${verseResponse.status} for ${reference}`);
-        return this.getFallbackVerse(reference, version);
-      }
-
-      const verseData = await verseResponse.json();
-      
-      if (!verseData.data?.content) {
+      if (!content) {
         return this.getFallbackVerse(reference, version);
       }
 
       return {
         reference: reference,
-        text: verseData.data.content.trim(),
+        text: content.trim(),
         book: parsed.book,
         chapter: parsed.chapter,
         verse: parsed.verse.toString(),
@@ -130,6 +130,79 @@ export class SimpleBibleAPIService {
       console.warn(`API.Bible error for ${reference}:`, error);
       return this.getFallbackVerse(reference, version);
     }
+  }
+
+  private async fetchVerseById(bibleId: string, verseId: string, reference: string, parsed: { book: string; chapter: number; verse: number }): Promise<BibleVerse | null> {
+    try {
+      const verseUrl = `${this.baseUrl}/bibles/${bibleId}/verses/${verseId}?content-type=text&include-notes=false&include-titles=false&include-chapter-numbers=false&include-verse-numbers=false`;
+      
+      const verseResponse = await fetch(verseUrl, {
+        headers: {
+          'api-key': this.apiKey,
+        },
+        signal: AbortSignal.timeout(10000),
+      });
+
+      if (!verseResponse.ok) {
+        return null;
+      }
+
+      const verseData = await verseResponse.json();
+      
+      if (!verseData.data?.content) {
+        return null;
+      }
+
+      return {
+        reference: reference,
+        text: verseData.data.content.trim(),
+        book: parsed.book,
+        chapter: parsed.chapter,
+        verse: parsed.verse.toString(),
+        version: this.displayNames[bibleId] || 'King James Version'
+      };
+    } catch (error) {
+      return null;
+    }
+  }
+
+  private buildVerseId(book: string, chapter: number, verse: number): string | null {
+    // Map common book names to API.Bible book IDs
+    const bookMap: Record<string, string> = {
+      'Genesis': 'GEN', 'Exodus': 'EXO', 'Leviticus': 'LEV', 'Numbers': 'NUM', 'Deuteronomy': 'DEU',
+      'Joshua': 'JOS', 'Judges': 'JDG', 'Ruth': 'RUT', '1 Samuel': '1SA', '2 Samuel': '2SA',
+      '1 Kings': '1KI', '2 Kings': '2KI', '1 Chronicles': '1CH', '2 Chronicles': '2CH',
+      'Ezra': 'EZR', 'Nehemiah': 'NEH', 'Esther': 'EST', 'Job': 'JOB', 'Psalm': 'PSA', 'Psalms': 'PSA',
+      'Proverbs': 'PRO', 'Ecclesiastes': 'ECC', 'Song of Solomon': 'SNG', 'Isaiah': 'ISA',
+      'Jeremiah': 'JER', 'Lamentations': 'LAM', 'Ezekiel': 'EZK', 'Daniel': 'DAN',
+      'Hosea': 'HOS', 'Joel': 'JOL', 'Amos': 'AMO', 'Obadiah': 'OBA', 'Jonah': 'JON',
+      'Micah': 'MIC', 'Nahum': 'NAM', 'Habakkuk': 'HAB', 'Zephaniah': 'ZEP', 'Haggai': 'HAG',
+      'Zechariah': 'ZEC', 'Malachi': 'MAL', 'Matthew': 'MAT', 'Mark': 'MRK', 'Luke': 'LUK',
+      'John': 'JHN', 'Acts': 'ACT', 'Romans': 'ROM', '1 Corinthians': '1CO', '2 Corinthians': '2CO',
+      'Galatians': 'GAL', 'Ephesians': 'EPH', 'Philippians': 'PHP', 'Colossians': 'COL',
+      '1 Thessalonians': '1TH', '2 Thessalonians': '2TH', '1 Timothy': '1TI', '2 Timothy': '2TI',
+      'Titus': 'TIT', 'Philemon': 'PHM', 'Hebrews': 'HEB', 'James': 'JAS', '1 Peter': '1PE',
+      '2 Peter': '2PE', '1 John': '1JN', '2 John': '2JN', '3 John': '3JN', 'Jude': 'JUD',
+      'Revelation': 'REV'
+    };
+
+    const bookCode = bookMap[book];
+    if (!bookCode) return null;
+
+    return `${bookCode}.${chapter}.${verse}`;
+  }
+
+  private stripHtmlTags(html: string): string {
+    return html
+      .replace(/<[^>]*>/g, '') // Remove HTML tags
+      .replace(/&nbsp;/g, ' ') // Replace &nbsp; with space
+      .replace(/&amp;/g, '&') // Replace &amp; with &
+      .replace(/&lt;/g, '<') // Replace &lt; with <
+      .replace(/&gt;/g, '>') // Replace &gt; with >
+      .replace(/&quot;/g, '"') // Replace &quot; with "
+      .replace(/&#39;/g, "'") // Replace &#39; with '
+      .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+      .trim();
   }
 
   private async getVerseFromFreeAPI(reference: string, version?: string): Promise<BibleVerse | null> {
