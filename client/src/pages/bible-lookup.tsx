@@ -32,13 +32,11 @@ const BIBLE_BOOKS = [
   '1 John', '2 John', '3 John', 'Jude', 'Revelation'
 ];
 
-// Bible versions available
+// Bible versions available - using API.Bible public domain translations
 const BIBLE_VERSIONS = [
   { value: 'kjv', label: 'King James Version (KJV)' },
-  { value: 'niv', label: 'New International Version (NIV)*' },
-  { value: 'esv', label: 'English Standard Version (ESV)*' },
-  { value: 'nlt', label: 'New Living Translation (NLT)*' },
-  { value: 'nasb', label: 'New American Standard Bible (NASB)*' }
+  { value: 'web', label: 'World English Bible (WEB)' },
+  { value: 'asv', label: 'American Standard Version (ASV)' }
 ];
 
 export default function BibleLookup() {
@@ -595,9 +593,7 @@ export default function BibleLookup() {
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className="text-xs text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-800/30 p-2 rounded border border-green-200 dark:border-green-700">
-                      <strong>Note:</strong> Only KJV and World English Bible are currently available from free Bible APIs. Other translations marked with * will display as World English Bible.
-                    </div>
+
                   </div>
                 )}
               </CardHeader>

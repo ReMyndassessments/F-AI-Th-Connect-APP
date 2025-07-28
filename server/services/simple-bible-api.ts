@@ -28,37 +28,122 @@ export interface BibleVerse {
 }
 
 export class SimpleBibleAPIService {
-  private baseUrl = 'https://bible-api.com';
-
-  // For now, only KJV and WEB are reliably available from most free APIs
-  // This provides a consistent user experience while being honest about limitations
+  private apiKey: string;
+  private baseUrl = 'https://api.scripture.api.bible/v1';
+  
+  // Map client version codes to API.Bible version IDs (using available versions)
   private versionMap: Record<string, string> = {
-    'kjv': 'kjv', // King James Version - widely available
-    'niv': 'web', // NIV not free - using World English Bible as alternative
-    'esv': 'web', // ESV not free - using World English Bible as alternative  
-    'nlt': 'web', // NLT not free - using World English Bible as alternative
-    'nasb': 'web' // NASB not free - using World English Bible as alternative
+    'kjv': 'de4e12af7f28f599-02', // King James Version (KJV) - Public Domain
+    'web': '9879dbb7cfe39e4d-01', // World English Bible - Public Domain  
+    'asv': '06125adad2d5898a-01', // American Standard Version - Public Domain
   };
 
-  // Map API codes back to display names - being honest about what's actually returned
+  // Map API codes back to display names  
   private displayNames: Record<string, string> = {
-    'kjv': 'King James Version',
-    'web': 'World English Bible (free alternative)'
+    'de4e12af7f28f599-02': 'King James Version',
+    '9879dbb7cfe39e4d-01': 'World English Bible',
+    '06125adad2d5898a-01': 'American Standard Version',
   };
+
+  constructor() {
+    this.apiKey = process.env.BIBLE_API_KEY || '';
+    if (!this.apiKey) {
+      console.warn('BIBLE_API_KEY not found - falling back to free API');
+    }
+  }
 
   async getVerse(reference: string, version?: string): Promise<BibleVerse | null> {
+    // Use API.Bible if we have an API key, otherwise fallback to free API
+    if (this.apiKey) {
+      return this.getVerseFromAPIBible(reference, version);
+    } else {
+      return this.getVerseFromFreeAPI(reference, version);
+    }
+  }
+
+  private async getVerseFromAPIBible(reference: string, version?: string): Promise<BibleVerse | null> {
     try {
-      // Convert reference to API format (e.g., "John 3:16" -> "john+3:16")
+      const bibleId = version ? this.versionMap[version] || this.versionMap['kjv'] : this.versionMap['kjv'];
+      
+      // Parse reference and convert to API.Bible format
+      const parsed = this.parseReference(reference);
+      if (!parsed) {
+        return this.getFallbackVerse(reference, version);
+      }
+
+      // Search for the verse using API.Bible search endpoint
+      const searchQuery = `${parsed.book} ${parsed.chapter}:${parsed.verse}`;
+      const searchUrl = `${this.baseUrl}/bibles/${bibleId}/search?query=${encodeURIComponent(searchQuery)}&limit=1`;
+      
+      const searchResponse = await fetch(searchUrl, {
+        headers: {
+          'api-key': this.apiKey,
+        },
+        signal: AbortSignal.timeout(10000),
+      });
+
+      if (!searchResponse.ok) {
+        console.warn(`API.Bible search error: ${searchResponse.status} for ${reference}`);
+        return this.getFallbackVerse(reference, version);
+      }
+
+      const searchData = await searchResponse.json();
+      
+      if (!searchData.data?.verses || searchData.data.verses.length === 0) {
+        return this.getFallbackVerse(reference, version);
+      }
+
+      // Get the first matching verse
+      const verseResult = searchData.data.verses[0];
+      
+      // Fetch the full verse content
+      const verseUrl = `${this.baseUrl}/bibles/${bibleId}/verses/${verseResult.id}?content-type=text&include-notes=false&include-titles=false&include-chapter-numbers=false&include-verse-numbers=false`;
+      
+      const verseResponse = await fetch(verseUrl, {
+        headers: {
+          'api-key': this.apiKey,
+        },
+        signal: AbortSignal.timeout(10000),
+      });
+
+      if (!verseResponse.ok) {
+        console.warn(`API.Bible verse error: ${verseResponse.status} for ${reference}`);
+        return this.getFallbackVerse(reference, version);
+      }
+
+      const verseData = await verseResponse.json();
+      
+      if (!verseData.data?.content) {
+        return this.getFallbackVerse(reference, version);
+      }
+
+      return {
+        reference: reference,
+        text: verseData.data.content.trim(),
+        book: parsed.book,
+        chapter: parsed.chapter,
+        verse: parsed.verse.toString(),
+        version: this.displayNames[bibleId] || 'King James Version'
+      };
+
+    } catch (error) {
+      console.warn(`API.Bible error for ${reference}:`, error);
+      return this.getFallbackVerse(reference, version);
+    }
+  }
+
+  private async getVerseFromFreeAPI(reference: string, version?: string): Promise<BibleVerse | null> {
+    try {
+      // Fallback to the previous free API implementation
       const apiReference = this.formatReferenceForAPI(reference);
-      const apiVersion = version ? this.versionMap[version] || 'kjv' : 'kjv';
-      const url = `${this.baseUrl}/${apiReference}?translation=${apiVersion}`;
+      const apiVersion = version === 'kjv' ? 'kjv' : 'web';
+      const url = `https://bible-api.com/${apiReference}?translation=${apiVersion}`;
       
       const response = await fetch(url, {
-        signal: AbortSignal.timeout(10000), // 10-second timeout
+        signal: AbortSignal.timeout(10000),
       });
 
       if (!response.ok) {
-        console.warn(`Bible API error: ${response.status} for ${reference} (${apiVersion})`);
         return this.getFallbackVerse(reference, version);
       }
 
@@ -68,7 +153,6 @@ export class SimpleBibleAPIService {
         return this.getFallbackVerse(reference, version);
       }
 
-      // Handle single verse or verse range
       const firstVerse = data.verses[0];
       const verseNumbers = data.verses.length > 1 
         ? `${data.verses[0].verse}-${data.verses[data.verses.length - 1].verse}`
@@ -80,18 +164,34 @@ export class SimpleBibleAPIService {
         book: firstVerse.book_name,
         chapter: firstVerse.chapter,
         verse: verseNumbers,
-        version: this.displayNames[apiVersion] || data.translation_name || 'King James Version'
+        version: data.translation_name || (apiVersion === 'kjv' ? 'King James Version' : 'World English Bible')
       };
 
     } catch (error) {
-      console.warn(`Bible API error for ${reference}:`, error);
+      console.warn(`Free API error for ${reference}:`, error);
       return this.getFallbackVerse(reference, version);
     }
   }
 
+  private parseReference(reference: string): { book: string; chapter: number; verse: number } | null {
+    try {
+      // Handle references like "John 3:16", "2 Corinthians 5:9", "1 Kings 2:3"
+      const match = reference.match(/^(.+?)\s+(\d+):(\d+)(?:-\d+)?$/);
+      if (!match) return null;
+
+      const book = match[1].trim();
+      const chapter = parseInt(match[2]);
+      const verse = parseInt(match[3]); // Take first verse if range
+
+      return { book, chapter, verse };
+    } catch (error) {
+      console.warn('Error parsing reference:', reference, error);
+      return null;
+    }
+  }
+
   private formatReferenceForAPI(reference: string): string {
-    // Convert "John 3:16" to "john+3:16"
-    // Convert "2 Corinthians 5:9-10" to "2+corinthians+5:9-10"
+    // Convert "John 3:16" to "john+3:16" for free API
     return reference
       .toLowerCase()
       .replace(/\s+/g, '+')
@@ -205,9 +305,9 @@ export class SimpleBibleAPIService {
     if (fallbackVerses[reference]) {
       const verse = { ...fallbackVerses[reference] }; // Create a copy to avoid modifying the original
       // Override version if a specific version was requested
-      if (version) {
-        const apiVersion = this.versionMap[version] || 'kjv';
-        verse.version = this.displayNames[apiVersion] || 'King James Version';
+      if (version && this.apiKey) {
+        const bibleId = this.versionMap[version] || this.versionMap['kjv'];
+        verse.version = this.displayNames[bibleId] || 'King James Version';
       }
       return verse;
     }

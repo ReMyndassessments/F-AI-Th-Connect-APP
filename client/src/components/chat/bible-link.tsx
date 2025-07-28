@@ -22,13 +22,11 @@ interface VerseData {
   version?: string;
 }
 
-// Bible versions available for comparison
+// Bible versions available for comparison - using API.Bible public domain translations
 const BIBLE_VERSIONS = [
   { value: 'kjv', label: 'King James Version (KJV)' },
-  { value: 'niv', label: 'New International Version (NIV)' },
-  { value: 'esv', label: 'English Standard Version (ESV)' },
-  { value: 'nlt', label: 'New Living Translation (NLT)' },
-  { value: 'nasb', label: 'New American Standard Bible (NASB)' }
+  { value: 'web', label: 'World English Bible (WEB)' },
+  { value: 'asv', label: 'American Standard Version (ASV)' }
 ];
 
 // Sample verse data - in production this could come from a Bible API
@@ -262,9 +260,7 @@ export default function BibleLink({ reference, children, className = "" }: Bible
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="text-xs text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-800/30 p-2 rounded border border-green-200 dark:border-green-700">
-                  <strong>Note:</strong> Only KJV and World English Bible are available. Other translations will show as World English Bible.
-                </div>
+
               </div>
             )}
           </DialogHeader>
