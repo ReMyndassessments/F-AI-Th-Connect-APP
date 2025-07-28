@@ -35,10 +35,10 @@ const BIBLE_BOOKS = [
 // Bible versions available
 const BIBLE_VERSIONS = [
   { value: 'kjv', label: 'King James Version (KJV)' },
-  { value: 'niv', label: 'New International Version (NIV)' },
-  { value: 'esv', label: 'English Standard Version (ESV)' },
-  { value: 'nlt', label: 'New Living Translation (NLT)' },
-  { value: 'nasb', label: 'New American Standard Bible (NASB)' }
+  { value: 'niv', label: 'New International Version (NIV)*' },
+  { value: 'esv', label: 'English Standard Version (ESV)*' },
+  { value: 'nlt', label: 'New Living Translation (NLT)*' },
+  { value: 'nasb', label: 'New American Standard Bible (NASB)*' }
 ];
 
 export default function BibleLookup() {
@@ -578,7 +578,7 @@ export default function BibleLookup() {
                 {/* Version Comparison Selector */}
                 {showVersionComparison && (
                   <div className="mt-4 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-3">
                       <span className="text-sm font-medium text-green-800 dark:text-green-200">
                         Compare with:
                       </span>
@@ -594,6 +594,9 @@ export default function BibleLookup() {
                           ))}
                         </SelectContent>
                       </Select>
+                    </div>
+                    <div className="text-xs text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-800/30 p-2 rounded border border-green-200 dark:border-green-700">
+                      <strong>Note:</strong> Only KJV and World English Bible are currently available from free Bible APIs. Other translations marked with * will display as World English Bible.
                     </div>
                   </div>
                 )}

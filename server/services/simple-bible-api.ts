@@ -30,13 +30,20 @@ export interface BibleVerse {
 export class SimpleBibleAPIService {
   private baseUrl = 'https://bible-api.com';
 
-  // Map client version codes to API version codes
+  // For now, only KJV and WEB are reliably available from most free APIs
+  // This provides a consistent user experience while being honest about limitations
   private versionMap: Record<string, string> = {
-    'kjv': 'kjv', // King James Version
-    'niv': 'web', // NIV not available, using World English Bible as fallback
-    'esv': 'web', // ESV not available, using World English Bible as fallback  
-    'nlt': 'web', // NLT not available, using World English Bible as fallback
-    'nasb': 'web' // NASB not available, using World English Bible as fallback
+    'kjv': 'kjv', // King James Version - widely available
+    'niv': 'web', // NIV not free - using World English Bible as alternative
+    'esv': 'web', // ESV not free - using World English Bible as alternative  
+    'nlt': 'web', // NLT not free - using World English Bible as alternative
+    'nasb': 'web' // NASB not free - using World English Bible as alternative
+  };
+
+  // Map API codes back to display names - being honest about what's actually returned
+  private displayNames: Record<string, string> = {
+    'kjv': 'King James Version',
+    'web': 'World English Bible (free alternative)'
   };
 
   async getVerse(reference: string, version?: string): Promise<BibleVerse | null> {
@@ -51,14 +58,14 @@ export class SimpleBibleAPIService {
       });
 
       if (!response.ok) {
-        console.warn(`Bible API error: ${response.status} for ${reference}`);
-        return this.getFallbackVerse(reference);
+        console.warn(`Bible API error: ${response.status} for ${reference} (${apiVersion})`);
+        return this.getFallbackVerse(reference, version);
       }
 
       const data: SimpleBibleResponse = await response.json();
       
       if (!data.verses || data.verses.length === 0) {
-        return this.getFallbackVerse(reference);
+        return this.getFallbackVerse(reference, version);
       }
 
       // Handle single verse or verse range
@@ -73,12 +80,12 @@ export class SimpleBibleAPIService {
         book: firstVerse.book_name,
         chapter: firstVerse.chapter,
         verse: verseNumbers,
-        version: data.translation_name || this.getVersionDisplayName(apiVersion)
+        version: this.displayNames[apiVersion] || data.translation_name || 'King James Version'
       };
 
     } catch (error) {
-      console.warn(`Simple Bible API error for ${reference}:`, error);
-      return this.getFallbackVerse(reference);
+      console.warn(`Bible API error for ${reference}:`, error);
+      return this.getFallbackVerse(reference, version);
     }
   }
 
@@ -91,15 +98,9 @@ export class SimpleBibleAPIService {
       .replace(/\./g, '');
   }
 
-  private getVersionDisplayName(apiVersion: string): string {
-    const displayNames: Record<string, string> = {
-      'kjv': 'King James Version',
-      'web': 'World English Bible'
-    };
-    return displayNames[apiVersion] || 'King James Version';
-  }
 
-  private getFallbackVerse(reference: string): BibleVerse | null {
+
+  private getFallbackVerse(reference: string, version?: string): BibleVerse | null {
     // Fallback verses for common references when API is unavailable
     const fallbackVerses: Record<string, BibleVerse> = {
       "John 3:16": {
@@ -202,7 +203,13 @@ export class SimpleBibleAPIService {
 
     // Try exact match first
     if (fallbackVerses[reference]) {
-      return fallbackVerses[reference];
+      const verse = { ...fallbackVerses[reference] }; // Create a copy to avoid modifying the original
+      // Override version if a specific version was requested
+      if (version) {
+        const apiVersion = this.versionMap[version] || 'kjv';
+        verse.version = this.displayNames[apiVersion] || 'King James Version';
+      }
+      return verse;
     }
     
     // Try normalized reference (handle different formats)
