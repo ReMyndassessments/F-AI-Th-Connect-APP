@@ -404,7 +404,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/bible/verse/:reference', async (req, res) => {
     try {
       const reference = decodeURIComponent(req.params.reference);
-      const verse = await simpleBibleAPI.getVerse(reference);
+      const version = req.query.version as string;
+      const verse = await simpleBibleAPI.getVerse(reference, version);
       
       if (!verse) {
         return res.status(404).json({ 

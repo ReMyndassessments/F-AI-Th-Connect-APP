@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 import { Book, ExternalLink, Copy, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
@@ -19,6 +21,15 @@ interface VerseData {
   verse: string;
   version?: string;
 }
+
+// Bible versions available for comparison
+const BIBLE_VERSIONS = [
+  { value: 'kjv', label: 'King James Version (KJV)' },
+  { value: 'niv', label: 'New International Version (NIV)' },
+  { value: 'esv', label: 'English Standard Version (ESV)' },
+  { value: 'nlt', label: 'New Living Translation (NLT)' },
+  { value: 'nasb', label: 'New American Standard Bible (NASB)' }
+];
 
 // Sample verse data - in production this could come from a Bible API
 const SAMPLE_VERSES: Record<string, VerseData> = {
@@ -85,6 +96,10 @@ export default function BibleLink({ reference, children, className = "" }: Bible
   const [verseData, setVerseData] = useState<VerseData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showVersionComparison, setShowVersionComparison] = useState(false);
+  const [comparisonVersion, setComparisonVersion] = useState('niv');
+  const [comparisonVerse, setComparisonVerse] = useState<VerseData | null>(null);
+  const [isLoadingComparison, setIsLoadingComparison] = useState(false);
   const { toast } = useToast();
 
   // Fetch verse data when dialog opens
@@ -151,6 +166,42 @@ export default function BibleLink({ reference, children, className = "" }: Bible
     }
   };
 
+  const fetchComparisonVerse = async (version: string) => {
+    if (!verseData || version === verseData.version) return;
+    
+    setIsLoadingComparison(true);
+    try {
+      const response = await apiRequest('GET', `/api/bible/verse/${encodeURIComponent(reference)}?version=${version}`);
+      const data = await response.json();
+      
+      if (response.ok) {
+        setComparisonVerse(data);
+      } else {
+        // Could add fallback logic here if needed
+        setComparisonVerse(null);
+      }
+    } catch (err) {
+      setComparisonVerse(null);
+    } finally {
+      setIsLoadingComparison(false);
+    }
+  };
+
+  const handleVersionChange = (version: string) => {
+    setComparisonVersion(version);
+    if (showVersionComparison && verseData) {
+      fetchComparisonVerse(version);
+    }
+  };
+
+  const toggleVersionComparison = () => {
+    const newState = !showVersionComparison;
+    setShowVersionComparison(newState);
+    if (newState && verseData && comparisonVersion !== verseData.version) {
+      fetchComparisonVerse(comparisonVersion);
+    }
+  };
+
   const openBibleGateway = () => {
     const searchQuery = encodeURIComponent(reference);
     const url = `https://www.biblegateway.com/passage/?search=${searchQuery}&version=NIV`;
@@ -169,12 +220,50 @@ export default function BibleLink({ reference, children, className = "" }: Bible
       </button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="flex items-center space-x-2">
-              <Book className="w-5 h-5 text-blue-600" />
-              <span>{reference}</span>
+            <DialogTitle className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Book className="w-5 h-5 text-blue-600" />
+                <span>{reference}</span>
+              </div>
+              
+              {/* Version Comparison Toggle */}
+              {verseData && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={toggleVersionComparison}
+                  className="flex items-center gap-1 border-green-300 text-green-700 hover:bg-green-50"
+                >
+                  <Book className="h-3 w-3" />
+                  {showVersionComparison ? 'Hide' : 'Compare'} Versions
+                </Button>
+              )}
             </DialogTitle>
+            
+            {/* Version Comparison Selector */}
+            {showVersionComparison && verseData && (
+              <div className="mt-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                  <span className="text-sm font-medium text-green-800 dark:text-green-200">
+                    Compare with:
+                  </span>
+                  <Select value={comparisonVersion} onValueChange={handleVersionChange}>
+                    <SelectTrigger className="w-full sm:w-48">
+                      <SelectValue placeholder="Select version to compare" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {BIBLE_VERSIONS.filter(v => v.value !== verseData?.version).map((version) => (
+                        <SelectItem key={version.value} value={version.value}>
+                          {version.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            )}
           </DialogHeader>
           
           <div className="space-y-4">
@@ -196,16 +285,49 @@ export default function BibleLink({ reference, children, className = "" }: Bible
               </div>
             ) : verseData ? (
               <>
-                <div className="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
-                  <p className="text-gray-800 italic leading-relaxed">
+                {/* Original Version */}
+                <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                  <div className="flex items-center justify-between mb-3">
+                    <Badge variant="default" className="bg-blue-600 text-white">
+                      {verseData.version || 'KJV'}
+                    </Badge>
+                  </div>
+                  <blockquote className="text-gray-800 italic leading-relaxed border-l-4 border-blue-500 pl-4 mb-3">
                     "{verseData.text}"
-                  </p>
-                  <p className="text-sm text-gray-600 mt-2 font-medium">
-                    - {verseData.reference} {verseData.version ? `(${verseData.version})` : ''}
+                  </blockquote>
+                  <p className="text-sm text-gray-600 font-medium">
+                    {verseData.reference} - {verseData.version || 'KJV'}
                   </p>
                 </div>
+
+                {/* Comparison Version */}
+                {showVersionComparison && comparisonVerse && (
+                  <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                    <div className="flex items-center justify-between mb-3">
+                      <Badge variant="default" className="bg-green-600 text-white">
+                        {comparisonVerse.version}
+                      </Badge>
+                    </div>
+                    <blockquote className="text-gray-800 italic leading-relaxed border-l-4 border-green-500 pl-4 mb-3">
+                      "{comparisonVerse.text}"
+                    </blockquote>
+                    <p className="text-sm text-gray-600 font-medium">
+                      {comparisonVerse.reference} - {comparisonVerse.version}
+                    </p>
+                  </div>
+                )}
+
+                {/* Loading state for comparison */}
+                {showVersionComparison && isLoadingComparison && (
+                  <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                    <div className="flex items-center justify-center">
+                      <Loader2 className="h-5 w-5 animate-spin mr-2 text-green-600" />
+                      <span className="text-green-700">Loading comparison verse...</span>
+                    </div>
+                  </div>
+                )}
                 
-                <div className="flex space-x-2">
+                <div className="flex space-x-2 pt-2">
                   <Button
                     onClick={handleCopyVerse}
                     variant="outline"

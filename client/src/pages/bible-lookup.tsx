@@ -54,6 +54,10 @@ export default function BibleLookup() {
   const [selectedChapter, setSelectedChapter] = useState('');
   const [selectedVerse, setSelectedVerse] = useState('');
   
+  // Version comparison state for displayed verse
+  const [verseComparisonVersion, setVerseComparisonVersion] = useState('kjv');
+  const [showVersionComparison, setShowVersionComparison] = useState(false);
+  
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -97,6 +101,18 @@ export default function BibleLookup() {
       return response as BibleVerse;
     },
     enabled: !!searchTrigger,
+    retry: false
+  });
+
+  // Query for version comparison verse
+  const { data: comparisonVerse, isLoading: isLoadingComparison } = useQuery({
+    queryKey: ['/api/bible/verse', searchTrigger, verseComparisonVersion],
+    queryFn: async () => {
+      if (!searchTrigger || !showVersionComparison || verseComparisonVersion === verse?.version) return null;
+      const response = await apiRequest(`/api/bible/verse/${encodeURIComponent(searchTrigger)}?version=${verseComparisonVersion}`);
+      return response as BibleVerse;
+    },
+    enabled: !!searchTrigger && showVersionComparison && verseComparisonVersion !== verse?.version,
     retry: false
   });
 
@@ -520,12 +536,24 @@ export default function BibleLookup() {
           {verse && !isLoading && (
             <Card className="faith-card border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-900/20">
               <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <CardTitle className="text-xl text-blue-700 dark:text-blue-300">
                     {verse.reference}
                   </CardTitle>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <Badge variant="secondary">{verse.version}</Badge>
+                    
+                    {/* Version Comparison Toggle */}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowVersionComparison(!showVersionComparison)}
+                      className="flex items-center gap-1 border-green-300 text-green-700 hover:bg-green-50"
+                    >
+                      <Book className="h-3 w-3" />
+                      {showVersionComparison ? 'Hide' : 'Compare'} Versions
+                    </Button>
+                    
                     <Button
                       variant="outline"
                       size="sm"
@@ -546,9 +574,39 @@ export default function BibleLookup() {
                     </Button>
                   </div>
                 </div>
+                
+                {/* Version Comparison Selector */}
+                {showVersionComparison && (
+                  <div className="mt-4 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                      <span className="text-sm font-medium text-green-800 dark:text-green-200">
+                        Compare with:
+                      </span>
+                      <Select value={verseComparisonVersion} onValueChange={setVerseComparisonVersion}>
+                        <SelectTrigger className="w-full sm:w-64">
+                          <SelectValue placeholder="Select version to compare" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {BIBLE_VERSIONS.filter(v => v.value !== verse.version).map((version) => (
+                            <SelectItem key={version.value} value={version.value}>
+                              {version.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                )}
               </CardHeader>
-              <CardContent>
+              
+              <CardContent className="space-y-4">
+                {/* Original Version */}
                 <div className="bg-white dark:bg-gray-900 p-6 rounded-lg border border-blue-100 dark:border-blue-800">
+                  <div className="flex items-center justify-between mb-3">
+                    <Badge variant="default" className="bg-blue-600 text-white">
+                      {verse.version}
+                    </Badge>
+                  </div>
                   <blockquote className="text-lg leading-relaxed text-gray-800 dark:text-gray-200 italic font-serif border-l-4 border-blue-500 pl-4 mb-4">
                     "{verse.text}"
                   </blockquote>
@@ -556,6 +614,33 @@ export default function BibleLookup() {
                     {verse.book} {verse.chapter}:{verse.verse} - {verse.version}
                   </div>
                 </div>
+
+                {/* Comparison Version */}
+                {showVersionComparison && comparisonVerse && (
+                  <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-lg border border-green-200 dark:border-green-800">
+                    <div className="flex items-center justify-between mb-3">
+                      <Badge variant="default" className="bg-green-600 text-white">
+                        {comparisonVerse.version}
+                      </Badge>
+                    </div>
+                    <blockquote className="text-lg leading-relaxed text-gray-800 dark:text-gray-200 italic font-serif border-l-4 border-green-500 pl-4 mb-4">
+                      "{comparisonVerse.text}"
+                    </blockquote>
+                    <div className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                      {comparisonVerse.book} {comparisonVerse.chapter}:{comparisonVerse.verse} - {comparisonVerse.version}
+                    </div>
+                  </div>
+                )}
+
+                {/* Loading state for comparison */}
+                {showVersionComparison && isLoadingComparison && (
+                  <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-lg border border-green-200 dark:border-green-800">
+                    <div className="flex items-center justify-center">
+                      <Loader2 className="h-5 w-5 animate-spin mr-2 text-green-600" />
+                      <span className="text-green-700 dark:text-green-300">Loading comparison verse...</span>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           )}

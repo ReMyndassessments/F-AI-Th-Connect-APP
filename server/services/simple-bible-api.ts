@@ -30,11 +30,21 @@ export interface BibleVerse {
 export class SimpleBibleAPIService {
   private baseUrl = 'https://bible-api.com';
 
-  async getVerse(reference: string): Promise<BibleVerse | null> {
+  // Map client version codes to API version codes
+  private versionMap: Record<string, string> = {
+    'kjv': 'kjv', // King James Version
+    'niv': 'web', // NIV not available, using World English Bible as fallback
+    'esv': 'web', // ESV not available, using World English Bible as fallback  
+    'nlt': 'web', // NLT not available, using World English Bible as fallback
+    'nasb': 'web' // NASB not available, using World English Bible as fallback
+  };
+
+  async getVerse(reference: string, version?: string): Promise<BibleVerse | null> {
     try {
       // Convert reference to API format (e.g., "John 3:16" -> "john+3:16")
       const apiReference = this.formatReferenceForAPI(reference);
-      const url = `${this.baseUrl}/${apiReference}`;
+      const apiVersion = version ? this.versionMap[version] || 'kjv' : 'kjv';
+      const url = `${this.baseUrl}/${apiReference}?translation=${apiVersion}`;
       
       const response = await fetch(url, {
         signal: AbortSignal.timeout(10000), // 10-second timeout
@@ -63,7 +73,7 @@ export class SimpleBibleAPIService {
         book: firstVerse.book_name,
         chapter: firstVerse.chapter,
         verse: verseNumbers,
-        version: data.translation_name
+        version: data.translation_name || this.getVersionDisplayName(apiVersion)
       };
 
     } catch (error) {
@@ -79,6 +89,14 @@ export class SimpleBibleAPIService {
       .toLowerCase()
       .replace(/\s+/g, '+')
       .replace(/\./g, '');
+  }
+
+  private getVersionDisplayName(apiVersion: string): string {
+    const displayNames: Record<string, string> = {
+      'kjv': 'King James Version',
+      'web': 'World English Bible'
+    };
+    return displayNames[apiVersion] || 'King James Version';
   }
 
   private getFallbackVerse(reference: string): BibleVerse | null {
