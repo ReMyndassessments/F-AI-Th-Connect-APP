@@ -1,4 +1,6 @@
 import { Check } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import type { MonthlyPhoto } from "@shared/schema";
 
 const steps = [
   {
@@ -26,6 +28,12 @@ const features = [
 ];
 
 export default function HowItWorks() {
+  // Fetch current month's secondary photo automatically
+  const { data: monthlySecondaryPhoto, isLoading: secondaryPhotoLoading } = useQuery<MonthlyPhoto>({
+    queryKey: ["/api/monthly-photos/current-secondary"],
+    retry: false,
+  });
+
   return (
     <section id="how-it-works" className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -67,11 +75,41 @@ export default function HowItWorks() {
             </div>
             
             <div className="relative">
-              <img 
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400" 
-                alt="Bible study group in peaceful discussion" 
-                className="rounded-xl shadow-lg w-full h-auto" 
-              />
+              {/* Monthly Themed Secondary Photo Display */}
+              {secondaryPhotoLoading ? (
+                <div className="rounded-xl shadow-lg w-full h-80 bg-gradient-to-br from-gray-100 to-blue-100 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="animate-pulse bg-blue-200 w-12 h-12 rounded-full mx-auto mb-3"></div>
+                    <p className="text-gray-600 text-sm">Loading ministry photo...</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="relative group">
+                  <img 
+                    src={monthlySecondaryPhoto?.imageUrl || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2070&auto=format&fit=crop"} 
+                    alt={monthlySecondaryPhoto?.altText || "Bible study group in peaceful discussion"} 
+                    className="rounded-xl shadow-lg w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105" 
+                  />
+                  
+                  {/* Monthly Theme Overlay for Secondary Photo */}
+                  {monthlySecondaryPhoto && (
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl flex items-center justify-center">
+                      <div className="text-center text-white p-6">
+                        <h4 className="font-bold text-lg mb-2">{monthlySecondaryPhoto.title}</h4>
+                        <p className="text-sm mb-3 opacity-90">{monthlySecondaryPhoto.description}</p>
+                        <div className="flex items-center justify-center space-x-3">
+                          <span className="text-xs font-medium px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full">
+                            {monthlySecondaryPhoto.theme}
+                          </span>
+                          <span className="text-xs opacity-75">
+                            {new Date().toLocaleDateString('en-US', { month: 'long' })}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>

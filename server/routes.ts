@@ -425,7 +425,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Monthly photos API endpoints
+  // Monthly photos API endpoints - specific routes first
   app.get('/api/monthly-photos/current', async (req, res) => {
     try {
       const currentPhoto = MonthlyPhotoService.getCurrentMonthPhoto();
@@ -435,6 +435,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ 
         error: 'Failed to fetch monthly photo',
         message: 'Unable to retrieve monthly photo at this time' 
+      });
+    }
+  });
+
+  app.get('/api/monthly-photos/current-secondary', async (req, res) => {
+    try {
+      const currentSecondaryPhoto = MonthlyPhotoService.getCurrentMonthSecondaryPhoto();
+      res.json(currentSecondaryPhoto);
+    } catch (error) {
+      console.error('Monthly photos API error:', error);
+      res.status(500).json({ 
+        error: 'Failed to fetch monthly secondary photo',
+        message: 'Unable to retrieve monthly secondary photo at this time' 
+      });
+    }
+  });
+
+  app.get('/api/monthly-photos/current-both', async (req, res) => {
+    try {
+      const currentPhotos = MonthlyPhotoService.getCurrentMonthPhotos();
+      res.json(currentPhotos);
+    } catch (error) {
+      console.error('Monthly photos API error:', error);
+      res.status(500).json({ 
+        error: 'Failed to fetch monthly photos',
+        message: 'Unable to retrieve monthly photos at this time' 
       });
     }
   });
@@ -452,6 +478,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Parameterized route last to avoid conflicts
   app.get('/api/monthly-photos/:month', async (req, res) => {
     try {
       const month = parseInt(req.params.month);
