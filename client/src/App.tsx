@@ -24,6 +24,7 @@ function Router() {
       <Route path="/chat/:sessionId" component={Chat} />
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/admin/login" component={AdminLogin} />
+      <Route path="/admin-login" component={AdminLogin} />
       <Route path="/help" component={Help} />
       <Route path="/contact" component={Contact} />
       <Route path="/privacy" component={Privacy} />

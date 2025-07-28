@@ -31,18 +31,7 @@ export default function AdminLogin() {
       const validatedData = adminLoginSchema.parse(formData);
       
       // Make login request
-      const response = await fetch("/api/admin/login", {
-        method: "POST",
-        body: JSON.stringify(validatedData),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Login failed");
-      }
+      const response = await apiRequest("POST", "/api/admin/login", validatedData);
 
       const loginResult = await response.json();
       
