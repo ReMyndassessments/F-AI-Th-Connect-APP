@@ -6,6 +6,7 @@ import crypto from "crypto";
 import { storage } from "./storage";
 import { DeepseekAI } from "./services/deepseek-ai";
 import { simpleBibleAPI } from "./services/simple-bible-api";
+import { MonthlyPhotoService } from "./services/monthly-photos";
 
 import { FileProcessor } from "./services/file-processor";
 import { z } from "zod";
@@ -424,7 +425,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Monthly photos API endpoints
+  app.get('/api/monthly-photos/current', async (req, res) => {
+    try {
+      const currentPhoto = MonthlyPhotoService.getCurrentMonthPhoto();
+      res.json(currentPhoto);
+    } catch (error) {
+      console.error('Monthly photos API error:', error);
+      res.status(500).json({ 
+        error: 'Failed to fetch monthly photo',
+        message: 'Unable to retrieve monthly photo at this time' 
+      });
+    }
+  });
 
+  app.get('/api/monthly-photos/all', async (req, res) => {
+    try {
+      const allPhotos = MonthlyPhotoService.getAllMonthlyPhotos();
+      res.json({ photos: allPhotos });
+    } catch (error) {
+      console.error('Monthly photos API error:', error);
+      res.status(500).json({ 
+        error: 'Failed to fetch monthly photos',
+        message: 'Unable to retrieve monthly photos at this time' 
+      });
+    }
+  });
+
+  app.get('/api/monthly-photos/:month', async (req, res) => {
+    try {
+      const month = parseInt(req.params.month);
+      if (isNaN(month) || month < 1 || month > 12) {
+        return res.status(400).json({ 
+          error: 'Invalid month',
+          message: 'Month must be a number between 1 and 12' 
+        });
+      }
+      
+      const monthPhoto = MonthlyPhotoService.getMonthPhoto(month);
+      if (!monthPhoto) {
+        return res.status(404).json({ 
+          error: 'Photo not found',
+          message: `No photo found for month ${month}` 
+        });
+      }
+      
+      res.json(monthPhoto);
+    } catch (error) {
+      console.error('Monthly photos API error:', error);
+      res.status(500).json({ 
+        error: 'Failed to fetch monthly photo',
+        message: 'Unable to retrieve monthly photo at this time' 
+      });
+    }
+  });
 
   // Feature flags endpoints (now require admin authentication)
   app.get("/api/feature-flags", requireAdmin, async (req, res) => {

@@ -2,11 +2,19 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Check, Play } from "lucide-react";
 import { useLocation } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 import DemoVideoModal from "@/components/demo/demo-video-modal";
+import type { MonthlyPhoto } from "@shared/schema";
 
 export default function Hero() {
   const [, setLocation] = useLocation();
   const [isDemoOpen, setIsDemoOpen] = useState(false);
+
+  // Fetch current month's photo automatically
+  const { data: monthlyPhoto, isLoading: photoLoading } = useQuery<MonthlyPhoto>({
+    queryKey: ["/api/monthly-photos/current"],
+    retry: false,
+  });
 
   const startChat = () => {
     setLocation("/chat");
@@ -88,11 +96,39 @@ export default function Hero() {
           </div>
           
           <div className="relative">
-            <img 
-              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&h=600" 
-              alt="People praying together in community" 
-              className="rounded-2xl shadow-2xl w-full h-auto" 
-            />
+            {/* Monthly Themed Photo Display */}
+            {photoLoading ? (
+              <div className="rounded-2xl shadow-2xl w-full h-96 bg-gradient-to-br from-blue-100 to-amber-100 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="animate-pulse bg-blue-200 w-16 h-16 rounded-full mx-auto mb-4"></div>
+                  <p className="text-gray-600">Loading inspiring image...</p>
+                </div>
+              </div>
+            ) : (
+              <div className="relative group">
+                <img 
+                  src={monthlyPhoto?.imageUrl || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"} 
+                  alt={monthlyPhoto?.altText || "Christian inspiration and community"} 
+                  className="rounded-2xl shadow-2xl w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105" 
+                />
+                
+                {/* Monthly Theme Overlay */}
+                {monthlyPhoto && (
+                  <div className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-lg transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                    <h3 className="font-semibold text-gray-900 mb-1">{monthlyPhoto.title}</h3>
+                    <p className="text-sm text-gray-600 mb-2">{monthlyPhoto.description}</p>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-medium px-2 py-1 bg-blue-100 text-blue-700 rounded-full">
+                        {monthlyPhoto.theme}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
             
             {/* Floating chat preview */}
             <div className="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-xl p-4 max-w-xs border border-gray-100">
