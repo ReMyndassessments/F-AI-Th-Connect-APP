@@ -319,7 +319,7 @@ export class MemStorage implements IStorage {
       const defaultAdmin: AdminUser = {
         id: 1,
         username: "admin",
-        passwordHash: "$2b$12$uFB6Gi.Cj8TmDC45WUym9OpYgwffjOfi1oJFMo3FsRmrdc3NL1xIW", // bcrypt hash of "admin123"
+        passwordHash: "$2b$12$WfwM.DDwTbB.OODoZIbN6ujnK7Ro0mI4YBXTJRcmxRvHHUeFDJUNe", // bcrypt hash of "admin123"
         email: null,
         role: "owner",
         lastLogin: null,
@@ -328,6 +328,7 @@ export class MemStorage implements IStorage {
       };
       this.adminUsers.set(1, defaultAdmin);
       this.currentAdminUserId = 2;
+      this.saveAdminData(); // Save the admin user to persistent storage
       console.log('✓ Default admin user created (admin/admin123)');
     }
   }

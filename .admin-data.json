@@ -1,0 +1,12 @@
+{
+  "adminUser": {
+    "id": 1,
+    "username": "admin",
+    "passwordHash": "$2b$12$WfwM.DDwTbB.OODoZIbN6ujnK7Ro0mI4YBXTJRcmxRvHHUeFDJUNe",
+    "email": null,
+    "role": "owner",
+    "lastLogin": null,
+    "createdAt": "2025-07-28T02:38:33.013Z",
+    "updatedAt": "2025-07-28T02:38:33.013Z"
+  }
+}
