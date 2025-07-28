@@ -490,22 +490,23 @@ export default function BibleLookup() {
                 Look Up Verse
               </Button>
               
-              {/* Popular Verses Quick Access */}
+              {/* Popular Verses Quick Access - Dropdown */}
               <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-gray-200 dark:border-gray-700">
                 <h4 className="text-sm font-medium mb-3 text-gray-700 dark:text-gray-300">Popular Verses (Quick Access)</h4>
-                <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-                  {quickVerses.map((quickRef) => (
-                    <Button
-                      key={quickRef}
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleSearch(quickRef)}
-                      className="text-xs justify-start h-8"
-                    >
-                      {quickRef}
-                    </Button>
-                  ))}
-                </div>
+                <Select onValueChange={(value) => handleSearch(value)}>
+                  <SelectTrigger className="w-full bg-gradient-to-r from-blue-50 to-amber-50 dark:from-blue-900/20 dark:to-amber-900/20 border-blue-200 dark:border-blue-700 hover:from-blue-100 hover:to-amber-100 dark:hover:from-blue-800/30 dark:hover:to-amber-800/30 transition-all duration-200">
+                    <SelectValue placeholder="Choose a popular verse to look up..." />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-64">
+                    {quickVerses.map((quickRef) => (
+                      <SelectItem key={quickRef} value={quickRef}>
+                        <span className="font-medium text-blue-800 dark:text-blue-200">
+                          {quickRef}
+                        </span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </CardContent>
           </Card>
