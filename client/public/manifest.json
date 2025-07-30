@@ -4,6 +4,44 @@
   "description": "Get biblical wisdom and spiritual support through AI-powered conversations",
   "start_url": "/",
   "display": "standalone",
+  "shortcuts": [
+    {
+      "name": "Daily Verse",
+      "short_name": "Daily Verse",
+      "description": "View today's Bible verse",
+      "url": "/daily-verse",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Bible Lookup",
+      "short_name": "Bible",
+      "description": "Look up Bible verses",
+      "url": "/bible",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Chat",
+      "short_name": "Chat",
+      "description": "Start spiritual conversation",
+      "url": "/chat",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
   "background_color": "#ffffff",
   "theme_color": "#1e40af",
   "orientation": "portrait-primary",

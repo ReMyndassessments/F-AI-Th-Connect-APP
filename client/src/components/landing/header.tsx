@@ -38,6 +38,12 @@ export default function Header() {
               Bible Lookup
             </button>
             <button
+              onClick={() => setLocation("/daily-verse")}
+              className="text-gray-600 hover:text-blue-500 transition-colors font-medium"
+            >
+              Daily Verse
+            </button>
+            <button
               onClick={() => scrollToSection("features")}
               className="text-gray-600 hover:text-blue-500 transition-colors"
             >
@@ -102,6 +108,15 @@ export default function Header() {
                 className="text-gray-600 hover:text-blue-500 transition-colors text-left font-medium"
               >
                 Bible Lookup
+              </button>
+              <button
+                onClick={() => {
+                  setLocation("/daily-verse");
+                  setIsMobileMenuOpen(false);
+                }}
+                className="text-gray-600 hover:text-blue-500 transition-colors text-left font-medium"
+              >
+                Daily Verse
               </button>
               <button
                 onClick={() => scrollToSection("features")}
