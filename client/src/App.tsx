@@ -15,7 +15,6 @@ import Privacy from "@/pages/privacy";
 import Terms from "@/pages/terms";
 import Share from "@/pages/share";
 import BibleLookup from "@/pages/bible-lookup";
-import DailyVerse from "@/pages/daily-verse";
 
 function Router() {
   return (
@@ -32,7 +31,6 @@ function Router() {
       <Route path="/terms" component={Terms} />
       <Route path="/share" component={Share} />
       <Route path="/bible" component={BibleLookup} />
-      <Route path="/daily-verse" component={DailyVerse} />
       <Route component={NotFound} />
     </Switch>
   );
