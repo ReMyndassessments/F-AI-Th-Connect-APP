@@ -81,42 +81,6 @@ const faqs: FAQItem[] = [
   {
     question: "How do I search for specific ministry topics in the prompt library?",
     answer: "Use the search bar at the top of the prompt library. Type keywords like 'prayer,' 'evangelism,' 'youth,' or 'Bible study' to find relevant prompts across all categories."
-  },
-  {
-    question: "How do I look up Bible verses within F-AI-TH-Connect?",
-    answer: "F-AI-TH-Connect has a comprehensive Bible lookup system! Click any blue Bible reference link in AI responses to view verses instantly. You can also visit the dedicated Bible page by clicking 'Quick Bible Lookup' in the navigation menu for advanced searching with multiple translation comparison."
-  },
-  {
-    question: "Can I compare different Bible translations?",
-    answer: "Yes! Our Bible lookup system supports multiple translations including King James Version (KJV), World English Bible (WEB), and American Standard Version (ASV). When viewing any verse, you can switch between translations to compare interpretations side-by-side."
-  },
-  {
-    question: "What's the dropdown system for Bible verses about?",
-    answer: "We've designed a mobile-friendly four-part dropdown system (Version, Book, Chapter, Verse) to help users who struggle with typing long Bible book names. This eliminates typing errors and makes Bible lookup accessible for everyone, especially during Bible study sessions."
-  },
-  {
-    question: "Can I save favorite Bible verses?",
-    answer: "Absolutely! The Bible lookup page includes a favorites system where you can bookmark up to 20 verses for quick access. Your recent searches (last 10) are also automatically saved for easy reference during Bible study."
-  },
-  {
-    question: "How do the popular verses work?",
-    answer: "Popular verses are available as a dropdown menu on the Bible lookup page, featuring commonly referenced scriptures like John 3:16, Psalm 23:1, and Romans 8:28. Simply select from the dropdown to instantly view these beloved passages."
-  },
-  {
-    question: "Is F-AI-TH-Connect available as a mobile app?",
-    answer: "Yes! F-AI-TH-Connect is a Progressive Web App (PWA) that can be installed on your phone or tablet like a native app. Look for the 'Install' prompt in your browser, or use the share icon on our landing page to access QR codes and installation instructions for offline spiritual access."
-  },
-  {
-    question: "How do I install F-AI-TH-Connect on my device?",
-    answer: "Installation is easy! Visit our QR code sharing page (share icon in header) for step-by-step instructions for all major browsers. Once installed, you'll have offline access to your spiritual conversations and can use F-AI-TH-Connect like any other app on your home screen."
-  },
-  {
-    question: "What are the changing photos on the homepage?",
-    answer: "F-AI-TH-Connect features an automated monthly photo rotation system with 24 high-resolution Christian-themed images that change every month. Each month displays unique inspirational landscapes and Bible study scenes - January shows 'New Beginnings,' April features 'Easter Hope,' December displays 'Christmas Hope,' etc."
-  },
-  {
-    question: "Do the daily verses change automatically?",
-    answer: "Yes! The 'Today's Memory Verse' rotates through 365 carefully selected scriptures, displaying a different verse each day of the year. Each verse includes its theme and provides spiritual encouragement for daily meditation and reflection."
   }
 ];
 
@@ -213,81 +177,175 @@ export default function Help() {
               </CardContent>
             </Card>
 
-            {/* New Features Section */}
-            <div className="grid md:grid-cols-2 gap-6 mb-8">
-              {/* Prompt Library */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <BookOpen className="w-5 h-5 text-blue-500" />
-                    <span>Prompt Library</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 mb-4">30+ pre-written questions organized by ministry categories for users new to AI.</p>
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div className="bg-gray-50 px-2 py-1 rounded">Leadership</div>
-                    <div className="bg-gray-50 px-2 py-1 rounded">Men's Ministry</div>
-                    <div className="bg-gray-50 px-2 py-1 rounded">Women's Ministry</div>
-                    <div className="bg-gray-50 px-2 py-1 rounded">Youth Ministry</div>
+            {/* Prompt Library Feature */}
+            <Card className="mb-8">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <BookOpen className="w-5 h-5 text-blue-500" />
+                  <span>Prompt Library - Your AI Guide</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-gray-600 leading-relaxed">
+                  New to AI? The Prompt Library provides 30+ professionally written questions organized by ministry areas, 
+                  making it easy to discover what you can ask F-AI-TH-Connect.
+                </p>
+                
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-gray-800">How to Use:</h4>
+                    <ol className="text-sm text-gray-600 space-y-2">
+                      <li className="flex items-start space-x-2">
+                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">1</span>
+                        <span>Click the book icon (📖) next to the send button in the chat</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">2</span>
+                        <span>Browse prompts by ministry category or use the search bar</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">3</span>
+                        <span>Click any prompt to automatically fill your message box</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">4</span>
+                        <span>Edit the prompt if needed, then send your message</span>
+                      </li>
+                    </ol>
                   </div>
-                </CardContent>
-              </Card>
-
-              {/* Bible Lookup */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Book className="w-5 h-5 text-green-500" />
-                    <span>Bible Lookup System</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 mb-4">Comprehensive Bible study with authentic translations, favorites, and mobile-friendly search.</p>
-                  <ul className="text-sm text-gray-600 space-y-1">
-                    <li>• KJV, WEB, ASV translations</li>
-                    <li>• Side-by-side comparison</li>
-                    <li>• Favorites & history</li>
-                  </ul>
-                </CardContent>
-              </Card>
-
-              {/* Highlighting System */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Highlighter className="w-5 h-5 text-amber-500" />
-                    <span>Study Highlighting</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 mb-4">5-category highlighting system for Bible study preparation with export functionality.</p>
-                  <div className="flex flex-wrap gap-2 text-xs">
-                    <span className="bg-yellow-200 px-2 py-1 rounded">Key Verse</span>
-                    <span className="bg-blue-200 px-2 py-1 rounded">Prayer Point</span>
-                    <span className="bg-green-200 px-2 py-1 rounded">Study Note</span>
+                  
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-gray-800">Available Categories:</h4>
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div className="bg-blue-50 p-2 rounded">
+                        <span className="font-medium text-blue-800">👥 Ministry Leadership</span>
+                        <p className="text-blue-600 text-xs">Sermon prep, team guidance</p>
+                      </div>
+                      <div className="bg-purple-50 p-2 rounded">
+                        <span className="font-medium text-purple-800">💪 Men's Ministry</span>
+                        <p className="text-purple-600 text-xs">Biblical manhood, fatherhood</p>
+                      </div>
+                      <div className="bg-pink-50 p-2 rounded">
+                        <span className="font-medium text-pink-800">🌸 Women's Ministry</span>
+                        <p className="text-pink-600 text-xs">Godly womanhood, mentoring</p>
+                      </div>
+                      <div className="bg-green-50 p-2 rounded">
+                        <span className="font-medium text-green-800">🌍 Missions & Outreach</span>
+                        <p className="text-green-600 text-xs">Evangelism, community service</p>
+                      </div>
+                      <div className="bg-yellow-50 p-2 rounded">
+                        <span className="font-medium text-yellow-800">🏛️ Church Planting</span>
+                        <p className="text-yellow-600 text-xs">Biblical foundation, leadership</p>
+                      </div>
+                      <div className="bg-red-50 p-2 rounded">
+                        <span className="font-medium text-red-800">🙏 Health & Wellness</span>
+                        <p className="text-red-600 text-xs">Biblical perspective on health</p>
+                      </div>
+                      <div className="bg-indigo-50 p-2 rounded">
+                        <span className="font-medium text-indigo-800">📖 Personal Growth</span>
+                        <p className="text-indigo-600 text-xs">Prayer, Bible study, stewardship</p>
+                      </div>
+                      <div className="bg-orange-50 p-2 rounded">
+                        <span className="font-medium text-orange-800">🎯 Youth Ministry</span>
+                        <p className="text-orange-600 text-xs">Discipling young people</p>
+                      </div>
+                    </div>
                   </div>
-                </CardContent>
-              </Card>
-
-              {/* PWA Installation */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Phone className="w-5 h-5 text-purple-500" />
-                    <span>Mobile App (PWA)</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 mb-4">Install as a native app on any device for offline access to spiritual conversations.</p>
-                  <ul className="text-sm text-gray-600 space-y-1">
-                    <li>• Home screen installation</li>
-                    <li>• Offline capability</li>
-                    <li>• Native app experience</li>
+                </div>
+                
+                <div className="bg-green-50 p-4 rounded-lg">
+                  <h5 className="font-semibold text-green-900 mb-2">Perfect for Beginners:</h5>
+                  <ul className="text-sm text-green-800 space-y-1">
+                    <li>• No need to think of questions - we've prepared them for you</li>
+                    <li>• See examples of what the AI can help with in your ministry area</li>
+                    <li>• All prompts are written by ministry professionals</li>
+                    <li>• Search by topic to find exactly what you need</li>
+                    <li>• Save favorites for quick access to your most-used prompts</li>
                   </ul>
-                </CardContent>
-              </Card>
-            </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Bible Study Highlighting Feature */}
+            <Card className="mb-8">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Highlighter className="w-5 h-5 text-amber-500" />
+                  <span>Bible Study Highlighting</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-gray-600 leading-relaxed">
+                  F-AI-TH-Connect includes a powerful highlighting system designed specifically for Bible study preparation, 
+                  sermon writing, and group discussion planning.
+                </p>
+                
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-gray-800">How to Use:</h4>
+                    <ol className="text-sm text-gray-600 space-y-2">
+                      <li className="flex items-start space-x-2">
+                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">1</span>
+                        <span>Ask the AI a biblical question or request spiritual guidance</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">2</span>
+                        <span>Select any text in the AI response with your mouse</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">3</span>
+                        <span>Choose from 5 study categories in the toolbar that appears</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">4</span>
+                        <span>Your highlights save automatically for future reference</span>
+                      </li>
+                    </ol>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-gray-800">Highlight Categories:</h4>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center space-x-2">
+                        <Star className="w-4 h-4 text-yellow-600" />
+                        <span className="bg-yellow-200 px-2 py-1 rounded text-xs font-medium">Key Verse</span>
+                        <span className="text-gray-600">Important Scripture passages</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Heart className="w-4 h-4 text-blue-600" />
+                        <span className="bg-blue-200 px-2 py-1 rounded text-xs font-medium">Prayer Point</span>
+                        <span className="text-gray-600">Prayer requests & topics</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Bookmark className="w-4 h-4 text-green-600" />
+                        <span className="bg-green-200 px-2 py-1 rounded text-xs font-medium">Study Note</span>
+                        <span className="text-gray-600">Study insights & observations</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <MessageCircle className="w-4 h-4 text-orange-600" />
+                        <span className="bg-orange-200 px-2 py-1 rounded text-xs font-medium">Action Item</span>
+                        <span className="text-gray-600">Things to do or apply</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Settings className="w-4 h-4 text-purple-600" />
+                        <span className="bg-purple-200 px-2 py-1 rounded text-xs font-medium">Discussion</span>
+                        <span className="text-gray-600">Group discussion points</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <h5 className="font-semibold text-blue-900 mb-2">Advanced Features:</h5>
+                  <ul className="text-sm text-blue-800 space-y-1">
+                    <li>• Click any highlighted text to remove the highlight</li>
+                    <li>• View highlight summary with counts by category</li>
+                    <li>• Export all highlights as study notes for sharing or printing</li>
+                    <li>• Highlights persist across sessions for long-term study projects</li>
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
 
             {/* FAQ Section */}
             <Card>

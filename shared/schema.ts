@@ -95,20 +95,6 @@ export const advertisements = pgTable("advertisements", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-// Monthly Hero Photos Schema
-export const monthlyPhotos = pgTable("monthly_photos", {
-  id: serial("id").primaryKey(),
-  month: integer("month").notNull(), // 1-12 for Jan-Dec
-  title: text("title").notNull(),
-  description: text("description"),
-  imageUrl: text("image_url").notNull(),
-  altText: text("alt_text").notNull(),
-  theme: text("theme").notNull(), // e.g., "New Beginnings", "Spring Renewal", etc.
-  isActive: boolean("is_active").default(true).notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
-
 export const insertFeatureFlagSchema = createInsertSchema(featureFlags).pick({
   name: true,
   description: true,
@@ -129,16 +115,6 @@ export const insertAdvertisementSchema = createInsertSchema(advertisements).pick
   endDate: true,
 });
 
-export const insertMonthlyPhotoSchema = createInsertSchema(monthlyPhotos).pick({
-  month: true,
-  title: true,
-  description: true,
-  imageUrl: true,
-  altText: true,
-  theme: true,
-  isActive: true,
-});
-
 export const insertAdminUserSchema = createInsertSchema(adminUsers).pick({
   username: true,
   passwordHash: true,
@@ -155,8 +131,6 @@ export type InsertFeatureFlag = z.infer<typeof insertFeatureFlagSchema>;
 export type FeatureFlag = typeof featureFlags.$inferSelect;
 export type InsertAdvertisement = z.infer<typeof insertAdvertisementSchema>;
 export type Advertisement = typeof advertisements.$inferSelect;
-export type InsertMonthlyPhoto = z.infer<typeof insertMonthlyPhotoSchema>;
-export type MonthlyPhoto = typeof monthlyPhotos.$inferSelect;
 export type AdminUser = typeof adminUsers.$inferSelect;
 export type InsertAdminUser = z.infer<typeof insertAdminUserSchema>;
 export type AdminSession = typeof adminSessions.$inferSelect;
