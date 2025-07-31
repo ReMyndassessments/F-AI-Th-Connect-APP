@@ -274,7 +274,7 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
                         <div className="flex flex-col">
                           <span className="text-xs">{voice.name}</span>
                           <span className="text-xs text-gray-500">
-                            {voice.lang} • {voice.gender || 'Neutral'}
+                            {voice.lang}
                           </span>
                         </div>
                       </SelectItem>

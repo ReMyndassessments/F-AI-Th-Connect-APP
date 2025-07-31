@@ -6,6 +6,7 @@ import crypto from "crypto";
 import { storage } from "./storage";
 import { DeepseekAI } from "./services/deepseek-ai";
 import { simpleBibleAPI } from "./services/simple-bible-api";
+import { elevenLabsTTS } from "./services/elevenlabs-tts";
 
 import { FileProcessor } from "./services/file-processor";
 import { z } from "zod";
@@ -420,6 +421,90 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ 
         error: 'Failed to fetch verse',
         message: 'Unable to retrieve verse at this time' 
+      });
+    }
+  });
+
+  // Text-to-Speech API routes
+  app.get('/api/tts/voices', async (req, res) => {
+    try {
+      const voices = elevenLabsTTS.getAvailableVoices();
+      const isAvailable = elevenLabsTTS.isAvailable();
+      
+      res.json({
+        available: isAvailable,
+        voices: voices,
+        service: 'ElevenLabs'
+      });
+    } catch (error) {
+      console.error('TTS voices error:', error);
+      res.status(500).json({ 
+        error: 'Failed to fetch voices',
+        message: 'Unable to get available voices'
+      });
+    }
+  });
+
+  app.post('/api/tts/generate', async (req, res) => {
+    try {
+      const { text, voiceId } = req.body;
+      
+      if (!text || text.trim().length === 0) {
+        return res.status(400).json({
+          error: 'Text required',
+          message: 'Text content is required for speech generation'
+        });
+      }
+
+      // Check if text is too long (ElevenLabs limit: 2500 chars)
+      if (text.length > 2500) {
+        return res.status(400).json({
+          error: 'Text too long',
+          message: 'Text must be 2500 characters or less for TTS generation'
+        });
+      }
+
+      const audioBuffer = await elevenLabsTTS.generateSpeech(text, voiceId);
+      
+      if (!audioBuffer) {
+        return res.status(503).json({
+          error: 'TTS unavailable',
+          message: 'ElevenLabs TTS service is not available. Please use browser TTS instead.'
+        });
+      }
+
+      // Return audio file
+      res.setHeader('Content-Type', 'audio/mpeg');
+      res.setHeader('Content-Length', audioBuffer.length);
+      res.setHeader('Cache-Control', 'public, max-age=3600'); // Cache for 1 hour
+      res.send(audioBuffer);
+      
+    } catch (error) {
+      console.error('TTS generation error:', error);
+      res.status(500).json({
+        error: 'Generation failed',
+        message: 'Failed to generate speech audio'
+      });
+    }
+  });
+
+  app.get('/api/tts/usage', async (req, res) => {
+    try {
+      const usage = await elevenLabsTTS.getUsageInfo();
+      
+      if (!usage) {
+        return res.status(503).json({
+          error: 'Usage unavailable',
+          message: 'Cannot retrieve ElevenLabs usage information'
+        });
+      }
+
+      res.json(usage);
+    } catch (error) {
+      console.error('TTS usage error:', error);
+      res.status(500).json({
+        error: 'Failed to get usage',
+        message: 'Unable to retrieve usage information'
       });
     }
   });
