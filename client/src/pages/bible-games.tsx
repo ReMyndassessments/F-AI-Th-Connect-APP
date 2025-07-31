@@ -471,6 +471,25 @@ export default function BibleGames() {
             </Card>
           )}
 
+          {/* Loading State */}
+          {isLoading && (
+            <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+              <CardContent className="text-center py-8">
+                <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+                <p className="text-gray-600">Loading Bible games...</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Debug Info */}
+          {!isLoading && (
+            <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+              <p className="text-sm text-blue-800">
+                Debug: Found {games?.length || 0} games | Category: {selectedCategory} | Difficulty: {selectedDifficulty}
+              </p>
+            </div>
+          )}
+
           {/* Games Available */}
           {!gameState.currentGame && games && games.length > 0 && (
             <div className="space-y-6 sm:space-y-8">
