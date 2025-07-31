@@ -1,10 +1,12 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Calendar, Copy, Share2 } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { BookOpen, Calendar, Copy, Share2, Sparkles, Loader2, Pause, Settings } from "lucide-react";
 import { getTodaysVerse, getFormattedDate } from "@/lib/daily-verses";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { elevenLabsClient, type ElevenLabsVoice } from "@/services/elevenlabs-client";
 
 interface DailyVerseCardProps {
   variant?: "default" | "compact" | "banner";
@@ -14,8 +16,41 @@ interface DailyVerseCardProps {
 export default function DailyVerseCard({ variant = "default", className = "" }: DailyVerseCardProps) {
   const { toast } = useToast();
   const [isSharing, setIsSharing] = useState(false);
+  
+  // TTS State
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
+  const [availableVoices, setAvailableVoices] = useState<ElevenLabsVoice[]>([]);
+  const [selectedVoice, setSelectedVoice] = useState<string>('pNInz6obpgDQGcFmaJgB'); // Bella (default)
+  const [isLoadingTTS, setIsLoadingTTS] = useState(false);
+  const [showVoiceSettings, setShowVoiceSettings] = useState(false);
+  
   const todaysVerse = getTodaysVerse();
   const todayDate = getFormattedDate();
+
+  // Load available voices on component mount
+  useEffect(() => {
+    loadAvailableVoices();
+    
+    // Cleanup audio when component unmounts
+    return () => {
+      if (currentAudio) {
+        currentAudio.pause();
+        setCurrentAudio(null);
+      }
+    };
+  }, []);
+
+  const loadAvailableVoices = async () => {
+    try {
+      const voices = await elevenLabsClient.getAvailableVoices();
+      if (voices && Array.isArray(voices)) {
+        setAvailableVoices(voices);
+      }
+    } catch (error) {
+      console.error('Failed to load voices:', error);
+    }
+  };
 
   const handleCopyVerse = async () => {
     const verseText = `"${todaysVerse.text}" - ${todaysVerse.reference}`;
@@ -53,6 +88,57 @@ export default function DailyVerseCard({ variant = "default", className = "" }: 
     } else {
       // Fallback to clipboard
       await handleCopyVerse();
+    }
+  };
+
+  const handleTTSToggle = async () => {
+    if (isPlaying && currentAudio) {
+      // Stop current playback
+      currentAudio.pause();
+      setCurrentAudio(null);
+      setIsPlaying(false);
+      return;
+    }
+
+    try {
+      setIsLoadingTTS(true);
+      
+      // Clean text for TTS (remove quotes and format nicely)
+      const cleanText = (todaysVerse.text || '').replace(/^"|"$/g, '');
+      const fullText = `Today's Memory Verse: ${cleanText}. ${todaysVerse.reference || ''}`;
+      
+      const audioUrl = await elevenLabsClient.generateSpeech(fullText, selectedVoice);
+      const audio = new Audio(audioUrl);
+      
+      audio.onplay = () => setIsPlaying(true);
+      audio.onpause = () => setIsPlaying(false);
+      audio.onended = () => {
+        setIsPlaying(false);
+        setCurrentAudio(null);
+        URL.revokeObjectURL(audioUrl);
+      };
+      audio.onerror = () => {
+        setIsPlaying(false);
+        setCurrentAudio(null);
+        URL.revokeObjectURL(audioUrl);
+        toast({
+          title: "Playback Error",
+          description: "Unable to play audio. Please try again.",
+          variant: "destructive",
+        });
+      };
+
+      setCurrentAudio(audio);
+      await audio.play();
+    } catch (error) {
+      console.error('TTS Error:', error);
+      toast({
+        title: "Voice Generation Failed",
+        description: "Unable to generate speech. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoadingTTS(false);
     }
   };
 
@@ -133,6 +219,56 @@ export default function DailyVerseCard({ variant = "default", className = "" }: 
             {todaysVerse.reference}
           </p>
           <div className="flex space-x-2">
+            {/* Voice Settings */}
+            {availableVoices.length > 0 && (
+              <div className="relative">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowVoiceSettings(!showVoiceSettings)}
+                  className="p-1 h-8 w-8"
+                >
+                  <Settings className="h-3 w-3" />
+                </Button>
+                
+                {showVoiceSettings && (
+                  <div className="absolute right-0 bottom-10 z-10 bg-white border border-gray-200 rounded-lg shadow-lg p-3 min-w-[200px]">
+                    <p className="text-xs font-medium text-gray-700 mb-2">Premium Voice:</p>
+                    <Select value={selectedVoice} onValueChange={setSelectedVoice}>
+                      <SelectTrigger className="w-full h-8 text-xs">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {availableVoices.map((voice) => (
+                          <SelectItem key={voice.voice_id} value={voice.voice_id}>
+                            {voice.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+              </div>
+            )}
+            
+            {/* Listen Button */}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleTTSToggle}
+              disabled={isLoadingTTS}
+              className="border-purple-200 text-purple-600 hover:bg-purple-50"
+            >
+              {isLoadingTTS ? (
+                <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+              ) : isPlaying ? (
+                <Pause className="w-4 h-4 mr-1" />
+              ) : (
+                <Sparkles className="w-4 h-4 mr-1" />
+              )}
+              {isLoadingTTS ? 'Loading...' : isPlaying ? 'Pause' : 'Listen'}
+            </Button>
+            
             <Button
               variant="outline"
               size="sm"

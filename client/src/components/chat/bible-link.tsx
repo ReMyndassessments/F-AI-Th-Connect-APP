@@ -3,9 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Book, ExternalLink, Copy, Loader2 } from "lucide-react";
+import { Book, ExternalLink, Copy, Loader2, Sparkles, Volume2, VolumeX, Pause, Play, Settings } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { elevenLabsClient, type ElevenLabsVoice } from "@/services/elevenlabs-client";
 
 interface BibleLinkProps {
   reference: string;
@@ -98,6 +99,15 @@ export default function BibleLink({ reference, children, className = "" }: Bible
   const [comparisonVersion, setComparisonVersion] = useState('niv');
   const [comparisonVerse, setComparisonVerse] = useState<VerseData | null>(null);
   const [isLoadingComparison, setIsLoadingComparison] = useState(false);
+  
+  // TTS State
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
+  const [availableVoices, setAvailableVoices] = useState<ElevenLabsVoice[]>([]);
+  const [selectedVoice, setSelectedVoice] = useState<string>('pNInz6obpgDQGcFmaJgB'); // Bella (default)
+  const [isLoadingTTS, setIsLoadingTTS] = useState(false);
+  const [showVoiceSettings, setShowVoiceSettings] = useState(false);
+  
   const { toast } = useToast();
 
   // Fetch verse data when dialog opens
@@ -106,6 +116,22 @@ export default function BibleLink({ reference, children, className = "" }: Bible
       fetchVerseData();
     }
   }, [isOpen, reference]);
+
+  // Load available voices when dialog opens
+  useEffect(() => {
+    if (isOpen && availableVoices.length === 0) {
+      loadAvailableVoices();
+    }
+  }, [isOpen]);
+
+  // Cleanup audio when component unmounts or dialog closes
+  useEffect(() => {
+    if (!isOpen && currentAudio) {
+      currentAudio.pause();
+      setCurrentAudio(null);
+      setIsPlaying(false);
+    }
+  }, [isOpen, currentAudio]);
 
   const fetchVerseData = async () => {
     setIsLoading(true);
@@ -206,6 +232,66 @@ export default function BibleLink({ reference, children, className = "" }: Bible
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
+  const loadAvailableVoices = async () => {
+    try {
+      const voices = await elevenLabsClient.getAvailableVoices();
+      setAvailableVoices(voices);
+    } catch (error) {
+      console.error('Failed to load voices:', error);
+    }
+  };
+
+  const handleTTSToggle = async (text: string, verseRef: string) => {
+    if (isPlaying && currentAudio) {
+      // Stop current playback
+      currentAudio.pause();
+      setCurrentAudio(null);
+      setIsPlaying(false);
+      return;
+    }
+
+    try {
+      setIsLoadingTTS(true);
+      
+      // Clean text for TTS (remove quotes and format nicely)
+      const cleanText = text.replace(/^"|"$/g, '');
+      const fullText = `${cleanText}. ${verseRef}`;
+      
+      const audioUrl = await elevenLabsClient.generateSpeech(fullText, selectedVoice);
+      const audio = new Audio(audioUrl);
+      
+      audio.onplay = () => setIsPlaying(true);
+      audio.onpause = () => setIsPlaying(false);
+      audio.onended = () => {
+        setIsPlaying(false);
+        setCurrentAudio(null);
+        URL.revokeObjectURL(audioUrl);
+      };
+      audio.onerror = () => {
+        setIsPlaying(false);
+        setCurrentAudio(null);
+        URL.revokeObjectURL(audioUrl);
+        toast({
+          title: "Playback Error",
+          description: "Unable to play audio. Please try again.",
+          variant: "destructive",
+        });
+      };
+
+      setCurrentAudio(audio);
+      await audio.play();
+    } catch (error) {
+      console.error('TTS Error:', error);
+      toast({
+        title: "Voice Generation Failed",
+        description: "Unable to generate speech. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoadingTTS(false);
+    }
+  };
+
   return (
     <>
       <button
@@ -292,6 +378,61 @@ export default function BibleLink({ reference, children, className = "" }: Bible
                     <Badge variant="default" className="bg-blue-600 text-white">
                       {verseData.version || 'KJV'}
                     </Badge>
+                    
+                    {/* Voice Controls for Original Verse */}
+                    <div className="flex items-center space-x-2">
+                      {/* Voice Settings */}
+                      {availableVoices.length > 0 && (
+                        <div className="relative">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setShowVoiceSettings(!showVoiceSettings)}
+                            className="p-1 h-8 w-8"
+                          >
+                            <Settings className="h-3 w-3" />
+                          </Button>
+                          
+                          {showVoiceSettings && (
+                            <div className="absolute right-0 top-10 z-10 bg-white border border-gray-200 rounded-lg shadow-lg p-3 min-w-[200px]">
+                              <p className="text-xs font-medium text-gray-700 mb-2">Premium Voice:</p>
+                              <Select value={selectedVoice} onValueChange={setSelectedVoice}>
+                                <SelectTrigger className="w-full h-8 text-xs">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {availableVoices.map((voice) => (
+                                    <SelectItem key={voice.voice_id} value={voice.voice_id}>
+                                      {voice.name}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                      
+                      {/* Listen Button */}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleTTSToggle(verseData.text, verseData.reference)}
+                        disabled={isLoadingTTS}
+                        className="flex items-center space-x-1 border-purple-300 text-purple-700 hover:bg-purple-50 h-8 px-2"
+                      >
+                        {isLoadingTTS ? (
+                          <Loader2 className="h-3 w-3 animate-spin" />
+                        ) : isPlaying ? (
+                          <Pause className="h-3 w-3" />
+                        ) : (
+                          <Sparkles className="h-3 w-3" />
+                        )}
+                        <span className="text-xs">
+                          {isLoadingTTS ? 'Loading...' : isPlaying ? 'Pause' : 'Listen'}
+                        </span>
+                      </Button>
+                    </div>
                   </div>
                   <blockquote className="text-gray-800 italic leading-relaxed border-l-4 border-blue-500 pl-4 mb-3">
                     "{verseData.text}"
@@ -308,6 +449,26 @@ export default function BibleLink({ reference, children, className = "" }: Bible
                       <Badge variant="default" className="bg-green-600 text-white">
                         {comparisonVerse.version}
                       </Badge>
+                      
+                      {/* Voice Controls for Comparison Verse */}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleTTSToggle(comparisonVerse.text, `${comparisonVerse.reference} ${comparisonVerse.version}`)}
+                        disabled={isLoadingTTS}
+                        className="flex items-center space-x-1 border-purple-300 text-purple-700 hover:bg-purple-50 h-8 px-2"
+                      >
+                        {isLoadingTTS ? (
+                          <Loader2 className="h-3 w-3 animate-spin" />
+                        ) : isPlaying ? (
+                          <Pause className="h-3 w-3" />
+                        ) : (
+                          <Sparkles className="h-3 w-3" />
+                        )}
+                        <span className="text-xs">
+                          {isLoadingTTS ? 'Loading...' : isPlaying ? 'Pause' : 'Listen'}
+                        </span>
+                      </Button>
                     </div>
                     <blockquote className="text-gray-800 italic leading-relaxed border-l-4 border-green-500 pl-4 mb-3">
                       "{comparisonVerse.text}"
