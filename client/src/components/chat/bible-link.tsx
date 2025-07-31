@@ -220,14 +220,14 @@ export default function BibleLink({ reference, children, className = "" }: Bible
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Book className="w-5 h-5 text-blue-600" />
-                <span>{reference}</span>
-              </div>
-              
-              {/* Version Comparison Toggle */}
-              {verseData && (
+            <DialogTitle className="flex items-center space-x-2">
+              <Book className="w-5 h-5 text-blue-600" />
+              <span>{reference}</span>
+            </DialogTitle>
+            
+            {/* Version Comparison Toggle - Move outside of DialogTitle */}
+            {verseData && (
+              <div className="flex justify-end mt-2">
                 <Button
                   variant="outline"
                   size="sm"
@@ -237,33 +237,32 @@ export default function BibleLink({ reference, children, className = "" }: Bible
                   <Book className="h-3 w-3" />
                   {showVersionComparison ? 'Hide' : 'Compare'} Versions
                 </Button>
-              )}
-            </DialogTitle>
-            
-            {/* Version Comparison Selector */}
-            {showVersionComparison && verseData && (
-              <div className="mt-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-3">
-                  <span className="text-sm font-medium text-green-800 dark:text-green-200">
-                    Compare with:
-                  </span>
-                  <Select value={comparisonVersion} onValueChange={handleVersionChange}>
-                    <SelectTrigger className="w-full sm:w-48">
-                      <SelectValue placeholder="Select version to compare" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {BIBLE_VERSIONS.filter(v => v.value !== verseData?.version).map((version) => (
-                        <SelectItem key={version.value} value={version.value}>
-                          {version.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
               </div>
             )}
           </DialogHeader>
+          
+          {/* Version Comparison Selector - Move outside of DialogHeader */}
+          {showVersionComparison && verseData && (
+            <div className="mt-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-3">
+                <span className="text-sm font-medium text-green-800 dark:text-green-200">
+                  Compare with:
+                </span>
+                <Select value={comparisonVersion} onValueChange={handleVersionChange}>
+                  <SelectTrigger className="w-full sm:w-48">
+                    <SelectValue placeholder="Select version to compare" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {BIBLE_VERSIONS.filter(v => v.value !== verseData?.version).map((version) => (
+                      <SelectItem key={version.value} value={version.value}>
+                        {version.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          )}
           
           <div className="space-y-4">
             {isLoading ? (
