@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Loader2, Book, Copy, Search, ArrowLeft, History, Clock, Bookmark, X, Volume2, VolumeX, Pause, Play, Settings } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
+import { elevenLabsClient, type ElevenLabsVoice } from '@/services/elevenlabs-client';
 
 interface BibleVerse {
   reference: string;
@@ -56,18 +57,28 @@ export default function BibleLookup() {
   const [verseComparisonVersion, setVerseComparisonVersion] = useState('kjv');
   const [showVersionComparison, setShowVersionComparison] = useState(false);
   
-  // Text-to-speech state
+  // Text-to-speech state - ElevenLabs premium only
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
-  const [speechSupported, setSpeechSupported] = useState(false);
-  const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
-  const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice | null>(null);
+  const [elevenLabsAvailable, setElevenLabsAvailable] = useState(false);
+  const [availableVoices, setAvailableVoices] = useState<ElevenLabsVoice[]>([]);
+  const [selectedVoice, setSelectedVoice] = useState<string>('EXAVITQu4vr4xnSDxMaL'); // Bella default
+  const [isLoadingTTS, setIsLoadingTTS] = useState(false);
+  const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
   
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Load saved data on mount and check speech support
+  // Feature flags
+  const { data: featureFlags } = useQuery({
+    queryKey: ['/api/feature-flags/public'],
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  const isBibleTTSEnabled = (featureFlags as any)?.flags?.find((f: any) => f.name === 'tts_bible_verses')?.enabled || false;
+
+  // Load saved data on mount and load ElevenLabs voices
   useEffect(() => {
     const saved = localStorage.getItem('bible-recent-searches');
     if (saved) setRecentSearches(JSON.parse(saved));
@@ -75,138 +86,136 @@ export default function BibleLookup() {
     const savedFavorites = localStorage.getItem('bible-favorites');
     if (savedFavorites) setFavorites(JSON.parse(savedFavorites));
     
-    // Check if speech synthesis is supported and load voices
-    const speechSupported = 'speechSynthesis' in window;
-    setSpeechSupported(speechSupported);
+    // Load ElevenLabs voices
+    loadElevenLabsVoices();
     
-    if (speechSupported) {
-      // Load voices when available
-      const loadVoices = () => {
-        const voices = window.speechSynthesis.getVoices();
-        
-        // Filter to high-quality English voices suitable for spiritual content
-        const allowedVoices = voices.filter(voice => 
-          voice.lang.startsWith('en') && (
-            // Premium voices
-            voice.name.includes('Google') ||
-            voice.name.includes('Microsoft') ||
-            voice.name.includes('Amazon') ||
-            voice.name.includes('Apple') ||
-            // Natural-sounding system voices
-            voice.name.includes('Natural') ||
-            voice.name.includes('Neural') ||
-            voice.name.includes('Premium') ||
-            // Common high-quality voices
-            voice.name === 'Samantha' ||
-            voice.name === 'Alex' ||
-            voice.name === 'Victoria' ||
-            voice.name === 'Daniel' ||
-            voice.name === 'Karen' ||
-            voice.name === 'Moira' ||
-            voice.name === 'Tessa' ||
-            voice.name === 'Veena' ||
-            voice.name === 'Fiona' ||
-            voice.name === 'Susan'
-          )
-        );
-        
-        setAvailableVoices(allowedVoices);
-        
-        // Prefer high-quality female voices for spiritual content
-        const preferredVoice = allowedVoices.find(voice => 
-          voice.name === 'Google UK English Female'
-        ) || allowedVoices.find(voice => 
-          voice.name === 'Samantha'
-        ) || allowedVoices.find(voice => 
-          voice.name === 'Victoria'
-        ) || allowedVoices.find(voice => 
-          voice.name === 'Karen'
-        ) || allowedVoices.find(voice => 
-          voice.name.includes('Female') || voice.name.includes('Woman')
-        ) || allowedVoices[0];
-        
-        if (preferredVoice) {
-          setSelectedVoice(preferredVoice);
-        }
-      };
-      
-      // Load voices immediately if available
-      loadVoices();
-      
-      // Also listen for voice changes (some browsers load voices asynchronously)
-      window.speechSynthesis.onvoiceschanged = loadVoices;
-    }
+    // Cleanup audio when component unmounts
+    return () => {
+      if (currentAudio) {
+        currentAudio.pause();
+        setCurrentAudio(null);
+      }
+    };
   }, []);
 
-  // Text-to-speech functions
-  const speakVerse = (verseData: BibleVerse) => {
-    if (!speechSupported || !window.speechSynthesis) {
+  const loadElevenLabsVoices = async () => {
+    try {
+      const voicesResponse = await elevenLabsClient.getAvailableVoices();
+      if (voicesResponse && voicesResponse.available && Array.isArray(voicesResponse.voices)) {
+        setElevenLabsAvailable(true);
+        setAvailableVoices(voicesResponse.voices);
+        // Default to Bella (gentle female voice)
+        setSelectedVoice('EXAVITQu4vr4xnSDxMaL');
+      } else {
+        setElevenLabsAvailable(false);
+      }
+    } catch (error) {
+      console.error('Failed to load ElevenLabs voices:', error);
+      setElevenLabsAvailable(false);
+    }
+  };
+
+  // Premium TTS functions using ElevenLabs
+  const speakVerse = async (verseData: BibleVerse) => {
+    if (!elevenLabsAvailable) {
       toast({
-        title: "Not supported",
-        description: "Text-to-speech is not supported in this browser",
+        title: "Premium TTS Unavailable",
+        description: "ElevenLabs voice service is not available",
         variant: "destructive",
       });
       return;
     }
 
-    // Stop any current speech
-    window.speechSynthesis.cancel();
-
-    const text = `${verseData.reference}. ${verseData.text}`;
-    const utterance = new SpeechSynthesisUtterance(text);
-    
-    // Configure speech for natural, contemplative reading
-    utterance.rate = 0.75; // Even slower for peaceful contemplation
-    utterance.pitch = 1.0;
-    utterance.volume = 1.0;
-    
-    // Use the selected voice for more natural speech
-    if (selectedVoice) {
-      utterance.voice = selectedVoice;
+    // Stop any current audio
+    if (currentAudio) {
+      currentAudio.pause();
+      setCurrentAudio(null);
+      setIsSpeaking(false);
+      return;
     }
-    
-    // Event handlers
-    utterance.onstart = () => {
-      setIsSpeaking(true);
-      setIsPaused(false);
-    };
-    
-    utterance.onend = () => {
-      setIsSpeaking(false);
-      setIsPaused(false);
-    };
-    
-    utterance.onerror = () => {
-      setIsSpeaking(false);
-      setIsPaused(false);
+
+    try {
+      setIsLoadingTTS(true);
+      
+      // Clean and format text for TTS
+      const cleanText = verseData.text.replace(/^"|"$/g, '');
+      const fullText = `${verseData.reference}. ${cleanText}`;
+      
+      const audioUrl = await elevenLabsClient.generateSpeech(fullText, selectedVoice);
+      
+      if (!audioUrl) {
+        toast({
+          title: "Premium TTS Unavailable",
+          description: "Unable to generate speech. Please check your connection.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      const audio = new Audio(audioUrl);
+      
+      audio.onplay = () => {
+        setIsSpeaking(true);
+        setIsPaused(false);
+      };
+      
+      audio.onpause = () => setIsPaused(true);
+      
+      audio.onended = () => {
+        setIsSpeaking(false);
+        setIsPaused(false);
+        setCurrentAudio(null);
+        URL.revokeObjectURL(audioUrl);
+      };
+      
+      audio.onerror = () => {
+        setIsSpeaking(false);
+        setIsPaused(false);
+        setCurrentAudio(null);
+        URL.revokeObjectURL(audioUrl);
+        toast({
+          title: "Playback Error",
+          description: "Unable to play audio. Please try again.",
+          variant: "destructive",
+        });
+      };
+
+      setCurrentAudio(audio);
+      await audio.play();
+      
+    } catch (error) {
+      console.error('TTS Error:', error);
       toast({
-        title: "Speech error",
-        description: "Unable to read the verse aloud",
+        title: "TTS Error",
+        description: "Failed to generate speech. Please try again.",
         variant: "destructive",
       });
-    };
-
-    window.speechSynthesis.speak(utterance);
+    } finally {
+      setIsLoadingTTS(false);
+    }
   };
 
-  const pauseSpeech = () => {
-    if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
-      window.speechSynthesis.pause();
+  const pauseAudio = () => {
+    if (currentAudio && !currentAudio.paused) {
+      currentAudio.pause();
       setIsPaused(true);
     }
   };
 
-  const resumeSpeech = () => {
-    if (window.speechSynthesis.paused) {
-      window.speechSynthesis.resume();
+  const resumeAudio = () => {
+    if (currentAudio && currentAudio.paused) {
+      currentAudio.play();
       setIsPaused(false);
     }
   };
 
-  const stopSpeech = () => {
-    window.speechSynthesis.cancel();
-    setIsSpeaking(false);
-    setIsPaused(false);
+  const stopAudio = () => {
+    if (currentAudio) {
+      currentAudio.pause();
+      setCurrentAudio(null);
+      setIsSpeaking(false);
+      setIsPaused(false);
+    }
   };
 
   // Autocomplete suggestions
@@ -747,17 +756,14 @@ export default function BibleLookup() {
                       {verse.version}
                     </Badge>
                     
-                    {/* Audio Controls */}
-                    {speechSupported && (
+                    {/* Premium Audio Controls */}
+                    {isBibleTTSEnabled && elevenLabsAvailable && (
                       <div className="flex items-center space-x-2">
-                        {/* Voice Selector */}
+                        {/* Premium Voice Selector */}
                         {availableVoices.length > 0 && (
                           <Select 
-                            value={selectedVoice?.name || ''} 
-                            onValueChange={(voiceName) => {
-                              const voice = availableVoices.find(v => v.name === voiceName);
-                              if (voice) setSelectedVoice(voice);
-                            }}
+                            value={selectedVoice} 
+                            onValueChange={setSelectedVoice}
                           >
                             <SelectTrigger className="w-32 h-8">
                               <div className="flex items-center space-x-1">
@@ -767,10 +773,10 @@ export default function BibleLookup() {
                             </SelectTrigger>
                             <SelectContent>
                               {availableVoices.map((voice) => (
-                                <SelectItem key={voice.name} value={voice.name}>
+                                <SelectItem key={voice.voice_id} value={voice.voice_id}>
                                   <div className="flex flex-col">
                                     <span className="text-sm">{voice.name}</span>
-                                    <span className="text-xs text-gray-500">{voice.lang}</span>
+                                    <span className="text-xs text-purple-600">{voice.description}</span>
                                   </div>
                                 </SelectItem>
                               ))}
@@ -783,10 +789,15 @@ export default function BibleLookup() {
                             variant="outline"
                             size="sm"
                             onClick={() => speakVerse(verse)}
-                            className="flex items-center space-x-1 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-                            title={`Listen to verse${selectedVoice ? ` (${selectedVoice.name})` : ''}`}
+                            disabled={isLoadingTTS}
+                            className="flex items-center space-x-1 text-purple-600 hover:text-purple-700 hover:bg-purple-50 border-purple-300"
+                            title="Listen with premium voice"
                           >
-                            <Volume2 className="w-4 h-4" />
+                            {isLoadingTTS ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <Volume2 className="w-4 h-4" />
+                            )}
                             <span className="hidden sm:inline">Listen</span>
                           </Button>
                         ) : (
@@ -795,7 +806,7 @@ export default function BibleLookup() {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={resumeSpeech}
+                                onClick={resumeAudio}
                                 className="flex items-center space-x-1 text-green-600 hover:text-green-700 hover:bg-green-50"
                                 title="Resume"
                               >
@@ -806,7 +817,7 @@ export default function BibleLookup() {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={pauseSpeech}
+                                onClick={pauseAudio}
                                 className="flex items-center space-x-1 text-amber-600 hover:text-amber-700 hover:bg-amber-50"
                                 title="Pause"
                               >
@@ -817,7 +828,7 @@ export default function BibleLookup() {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={stopSpeech}
+                              onClick={stopAudio}
                               className="flex items-center space-x-1 text-red-600 hover:text-red-700 hover:bg-red-50"
                               title="Stop"
                             >
