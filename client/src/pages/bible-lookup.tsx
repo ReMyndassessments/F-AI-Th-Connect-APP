@@ -100,18 +100,14 @@ export default function BibleLookup() {
 
   const loadElevenLabsVoices = async () => {
     try {
-      console.log('Loading ElevenLabs voices...');
       const voicesResponse = await elevenLabsClient.getAvailableVoices();
-      console.log('Voices response:', voicesResponse);
       
       if (voicesResponse && voicesResponse.available && Array.isArray(voicesResponse.voices)) {
-        console.log('ElevenLabs voices loaded successfully:', voicesResponse.voices.length);
         setElevenLabsAvailable(true);
         setAvailableVoices(voicesResponse.voices);
         // Default to Bella (gentle female voice)
         setSelectedVoice('EXAVITQu4vr4xnSDxMaL');
       } else {
-        console.warn('ElevenLabs voices not available:', voicesResponse);
         setElevenLabsAvailable(false);
       }
     } catch (error) {
@@ -122,12 +118,7 @@ export default function BibleLookup() {
 
   // Premium TTS functions using ElevenLabs
   const speakVerse = async (verseData: BibleVerse) => {
-    console.log('Speak verse called. ElevenLabs available:', elevenLabsAvailable);
-    console.log('Feature flag enabled:', isBibleTTSEnabled);
-    console.log('Available voices:', availableVoices.length);
-    
     if (!elevenLabsAvailable) {
-      console.error('ElevenLabs not available');
       toast({
         title: "Premium TTS Unavailable",
         description: "ElevenLabs voice service is not available",
