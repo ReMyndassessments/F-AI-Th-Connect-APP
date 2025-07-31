@@ -27,6 +27,17 @@ interface GameState {
   attempts: number;
 }
 
+interface GameSession {
+  games: BibleGame[];
+  currentQuestionIndex: number;
+  totalQuestions: number;
+  sessionScore: number;
+  sessionStarted: number;
+  questionsAnswered: number;
+  correctAnswers: number;
+  isSessionActive: boolean;
+}
+
 export default function BibleGames() {
   const [, setLocation] = useLocation();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -40,6 +51,17 @@ export default function BibleGames() {
     isAnswered: false,
     isCorrect: false,
     attempts: 0
+  });
+
+  const [gameSession, setGameSession] = useState<GameSession>({
+    games: [],
+    currentQuestionIndex: 0,
+    totalQuestions: 5, // Default 5 questions per session
+    sessionScore: 0,
+    sessionStarted: 0,
+    questionsAnswered: 0,
+    correctAnswers: 0,
+    isSessionActive: false
   });
 
   const { toast } = useToast();
@@ -81,7 +103,40 @@ export default function BibleGames() {
     }
   });
 
-  const startNewGame = () => {
+  const startNewGameSession = (questionsCount: number = 5) => {
+    if (!games || games.length === 0) return;
+    
+    // Select random games for the session
+    const shuffledGames = [...games].sort(() => Math.random() - 0.5);
+    const sessionGames = shuffledGames.slice(0, Math.min(questionsCount, games.length));
+    
+    setGameSession({
+      games: sessionGames,
+      currentQuestionIndex: 0,
+      totalQuestions: sessionGames.length,
+      sessionScore: 0,
+      sessionStarted: Date.now(),
+      questionsAnswered: 0,
+      correctAnswers: 0,
+      isSessionActive: true
+    });
+
+    // Start first question
+    if (sessionGames.length > 0) {
+      setGameState({
+        currentGame: sessionGames[0],
+        userAnswer: '',
+        showHint: false,
+        hintIndex: 0,
+        timeStarted: Date.now(),
+        isAnswered: false,
+        isCorrect: false,
+        attempts: 0
+      });
+    }
+  };
+
+  const startSingleGame = () => {
     if (!games || games.length === 0) return;
     
     const randomGame = games[Math.floor(Math.random() * games.length)];
@@ -94,6 +149,18 @@ export default function BibleGames() {
       isAnswered: false,
       isCorrect: false,
       attempts: 0
+    });
+
+    // Reset session for single game
+    setGameSession({
+      games: [randomGame],
+      currentQuestionIndex: 0,
+      totalQuestions: 1,
+      sessionScore: 0,
+      sessionStarted: Date.now(),
+      questionsAnswered: 0,
+      correctAnswers: 0,
+      isSessionActive: true
     });
   };
 
@@ -155,6 +222,14 @@ export default function BibleGames() {
         attempts
       });
 
+      // Update session progress
+      setGameSession(prev => ({
+        ...prev,
+        sessionScore: prev.sessionScore + score,
+        questionsAnswered: prev.questionsAnswered + 1,
+        correctAnswers: prev.correctAnswers + 1
+      }));
+
       setGameState(prev => ({ ...prev, isAnswered: true, isCorrect: true }));
       
       toast({
@@ -163,11 +238,26 @@ export default function BibleGames() {
       });
     } else {
       setGameState(prev => ({ ...prev, attempts }));
-      toast({
-        title: "Not quite right",
-        description: "Try again! Use a hint if you need help.",
-        variant: "destructive",
-      });
+      
+      // After 3 wrong attempts, update session for incorrect answer
+      if (attempts >= 3) {
+        setGameSession(prev => ({
+          ...prev,
+          questionsAnswered: prev.questionsAnswered + 1
+        }));
+        setGameState(prev => ({ ...prev, isAnswered: true, isCorrect: false }));
+        toast({
+          title: "Answer revealed",
+          description: `The correct answer was: ${gameState.currentGame.correctAnswer}`,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Not quite right",
+          description: "Try again! Use a hint if you need help.",
+          variant: "destructive",
+        });
+      }
     }
   };
 
@@ -184,6 +274,35 @@ export default function BibleGames() {
     }
   };
 
+  const nextQuestion = () => {
+    if (!gameSession.isSessionActive || gameSession.currentQuestionIndex >= gameSession.totalQuestions - 1) {
+      // Session complete
+      setGameSession(prev => ({ ...prev, isSessionActive: false }));
+      const accuracy = Math.round((gameSession.correctAnswers / gameSession.questionsAnswered) * 100);
+      toast({
+        title: "Session Complete! 🏆",
+        description: `Final Score: ${gameSession.sessionScore} points (${accuracy}% accuracy)`,
+      });
+      return;
+    }
+
+    // Move to next question
+    const nextIndex = gameSession.currentQuestionIndex + 1;
+    const nextGame = gameSession.games[nextIndex];
+    
+    setGameSession(prev => ({ ...prev, currentQuestionIndex: nextIndex }));
+    setGameState({
+      currentGame: nextGame,
+      userAnswer: '',
+      showHint: false,
+      hintIndex: 0,
+      timeStarted: Date.now(),
+      isAnswered: false,
+      isCorrect: false,
+      attempts: 0
+    });
+  };
+
   const resetGame = () => {
     setGameState({
       currentGame: null,
@@ -194,6 +313,16 @@ export default function BibleGames() {
       isAnswered: false,
       isCorrect: false,
       attempts: 0
+    });
+    setGameSession({
+      games: [],
+      currentQuestionIndex: 0,
+      totalQuestions: 5,
+      sessionScore: 0,
+      sessionStarted: 0,
+      questionsAnswered: 0,
+      correctAnswers: 0,
+      isSessionActive: false
     });
   };
 
@@ -340,18 +469,54 @@ export default function BibleGames() {
                   </Select>
                 </div>
                 <div className="flex items-end">
-                  <Button 
-                    onClick={startNewGame} 
-                    disabled={!games || games.length === 0 || isLoading}
-                    className="w-full faith-button-primary touch-target mobile-tap"
-                  >
-                  <Play className="w-4 h-4 mr-2" />
-                  Start New Game
-                </Button>
+                  <div className="flex flex-col gap-2">
+                    <Button 
+                      onClick={() => startNewGameSession(5)} 
+                      disabled={!games || games.length === 0 || isLoading}
+                      className="w-full faith-button-primary touch-target mobile-tap"
+                    >
+                      <Play className="w-4 h-4 mr-2" />
+                      Start 5-Question Quiz
+                    </Button>
+                    <Button 
+                      onClick={startSingleGame} 
+                      disabled={!games || games.length === 0 || isLoading}
+                      variant="outline"
+                      className="w-full touch-target mobile-tap"
+                    >
+                      <Shuffle className="w-4 h-4 mr-2" />
+                      Single Question
+                    </Button>
+                  </div>
               </div>
             </div>
           </CardContent>
         </Card>
+
+          {/* Session Progress */}
+          {gameSession.isSessionActive && gameSession.totalQuestions > 1 && (
+            <Card className="mb-4 bg-gradient-to-r from-blue-50 to-purple-50 border-0 shadow-sm">
+              <CardContent className="py-4">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-gray-700">
+                    Question {gameSession.currentQuestionIndex + 1} of {gameSession.totalQuestions}
+                  </span>
+                  <span className="text-sm font-medium text-blue-600">
+                    Score: {gameSession.sessionScore} pts
+                  </span>
+                </div>
+                <div className="flex items-center gap-4">
+                  <Progress 
+                    value={(gameSession.questionsAnswered / gameSession.totalQuestions) * 100} 
+                    className="flex-1 h-2"
+                  />
+                  <span className="text-xs text-gray-500 whitespace-nowrap">
+                    {gameSession.correctAnswers}/{gameSession.questionsAnswered} correct
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Current Game */}
           {gameState.currentGame && (
@@ -499,13 +664,23 @@ export default function BibleGames() {
                     </div>
                     
                     <div className="flex flex-col sm:flex-row gap-3">
-                      <Button 
-                        onClick={startNewGame}
-                        className="faith-button-primary touch-target mobile-tap"
-                      >
-                        <Play className="w-4 h-4 mr-2" />
-                        Next Game
-                      </Button>
+                      {gameSession.isSessionActive && gameSession.currentQuestionIndex < gameSession.totalQuestions - 1 ? (
+                        <Button 
+                          onClick={nextQuestion}
+                          className="faith-button-primary touch-target mobile-tap"
+                        >
+                          <Play className="w-4 h-4 mr-2" />
+                          Next Question ({gameSession.currentQuestionIndex + 2}/{gameSession.totalQuestions})
+                        </Button>
+                      ) : (
+                        <Button 
+                          onClick={() => startNewGameSession(5)}
+                          className="faith-button-primary touch-target mobile-tap"
+                        >
+                          <Play className="w-4 h-4 mr-2" />
+                          New Quiz
+                        </Button>
+                      )}
                       <Button 
                         variant="outline" 
                         onClick={resetGame}
@@ -553,14 +728,25 @@ export default function BibleGames() {
                     <p className="text-gray-600 mb-6 text-sm sm:text-base max-w-md mx-auto leading-relaxed">
                       {games.length} engaging Bible games are ready for you. Test your knowledge and grow in faith!
                     </p>
-                    <Button 
-                      onClick={startNewGame} 
-                      size="lg"
-                      className="faith-button-primary text-base sm:text-lg px-6 sm:px-8 py-3 touch-target mobile-tap"
-                    >
-                      <Play className="w-5 h-5 mr-2" />
-                      Start Random Game
-                    </Button>
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                      <Button 
+                        onClick={() => startNewGameSession(5)} 
+                        size="lg"
+                        className="faith-button-primary text-base sm:text-lg px-6 sm:px-8 py-3 touch-target mobile-tap"
+                      >
+                        <Play className="w-5 h-5 mr-2" />
+                        Start 5-Question Quiz
+                      </Button>
+                      <Button 
+                        onClick={startSingleGame} 
+                        size="lg"
+                        variant="outline"
+                        className="text-base sm:text-lg px-6 sm:px-8 py-3 touch-target mobile-tap"
+                      >
+                        <Shuffle className="w-5 h-5 mr-2" />
+                        Random Single Game
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
