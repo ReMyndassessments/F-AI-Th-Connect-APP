@@ -171,6 +171,189 @@ export const sampleBibleGames: InsertBibleGame[] = [
     category: 'verses',
     scripture: 'Joshua 1:9',
     points: 20
+  },
+
+  // Additional Memory Verse Games
+  {
+    type: 'memory_verse',
+    title: 'Easy Memory Verse',
+    question: 'Complete this beloved verse: "For God so loved the world that he gave his one and only _____, that whoever believes in him shall not perish but have eternal life."',
+    correctAnswer: 'Son',
+    hints: JSON.stringify([
+      'This is John 3:16',
+      'It refers to Jesus',
+      'God\'s only begotten'
+    ]),
+    difficulty: 'easy',
+    category: 'verses',
+    scripture: 'John 3:16',
+    points: 10
+  },
+  {
+    type: 'memory_verse',
+    title: 'Hard Memory Verse',
+    question: 'Complete this challenging verse: "And we know that in all things God works for the _____ of those who love him, who have been called according to his purpose."',
+    correctAnswer: 'good',
+    hints: JSON.stringify([
+      'This is Romans 8:28',
+      'It\'s the opposite of bad',
+      'God brings positive outcomes'
+    ]),
+    difficulty: 'hard',
+    category: 'verses',
+    scripture: 'Romans 8:28',
+    points: 25
+  },
+
+  // More Scripture Scramble Games
+  {
+    type: 'scramble',
+    title: 'Medium Scripture Scramble',
+    question: 'Unscramble this verse: "Peace be with you still and know that I am God"',
+    correctAnswer: 'Be still and know that I am God',
+    hints: JSON.stringify([
+      'This is from Psalm 46:10',
+      'It\'s about being calm and quiet',
+      'It\'s about recognizing God\'s authority'
+    ]),
+    difficulty: 'medium',
+    category: 'verses',
+    scripture: 'Psalm 46:10',
+    points: 18
+  },
+  {
+    type: 'scramble',
+    title: 'Hard Character Scramble',
+    question: 'Unscramble this biblical name: HEZARIANBUCH',
+    correctAnswer: 'Nebuchadnezzar',
+    hints: JSON.stringify([
+      'He was a Babylonian king',
+      'He conquered Jerusalem',
+      'Daniel interpreted his dreams'
+    ]),
+    difficulty: 'hard',
+    category: 'characters',
+    points: 30
+  },
+
+  // Bible Books Games
+  {
+    type: 'fill_blank',
+    title: 'Bible Books Easy',
+    question: 'Which book comes after Matthew in the New Testament?',
+    correctAnswer: 'Mark',
+    hints: JSON.stringify([
+      'It\'s one of the four Gospels',
+      'Written by a companion of Peter',
+      'Shortest Gospel'
+    ]),
+    difficulty: 'easy',
+    category: 'books',
+    points: 10
+  },
+  {
+    type: 'scramble',
+    title: 'Scrambled Bible Book',
+    question: 'Unscramble this Bible book: SISENGE',
+    correctAnswer: 'Genesis',
+    hints: JSON.stringify([
+      'First book of the Bible',
+      'Tells the story of creation',
+      'Contains stories of Adam, Noah, Abraham'
+    ]),
+    difficulty: 'medium',
+    category: 'books',
+    points: 15
+  },
+  {
+    type: 'character_guess',
+    title: 'Bible Book Challenge',
+    question: 'In which book would you find the story of the walls of Jericho falling down?',
+    correctAnswer: 'Joshua',
+    hints: JSON.stringify([
+      'It\'s named after Moses\' successor',
+      'Contains stories of conquering the Promised Land',
+      'The trumpets played a key role'
+    ]),
+    difficulty: 'hard',
+    category: 'books',
+    points: 22
+  },
+
+  // Bible Events Games
+  {
+    type: 'fill_blank',
+    title: 'Biblical Events Easy',
+    question: 'What did God create on the first day?',
+    correctAnswer: 'light',
+    hints: JSON.stringify([
+      'It\'s the opposite of darkness',
+      'God said "Let there be..."',
+      'It was good'
+    ]),
+    difficulty: 'easy',
+    category: 'events',
+    points: 8
+  },
+  {
+    type: 'character_guess',
+    title: 'Biblical Events Medium',
+    question: 'What miracle did Jesus perform at the wedding in Cana?',
+    correctAnswer: 'turned water into wine',
+    hints: JSON.stringify([
+      'It was his first recorded miracle',
+      'It happened at a celebration',
+      'He transformed one liquid into another'
+    ]),
+    difficulty: 'medium',
+    category: 'events',
+    points: 16
+  },
+  {
+    type: 'memory_verse',
+    title: 'Creation Memory Verse',
+    question: 'Complete: "In the beginning God created the _____ and the earth."',
+    correctAnswer: 'heavens',
+    hints: JSON.stringify([
+      'This is Genesis 1:1',
+      'It\'s above the earth',
+      'Where the stars are'
+    ]),
+    difficulty: 'easy',
+    category: 'events',
+    scripture: 'Genesis 1:1',
+    points: 10
+  },
+
+  // More Places Games
+  {
+    type: 'scramble',
+    title: 'Biblical Places',
+    question: 'Unscramble this biblical city: MESHLUREJA',
+    correctAnswer: 'Jerusalem',
+    hints: JSON.stringify([
+      'The holy city',
+      'David made it his capital',
+      'Site of the Temple'
+    ]),
+    difficulty: 'medium',
+    category: 'places',
+    points: 18
+  },
+  {
+    type: 'memory_verse',
+    title: 'Places Memory Verse',
+    question: 'Complete: "Pray for the peace of _____: May those who love you be secure."',
+    correctAnswer: 'Jerusalem',
+    hints: JSON.stringify([
+      'This is Psalm 122:6',
+      'It\'s the holy city',
+      'Center of Jewish worship'
+    ]),
+    difficulty: 'medium',
+    category: 'places',
+    scripture: 'Psalm 122:6',
+    points: 16
   }
 ];
 
