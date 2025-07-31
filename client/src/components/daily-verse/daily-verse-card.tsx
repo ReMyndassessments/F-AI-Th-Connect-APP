@@ -203,51 +203,54 @@ export default function DailyVerseCard({ variant = "default", className = "" }: 
 
   return (
     <Card className={`border-blue-100 bg-gradient-to-br from-blue-50 via-white to-amber-50 ${className}`}>
-      <CardContent className="p-6">
-        <div className="flex items-center justify-between mb-4">
+      <CardContent className="p-4 sm:p-6">
+        {/* Header - Mobile Optimized */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-2 sm:space-y-0">
           <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-amber-500 rounded-full flex items-center justify-center">
-              <BookOpen className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-amber-500 rounded-full flex items-center justify-center">
+              <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">Today's Memory Verse</h3>
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900">Today's Memory Verse</h3>
               <p className="text-sm text-gray-600">{todayDate}</p>
             </div>
           </div>
-          <Badge variant="outline" className="bg-white border-blue-200 text-blue-700">
+          <Badge variant="outline" className="bg-white border-blue-200 text-blue-700 text-xs sm:text-sm self-start sm:self-auto">
             {todaysVerse.theme}
           </Badge>
         </div>
 
-        <blockquote className="text-gray-700 text-lg italic mb-4 leading-relaxed">
+        {/* Verse Text - Mobile Enhanced */}
+        <blockquote className="text-gray-700 text-base sm:text-lg italic mb-4 leading-relaxed px-2 sm:px-0">
           "{todaysVerse.text}"
         </blockquote>
 
-        <div className="flex items-center justify-between">
-          <p className="text-base font-semibold text-blue-600">
+        {/* Reference and Actions - Mobile Stack */}
+        <div className="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm sm:text-base font-semibold text-blue-600 text-center sm:text-left">
             {todaysVerse.reference}
           </p>
-          <div className="flex space-x-2">
-            {/* TTS Controls - Only show if feature flag enabled */}
+          <div className="flex flex-wrap justify-center sm:justify-end gap-2 sm:space-x-2 sm:gap-0">
+            {/* TTS Controls - Mobile Enhanced */}
             {isBibleTTSEnabled && (
               <>
-                {/* Voice Settings */}
+                {/* Voice Settings - Mobile Optimized */}
                 {availableVoices.length > 0 && (
               <div className="relative">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => setShowVoiceSettings(!showVoiceSettings)}
-                  className="p-1 h-8 w-8"
+                  className="p-2 h-9 w-9 sm:p-1 sm:h-8 sm:w-8 touch-target mobile-tap"
                 >
-                  <Settings className="h-3 w-3" />
+                  <Settings className="h-4 w-4 sm:h-3 sm:w-3" />
                 </Button>
                 
                 {showVoiceSettings && (
-                  <div className="absolute right-0 bottom-10 z-10 bg-white border border-gray-200 rounded-lg shadow-lg p-3 min-w-[200px]">
+                  <div className="absolute right-0 bottom-12 sm:bottom-10 z-10 bg-white border border-gray-200 rounded-lg shadow-lg p-3 min-w-[200px]">
                     <p className="text-xs font-medium text-gray-700 mb-2">Premium Voice:</p>
                     <Select value={selectedVoice} onValueChange={setSelectedVoice}>
-                      <SelectTrigger className="w-full h-8 text-xs">
+                      <SelectTrigger className="w-full h-9 sm:h-8 text-xs">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -263,13 +266,13 @@ export default function DailyVerseCard({ variant = "default", className = "" }: 
               </div>
             )}
             
-            {/* Listen Button */}
+            {/* Listen Button - Mobile Enhanced */}
             <Button
               variant="outline"
               size="sm"
               onClick={handleTTSToggle}
               disabled={isLoadingTTS}
-              className="border-purple-200 text-purple-600 hover:bg-purple-50"
+              className="border-purple-200 text-purple-600 hover:bg-purple-50 h-9 sm:h-8 px-3 sm:px-2 text-xs sm:text-sm touch-target mobile-tap"
             >
               {isLoadingTTS ? (
                 <Loader2 className="w-4 h-4 mr-1 animate-spin" />
@@ -278,35 +281,42 @@ export default function DailyVerseCard({ variant = "default", className = "" }: 
               ) : (
                 <Sparkles className="w-4 h-4 mr-1" />
               )}
-              {isLoadingTTS ? 'Loading...' : isPlaying ? 'Pause' : 'Listen'}
+              <span className="hidden sm:inline">{isLoadingTTS ? 'Loading...' : isPlaying ? 'Pause' : 'Listen'}</span>
+              <span className="sm:hidden">{isLoadingTTS ? '...' : isPlaying ? '⏸️' : '🔊'}</span>
             </Button>
               </>
             )}
             
+            {/* Copy Button - Mobile Enhanced */}
             <Button
               variant="outline"
               size="sm"
               onClick={handleCopyVerse}
-              className="border-blue-200 text-blue-600 hover:bg-blue-50"
+              className="border-blue-200 text-blue-600 hover:bg-blue-50 h-9 sm:h-8 px-3 sm:px-2 text-xs sm:text-sm touch-target mobile-tap"
             >
               <Copy className="w-4 h-4 mr-1" />
-              Copy
+              <span className="hidden sm:inline">Copy</span>
+              <span className="sm:hidden">📋</span>
             </Button>
+            
+            {/* Share Button - Mobile Enhanced */}
             <Button
               variant="outline"
               size="sm"
               onClick={handleShareVerse}
               disabled={isSharing}
-              className="border-blue-200 text-blue-600 hover:bg-blue-50"
+              className="border-blue-200 text-blue-600 hover:bg-blue-50 h-9 sm:h-8 px-3 sm:px-2 text-xs sm:text-sm touch-target mobile-tap"
             >
               <Share2 className="w-4 h-4 mr-1" />
-              Share
+              <span className="hidden sm:inline">Share</span>
+              <span className="sm:hidden">📤</span>
             </Button>
           </div>
         </div>
 
+        {/* Footer - Mobile Optimized */}
         <div className="mt-4 pt-4 border-t border-blue-100">
-          <p className="text-xs text-gray-500 text-center">
+          <p className="text-xs text-gray-500 text-center leading-relaxed">
             Memory verses change daily • Meditate on God's Word
           </p>
         </div>
