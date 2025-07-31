@@ -39,7 +39,7 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
   const [elevenLabsVoices, setElevenLabsVoices] = useState<ElevenLabsVoice[]>([]);
   const [elevenLabsAvailable, setElevenLabsAvailable] = useState(false);
   const [selectedElevenLabsVoice, setSelectedElevenLabsVoice] = useState<string>('EXAVITQu4vr4xnSDxMaL'); // Default to Bella
-  const [usePremiumTTS, setUsePremiumTTS] = useState(false); // Default to browser, let user choose premium
+  const [usePremiumTTS, setUsePremiumTTS] = useState(true); // Default to premium only
   const [isGenerating, setIsGenerating] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   
@@ -143,113 +143,41 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
 
   // Text-to-speech functions
   const speakMessage = async () => {
-    // Use premium TTS if available and selected
-    if (usePremiumTTS && elevenLabsAvailable) {
+    // Use premium TTS only as requested
+    if (elevenLabsAvailable) {
       await speakWithElevenLabs();
       return;
     }
 
-    // Fall back to browser TTS
-    if (!speechSupported || !window.speechSynthesis) {
-      toast({
-        title: "Not supported",
-        description: "Text-to-speech is not supported in this browser",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Stop any current speech
-    window.speechSynthesis.cancel();
-
-    // Clean the message content by removing markdown and extra formatting
-    const cleanText = message.content
-      .replace(/\*\*(.*?)\*\*/g, '$1') // Remove bold markdown
-      .replace(/\*(.*?)\*/g, '$1') // Remove italic markdown
-      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Replace links with just text
-      .replace(/---/g, '') // Remove separator lines
-      .replace(/💙/g, '') // Remove emojis
-      .replace(/\n\s*\n/g, '\n') // Remove extra line breaks
-      .trim();
-
-    const utterance = new SpeechSynthesisUtterance(cleanText);
-    
-    // Configure speech for natural reading
-    utterance.rate = 0.75; // Slower for contemplative listening
-    utterance.pitch = 1.0;
-    utterance.volume = 1.0;
-    
-    // Use the selected voice
-    if (selectedVoice) {
-      utterance.voice = selectedVoice;
-    }
-    
-    // Event handlers
-    utterance.onstart = () => {
-      speechState.isSpeaking = true;
-      speechState.isPaused = false;
-      speechState.currentMessageId = message.id;
-      setIsSpeaking(true);
-      setIsPaused(false);
-    };
-    
-    utterance.onend = () => {
-      speechState.isSpeaking = false;
-      speechState.isPaused = false;
-      speechState.currentMessageId = null;
-      setIsSpeaking(false);
-      setIsPaused(false);
-      currentSpeechUtterance = null;
-    };
-    
-    utterance.onerror = () => {
-      speechState.isSpeaking = false;
-      speechState.isPaused = false;
-      speechState.currentMessageId = null;
-      setIsSpeaking(false);
-      setIsPaused(false);
-      currentSpeechUtterance = null;
-      toast({
-        title: "Speech error",
-        description: "Unable to read the message aloud",
-        variant: "destructive",
-      });
-    };
-
-    currentSpeechUtterance = utterance;
-    window.speechSynthesis.speak(utterance);
+    // Show error if premium TTS not available
+    toast({
+      title: "Premium TTS unavailable",
+      description: "ElevenLabs voices are not available. Please check your connection.",
+      variant: "destructive",
+    });
   };
 
   const pauseSpeech = () => {
-    if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
-      window.speechSynthesis.pause();
-      speechState.isPaused = true;
-      setIsPaused(true);
-    }
+    // Premium TTS pause handled by audio element
   };
 
   const resumeSpeech = () => {
-    if (window.speechSynthesis.paused) {
-      window.speechSynthesis.resume();
-      speechState.isPaused = false;
-      setIsPaused(false);
-    }
+    // Premium TTS resume handled by audio element
   };
 
   const stopSpeech = () => {
-    window.speechSynthesis.cancel();
+    // Stop premium TTS if playing
+    if (audioUrl) {
+      URL.revokeObjectURL(audioUrl);
+      setAudioUrl(null);
+    }
+    
+    // Reset speech state
     speechState.isSpeaking = false;
     speechState.isPaused = false;
     speechState.currentMessageId = null;
     setIsSpeaking(false);
     setIsPaused(false);
-    currentSpeechUtterance = null;
-    
-    // Also stop premium TTS if playing
-    if (audioUrl) {
-      URL.revokeObjectURL(audioUrl);
-      setAudioUrl(null);
-    }
   };
 
   // Premium TTS with ElevenLabs
@@ -288,9 +216,8 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
           description: "Falling back to browser TTS. Check your internet connection.",
           variant: "destructive",
         });
-        setUsePremiumTTS(false);
         setIsGenerating(false);
-        speakMessage(); // Fall back to browser TTS
+        // No fallback - premium only as requested
         return;
       }
 
@@ -302,7 +229,7 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
 
       // Play the audio
       const audio = new Audio(newAudioUrl);
-      audio.playbackRate = 0.75; // Slower for contemplation
+      audio.playbackRate = 1.0; // Regular speed as requested
       
       audio.onplay = () => {
         speechState.isSpeaking = true;
@@ -338,8 +265,7 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
         description: "Falling back to browser TTS",
         variant: "destructive",
       });
-      setUsePremiumTTS(false);
-      speakMessage(); // Fall back to browser TTS
+      // No fallback - premium only as requested
     } finally {
       setIsGenerating(false);
     }
@@ -386,68 +312,32 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
             F-AI-TH-Connect • {new Date(message.timestamp).toLocaleTimeString()}
           </p>
           
-          {/* Audio Controls for AI Messages */}
-          {(speechSupported || elevenLabsAvailable) && (
+          {/* Audio Controls for AI Messages - Premium Only */}
+          {elevenLabsAvailable && (
             <div className="flex items-center space-x-1">
-              {/* Premium TTS Toggle */}
-              {elevenLabsAvailable && (
-                <Button
-                  variant={usePremiumTTS ? "default" : "outline"}
-                  size="sm"
-                  className="h-6 px-2"
-                  onClick={() => setUsePremiumTTS(!usePremiumTTS)}
-                  title="Toggle premium vs browser TTS"
-                >
-                  <Sparkles className="w-2.5 h-2.5" />
-                  <span className="hidden sm:inline text-xs ml-1">
-                    {usePremiumTTS ? 'Premium' : 'Browser'}
-                  </span>
-                </Button>
-              )}
-
-              {/* Voice Selector */}
-              {(usePremiumTTS && elevenLabsAvailable ? elevenLabsVoices.length > 0 : availableVoices.length > 0) && (
+              {/* Voice Selector - Premium voices only */}
+              {elevenLabsVoices.length > 0 && (
                 <Select 
-                  value={usePremiumTTS && elevenLabsAvailable ? selectedElevenLabsVoice : (selectedVoice?.name || '')} 
-                  onValueChange={(value) => {
-                    if (usePremiumTTS && elevenLabsAvailable) {
-                      setSelectedElevenLabsVoice(value);
-                    } else {
-                      const voice = availableVoices.find(v => v.name === value);
-                      if (voice) setSelectedVoice(voice);
-                    }
-                  }}
+                  value={selectedElevenLabsVoice} 
+                  onValueChange={setSelectedElevenLabsVoice}
                 >
                   <SelectTrigger className="w-20 h-6 text-xs">
                     <div className="flex items-center space-x-1">
-                      <Settings className="w-2.5 h-2.5" />
+                      <Sparkles className="w-2.5 h-2.5 text-yellow-500" />
                       <span className="hidden sm:inline text-xs">Voice</span>
                     </div>
                   </SelectTrigger>
                   <SelectContent>
-                    {usePremiumTTS && elevenLabsAvailable ? (
-                      elevenLabsVoices.map((voice) => (
-                        <SelectItem key={voice.voice_id} value={voice.voice_id}>
-                          <div className="flex flex-col">
-                            <span className="text-xs font-medium">{voice.name}</span>
-                            <span className="text-xs text-gray-500">
-                              {voice.gender} • {voice.accent} • Premium
-                            </span>
-                          </div>
-                        </SelectItem>
-                      ))
-                    ) : (
-                      availableVoices.map((voice) => (
-                        <SelectItem key={voice.name} value={voice.name}>
-                          <div className="flex flex-col">
-                            <span className="text-xs">{voice.name}</span>
-                            <span className="text-xs text-gray-500">
-                              {voice.lang}
-                            </span>
-                          </div>
-                        </SelectItem>
-                      ))
-                    )}
+                    {elevenLabsVoices.map((voice) => (
+                      <SelectItem key={voice.voice_id} value={voice.voice_id}>
+                        <div className="flex flex-col">
+                          <span className="text-xs font-medium">{voice.name}</span>
+                          <span className="text-xs text-gray-500">
+                            {voice.gender} • {voice.accent} • Premium
+                          </span>
+                        </div>
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               )}
@@ -458,16 +348,10 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
                   size="sm"
                   onClick={speakMessage}
                   className="h-6 px-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-                  title={usePremiumTTS && elevenLabsAvailable ? "Listen with premium voice" : "Listen to AI response"}
+                  title="Listen with premium voice"
                 >
-                  {usePremiumTTS && elevenLabsAvailable ? (
-                    <Sparkles className="w-3 h-3 text-yellow-500" />
-                  ) : (
-                    <Volume2 className="w-3 h-3" />
-                  )}
-                  <span className="hidden sm:inline text-xs ml-1">
-                    {usePremiumTTS && elevenLabsAvailable ? 'Premium' : 'Listen'}
-                  </span>
+                  <Sparkles className="w-3 h-3 text-yellow-500" />
+                  <span className="hidden sm:inline text-xs ml-1">Listen</span>
                 </Button>
               ) : isGenerating ? (
                 <Button
