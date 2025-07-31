@@ -94,83 +94,85 @@ export default function Help() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-4">
+      {/* Header - Mobile Optimized */}
+      <header className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+          <div className="flex justify-between items-center h-14 sm:h-16">
+            <div className="flex items-center space-x-2 sm:space-x-4">
               <Button
                 variant="ghost"
                 onClick={() => setLocation("/")}
-                className="flex items-center space-x-2"
+                className="flex items-center space-x-1 sm:space-x-2 p-1 sm:p-2"
               >
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-amber-500 rounded-lg flex items-center justify-center">
-                  <MessageCircle className="w-5 h-5 text-white" />
+                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-500 to-amber-500 rounded-lg flex items-center justify-center">
+                  <MessageCircle className="w-3 h-3 sm:w-5 sm:h-5 text-white" />
                 </div>
-                <span className="text-xl font-bold faith-gradient-text">F-AI-TH-Connect</span>
+                <span className="text-lg sm:text-xl font-bold faith-gradient-text hidden xs:inline">F-AI-TH-Connect</span>
+                <span className="text-sm font-bold faith-gradient-text xs:hidden">F-AI-TH</span>
               </Button>
             </div>
             <Button
               onClick={() => setLocation("/")}
-              className="faith-button-primary"
+              className="faith-button-primary text-xs sm:text-sm px-2 sm:px-4 py-1 sm:py-2"
             >
-              Back to Home
+              <span className="hidden sm:inline">Back to Home</span>
+              <span className="sm:hidden">Home</span>
             </Button>
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
+      <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
+        <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8">
           {/* Main Content */}
           <div className="flex-1">
-            {/* Hero Section */}
-            <div className="text-center mb-12">
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                <HelpCircle className="w-8 h-8 text-white" />
+            {/* Hero Section - Mobile Optimized */}
+            <div className="text-center mb-6 sm:mb-8 lg:mb-12">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-blue-500 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+                <HelpCircle className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-white" />
               </div>
-              <h1 className="text-4xl font-bold faith-gradient-text mb-4">Help Center</h1>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold faith-gradient-text mb-3 sm:mb-4">Help Center</h1>
+              <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto px-2">
                 Find answers to your questions and learn how to make the most of your spiritual journey with F-AI-TH-Connect.
               </p>
             </div>
 
-            {/* Getting Started */}
-            <Card className="mb-8">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Book className="w-5 h-5 text-blue-500" />
+            {/* Getting Started - Mobile Optimized */}
+            <Card className="mb-4 sm:mb-6 lg:mb-8">
+              <CardHeader className="pb-3 sm:pb-4">
+                <CardTitle className="flex items-center space-x-2 text-lg sm:text-xl">
+                  <Book className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
                   <span>Getting Started</span>
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid md:grid-cols-2 gap-6">
+              <CardContent className="space-y-3 sm:space-y-4">
+                <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
                   <div className="flex items-start space-x-3">
-                    <MessageCircle className="w-5 h-5 text-blue-500 mt-1" />
+                    <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 mt-1 flex-shrink-0" />
                     <div>
-                      <h4 className="font-semibold mb-1">Start a Conversation</h4>
-                      <p className="text-sm text-gray-600">Type your spiritual questions or concerns in the chat interface for biblical guidance.</p>
+                      <h4 className="font-semibold mb-1 text-sm sm:text-base">Start a Conversation</h4>
+                      <p className="text-xs sm:text-sm text-gray-600">Type your spiritual questions or concerns in the chat interface for biblical guidance.</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
-                    <Upload className="w-5 h-5 text-green-500 mt-1" />
+                    <Upload className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mt-1 flex-shrink-0" />
                     <div>
-                      <h4 className="font-semibold mb-1">Upload Documents</h4>
-                      <p className="text-sm text-gray-600">Upload files to create comprehensive Bible studies and spiritual content.</p>
+                      <h4 className="font-semibold mb-1 text-sm sm:text-base">Upload Documents</h4>
+                      <p className="text-xs sm:text-sm text-gray-600">Upload files to create comprehensive Bible studies and spiritual content.</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
-                    <Heart className="w-5 h-5 text-red-500 mt-1" />
+                    <Heart className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 mt-1 flex-shrink-0" />
                     <div>
-                      <h4 className="font-semibold mb-1">Share & Save</h4>
-                      <p className="text-sm text-gray-600">Copy, download, or share meaningful conversations with fellow believers.</p>
+                      <h4 className="font-semibold mb-1 text-sm sm:text-base">Share & Save</h4>
+                      <p className="text-xs sm:text-sm text-gray-600">Copy, download, or share meaningful conversations with fellow believers.</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
-                    <Settings className="w-5 h-5 text-purple-500 mt-1" />
+                    <Settings className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500 mt-1 flex-shrink-0" />
                     <div>
-                      <h4 className="font-semibold mb-1">Personalized Experience</h4>
-                      <p className="text-sm text-gray-600">Each conversation is tailored to provide relevant biblical wisdom for your situation.</p>
+                      <h4 className="font-semibold mb-1 text-sm sm:text-base">Personalized Experience</h4>
+                      <p className="text-xs sm:text-sm text-gray-600">Each conversation is tailored to provide relevant biblical wisdom for your situation.</p>
                     </div>
                   </div>
                 </div>
@@ -191,62 +193,62 @@ export default function Help() {
                   making it easy to discover what you can ask F-AI-TH-Connect.
                 </p>
                 
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <h4 className="font-semibold text-gray-800">How to Use:</h4>
-                    <ol className="text-sm text-gray-600 space-y-2">
+                <div className="grid lg:grid-cols-2 gap-4 sm:gap-6">
+                  <div className="space-y-3 sm:space-y-4">
+                    <h4 className="font-semibold text-gray-800 text-sm sm:text-base">How to Use:</h4>
+                    <ol className="text-xs sm:text-sm text-gray-600 space-y-2">
                       <li className="flex items-start space-x-2">
-                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">1</span>
+                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full mt-0.5 flex-shrink-0">1</span>
                         <span>Click the book icon (📖) next to the send button in the chat</span>
                       </li>
                       <li className="flex items-start space-x-2">
-                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">2</span>
+                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full mt-0.5 flex-shrink-0">2</span>
                         <span>Browse prompts by ministry category or use the search bar</span>
                       </li>
                       <li className="flex items-start space-x-2">
-                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">3</span>
+                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full mt-0.5 flex-shrink-0">3</span>
                         <span>Click any prompt to automatically fill your message box</span>
                       </li>
                       <li className="flex items-start space-x-2">
-                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">4</span>
+                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full mt-0.5 flex-shrink-0">4</span>
                         <span>Edit the prompt if needed, then send your message</span>
                       </li>
                     </ol>
                   </div>
                   
-                  <div className="space-y-4">
-                    <h4 className="font-semibold text-gray-800">Available Categories:</h4>
-                    <div className="grid grid-cols-2 gap-2 text-sm">
-                      <div className="bg-blue-50 p-2 rounded">
-                        <span className="font-medium text-blue-800">👥 Ministry Leadership</span>
+                  <div className="space-y-3 sm:space-y-4">
+                    <h4 className="font-semibold text-gray-800 text-sm sm:text-base">Available Categories:</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm">
+                      <div className="bg-blue-50 p-2 sm:p-3 rounded">
+                        <span className="font-medium text-blue-800 block">👥 Ministry Leadership</span>
                         <p className="text-blue-600 text-xs">Sermon prep, team guidance</p>
                       </div>
-                      <div className="bg-purple-50 p-2 rounded">
-                        <span className="font-medium text-purple-800">💪 Men's Ministry</span>
+                      <div className="bg-purple-50 p-2 sm:p-3 rounded">
+                        <span className="font-medium text-purple-800 block">💪 Men's Ministry</span>
                         <p className="text-purple-600 text-xs">Biblical manhood, fatherhood</p>
                       </div>
-                      <div className="bg-pink-50 p-2 rounded">
-                        <span className="font-medium text-pink-800">🌸 Women's Ministry</span>
+                      <div className="bg-pink-50 p-2 sm:p-3 rounded">
+                        <span className="font-medium text-pink-800 block">🌸 Women's Ministry</span>
                         <p className="text-pink-600 text-xs">Godly womanhood, mentoring</p>
                       </div>
-                      <div className="bg-green-50 p-2 rounded">
-                        <span className="font-medium text-green-800">🌍 Missions & Outreach</span>
+                      <div className="bg-green-50 p-2 sm:p-3 rounded">
+                        <span className="font-medium text-green-800 block">🌍 Missions & Outreach</span>
                         <p className="text-green-600 text-xs">Evangelism, community service</p>
                       </div>
-                      <div className="bg-yellow-50 p-2 rounded">
-                        <span className="font-medium text-yellow-800">🏛️ Church Planting</span>
+                      <div className="bg-yellow-50 p-2 sm:p-3 rounded">
+                        <span className="font-medium text-yellow-800 block">🏛️ Church Planting</span>
                         <p className="text-yellow-600 text-xs">Biblical foundation, leadership</p>
                       </div>
-                      <div className="bg-red-50 p-2 rounded">
-                        <span className="font-medium text-red-800">🙏 Health & Wellness</span>
+                      <div className="bg-red-50 p-2 sm:p-3 rounded">
+                        <span className="font-medium text-red-800 block">🙏 Health & Wellness</span>
                         <p className="text-red-600 text-xs">Biblical perspective on health</p>
                       </div>
-                      <div className="bg-indigo-50 p-2 rounded">
-                        <span className="font-medium text-indigo-800">📖 Personal Growth</span>
+                      <div className="bg-indigo-50 p-2 sm:p-3 rounded">
+                        <span className="font-medium text-indigo-800 block">📖 Personal Growth</span>
                         <p className="text-indigo-600 text-xs">Prayer, Bible study, stewardship</p>
                       </div>
-                      <div className="bg-orange-50 p-2 rounded">
-                        <span className="font-medium text-orange-800">🎯 Youth Ministry</span>
+                      <div className="bg-orange-50 p-2 sm:p-3 rounded">
+                        <span className="font-medium text-orange-800 block">🎯 Youth Ministry</span>
                         <p className="text-orange-600 text-xs">Discipling young people</p>
                       </div>
                     </div>
@@ -347,28 +349,30 @@ export default function Help() {
               </CardContent>
             </Card>
 
-            {/* FAQ Section */}
+            {/* FAQ Section - Mobile Optimized */}
             <Card>
-              <CardHeader>
-                <CardTitle>Frequently Asked Questions</CardTitle>
+              <CardHeader className="pb-3 sm:pb-4">
+                <CardTitle className="text-lg sm:text-xl">Frequently Asked Questions</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   {faqs.map((faq, index) => (
-                    <div key={index} className="border-b border-gray-100 last:border-b-0 pb-4 last:pb-0">
+                    <div key={index} className="border-b border-gray-100 last:border-b-0 pb-3 sm:pb-4 last:pb-0">
                       <button
                         onClick={() => toggleFAQ(index)}
-                        className="flex justify-between items-center w-full text-left hover:text-blue-600 transition-colors"
+                        className="flex justify-between items-center w-full text-left p-2 sm:p-3 hover:bg-gray-50 rounded-lg transition-colors"
                       >
-                        <h4 className="font-semibold pr-4">{faq.question}</h4>
+                        <h4 className="font-semibold pr-3 sm:pr-4 text-sm sm:text-base leading-tight">{faq.question}</h4>
                         {expandedFAQ === index ? (
-                          <ChevronUp className="w-5 h-5 text-gray-400" />
+                          <ChevronUp className="w-4 h-4 text-gray-400 flex-shrink-0" />
                         ) : (
-                          <ChevronDown className="w-5 h-5 text-gray-400" />
+                          <ChevronDown className="w-4 h-4 text-gray-400 flex-shrink-0" />
                         )}
                       </button>
                       {expandedFAQ === index && (
-                        <p className="text-gray-600 mt-2 leading-relaxed">{faq.answer}</p>
+                        <div className="mt-2 sm:mt-3 ml-2 sm:ml-3">
+                          <p className="text-gray-600 leading-relaxed text-xs sm:text-sm">{faq.answer}</p>
+                        </div>
                       )}
                     </div>
                   ))}
@@ -376,19 +380,19 @@ export default function Help() {
               </CardContent>
             </Card>
 
-            {/* Contact Support */}
-            <Card className="mt-8">
-              <CardHeader>
-                <CardTitle>Need More Help?</CardTitle>
+            {/* Contact Support - Mobile Optimized */}
+            <Card className="mt-4 sm:mt-6 lg:mt-8">
+              <CardHeader className="pb-3 sm:pb-4">
+                <CardTitle className="text-lg sm:text-xl">Need More Help?</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 mb-6">
+                <p className="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base">
                   If you can't find the answer you're looking for, we're here to help! Reach out to our support team.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                   <Button
                     onClick={() => setLocation("/contact")}
-                    className="faith-button-primary flex items-center space-x-2"
+                    className="faith-button-primary flex items-center justify-center space-x-2 w-full sm:w-auto"
                   >
                     <Mail className="w-4 h-4" />
                     <span>Contact Support</span>
@@ -396,7 +400,7 @@ export default function Help() {
                   <Button
                     variant="outline"
                     onClick={() => window.open("mailto:info@f-ai-th-connect.online", "_blank")}
-                    className="flex items-center space-x-2"
+                    className="flex items-center justify-center space-x-2 w-full sm:w-auto"
                   >
                     <Mail className="w-4 h-4" />
                     <span>Email Us Directly</span>
@@ -406,18 +410,18 @@ export default function Help() {
             </Card>
           </div>
 
-          {/* Sidebar */}
-          <div className="w-full lg:w-80 space-y-6">
+          {/* Sidebar - Mobile Optimized */}
+          <div className="w-full lg:w-80 space-y-4 sm:space-y-6">
             <DailyVerseCard />
             
             <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Quick Actions</CardTitle>
+              <CardHeader className="pb-3 sm:pb-4">
+                <CardTitle className="text-base sm:text-lg">Quick Actions</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
+              <CardContent className="space-y-2 sm:space-y-3">
                 <Button
                   onClick={() => setLocation("/chat")}
-                  className="w-full faith-button-primary justify-start"
+                  className="w-full faith-button-primary justify-center sm:justify-start text-sm sm:text-base py-2 sm:py-3"
                 >
                   <MessageCircle className="w-4 h-4 mr-2" />
                   Start New Chat
@@ -425,7 +429,7 @@ export default function Help() {
                 <Button
                   onClick={() => setLocation("/contact")}
                   variant="outline"
-                  className="w-full justify-start"
+                  className="w-full justify-center sm:justify-start text-sm sm:text-base py-2 sm:py-3"
                 >
                   <Phone className="w-4 h-4 mr-2" />
                   Contact Us
@@ -433,7 +437,7 @@ export default function Help() {
                 <Button
                   onClick={() => window.open("https://www.givesendgo.com/CodeandCoffeeforChrist", "_blank")}
                   variant="outline"
-                  className="w-full justify-start"
+                  className="w-full justify-center sm:justify-start text-sm sm:text-base py-2 sm:py-3"
                 >
                   <Heart className="w-4 h-4 mr-2" />
                   Support Ministry

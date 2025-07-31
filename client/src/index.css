@@ -218,6 +218,38 @@ body {
   /* Mobile tap highlights */
   .mobile-tap {
     -webkit-tap-highlight-color: rgba(59, 130, 246, 0.15);
+    touch-action: manipulation;
+  }
+  
+  /* Extra small screen utilities */
+  @media (max-width: 640px) {
+    .xs\:hidden {
+      display: none !important;
+    }
+    
+    .xs\:inline {
+      display: inline !important;
+    }
+    
+    .xs\:block {
+      display: block !important;
+    }
+    
+    .xs\:flex {
+      display: flex !important;
+    }
+    
+    /* Mobile button enhancements */
+    .mobile-buttons {
+      gap: 12px;
+    }
+    
+    .mobile-buttons button,
+    .mobile-buttons .button {
+      padding: 12px 16px;
+      font-size: 16px;
+      min-height: 48px;
+    }
   }
   
   /* Faith-themed button styles */

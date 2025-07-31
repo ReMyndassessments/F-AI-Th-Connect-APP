@@ -52,9 +52,9 @@
       "id": 7,
       "name": "tts_ai_responses",
       "description": "Enable premium text-to-speech for AI-generated spiritual guidance and biblical teachings.",
-      "enabled": true,
+      "enabled": false,
       "createdAt": "2025-07-31T05:02:58.090Z",
-      "updatedAt": "2025-07-31T05:02:58.090Z"
+      "updatedAt": "2025-07-31T05:06:39.933Z"
     },
     {
       "id": 8,
