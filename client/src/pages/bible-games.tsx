@@ -471,33 +471,114 @@ export default function BibleGames() {
             </Card>
           )}
 
-          {/* Available Games Welcome */}
-          {!gameState.currentGame && games && (
-            <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
-              <CardHeader className="pb-3 sm:pb-4">
-                <CardTitle className="flex items-center text-lg sm:text-xl text-center justify-center">
-                  <Award className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-purple-600" />
-                  Ready for Bible Study Fun?
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-6 sm:py-8">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-500 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Gamepad2 className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+          {/* Games Available */}
+          {!gameState.currentGame && games && games.length > 0 && (
+            <div className="space-y-6 sm:space-y-8">
+              {/* Quick Start Section */}
+              <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+                <CardHeader className="pb-3 sm:pb-4">
+                  <CardTitle className="flex items-center text-lg sm:text-xl text-center justify-center">
+                    <Award className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-purple-600" />
+                    Ready for Bible Study Fun?
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-center py-4 sm:py-6">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-500 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Gamepad2 className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+                    </div>
+                    <h3 className="text-xl sm:text-2xl font-bold mb-3 faith-gradient-text">Let's Begin!</h3>
+                    <p className="text-gray-600 mb-6 text-sm sm:text-base max-w-md mx-auto leading-relaxed">
+                      {games.length} engaging Bible games are ready for you. Test your knowledge and grow in faith!
+                    </p>
+                    <Button 
+                      onClick={startNewGame} 
+                      size="lg"
+                      className="faith-button-primary text-base sm:text-lg px-6 sm:px-8 py-3 touch-target mobile-tap"
+                    >
+                      <Play className="w-5 h-5 mr-2" />
+                      Start Random Game
+                    </Button>
                   </div>
-                  <h3 className="text-xl sm:text-2xl font-bold mb-3 faith-gradient-text">Let's Begin!</h3>
-                  <p className="text-gray-600 mb-6 text-sm sm:text-base max-w-md mx-auto leading-relaxed">
-                    {games.length} engaging Bible games are ready for you. Test your knowledge and grow in faith!
-                  </p>
-                  <Button 
-                    onClick={startNewGame} 
-                    size="lg"
-                    className="faith-button-primary text-base sm:text-lg px-6 sm:px-8 py-3 touch-target mobile-tap"
-                  >
-                    <Play className="w-5 h-5 mr-2" />
-                    Start Playing Now
-                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Browse All Games */}
+              <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+                <CardHeader className="pb-3 sm:pb-4">
+                  <CardTitle className="flex items-center text-lg sm:text-xl">
+                    <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-blue-500" />
+                    Browse All Games ({games.length})
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {games.map((game) => (
+                      <div
+                        key={game.id}
+                        className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow cursor-pointer bg-gradient-to-br from-gray-50 to-white"
+                        onClick={() => {
+                          setGameState({
+                            currentGame: game,
+                            userAnswer: '',
+                            showHint: false,
+                            hintIndex: 0,
+                            timeStarted: Date.now(),
+                            isAnswered: false,
+                            isCorrect: false,
+                            attempts: 0
+                          });
+                        }}
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center space-x-2">
+                            {getGameIcon(game.type)}
+                            <span className="font-medium text-sm text-gray-900">{game.title}</span>
+                          </div>
+                          <Badge className={`text-white text-xs ${getDifficultyColor(game.difficulty)}`}>
+                            {game.difficulty}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <Badge variant="outline" className="capitalize text-xs bg-blue-50 text-blue-700 border-blue-200">
+                            {game.category}
+                          </Badge>
+                          <div className="flex items-center text-xs text-gray-600">
+                            <Star className="w-3 h-3 mr-1" />
+                            {game.points} pts
+                          </div>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-2 line-clamp-2">
+                          {game.question.substring(0, 80)}...
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {/* No Games Found */}
+          {!gameState.currentGame && (!games || games.length === 0) && !isLoading && (
+            <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+              <CardContent className="text-center py-8">
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Gamepad2 className="w-8 h-8 text-gray-400" />
                 </div>
+                <h3 className="text-xl font-semibold mb-2">No Games Found</h3>
+                <p className="text-gray-600 mb-4">
+                  Try selecting different category and difficulty options above.
+                </p>
+                <Button 
+                  onClick={() => {
+                    setSelectedCategory('all');
+                    setSelectedDifficulty('all');
+                  }}
+                  variant="outline"
+                >
+                  Reset Filters
+                </Button>
               </CardContent>
             </Card>
           )}
