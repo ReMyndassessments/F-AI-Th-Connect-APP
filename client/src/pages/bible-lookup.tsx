@@ -83,24 +83,22 @@ export default function BibleLookup() {
       // Load voices when available
       const loadVoices = () => {
         const voices = window.speechSynthesis.getVoices();
-        setAvailableVoices(voices);
         
-        // Find the best English voice (prefer neural/natural voices)
-        const englishVoices = voices.filter(voice => 
-          voice.lang.startsWith('en') && voice.localService
+        // Filter to only the three specific Google voices
+        const allowedVoices = voices.filter(voice => 
+          voice.name === 'Google US English' ||
+          voice.name === 'Google UK English Female' ||
+          voice.name === 'Google UK English Male'
         );
         
-        // Prioritize voices with "neural", "natural", or female voices which tend to sound more pleasant
-        const preferredVoice = englishVoices.find(voice => 
-          voice.name.toLowerCase().includes('neural') ||
-          voice.name.toLowerCase().includes('natural') ||
-          voice.name.toLowerCase().includes('zira') ||
-          voice.name.toLowerCase().includes('susan') ||
-          voice.name.toLowerCase().includes('samantha') ||
-          voice.name.toLowerCase().includes('karen')
-        ) || englishVoices.find(voice => 
-          voice.name.toLowerCase().includes('female')
-        ) || englishVoices[0];
+        setAvailableVoices(allowedVoices);
+        
+        // Prefer the UK Female voice as default, then US English, then UK Male
+        const preferredVoice = allowedVoices.find(voice => 
+          voice.name === 'Google UK English Female'
+        ) || allowedVoices.find(voice => 
+          voice.name === 'Google US English'
+        ) || allowedVoices[0];
         
         if (preferredVoice) {
           setSelectedVoice(preferredVoice);
@@ -743,9 +741,7 @@ export default function BibleLookup() {
                               </div>
                             </SelectTrigger>
                             <SelectContent>
-                              {availableVoices
-                                .filter(voice => voice.lang.startsWith('en'))
-                                .map((voice) => (
+                              {availableVoices.map((voice) => (
                                 <SelectItem key={voice.name} value={voice.name}>
                                   <div className="flex flex-col">
                                     <span className="text-sm">{voice.name}</span>
