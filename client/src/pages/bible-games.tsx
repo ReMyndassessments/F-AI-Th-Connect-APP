@@ -481,17 +481,10 @@ export default function BibleGames() {
             </Card>
           )}
 
-          {/* Debug Info */}
-          {!isLoading && (
-            <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-              <p className="text-sm text-blue-800">
-                Debug: Found {games?.length || 0} games | Category: {selectedCategory} | Difficulty: {selectedDifficulty}
-              </p>
-            </div>
-          )}
+
 
           {/* Games Available */}
-          {!gameState.currentGame && games && games.length > 0 && (
+          {!gameState.currentGame && !isLoading && games && games.length > 0 && (
             <div className="space-y-6 sm:space-y-8">
               {/* Quick Start Section */}
               <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
