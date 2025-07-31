@@ -14,7 +14,14 @@ import {
   Highlighter,
   Star,
   Bookmark,
-  BookOpen
+  BookOpen,
+  Gamepad2,
+  Shuffle,
+  Users,
+  Volume2,
+  RefreshCw,
+  Clock,
+  Headphones
 } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "wouter";
@@ -81,6 +88,18 @@ const faqs: FAQItem[] = [
   {
     question: "How do I search for specific ministry topics in the prompt library?",
     answer: "Use the search bar at the top of the prompt library. Type keywords like 'prayer,' 'evangelism,' 'youth,' or 'Bible study' to find relevant prompts across all categories."
+  },
+  {
+    question: "What are Bible Games and how do I play them?",
+    answer: "Bible Games are interactive challenges to test your biblical knowledge! Navigate to 'Bible Games' in the menu, choose a category (Characters, Places, Verses, Books, Events) and difficulty level, then click any game card to start. You'll find 4 game types: Scripture Scramble, Fill-in-the-Blank, Character Guessing, and Memory Challenge."
+  },
+  {
+    question: "How does the Bible verse lookup work?",
+    answer: "Go to 'Bible Lookup' in the menu and use the dropdown menus to select your Bible version, book, chapter, and verse. The system supports multiple translations (KJV, WEB, ASV) and includes voice playback using premium AI voices. You can also save favorite verses and view your recent searches."
+  },
+  {
+    question: "What are the premium voices and how do I use them?",
+    answer: "F-AI-TH-Connect features three premium ElevenLabs AI voices (Adam, Bella, Grace) specifically chosen for spiritual content. You'll find voice playback buttons on Bible verses and AI responses. Just click the play button to hear Scripture or spiritual guidance read aloud - perfect for meditation or accessibility."
   }
 ];
 
@@ -268,6 +287,247 @@ export default function Help() {
               </CardContent>
             </Card>
 
+            {/* Bible Word Games Feature */}
+            <Card className="mb-8">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Gamepad2 className="w-5 h-5 text-purple-500" />
+                  <span>Bible Word Games - NEW!</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-gray-600 leading-relaxed">
+                  Test your biblical knowledge with 24+ engaging games across 4 different types, covering all difficulty levels 
+                  and ministry categories. Perfect for personal study, group activities, or educational purposes.
+                </p>
+                
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-gray-800">Game Types:</h4>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center space-x-2">
+                        <Shuffle className="w-4 h-4 text-blue-600" />
+                        <span className="font-medium">Scripture Scramble</span>
+                        <span className="text-gray-600">- Unscramble Bible words</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <BookOpen className="w-4 h-4 text-green-600" />
+                        <span className="font-medium">Fill-in-the-Blank</span>
+                        <span className="text-gray-600">- Complete Bible verses</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Users className="w-4 h-4 text-purple-600" />
+                        <span className="font-medium">Character Guessing</span>
+                        <span className="text-gray-600">- Identify Bible figures</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Star className="w-4 h-4 text-amber-600" />
+                        <span className="font-medium">Memory Challenge</span>
+                        <span className="text-gray-600">- Memorize key verses</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-gray-800">How to Play:</h4>
+                    <ol className="text-sm text-gray-600 space-y-2">
+                      <li className="flex items-start space-x-2">
+                        <span className="bg-purple-100 text-purple-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">1</span>
+                        <span>Navigate to "Bible Games" in the main menu</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <span className="bg-purple-100 text-purple-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">2</span>
+                        <span>Choose your category and difficulty level</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <span className="bg-purple-100 text-purple-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">3</span>
+                        <span>Click on any game card to start playing</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <span className="bg-purple-100 text-purple-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">4</span>
+                        <span>Use hints if needed and track your progress</span>
+                      </li>
+                    </ol>
+                  </div>
+                </div>
+                
+                <div className="grid sm:grid-cols-3 gap-3 text-xs">
+                  <div className="bg-blue-50 p-3 rounded text-center">
+                    <div className="font-semibold text-blue-800">Easy Games</div>
+                    <div className="text-blue-600">10 Points Each</div>
+                  </div>
+                  <div className="bg-amber-50 p-3 rounded text-center">
+                    <div className="font-semibold text-amber-800">Medium Games</div>
+                    <div className="text-amber-600">20 Points Each</div>
+                  </div>
+                  <div className="bg-red-50 p-3 rounded text-center">
+                    <div className="font-semibold text-red-800">Hard Games</div>
+                    <div className="text-red-600">30 Points Each</div>
+                  </div>
+                </div>
+                
+                <div className="bg-green-50 p-4 rounded-lg">
+                  <h5 className="font-semibold text-green-900 mb-2">Game Features:</h5>
+                  <ul className="text-sm text-green-800 space-y-1">
+                    <li>• 5 categories: Characters, Places, Verses, Books, Events</li>
+                    <li>• Progressive hint system for when you get stuck</li>
+                    <li>• Score tracking and personal statistics</li>
+                    <li>• Mobile-friendly interface perfect for any device</li>
+                    <li>• Close button (X) to easily exit and try different games</li>
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Bible Lookup Feature */}
+            <Card className="mb-8">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <BookOpen className="w-5 h-5 text-blue-500" />
+                  <span>Bible Verse Lookup</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-gray-600 leading-relaxed">
+                  Look up any Bible verse instantly with our comprehensive Bible lookup system. Features authentic translations, 
+                  voice playback, and mobile-friendly interface designed for Bible study participants.
+                </p>
+                
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-gray-800">How to Use:</h4>
+                    <ol className="text-sm text-gray-600 space-y-2">
+                      <li className="flex items-start space-x-2">
+                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">1</span>
+                        <span>Navigate to "Bible Lookup" in the main menu</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">2</span>
+                        <span>Select Bible version, book, chapter, and verse using dropdowns</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">3</span>
+                        <span>Click "Look Up Verse" to display the Scripture</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">4</span>
+                        <span>Use voice playback for audio Bible reading</span>
+                      </li>
+                    </ol>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-gray-800">Available Features:</h4>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center space-x-2">
+                        <Volume2 className="w-4 h-4 text-green-600" />
+                        <span className="font-medium">Premium Voice Playback</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RefreshCw className="w-4 h-4 text-blue-600" />
+                        <span className="font-medium">Multiple Bible Versions</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Clock className="w-4 h-4 text-purple-600" />
+                        <span className="font-medium">Recent Searches History</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Bookmark className="w-4 h-4 text-amber-600" />
+                        <span className="font-medium">Favorite Verses (Save up to 20)</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Star className="w-4 h-4 text-yellow-600" />
+                        <span className="font-medium">Popular Verses Quick Access</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <h5 className="font-semibold text-blue-900 mb-2">Bible Versions Available:</h5>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm text-blue-800">
+                    <div>• King James Version (KJV)</div>
+                    <div>• World English Bible (WEB)</div>
+                    <div>• American Standard Version (ASV)</div>
+                  </div>
+                  <p className="text-sm text-blue-700 mt-2">
+                    All translations are authentic and sourced from official Bible API services.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Premium Text-to-Speech Feature */}
+            <Card className="mb-8">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Volume2 className="w-5 h-5 text-green-500" />
+                  <span>Premium Voice Playback</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-gray-600 leading-relaxed">
+                  Experience Scripture and spiritual guidance through high-quality AI voices specifically chosen for Christian content. 
+                  Perfect for meditation, accessibility, or hands-free listening during prayer time.
+                </p>
+                
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-gray-800">Premium Voices:</h4>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                        <span className="font-medium">Adam</span>
+                        <span className="text-gray-600">- Deep, thoughtful male voice</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
+                        <span className="font-medium">Bella</span>
+                        <span className="text-gray-600">- Gentle, nurturing female voice</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-3 h-3 bg-amber-500 rounded-full"></div>
+                        <span className="font-medium">Grace</span>
+                        <span className="text-gray-600">- Clear, inspiring female voice</span>
+                      </div>
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      Powered by ElevenLabs AI for natural, spiritual-focused audio experience.
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-gray-800">Where You'll Hear Voices:</h4>
+                    <ul className="text-sm text-gray-600 space-y-2">
+                      <li className="flex items-start space-x-2">
+                        <BookOpen className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                        <span>Bible verse lookup and daily memory verses</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <MessageCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                        <span>AI spiritual guidance and biblical responses</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <Headphones className="w-4 h-4 text-purple-500 mt-0.5 flex-shrink-0" />
+                        <span>Hands-free listening during prayer or meditation</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                
+                <div className="bg-green-50 p-4 rounded-lg">
+                  <h5 className="font-semibold text-green-900 mb-2">Voice Features:</h5>
+                  <ul className="text-sm text-green-800 space-y-1">
+                    <li>• Premium quality voices specifically chosen for spiritual content</li>
+                    <li>• Regular 1.0x playback speed optimized for contemplation</li>
+                    <li>• Intelligent content processing removes formatting for clear audio</li>
+                    <li>• Long content automatically split for seamless listening</li>
+                    <li>• Simple play/pause/stop controls in every message and verse</li>
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Bible Study Highlighting Feature */}
             <Card className="mb-8">
               <CardHeader>
@@ -420,11 +680,27 @@ export default function Help() {
               </CardHeader>
               <CardContent className="space-y-2 sm:space-y-3">
                 <Button
-                  onClick={() => setLocation("/chat")}
+                  onClick={() => setLocation("/")}
                   className="w-full faith-button-primary justify-center sm:justify-start text-sm sm:text-base py-2 sm:py-3"
                 >
                   <MessageCircle className="w-4 h-4 mr-2" />
                   Start New Chat
+                </Button>
+                <Button
+                  onClick={() => setLocation("/bible-games")}
+                  variant="outline"
+                  className="w-full justify-center sm:justify-start text-sm sm:text-base py-2 sm:py-3"
+                >
+                  <Gamepad2 className="w-4 h-4 mr-2" />
+                  Play Bible Games
+                </Button>
+                <Button
+                  onClick={() => setLocation("/bible-lookup")}
+                  variant="outline"
+                  className="w-full justify-center sm:justify-start text-sm sm:text-base py-2 sm:py-3"
+                >
+                  <BookOpen className="w-4 h-4 mr-2" />
+                  Bible Lookup
                 </Button>
                 <Button
                   onClick={() => setLocation("/contact")}
