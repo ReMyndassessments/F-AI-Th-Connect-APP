@@ -16,6 +16,7 @@ import Terms from "@/pages/terms";
 import Share from "@/pages/share";
 import BibleLookup from "@/pages/bible-lookup";
 import VoiceTest from "@/pages/voice-test";
+import APIDiagnostics from "@/pages/api-diagnostics";
 
 function Router() {
   return (
@@ -33,6 +34,7 @@ function Router() {
       <Route path="/share" component={Share} />
       <Route path="/bible" component={BibleLookup} />
       <Route path="/voice-test" component={VoiceTest} />
+      <Route path="/api-diagnostics" component={APIDiagnostics} />
       <Route component={NotFound} />
     </Switch>
   );

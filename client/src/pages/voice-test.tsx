@@ -129,12 +129,20 @@ export default function VoiceTest() {
             <h1 className="text-3xl font-bold text-gray-900 mb-2">ElevenLabs Voice Test</h1>
             <p className="text-gray-600">Test premium AI voices for spiritual content</p>
           </div>
-          <Link href="/chat">
-            <Button variant="outline" className="flex items-center space-x-2">
-              <ArrowLeft className="w-4 h-4" />
-              <span>Back to Chat</span>
-            </Button>
-          </Link>
+          <div className="flex items-center space-x-2">
+            <Link href="/api-diagnostics">
+              <Button variant="secondary" className="flex items-center space-x-2">
+                <VolumeX className="w-4 h-4" />
+                <span>Troubleshoot API</span>
+              </Button>
+            </Link>
+            <Link href="/chat">
+              <Button variant="outline" className="flex items-center space-x-2">
+                <ArrowLeft className="w-4 h-4" />
+                <span>Back to Chat</span>
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* Test Text */}
