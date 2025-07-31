@@ -30,7 +30,7 @@ export default function DailyVerseCard({ variant = "default", className = "" }: 
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
   const [availableVoices, setAvailableVoices] = useState<ElevenLabsVoice[]>([]);
-  const [selectedVoice, setSelectedVoice] = useState<string>('pNInz6obpgDQGcFmaJgB'); // Bella (default)
+  const [selectedVoice, setSelectedVoice] = useState<string>('EXAVITQu4vr4xnSDxMaL'); // Bella (default)
   const [isLoadingTTS, setIsLoadingTTS] = useState(false);
   const [showVoiceSettings, setShowVoiceSettings] = useState(false);
   
@@ -52,9 +52,14 @@ export default function DailyVerseCard({ variant = "default", className = "" }: 
 
   const loadAvailableVoices = async () => {
     try {
+      console.log('Loading ElevenLabs voices for daily verse...');
       const voicesResponse = await elevenLabsClient.getAvailableVoices();
+      console.log('Voices response:', voicesResponse);
       if (voicesResponse && voicesResponse.available && Array.isArray(voicesResponse.voices)) {
         setAvailableVoices(voicesResponse.voices);
+        console.log('Voices loaded successfully:', voicesResponse.voices.length);
+      } else {
+        console.warn('No voices available or invalid response:', voicesResponse);
       }
     } catch (error) {
       console.error('Failed to load voices:', error);
@@ -116,12 +121,16 @@ export default function DailyVerseCard({ variant = "default", className = "" }: 
       const cleanText = (todaysVerse.text || '').replace(/^"|"$/g, '');
       const fullText = `Today's Memory Verse: ${cleanText}. ${todaysVerse.reference || ''}`;
       
+      console.log('Generating TTS for daily verse:', fullText);
+      console.log('Using voice ID:', selectedVoice);
       const audioUrl = await elevenLabsClient.generateSpeech(fullText, selectedVoice);
+      console.log('TTS generation result:', audioUrl ? 'success' : 'failed');
       
       if (!audioUrl) {
+        console.error('TTS generation failed - no audio URL returned');
         toast({
-          title: "Premium TTS Unavailable",
-          description: "Unable to generate speech. Please check your connection.",
+          title: "Voice Generation Failed",
+          description: "Unable to generate speech. Please try again.",
           variant: "destructive",
         });
         return;
