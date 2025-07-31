@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageCircle, Menu, X, Share } from "lucide-react";
+import { MessageCircle, Menu, X, Share, Smartphone } from "lucide-react";
 import { useLocation } from "wouter";
+import { usePWA } from "@/hooks/usePWA";
 
 export default function Header() {
   const [, setLocation] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { canInstall, install } = usePWA();
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -65,6 +67,17 @@ export default function Header() {
             >
               <Share className="w-5 h-5 text-gray-600" />
             </Button>
+            {canInstall && (
+              <Button
+                onClick={install}
+                variant="ghost"
+                size="sm"
+                className="p-2 hover:bg-gray-100 touch-target mobile-tap"
+                title="Install App"
+              >
+                <Smartphone className="w-5 h-5 text-green-600" />
+              </Button>
+            )}
             <Button
               asChild
               variant="outline"
@@ -139,6 +152,16 @@ export default function Header() {
                 <Share className="w-4 h-4 mr-2" />
                 Share App
               </Button>
+              {canInstall && (
+                <Button
+                  onClick={install}
+                  variant="ghost"
+                  className="w-full justify-start text-green-600 hover:text-green-700 py-3 touch-target mobile-tap"
+                >
+                  <Smartphone className="w-4 h-4 mr-2" />
+                  Install App
+                </Button>
+              )}
               <Button
                 asChild
                 variant="outline"
