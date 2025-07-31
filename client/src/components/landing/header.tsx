@@ -38,6 +38,12 @@ export default function Header() {
               Bible Lookup
             </button>
             <button
+              onClick={() => setLocation("/bible-games")}
+              className="text-gray-600 hover:text-blue-500 transition-colors font-medium"
+            >
+              Bible Games
+            </button>
+            <button
               onClick={() => scrollToSection("features")}
               className="text-gray-600 hover:text-blue-500 transition-colors"
             >
@@ -102,6 +108,15 @@ export default function Header() {
                 className="text-gray-600 hover:text-blue-500 transition-colors text-left font-medium py-3 px-2 rounded-lg hover:bg-gray-50 touch-target mobile-tap"
               >
                 Bible Lookup
+              </button>
+              <button
+                onClick={() => {
+                  setLocation("/bible-games");
+                  setIsMobileMenuOpen(false);
+                }}
+                className="text-gray-600 hover:text-blue-500 transition-colors text-left font-medium py-3 px-2 rounded-lg hover:bg-gray-50 touch-target mobile-tap"
+              >
+                Bible Games
               </button>
               <button
                 onClick={() => scrollToSection("features")}

@@ -9,10 +9,12 @@ import { simpleBibleAPI } from "./services/simple-bible-api";
 import { elevenLabsTTS } from "./services/elevenlabs-tts";
 
 import { FileProcessor } from "./services/file-processor";
+import { BibleGamesService } from "./services/bible-games-service";
 import { z } from "zod";
 import { insertMessageSchema, insertChatSessionSchema, adminLoginSchema, insertFeatureFlagSchema, insertAdvertisementSchema } from "@shared/schema";
 
 const deepseekAI = new DeepseekAI();
+const bibleGamesService = new BibleGamesService();
 
 // Admin Authentication Middleware
 const requireAdmin = async (req: Request, res: Response, next: NextFunction) => {
@@ -629,6 +631,84 @@ export async function registerRoutes(app: Express): Promise<Server> {
         success: false, 
         message: errorMessage 
       });
+    }
+  });
+
+  // Bible Games API Routes
+  app.get("/api/bible-games", async (req: Request, res: Response) => {
+    try {
+      const { category, difficulty } = req.query;
+      const games = await bibleGamesService.getGames(
+        category as string || undefined,
+        difficulty as string || undefined
+      );
+      res.json(games);
+    } catch (error) {
+      console.error("Error fetching Bible games:", error);
+      res.status(500).json({ message: "Failed to fetch games" });
+    }
+  });
+
+  app.get("/api/bible-games/:id", async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const game = await bibleGamesService.getGameById(id);
+      
+      if (!game) {
+        return res.status(404).json({ message: "Game not found" });
+      }
+      
+      res.json(game);
+    } catch (error) {
+      console.error("Error fetching Bible game:", error);
+      res.status(500).json({ message: "Failed to fetch game" });
+    }
+  });
+
+  app.post("/api/bible-games/score", async (req: Request, res: Response) => {
+    try {
+      // For demo purposes, using a simple user ID. In production, get from auth
+      const userId = req.ip || 'anonymous-user';
+      
+      const scoreData = {
+        gameId: req.body.gameId,
+        score: req.body.score,
+        timeCompleted: req.body.timeCompleted,
+        attempts: req.body.attempts || 1
+      };
+
+      const score = await bibleGamesService.submitScore(userId, scoreData);
+      res.json(score);
+    } catch (error) {
+      console.error("Error submitting score:", error);
+      res.status(500).json({ message: "Failed to submit score" });
+    }
+  });
+
+  app.get("/api/bible-games/stats", async (req: Request, res: Response) => {
+    try {
+      // For demo purposes, using a simple user ID. In production, get from auth
+      const userId = req.ip || 'anonymous-user';
+      
+      const stats = await bibleGamesService.getUserStats(userId);
+      res.json(stats);
+    } catch (error) {
+      console.error("Error fetching user stats:", error);
+      res.status(500).json({ message: "Failed to fetch stats" });
+    }
+  });
+
+  app.get("/api/bible-games/leaderboard", async (req: Request, res: Response) => {
+    try {
+      const { category, timeframe } = req.query;
+      const leaderboard = await bibleGamesService.getLeaderboard(
+        category as string || undefined,
+        (timeframe as 'all' | 'week' | 'month') || 'all'
+      );
+      res.json(leaderboard);
+    } catch (error) {
+      console.error("Error fetching leaderboard:", error);
+      res.status(500).json({ message: "Failed to fetch leaderboard" });
     }
   });
 

@@ -15,6 +15,7 @@ import Privacy from "@/pages/privacy";
 import Terms from "@/pages/terms";
 import Share from "@/pages/share";
 import BibleLookup from "@/pages/bible-lookup";
+import BibleGames from "@/pages/bible-games";
 import VoiceTest from "@/pages/voice-test";
 import APIDiagnostics from "@/pages/api-diagnostics";
 
@@ -33,6 +34,7 @@ function Router() {
       <Route path="/terms" component={Terms} />
       <Route path="/share" component={Share} />
       <Route path="/bible" component={BibleLookup} />
+      <Route path="/bible-games" component={BibleGames} />
       <Route path="/voice-test" component={VoiceTest} />
       <Route path="/api-diagnostics" component={APIDiagnostics} />
       <Route component={NotFound} />
