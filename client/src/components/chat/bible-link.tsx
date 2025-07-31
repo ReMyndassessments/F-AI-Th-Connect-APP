@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Book, ExternalLink, Copy, Loader2 } from "lucide-react";
@@ -220,31 +220,34 @@ export default function BibleLink({ reference, children, className = "" }: Bible
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="flex items-center space-x-2">
+            <DialogTitle className="flex items-center space-x-2 pr-12">
               <Book className="w-5 h-5 text-blue-600" />
               <span>{reference}</span>
             </DialogTitle>
-            
-            {/* Version Comparison Toggle - Move outside of DialogTitle */}
-            {verseData && (
-              <div className="flex justify-end mt-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={toggleVersionComparison}
-                  className="flex items-center gap-1 border-green-300 text-green-700 hover:bg-green-50"
-                >
-                  <Book className="h-3 w-3" />
-                  {showVersionComparison ? 'Hide' : 'Compare'} Versions
-                </Button>
-              </div>
-            )}
+            <DialogDescription className="sr-only">
+              Bible verse lookup dialog showing {reference} with version comparison options
+            </DialogDescription>
           </DialogHeader>
           
-          {/* Version Comparison Selector - Move outside of DialogHeader */}
+          {/* Version Comparison Toggle - Positioned to avoid close button */}
+          {verseData && (
+            <div className="flex justify-start mb-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={toggleVersionComparison}
+                className="flex items-center gap-1 border-green-300 text-green-700 hover:bg-green-50"
+              >
+                <Book className="h-3 w-3" />
+                {showVersionComparison ? 'Hide' : 'Compare'} Versions
+              </Button>
+            </div>
+          )}
+          
+          {/* Version Comparison Selector */}
           {showVersionComparison && verseData && (
-            <div className="mt-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-3">
+            <div className="mb-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                 <span className="text-sm font-medium text-green-800 dark:text-green-200">
                   Compare with:
                 </span>
