@@ -96,17 +96,22 @@ export default function BibleLookup() {
         setCurrentAudio(null);
       }
     };
-  }, []);
+  }, [currentAudio]);
 
   const loadElevenLabsVoices = async () => {
     try {
+      console.log('Loading ElevenLabs voices...');
       const voicesResponse = await elevenLabsClient.getAvailableVoices();
+      console.log('Voices response:', voicesResponse);
+      
       if (voicesResponse && voicesResponse.available && Array.isArray(voicesResponse.voices)) {
+        console.log('ElevenLabs voices loaded successfully:', voicesResponse.voices.length);
         setElevenLabsAvailable(true);
         setAvailableVoices(voicesResponse.voices);
         // Default to Bella (gentle female voice)
         setSelectedVoice('EXAVITQu4vr4xnSDxMaL');
       } else {
+        console.warn('ElevenLabs voices not available:', voicesResponse);
         setElevenLabsAvailable(false);
       }
     } catch (error) {
@@ -117,7 +122,12 @@ export default function BibleLookup() {
 
   // Premium TTS functions using ElevenLabs
   const speakVerse = async (verseData: BibleVerse) => {
+    console.log('Speak verse called. ElevenLabs available:', elevenLabsAvailable);
+    console.log('Feature flag enabled:', isBibleTTSEnabled);
+    console.log('Available voices:', availableVoices.length);
+    
     if (!elevenLabsAvailable) {
+      console.error('ElevenLabs not available');
       toast({
         title: "Premium TTS Unavailable",
         description: "ElevenLabs voice service is not available",
@@ -856,17 +866,22 @@ export default function BibleLookup() {
                         {comparisonVerse.version}
                       </Badge>
                       
-                      {/* Audio Controls for Comparison */}
-                      {speechSupported && (
+                      {/* Premium Audio Controls for Comparison */}
+                      {isBibleTTSEnabled && elevenLabsAvailable && (
                         <div className="flex items-center space-x-2">
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => speakVerse(comparisonVerse)}
-                            className="flex items-center space-x-1 text-green-600 hover:text-green-700 hover:bg-green-100"
-                            title="Listen to comparison verse"
+                            disabled={isLoadingTTS}
+                            className="flex items-center space-x-1 text-green-600 hover:text-green-700 hover:bg-green-100 border-green-300"
+                            title="Listen to comparison verse with premium voice"
                           >
-                            <Volume2 className="w-4 h-4" />
+                            {isLoadingTTS ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <Volume2 className="w-4 h-4" />
+                            )}
                             <span className="hidden sm:inline">Listen</span>
                           </Button>
                         </div>
