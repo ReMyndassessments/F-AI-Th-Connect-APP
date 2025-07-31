@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, Book, Copy, Search, ArrowLeft, History, Clock, Bookmark, X, Volume2, VolumeX, Pause, Play } from 'lucide-react';
+import { Loader2, Book, Copy, Search, ArrowLeft, History, Clock, Bookmark, X, Volume2, VolumeX, Pause, Play, Settings } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 
@@ -60,6 +60,8 @@ export default function BibleLookup() {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [speechSupported, setSpeechSupported] = useState(false);
+  const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice | null>(null);
   
   const { toast } = useToast();
   const [, setLocation] = useLocation();
@@ -73,8 +75,44 @@ export default function BibleLookup() {
     const savedFavorites = localStorage.getItem('bible-favorites');
     if (savedFavorites) setFavorites(JSON.parse(savedFavorites));
     
-    // Check if speech synthesis is supported
-    setSpeechSupported('speechSynthesis' in window);
+    // Check if speech synthesis is supported and load voices
+    const speechSupported = 'speechSynthesis' in window;
+    setSpeechSupported(speechSupported);
+    
+    if (speechSupported) {
+      // Load voices when available
+      const loadVoices = () => {
+        const voices = window.speechSynthesis.getVoices();
+        setAvailableVoices(voices);
+        
+        // Find the best English voice (prefer neural/natural voices)
+        const englishVoices = voices.filter(voice => 
+          voice.lang.startsWith('en') && voice.localService
+        );
+        
+        // Prioritize voices with "neural", "natural", or female voices which tend to sound more pleasant
+        const preferredVoice = englishVoices.find(voice => 
+          voice.name.toLowerCase().includes('neural') ||
+          voice.name.toLowerCase().includes('natural') ||
+          voice.name.toLowerCase().includes('zira') ||
+          voice.name.toLowerCase().includes('susan') ||
+          voice.name.toLowerCase().includes('samantha') ||
+          voice.name.toLowerCase().includes('karen')
+        ) || englishVoices.find(voice => 
+          voice.name.toLowerCase().includes('female')
+        ) || englishVoices[0];
+        
+        if (preferredVoice) {
+          setSelectedVoice(preferredVoice);
+        }
+      };
+      
+      // Load voices immediately if available
+      loadVoices();
+      
+      // Also listen for voice changes (some browsers load voices asynchronously)
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
   }, []);
 
   // Text-to-speech functions
@@ -94,10 +132,15 @@ export default function BibleLookup() {
     const text = `${verseData.reference}. ${verseData.text}`;
     const utterance = new SpeechSynthesisUtterance(text);
     
-    // Configure speech
-    utterance.rate = 0.8; // Slightly slower for contemplation
+    // Configure speech for natural, contemplative reading
+    utterance.rate = 0.75; // Even slower for peaceful contemplation
     utterance.pitch = 1.0;
     utterance.volume = 1.0;
+    
+    // Use the selected voice for more natural speech
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
+    }
     
     // Event handlers
     utterance.onstart = () => {
@@ -684,13 +727,43 @@ export default function BibleLookup() {
                     {/* Audio Controls */}
                     {speechSupported && (
                       <div className="flex items-center space-x-2">
+                        {/* Voice Selector */}
+                        {availableVoices.length > 0 && (
+                          <Select 
+                            value={selectedVoice?.name || ''} 
+                            onValueChange={(voiceName) => {
+                              const voice = availableVoices.find(v => v.name === voiceName);
+                              if (voice) setSelectedVoice(voice);
+                            }}
+                          >
+                            <SelectTrigger className="w-32 h-8">
+                              <div className="flex items-center space-x-1">
+                                <Settings className="w-3 h-3" />
+                                <span className="text-xs">Voice</span>
+                              </div>
+                            </SelectTrigger>
+                            <SelectContent>
+                              {availableVoices
+                                .filter(voice => voice.lang.startsWith('en'))
+                                .map((voice) => (
+                                <SelectItem key={voice.name} value={voice.name}>
+                                  <div className="flex flex-col">
+                                    <span className="text-sm">{voice.name}</span>
+                                    <span className="text-xs text-gray-500">{voice.lang}</span>
+                                  </div>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        )}
+                        
                         {!isSpeaking ? (
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => speakVerse(verse)}
                             className="flex items-center space-x-1 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-                            title="Listen to verse"
+                            title={`Listen to verse${selectedVoice ? ` (${selectedVoice.name})` : ''}`}
                           >
                             <Volume2 className="w-4 h-4" />
                             <span className="hidden sm:inline">Listen</span>
@@ -810,7 +883,8 @@ export default function BibleLookup() {
                   <ul className="space-y-1 text-gray-600 dark:text-gray-300">
                     <li>• Use Enter key for quick search</li>
                     <li>• Click popular verses for instant access</li>
-                    <li>• Listen to verses with audio playback</li>
+                    <li>• Listen to verses with natural voice selection</li>
+                    <li>• Choose your preferred voice from the dropdown</li>
                     <li>• Copy button includes reference and translation</li>
                     <li>• Works with all 66 books of the Bible</li>
                   </ul>
