@@ -35,22 +35,35 @@ class ElevenLabsClientService {
 
   async generateSpeech(text: string, voiceId?: string): Promise<string | null> {
     try {
+      console.log('ElevenLabs TTS: Starting generation...', { textLength: text.length, voiceId });
+      
       const response = await apiRequest('POST', '/api/tts/generate', {
         text: text.trim(),
         voiceId: voiceId || 'EXAVITQu4vr4xnSDxMaL' // Default to Bella
       });
 
+      console.log('ElevenLabs TTS: Response status:', response.status);
+
       if (!response.ok) {
         const error = await response.json();
-        console.warn('TTS generation failed:', error.message);
+        console.error('ElevenLabs TTS: API error:', error);
         return null;
       }
 
       // Convert audio response to blob URL
       const audioBlob = await response.blob();
-      return URL.createObjectURL(audioBlob);
+      console.log('ElevenLabs TTS: Audio blob size:', audioBlob.size);
+      
+      if (audioBlob.size === 0) {
+        console.error('ElevenLabs TTS: Empty audio blob received');
+        return null;
+      }
+      
+      const audioUrl = URL.createObjectURL(audioBlob);
+      console.log('ElevenLabs TTS: Audio URL created successfully');
+      return audioUrl;
     } catch (error) {
-      console.error('TTS generation error:', error);
+      console.error('ElevenLabs TTS: Generation error:', error);
       return null;
     }
   }

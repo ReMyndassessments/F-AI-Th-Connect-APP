@@ -130,39 +130,79 @@ export default function DailyVerseCard({ variant = "default", className = "" }: 
         console.error('TTS generation failed - no audio URL returned');
         toast({
           title: "Voice Generation Failed",
-          description: "Unable to generate speech. Please try again.",
+          description: "Check your internet connection and try again.",
           variant: "destructive",
         });
         return;
       }
       
+      console.log('Audio URL generated successfully, preparing playback...');
+      
       const audio = new Audio(audioUrl);
       
-      audio.onplay = () => setIsPlaying(true);
-      audio.onpause = () => setIsPlaying(false);
+      // Mobile compatibility settings
+      audio.preload = 'auto';
+      audio.crossOrigin = 'anonymous';
+      
+      audio.onplay = () => {
+        console.log('Audio playback started');
+        setIsPlaying(true);
+      };
+      audio.onpause = () => {
+        console.log('Audio playback paused');
+        setIsPlaying(false);
+      };
       audio.onended = () => {
+        console.log('Audio playback ended');
         setIsPlaying(false);
         setCurrentAudio(null);
         URL.revokeObjectURL(audioUrl);
       };
-      audio.onerror = () => {
+      audio.onerror = (e) => {
+        console.error('Audio playback error:', e);
         setIsPlaying(false);
         setCurrentAudio(null);
         URL.revokeObjectURL(audioUrl);
         toast({
           title: "Playback Error",
-          description: "Unable to play audio. Please try again.",
+          description: "Unable to play audio on this device. Try using headphones or check your volume settings.",
           variant: "destructive",
         });
       };
+      
+      // Test if audio can be loaded
+      audio.oncanplaythrough = () => {
+        console.log('Audio ready to play');
+      };
+      
+      audio.onloadstart = () => {
+        console.log('Audio loading started');
+      };
 
       setCurrentAudio(audio);
-      await audio.play();
+      
+      // Add extra checks for mobile playback
+      try {
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+          await playPromise;
+        }
+      } catch (playError) {
+        console.error('Play promise rejected:', playError);
+        toast({
+          title: "Playback Blocked",
+          description: "Audio playback was blocked. Please try tapping the button again.",
+          variant: "destructive",
+        });
+        setIsPlaying(false);
+        setCurrentAudio(null);
+        URL.revokeObjectURL(audioUrl);
+      }
     } catch (error) {
       console.error('TTS Error:', error);
       toast({
-        title: "Voice Generation Failed",
-        description: "Unable to generate speech. Please try again.",
+        title: "Voice Generation Failed", 
+        description: error instanceof Error ? error.message : "Network or audio error. Check connection and try again.",
         variant: "destructive",
       });
     } finally {
