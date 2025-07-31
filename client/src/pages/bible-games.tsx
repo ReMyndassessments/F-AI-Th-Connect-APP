@@ -68,7 +68,7 @@ export default function BibleGames() {
   // Submit score mutation
   const submitScoreMutation = useMutation({
     mutationFn: async (scoreData: { gameId: number; score: number; timeCompleted: number; attempts: number }) => {
-      return await apiRequest('/api/bible-games/score', scoreData);
+      return await apiRequest('POST', '/api/bible-games/score', scoreData);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/bible-games/stats'] });
