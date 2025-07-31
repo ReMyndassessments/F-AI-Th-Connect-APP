@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - F-AI-TH-Connect</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
+        .container {
+            max-width: 400px;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        .verse {
+            font-style: italic;
+            margin: 2rem 0;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid #fbbf24;
+        }
+        .retry-btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .retry-btn:hover {
+            transform: translateY(-2px);
+        }
+        .features {
+            margin-top: 2rem;
+            text-align: left;
+        }
+        .feature {
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+        }
+        .feature::before {
+            content: "✓";
+            margin-right: 0.5rem;
+            color: #10b981;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">📱</div>
+        <h1>You're Offline</h1>
+        <p>Don't worry! F-AI-TH-Connect works offline too. Some features are still available while you're disconnected.</p>
+        
+        <div class="verse">
+            "Trust in the Lord with all your heart and lean not on your own understanding."
+            <br><strong>- Proverbs 3:5</strong>
+        </div>
+        
+        <div class="features">
+            <div class="feature">Browse previously viewed Bible verses</div>
+            <div class="feature">Access cached spiritual guidance</div>
+            <div class="feature">View your saved highlights</div>
+            <div class="feature">Play offline Bible games</div>
+        </div>
+        
+        <button class="retry-btn" onclick="window.location.reload()">
+            Retry Connection
+        </button>
+        
+        <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.7;">
+            Once you're back online, all features will be restored automatically.
+        </p>
+    </div>
+    
+    <script>
+        // Check for connection and auto-reload when back online
+        window.addEventListener('online', () => {
+            window.location.reload();
+        });
+        
+        // Update connection status
+        function updateConnectionStatus() {
+            if (navigator.onLine) {
+                window.location.reload();
+            }
+        }
+        
+        // Check connection every 30 seconds
+        setInterval(updateConnectionStatus, 30000);
+    </script>
+</body>
+</html>

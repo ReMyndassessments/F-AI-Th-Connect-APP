@@ -11,7 +11,8 @@ import {
   Eye,
   EyeOff,
   Shield,
-  Clock
+  Clock,
+  Smartphone
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -90,6 +91,8 @@ export default function FeatureFlagsTab() {
         return <Eye className="w-5 h-5 text-green-500" />;
       case "between_messages_ads":
         return <Clock className="w-5 h-5 text-purple-500" />;
+      case "pwa_enabled":
+        return <Smartphone className="w-5 h-5 text-indigo-500" />;
       default:
         return <Settings className="w-5 h-5 text-gray-500" />;
     }
@@ -105,6 +108,8 @@ export default function FeatureFlagsTab() {
         return "Home Page Banner Ads";
       case "between_messages_ads":
         return "Between Messages Ads";
+      case "pwa_enabled":
+        return "Progressive Web App";
       default:
         return flagName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
     }

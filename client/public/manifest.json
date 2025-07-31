@@ -1,39 +1,79 @@
 {
-  "name": "F-AI-TH-Connect - Christian AI Guidance",
-  "short_name": "F-AI-TH-Connect",
-  "description": "Get biblical wisdom and spiritual support through AI-powered conversations",
+  "name": "F-AI-TH-Connect",
+  "short_name": "F-AI-TH",
+  "description": "Christian AI Chat Application for Biblical Guidance and Spiritual Growth",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#1e40af",
   "orientation": "portrait-primary",
-  "categories": ["education", "lifestyle", "productivity"],
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "scope": "/",
+  "lang": "en",
   "icons": [
     {
-      "src": "/icon-192.png",
+      "src": "/pwa-icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "maskable any"
+      "purpose": "any maskable"
     },
     {
-      "src": "/icon-512.png",
+      "src": "/pwa-icon-512.png", 
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "maskable any"
+      "purpose": "any maskable"
     }
   ],
   "screenshots": [
     {
-      "src": "/screenshot-mobile.png",
+      "src": "/pwa-screenshot-mobile.png",
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow"
     },
     {
-      "src": "/screenshot-desktop.png",
-      "sizes": "1920x1080",
+      "src": "/pwa-screenshot-desktop.png",
+      "sizes": "1920x1080", 
       "type": "image/png",
       "form_factor": "wide"
+    }
+  ],
+  "categories": ["lifestyle", "education", "productivity"],
+  "shortcuts": [
+    {
+      "name": "Start New Chat",
+      "short_name": "Chat",
+      "description": "Begin a new spiritual conversation",
+      "url": "/",
+      "icons": [
+        {
+          "src": "/chat-icon.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Bible Lookup",
+      "short_name": "Bible",
+      "description": "Look up Bible verses",
+      "url": "/bible-lookup",
+      "icons": [
+        {
+          "src": "/bible-icon.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Bible Games",
+      "short_name": "Games",
+      "description": "Play interactive Bible games",
+      "url": "/bible-games",
+      "icons": [
+        {
+          "src": "/games-icon.png",
+          "sizes": "96x96"
+        }
+      ]
     }
   ]
 }

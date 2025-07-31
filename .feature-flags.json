@@ -63,6 +63,14 @@
       "enabled": true,
       "createdAt": "2025-07-31T05:02:58.090Z",
       "updatedAt": "2025-07-31T05:02:58.090Z"
+    },
+    {
+      "id": 9,
+      "name": "pwa_enabled",
+      "description": "Enable Progressive Web App features including service worker, offline capability, and app installation prompts.",
+      "enabled": true,
+      "createdAt": "2025-07-31T07:28:57.938Z",
+      "updatedAt": "2025-07-31T07:28:57.938Z"
     }
   ]
 }

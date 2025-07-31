@@ -235,6 +235,14 @@ export class MemStorage implements IStorage {
           enabled: true,
           createdAt: new Date(),
           updatedAt: new Date(),
+        },
+        {
+          id: 9,
+          name: "pwa_enabled",
+          description: "Enable Progressive Web App features including service worker, offline capability, and app installation prompts.",
+          enabled: true,
+          createdAt: new Date(),
+          updatedAt: new Date(),
         }
       ];
 
@@ -260,7 +268,7 @@ export class MemStorage implements IStorage {
       defaultFlags.forEach(flag => {
         this.featureFlags.set(flag.id, flag);
       });
-      this.currentFeatureFlagId = 9;
+      this.currentFeatureFlagId = 10;
       this.saveFeatureFlags();
     }
   }
