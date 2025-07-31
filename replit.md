@@ -69,7 +69,7 @@ The application uses these main entities:
 - **Provider**: DeepSeek AI API integration
 - **Specialization**: Christian-focused system prompts for biblical guidance
 - **Performance**: Optimized for speed with 30-second timeouts and reduced token limits
-- **Dynamic Token Allocation**: 800 tokens for extensive content, 400 for regular messages
+- **Dynamic Token Allocation**: 1200 tokens for extensive content, 800 for regular messages (enhanced for detailed responses)
 - **Context Optimization**: Limited conversation history (2-6 messages) and 300-character truncation for faster responses
 - **Features**: Scripture reference extraction and theological accuracy
 - **Fallback**: Scripture service for common verses when API unavailable
@@ -190,3 +190,4 @@ The architecture prioritizes developer experience with fast iteration cycles whi
 - **Text-to-Speech Implementation**: Added comprehensive audio functionality to Bible verse reading with play/pause/stop controls, support for both original and comparison verses, slower reading speed (0.75x) optimized for contemplation and meditation, browser compatibility detection, responsive button design for mobile accessibility, and expanded voice selection including premium Google, Microsoft, Apple, and Amazon voices plus high-quality system voices (Samantha, Victoria, Daniel, Karen, etc.) with automatic preference for natural-sounding female voices suitable for spiritual content
 - **AI Response Audio Playback**: Extended text-to-speech functionality to AI-generated spiritual guidance with intelligent content cleaning (removes markdown, emojis, formatting), compact chat-optimized voice controls, global speech state management to prevent conflicts between messages, and seamless integration with existing message actions for hands-free devotional listening
 - **ElevenLabs Premium TTS Integration - COMPLETED**: Successfully implemented premium-only TTS system using ElevenLabs AI voices (Bella, Adam, Grace) with natural spiritual tones at regular 1.0x playback speed. Premium TTS includes intelligent text processing, 2500-character limit handling, and high-quality voice synthesis. Free tier provides 10,000 monthly characters with voices specifically chosen for Christian spiritual content. No browser fallback - premium voices only for consistent quality experience.
+- **Enhanced AI Detail Generation - COMPLETED**: Upgraded AI system prompt to generate more comprehensive and detailed spiritual content with structured responses including biblical foundation, theological context, practical applications, personal reflection questions, and additional resources. Increased token limits from 400/800 to 800/1200 for richer, more substantive biblical guidance and theological insights.

@@ -33,11 +33,21 @@ export class DeepseekAI {
       // Optimize system prompt for faster responses
       const isLongContent = userMessage.length > 1000;
       
-      const systemPrompt = `You are F-AI-TH-Connect, a Christian AI assistant. ${isLongContent ? 
-        'Focus on key spiritual themes and provide concise, actionable guidance.' : 
-        'Provide biblical guidance and Christian wisdom.'} Be concise yet meaningful. 
+      const systemPrompt = `You are F-AI-TH-Connect, a Christian AI assistant providing comprehensive biblical guidance and theological wisdom. ${isLongContent ? 
+        'Provide thorough analysis of key spiritual themes with detailed, actionable guidance and practical applications.' : 
+        'Offer detailed biblical guidance, practical applications, and comprehensive Christian wisdom.'}
 
-Always include 1-2 relevant Scripture references with book, chapter, and verse numbers. When referencing verses, use the format [John 3:16](bible://John 3:16) to create clickable study links. For verse ranges, use formats like [Romans 3:23-24](bible://Romans 3:23-24). Keep responses helpful but brief.`;
+Structure your responses with depth and detail:
+
+1. **Biblical Foundation**: Start with solid scriptural grounding
+2. **Theological Context**: Explain the deeper meaning and historical context
+3. **Practical Application**: Provide specific, actionable steps for daily life
+4. **Personal Reflection**: Include questions for spiritual growth and self-examination
+5. **Additional Resources**: Suggest related biblical passages or spiritual practices
+
+Always include 2-4 relevant Scripture references with book, chapter, and verse numbers. When referencing verses, use the format [John 3:16](bible://John 3:16) to create clickable study links. For verse ranges, use formats like [Romans 3:23-24](bible://Romans 3:23-24).
+
+Provide rich, substantive responses that truly help believers grow in their faith with thorough explanations, examples, and spiritual insights.`;
 
       // Optimize conversation history for speed - limit to last 4 messages for context
       const recentHistory = conversationHistory.slice(-4);
@@ -61,7 +71,7 @@ Always include 1-2 relevant Scripture references with book, chapter, and verse n
           model: 'deepseek-chat',
           messages,
           temperature: 0.6, // Slightly lower temperature for faster, more focused responses
-          max_tokens: userMessage.length > 1000 ? 800 : 400, // Reduced token limits for faster generation
+          max_tokens: userMessage.length > 1000 ? 1200 : 800, // Increased token limits for more detailed responses
           stream: false,
           top_p: 0.9, // Add nucleus sampling for more efficient generation
         }),
