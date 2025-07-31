@@ -97,12 +97,51 @@ export default function BibleGames() {
     });
   };
 
+  // Flexible answer validation that handles multiple correct formats
+  const isAnswerCorrect = (userAnswer: string, correctAnswer: string): boolean => {
+    const normalize = (str: string) => str.toLowerCase().trim().replace(/[^\w\s]/g, '');
+    const userNorm = normalize(userAnswer);
+    const correctNorm = normalize(correctAnswer);
+    
+    // Exact match
+    if (userNorm === correctNorm) return true;
+    
+    // Handle common variations for biblical answers
+    const userWords = userNorm.split(/\s+/).filter(w => w.length > 0);
+    const correctWords = correctNorm.split(/\s+/).filter(w => w.length > 0);
+    
+    // Check if user answer contains all key words from correct answer (ignoring common words)
+    const skipWords = ['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'from', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'up', 'down', 'out', 'off', 'over', 'under', 'again', 'further', 'then', 'once'];
+    const keyCorrectWords = correctWords.filter(w => !skipWords.includes(w));
+    const keyUserWords = userWords.filter(w => !skipWords.includes(w));
+    
+    // Check if user has all the key words (in any order)
+    const hasAllKeyWords = keyCorrectWords.every(word => 
+      keyUserWords.some(userWord => 
+        userWord.includes(word) || word.includes(userWord) || 
+        // Handle common synonyms for biblical content
+        (word === 'turned' && (userWord.includes('chang') || userWord.includes('transform'))) ||
+        (word === 'wine' && userWord === 'wine') ||
+        (word === 'water' && userWord === 'water')
+      )
+    );
+    
+    // Special case for "water to wine" vs "turned water into wine"
+    if (correctNorm.includes('turned water into wine') || correctNorm.includes('water into wine')) {
+      if (userNorm.includes('water') && userNorm.includes('wine') && 
+          (userNorm.includes('to') || userNorm.includes('into') || userNorm.includes('turned'))) {
+        return true;
+      }
+    }
+    
+    return hasAllKeyWords && keyCorrectWords.length > 0;
+  };
+
   const submitAnswer = () => {
     if (!gameState.currentGame || !gameState.userAnswer.trim()) return;
 
     const attempts = gameState.attempts + 1;
-    const isCorrect = gameState.userAnswer.toLowerCase().trim() === 
-                     gameState.currentGame.correctAnswer.toLowerCase().trim();
+    const isCorrect = isAnswerCorrect(gameState.userAnswer, gameState.currentGame.correctAnswer);
     
     if (isCorrect) {
       const timeCompleted = Math.floor((Date.now() - gameState.timeStarted) / 1000);
