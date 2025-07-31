@@ -23,7 +23,7 @@ export default function DailyVerseCard({ variant = "default", className = "" }: 
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  const isBibleTTSEnabled = featureFlags?.flags?.find((f: any) => f.name === 'tts_bible_verses')?.enabled || false;
+  const isBibleTTSEnabled = (featureFlags as any)?.flags?.find((f: any) => f.name === 'tts_bible_verses')?.enabled || false;
   const [isSharing, setIsSharing] = useState(false);
   
   // TTS State
@@ -52,9 +52,9 @@ export default function DailyVerseCard({ variant = "default", className = "" }: 
 
   const loadAvailableVoices = async () => {
     try {
-      const voices = await elevenLabsClient.getAvailableVoices();
-      if (voices && Array.isArray(voices)) {
-        setAvailableVoices(voices);
+      const voicesResponse = await elevenLabsClient.getAvailableVoices();
+      if (voicesResponse && voicesResponse.available && Array.isArray(voicesResponse.voices)) {
+        setAvailableVoices(voicesResponse.voices);
       }
     } catch (error) {
       console.error('Failed to load voices:', error);
@@ -117,6 +117,16 @@ export default function DailyVerseCard({ variant = "default", className = "" }: 
       const fullText = `Today's Memory Verse: ${cleanText}. ${todaysVerse.reference || ''}`;
       
       const audioUrl = await elevenLabsClient.generateSpeech(fullText, selectedVoice);
+      
+      if (!audioUrl) {
+        toast({
+          title: "Premium TTS Unavailable",
+          description: "Unable to generate speech. Please check your connection.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
       const audio = new Audio(audioUrl);
       
       audio.onplay = () => setIsPlaying(true);
