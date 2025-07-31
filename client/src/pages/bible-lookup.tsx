@@ -84,20 +84,45 @@ export default function BibleLookup() {
       const loadVoices = () => {
         const voices = window.speechSynthesis.getVoices();
         
-        // Filter to only the three specific Google voices
+        // Filter to high-quality English voices suitable for spiritual content
         const allowedVoices = voices.filter(voice => 
-          voice.name === 'Google US English' ||
-          voice.name === 'Google UK English Female' ||
-          voice.name === 'Google UK English Male'
+          voice.lang.startsWith('en') && (
+            // Premium voices
+            voice.name.includes('Google') ||
+            voice.name.includes('Microsoft') ||
+            voice.name.includes('Amazon') ||
+            voice.name.includes('Apple') ||
+            // Natural-sounding system voices
+            voice.name.includes('Natural') ||
+            voice.name.includes('Neural') ||
+            voice.name.includes('Premium') ||
+            // Common high-quality voices
+            voice.name === 'Samantha' ||
+            voice.name === 'Alex' ||
+            voice.name === 'Victoria' ||
+            voice.name === 'Daniel' ||
+            voice.name === 'Karen' ||
+            voice.name === 'Moira' ||
+            voice.name === 'Tessa' ||
+            voice.name === 'Veena' ||
+            voice.name === 'Fiona' ||
+            voice.name === 'Susan'
+          )
         );
         
         setAvailableVoices(allowedVoices);
         
-        // Prefer the UK Female voice as default, then US English, then UK Male
+        // Prefer high-quality female voices for spiritual content
         const preferredVoice = allowedVoices.find(voice => 
           voice.name === 'Google UK English Female'
         ) || allowedVoices.find(voice => 
-          voice.name === 'Google US English'
+          voice.name === 'Samantha'
+        ) || allowedVoices.find(voice => 
+          voice.name === 'Victoria'
+        ) || allowedVoices.find(voice => 
+          voice.name === 'Karen'
+        ) || allowedVoices.find(voice => 
+          voice.name.includes('Female') || voice.name.includes('Woman')
         ) || allowedVoices[0];
         
         if (preferredVoice) {
