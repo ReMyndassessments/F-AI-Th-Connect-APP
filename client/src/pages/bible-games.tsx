@@ -10,7 +10,7 @@ import { Progress } from '@/components/ui/progress';
 import { 
   Gamepad2, Trophy, Clock, Target, Shuffle, BookOpen, 
   Users, MapPin, Star, Play, RotateCcw, CheckCircle, 
-  XCircle, Lightbulb, Award, TrendingUp, ArrowLeft 
+  XCircle, Lightbulb, Award, TrendingUp, ArrowLeft, X
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
@@ -318,23 +318,34 @@ export default function BibleGames() {
           {gameState.currentGame && (
             <Card className="mb-6 sm:mb-8 bg-white/80 backdrop-blur-sm border-0 shadow-lg">
               <CardHeader className="pb-3 sm:pb-4">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                  <CardTitle className="flex items-center text-lg sm:text-xl">
-                    {getGameIcon(gameState.currentGame.type)}
-                    <span className="ml-2 faith-gradient-text">{gameState.currentGame.title}</span>
-                  </CardTitle>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <Badge variant="outline" className="capitalize bg-blue-50 text-blue-700 border-blue-200">
-                      {gameState.currentGame.category}
-                    </Badge>
-                    <Badge className={`text-white ${getDifficultyColor(gameState.currentGame.difficulty)}`}>
-                      {gameState.currentGame.difficulty}
-                    </Badge>
-                    <Badge className="bg-amber-100 text-amber-800 border-amber-200">
-                      <Star className="w-3 h-3 mr-1" />
-                      {gameState.currentGame.points} pts
-                    </Badge>
+                <div className="flex items-start justify-between">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-3 flex-1">
+                    <CardTitle className="flex items-center text-lg sm:text-xl">
+                      {getGameIcon(gameState.currentGame.type)}
+                      <span className="ml-2 faith-gradient-text">{gameState.currentGame.title}</span>
+                    </CardTitle>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Badge variant="outline" className="capitalize bg-blue-50 text-blue-700 border-blue-200">
+                        {gameState.currentGame.category}
+                      </Badge>
+                      <Badge className={`text-white ${getDifficultyColor(gameState.currentGame.difficulty)}`}>
+                        {gameState.currentGame.difficulty}
+                      </Badge>
+                      <Badge className="bg-amber-100 text-amber-800 border-amber-200">
+                        <Star className="w-3 h-3 mr-1" />
+                        {gameState.currentGame.points} pts
+                      </Badge>
+                    </div>
                   </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={resetGame}
+                    className="ml-2 hover:bg-red-50 hover:text-red-600 h-8 w-8 p-0 flex-shrink-0"
+                    title="Close Game"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
                 </div>
               </CardHeader>
               <CardContent className="space-y-6">
