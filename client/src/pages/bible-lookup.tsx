@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, Book, Copy, Search, ArrowLeft, History, Clock, Bookmark, X } from 'lucide-react';
+import { Loader2, Book, Copy, Search, ArrowLeft, History, Clock, Bookmark, X, Volume2, VolumeX, Pause, Play } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 
@@ -56,18 +56,92 @@ export default function BibleLookup() {
   const [verseComparisonVersion, setVerseComparisonVersion] = useState('kjv');
   const [showVersionComparison, setShowVersionComparison] = useState(false);
   
+  // Text-to-speech state
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [speechSupported, setSpeechSupported] = useState(false);
+  
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Load saved data on mount
+  // Load saved data on mount and check speech support
   useEffect(() => {
     const saved = localStorage.getItem('bible-recent-searches');
     if (saved) setRecentSearches(JSON.parse(saved));
     
     const savedFavorites = localStorage.getItem('bible-favorites');
     if (savedFavorites) setFavorites(JSON.parse(savedFavorites));
+    
+    // Check if speech synthesis is supported
+    setSpeechSupported('speechSynthesis' in window);
   }, []);
+
+  // Text-to-speech functions
+  const speakVerse = (verseData: BibleVerse) => {
+    if (!speechSupported || !window.speechSynthesis) {
+      toast({
+        title: "Not supported",
+        description: "Text-to-speech is not supported in this browser",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Stop any current speech
+    window.speechSynthesis.cancel();
+
+    const text = `${verseData.reference}. ${verseData.text}`;
+    const utterance = new SpeechSynthesisUtterance(text);
+    
+    // Configure speech
+    utterance.rate = 0.8; // Slightly slower for contemplation
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
+    
+    // Event handlers
+    utterance.onstart = () => {
+      setIsSpeaking(true);
+      setIsPaused(false);
+    };
+    
+    utterance.onend = () => {
+      setIsSpeaking(false);
+      setIsPaused(false);
+    };
+    
+    utterance.onerror = () => {
+      setIsSpeaking(false);
+      setIsPaused(false);
+      toast({
+        title: "Speech error",
+        description: "Unable to read the verse aloud",
+        variant: "destructive",
+      });
+    };
+
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const pauseSpeech = () => {
+    if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+      window.speechSynthesis.pause();
+      setIsPaused(true);
+    }
+  };
+
+  const resumeSpeech = () => {
+    if (window.speechSynthesis.paused) {
+      window.speechSynthesis.resume();
+      setIsPaused(false);
+    }
+  };
+
+  const stopSpeech = () => {
+    window.speechSynthesis.cancel();
+    setIsSpeaking(false);
+    setIsPaused(false);
+  };
 
   // Autocomplete suggestions
   const suggestions = useMemo(() => {
@@ -606,6 +680,60 @@ export default function BibleLookup() {
                     <Badge variant="default" className="bg-blue-600 text-white">
                       {verse.version}
                     </Badge>
+                    
+                    {/* Audio Controls */}
+                    {speechSupported && (
+                      <div className="flex items-center space-x-2">
+                        {!isSpeaking ? (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => speakVerse(verse)}
+                            className="flex items-center space-x-1 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                            title="Listen to verse"
+                          >
+                            <Volume2 className="w-4 h-4" />
+                            <span className="hidden sm:inline">Listen</span>
+                          </Button>
+                        ) : (
+                          <div className="flex items-center space-x-1">
+                            {isPaused ? (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={resumeSpeech}
+                                className="flex items-center space-x-1 text-green-600 hover:text-green-700 hover:bg-green-50"
+                                title="Resume"
+                              >
+                                <Play className="w-4 h-4" />
+                                <span className="hidden sm:inline">Resume</span>
+                              </Button>
+                            ) : (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={pauseSpeech}
+                                className="flex items-center space-x-1 text-amber-600 hover:text-amber-700 hover:bg-amber-50"
+                                title="Pause"
+                              >
+                                <Pause className="w-4 h-4" />
+                                <span className="hidden sm:inline">Pause</span>
+                              </Button>
+                            )}
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={stopSpeech}
+                              className="flex items-center space-x-1 text-red-600 hover:text-red-700 hover:bg-red-50"
+                              title="Stop"
+                            >
+                              <VolumeX className="w-4 h-4" />
+                              <span className="hidden sm:inline">Stop</span>
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                   <blockquote className="text-lg leading-relaxed text-gray-800 dark:text-gray-200 italic font-serif border-l-4 border-blue-500 pl-4 mb-4">
                     "{verse.text}"
@@ -622,6 +750,22 @@ export default function BibleLookup() {
                       <Badge variant="default" className="bg-green-600 text-white">
                         {comparisonVerse.version}
                       </Badge>
+                      
+                      {/* Audio Controls for Comparison */}
+                      {speechSupported && (
+                        <div className="flex items-center space-x-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => speakVerse(comparisonVerse)}
+                            className="flex items-center space-x-1 text-green-600 hover:text-green-700 hover:bg-green-100"
+                            title="Listen to comparison verse"
+                          >
+                            <Volume2 className="w-4 h-4" />
+                            <span className="hidden sm:inline">Listen</span>
+                          </Button>
+                        </div>
+                      )}
                     </div>
                     <blockquote className="text-lg leading-relaxed text-gray-800 dark:text-gray-200 italic font-serif border-l-4 border-green-500 pl-4 mb-4">
                       "{comparisonVerse.text}"
@@ -666,6 +810,7 @@ export default function BibleLookup() {
                   <ul className="space-y-1 text-gray-600 dark:text-gray-300">
                     <li>• Use Enter key for quick search</li>
                     <li>• Click popular verses for instant access</li>
+                    <li>• Listen to verses with audio playback</li>
                     <li>• Copy button includes reference and translation</li>
                     <li>• Works with all 66 books of the Bible</li>
                   </ul>
