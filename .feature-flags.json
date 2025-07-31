@@ -47,6 +47,22 @@
       "enabled": true,
       "createdAt": "2025-07-27T10:11:32.512Z",
       "updatedAt": "2025-07-27T10:11:32.512Z"
+    },
+    {
+      "id": 7,
+      "name": "tts_ai_responses",
+      "description": "Enable premium text-to-speech for AI-generated spiritual guidance and biblical teachings.",
+      "enabled": true,
+      "createdAt": "2025-07-31T05:02:58.090Z",
+      "updatedAt": "2025-07-31T05:02:58.090Z"
+    },
+    {
+      "id": 8,
+      "name": "tts_bible_verses",
+      "description": "Enable premium text-to-speech for Bible verse cards, daily verses, and scripture references.",
+      "enabled": true,
+      "createdAt": "2025-07-31T05:02:58.090Z",
+      "updatedAt": "2025-07-31T05:02:58.090Z"
     }
   ]
 }

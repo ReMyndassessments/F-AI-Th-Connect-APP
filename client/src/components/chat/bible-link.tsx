@@ -5,6 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Book, ExternalLink, Copy, Loader2, Sparkles, Volume2, VolumeX, Pause, Play, Settings } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { elevenLabsClient, type ElevenLabsVoice } from "@/services/elevenlabs-client";
 
@@ -109,6 +110,14 @@ export default function BibleLink({ reference, children, className = "" }: Bible
   const [showVoiceSettings, setShowVoiceSettings] = useState(false);
   
   const { toast } = useToast();
+
+  // Check feature flags for TTS availability
+  const { data: featureFlags } = useQuery({
+    queryKey: ['/api/feature-flags/public'],
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  const isBibleTTSEnabled = featureFlags?.flags?.find((f: any) => f.name === 'tts_bible_verses')?.enabled || false;
 
   // Fetch verse data when dialog opens
   useEffect(() => {
@@ -379,10 +388,11 @@ export default function BibleLink({ reference, children, className = "" }: Bible
                       {verseData.version || 'KJV'}
                     </Badge>
                     
-                    {/* Voice Controls for Original Verse */}
-                    <div className="flex items-center space-x-2">
-                      {/* Voice Settings */}
-                      {availableVoices.length > 0 && (
+                    {/* Voice Controls for Original Verse - Only show if feature flag enabled */}
+                    {isBibleTTSEnabled && (
+                      <div className="flex items-center space-x-2">
+                        {/* Voice Settings */}
+                        {availableVoices.length > 0 && (
                         <div className="relative">
                           <Button
                             variant="ghost"
@@ -432,7 +442,8 @@ export default function BibleLink({ reference, children, className = "" }: Bible
                           {isLoadingTTS ? 'Loading...' : isPlaying ? 'Pause' : 'Listen'}
                         </span>
                       </Button>
-                    </div>
+                      </div>
+                    )}
                   </div>
                   <blockquote className="text-gray-800 italic leading-relaxed border-l-4 border-blue-500 pl-4 mb-3">
                     "{verseData.text}"
@@ -450,8 +461,9 @@ export default function BibleLink({ reference, children, className = "" }: Bible
                         {comparisonVerse.version}
                       </Badge>
                       
-                      {/* Voice Controls for Comparison Verse */}
-                      <Button
+                      {/* Voice Controls for Comparison Verse - Only show if feature flag enabled */}
+                      {isBibleTTSEnabled && (
+                        <Button
                         variant="outline"
                         size="sm"
                         onClick={() => handleTTSToggle(comparisonVerse.text, `${comparisonVerse.reference} ${comparisonVerse.version}`)}
@@ -468,7 +480,8 @@ export default function BibleLink({ reference, children, className = "" }: Bible
                         <span className="text-xs">
                           {isLoadingTTS ? 'Loading...' : isPlaying ? 'Pause' : 'Listen'}
                         </span>
-                      </Button>
+                        </Button>
+                      )}
                     </div>
                     <blockquote className="text-gray-800 italic leading-relaxed border-l-4 border-green-500 pl-4 mb-3">
                       "{comparisonVerse.text}"

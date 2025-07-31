@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 import { Volume2, VolumeX, Pause, Play, Settings, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useQuery } from "@tanstack/react-query";
 import { elevenLabsClient, type ElevenLabsVoice } from "@/services/elevenlabs-client";
 
 interface MessageBubbleProps {
@@ -44,6 +45,14 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   
   const { toast } = useToast();
+
+  // Check feature flags for TTS availability
+  const { data: featureFlags } = useQuery({
+    queryKey: ['/api/feature-flags/public'],
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  const isTTSEnabled = featureFlags?.flags?.find((f: any) => f.name === 'tts_ai_responses')?.enabled || false;
 
   // Load voices and check speech support
   useEffect(() => {
@@ -390,7 +399,7 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
           </p>
           
           {/* Audio Controls for AI Messages - Premium Only */}
-          {elevenLabsAvailable && (
+          {elevenLabsAvailable && isTTSEnabled && (
             <div className="flex items-center space-x-1">
               {/* Voice Selector - Premium voices only */}
               {elevenLabsVoices.length > 0 && (

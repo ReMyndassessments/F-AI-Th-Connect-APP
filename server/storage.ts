@@ -219,6 +219,22 @@ export class MemStorage implements IStorage {
           enabled: true,
           createdAt: new Date(),
           updatedAt: new Date(),
+        },
+        {
+          id: 7,
+          name: "tts_ai_responses",
+          description: "Enable premium text-to-speech for AI-generated spiritual guidance and biblical teachings.",
+          enabled: true,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: 8,
+          name: "tts_bible_verses",
+          description: "Enable premium text-to-speech for Bible verse cards, daily verses, and scripture references.",
+          enabled: true,
+          createdAt: new Date(),
+          updatedAt: new Date(),
         }
       ];
 
@@ -244,7 +260,7 @@ export class MemStorage implements IStorage {
       defaultFlags.forEach(flag => {
         this.featureFlags.set(flag.id, flag);
       });
-      this.currentFeatureFlagId = 7;
+      this.currentFeatureFlagId = 9;
       this.saveFeatureFlags();
     }
   }

@@ -5,6 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { BookOpen, Calendar, Copy, Share2, Sparkles, Loader2, Pause, Settings } from "lucide-react";
 import { getTodaysVerse, getFormattedDate } from "@/lib/daily-verses";
 import { useToast } from "@/hooks/use-toast";
+import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { elevenLabsClient, type ElevenLabsVoice } from "@/services/elevenlabs-client";
 
@@ -15,6 +16,14 @@ interface DailyVerseCardProps {
 
 export default function DailyVerseCard({ variant = "default", className = "" }: DailyVerseCardProps) {
   const { toast } = useToast();
+
+  // Check feature flags for TTS availability
+  const { data: featureFlags } = useQuery({
+    queryKey: ['/api/feature-flags/public'],
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  const isBibleTTSEnabled = featureFlags?.flags?.find((f: any) => f.name === 'tts_bible_verses')?.enabled || false;
   const [isSharing, setIsSharing] = useState(false);
   
   // TTS State
@@ -219,8 +228,11 @@ export default function DailyVerseCard({ variant = "default", className = "" }: 
             {todaysVerse.reference}
           </p>
           <div className="flex space-x-2">
-            {/* Voice Settings */}
-            {availableVoices.length > 0 && (
+            {/* TTS Controls - Only show if feature flag enabled */}
+            {isBibleTTSEnabled && (
+              <>
+                {/* Voice Settings */}
+                {availableVoices.length > 0 && (
               <div className="relative">
                 <Button
                   variant="ghost"
@@ -268,6 +280,8 @@ export default function DailyVerseCard({ variant = "default", className = "" }: 
               )}
               {isLoadingTTS ? 'Loading...' : isPlaying ? 'Pause' : 'Listen'}
             </Button>
+              </>
+            )}
             
             <Button
               variant="outline"
