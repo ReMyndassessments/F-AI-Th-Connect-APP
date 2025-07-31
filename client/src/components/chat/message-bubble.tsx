@@ -180,6 +180,63 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
     setIsPaused(false);
   };
 
+  // Play chunked audio sequentially
+  const playChunkedAudio = async (audioUrls: string[]) => {
+    if (audioUrls.length === 0) return;
+
+    speechState.isSpeaking = true;
+    speechState.isPaused = false;
+    speechState.currentMessageId = message.id;
+    setIsSpeaking(true);
+    setIsPaused(false);
+
+    for (let i = 0; i < audioUrls.length; i++) {
+      const audioUrl = audioUrls[i];
+      
+      try {
+        await new Promise<void>((resolve, reject) => {
+          const audio = new Audio(audioUrl);
+          audio.playbackRate = 1.0;
+
+          audio.onended = () => {
+            URL.revokeObjectURL(audioUrl);
+            resolve();
+          };
+
+          audio.onerror = () => {
+            URL.revokeObjectURL(audioUrl);
+            reject(new Error('Audio playback failed'));
+          };
+
+          audio.play().catch(reject);
+        });
+
+        // Check if speech was stopped while playing
+        if (!speechState.isSpeaking || speechState.currentMessageId !== message.id) {
+          // Clean up remaining audio URLs
+          for (let j = i + 1; j < audioUrls.length; j++) {
+            URL.revokeObjectURL(audioUrls[j]);
+          }
+          break;
+        }
+      } catch (error) {
+        console.error('Error playing audio chunk:', error);
+        // Clean up remaining audio URLs
+        for (let j = i + 1; j < audioUrls.length; j++) {
+          URL.revokeObjectURL(audioUrls[j]);
+        }
+        break;
+      }
+    }
+
+    // Reset state when finished
+    speechState.isSpeaking = false;
+    speechState.isPaused = false;
+    speechState.currentMessageId = null;
+    setIsSpeaking(false);
+    setIsPaused(false);
+  };
+
   // Premium TTS with ElevenLabs
   const speakWithElevenLabs = async () => {
     if (isGenerating) return;
@@ -196,28 +253,48 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
         .replace(/💙/g, '')
         .trim();
 
-      // Check text length
+      // For long text, use chunked speech generation
       if (elevenLabsClient.isTextTooLong(cleanText)) {
         toast({
-          title: "Text too long",
-          description: "This message is too long for premium TTS. Please use browser TTS instead.",
-          variant: "destructive",
+          title: "Processing long message",
+          description: "Generating speech in segments for better quality...",
+          variant: "default",
         });
+
+        const audioUrls = await elevenLabsClient.generateChunkedSpeech(cleanText, selectedElevenLabsVoice);
+        
+        if (audioUrls.length === 0) {
+          toast({
+            title: "Premium TTS unavailable",
+            description: "Unable to generate speech. Please check your connection.",
+            variant: "destructive",
+          });
+          setIsGenerating(false);
+          return;
+        }
+
+        toast({
+          title: "Ready to play",
+          description: `Generated ${audioUrls.length} audio segments. Starting playback...`,
+          variant: "default",
+        });
+
+        // Play chunked audio sequentially
+        await playChunkedAudio(audioUrls);
         setIsGenerating(false);
         return;
       }
 
-      // Generate audio with ElevenLabs
+      // Generate audio with ElevenLabs for normal length text
       const newAudioUrl = await elevenLabsClient.generateSpeech(cleanText, selectedElevenLabsVoice);
       
       if (!newAudioUrl) {
         toast({
           title: "Premium TTS unavailable",
-          description: "Falling back to browser TTS. Check your internet connection.",
+          description: "Unable to generate speech. Please check your connection.",
           variant: "destructive",
         });
         setIsGenerating(false);
-        // No fallback - premium only as requested
         return;
       }
 

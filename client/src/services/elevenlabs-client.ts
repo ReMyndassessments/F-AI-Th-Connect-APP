@@ -71,6 +71,75 @@ class ElevenLabsClientService {
     return text.length > 2500;
   }
 
+  // Smart text chunking for long messages
+  chunkText(text: string, maxLength: number = 2000): string[] {
+    if (text.length <= maxLength) {
+      return [text];
+    }
+
+    const chunks: string[] = [];
+    const sentences = text.split(/[.!?]+\s+/);
+    let currentChunk = '';
+
+    for (const sentence of sentences) {
+      const trimmedSentence = sentence.trim();
+      if (!trimmedSentence) continue;
+
+      // If adding this sentence would exceed the limit
+      if (currentChunk.length + trimmedSentence.length + 2 > maxLength) {
+        if (currentChunk.length > 0) {
+          chunks.push(currentChunk.trim());
+          currentChunk = '';
+        }
+        
+        // If a single sentence is too long, split it further
+        if (trimmedSentence.length > maxLength) {
+          const words = trimmedSentence.split(' ');
+          let wordChunk = '';
+          
+          for (const word of words) {
+            if (wordChunk.length + word.length + 1 > maxLength) {
+              if (wordChunk.length > 0) {
+                chunks.push(wordChunk.trim());
+                wordChunk = '';
+              }
+            }
+            wordChunk += (wordChunk ? ' ' : '') + word;
+          }
+          
+          if (wordChunk.length > 0) {
+            currentChunk = wordChunk;
+          }
+        } else {
+          currentChunk = trimmedSentence;
+        }
+      } else {
+        currentChunk += (currentChunk ? '. ' : '') + trimmedSentence;
+      }
+    }
+
+    if (currentChunk.length > 0) {
+      chunks.push(currentChunk.trim());
+    }
+
+    return chunks.length > 0 ? chunks : [text.substring(0, maxLength)];
+  }
+
+  // Generate speech for chunked text
+  async generateChunkedSpeech(text: string, voiceId?: string): Promise<string[]> {
+    const chunks = this.chunkText(text);
+    const audioUrls: string[] = [];
+
+    for (const chunk of chunks) {
+      const audioUrl = await this.generateSpeech(chunk, voiceId);
+      if (audioUrl) {
+        audioUrls.push(audioUrl);
+      }
+    }
+
+    return audioUrls;
+  }
+
   // Helper to estimate character usage
   calculateCharacterCount(text: string): number {
     // Clean text similar to server-side cleaning
