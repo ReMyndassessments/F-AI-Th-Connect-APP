@@ -1,7 +1,22 @@
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Play, Pause, MessageCircle, Book, Heart } from "lucide-react";
+import { 
+  Play, 
+  Pause, 
+  MessageCircle, 
+  Book, 
+  Heart,
+  Upload,
+  BookOpen,
+  Gamepad2,
+  Users,
+  Highlighter,
+  Smartphone,
+  HelpCircle,
+  Church,
+  ArrowRight
+} from "lucide-react";
 
 interface DemoVideoModalProps {
   isOpen: boolean;
@@ -11,38 +26,87 @@ interface DemoVideoModalProps {
 const demoSteps = [
   {
     title: "Welcome to F-AI-TH-Connect",
-    description: "Your AI companion for biblical guidance and spiritual support",
+    description: "Your comprehensive Christian AI companion for spiritual growth, Bible study, and interactive faith-based learning",
     icon: MessageCircle,
     bgColor: "bg-blue-500",
     duration: 3000
   },
   {
-    title: "Ask Any Spiritual Question",
-    description: "Share your concerns, prayer requests, or questions about faith",
+    title: "AI Chat with Biblical Wisdom",
+    description: "Ask spiritual questions and receive Scripture-grounded responses with biblical references and practical guidance",
     icon: Heart,
     bgColor: "bg-amber-500",
     duration: 4000
   },
   {
-    title: "Receive Scripture-Based Answers",
-    description: "Get thoughtful responses grounded in biblical wisdom",
+    title: "Upload Documents for Study",
+    description: "Upload PDFs, text files, or documents to create personalized Bible studies and discussion guides",
+    icon: Upload,
+    bgColor: "bg-green-500",
+    duration: 4000
+  },
+  {
+    title: "Prompt Library for Ministry",
+    description: "Access 30+ professionally written prompts organized by ministry areas - perfect for pastors and leaders",
+    icon: BookOpen,
+    bgColor: "bg-purple-500",
+    duration: 4000
+  },
+  {
+    title: "Bible Study Tools",
+    description: "Look up verses across multiple translations (KJV, NIV, ESV, NLT, NASB) with premium voice playback",
     icon: Book,
     bgColor: "bg-blue-500",
     duration: 4000
   },
   {
-    title: "Explore Biblical References",
-    description: "Every response includes relevant Scripture passages and context",
-    icon: Book,
-    bgColor: "bg-amber-500",
+    title: "Interactive Bible Games",
+    description: "Test your knowledge with 4 game types: Scripture Scramble, Fill-in-the-Blank, Character Guessing, Memory Challenge",
+    icon: Gamepad2,
+    bgColor: "bg-orange-500",
+    duration: 4500
+  },
+  {
+    title: "Group Bible Study Features",
+    description: "Icebreaker challenges for 3-15 participants, Quick Fire sessions, and Team Building activities for ministry groups",
+    icon: Users,
+    bgColor: "bg-indigo-500",
+    duration: 4500
+  },
+  {
+    title: "Advanced Study Features",
+    description: "Text highlighting in 5 colors, export study notes, conversation search, and intelligent biblical spell check",
+    icon: Highlighter,
+    bgColor: "bg-pink-500",
     duration: 4000
   },
   {
-    title: "Continue Your Journey",
-    description: "Build ongoing conversations as your faith grows",
-    icon: MessageCircle,
-    bgColor: "bg-blue-500",
-    duration: 3000
+    title: "Mobile & PWA Experience",
+    description: "Install as a Progressive Web App for offline access, touch-optimized interface, and home screen convenience",
+    icon: Smartphone,
+    bgColor: "bg-teal-500",
+    duration: 4000
+  },
+  {
+    title: "Comprehensive Help Center",
+    description: "Access detailed documentation, group leader resources, troubleshooting guides, and step-by-step instructions",
+    icon: HelpCircle,
+    bgColor: "bg-cyan-500",
+    duration: 3500
+  },
+  {
+    title: "Ministry Support & Community",
+    description: "Support Christian ministry through integrated features and connect with a global faith community",
+    icon: Church,
+    bgColor: "bg-emerald-500",
+    duration: 3500
+  },
+  {
+    title: "Start Your Spiritual Journey",
+    description: "Experience the full power of AI-powered biblical guidance, Bible study tools, and interactive learning",
+    icon: ArrowRight,
+    bgColor: "bg-gradient-to-r from-blue-500 to-amber-500",
+    duration: 4000
   }
 ];
 
