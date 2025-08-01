@@ -223,9 +223,40 @@ export default function BibleGames() {
   const startNewGameSession = (questionsCount: number = 5) => {
     if (!games || games.length === 0) return;
     
-    // Select random games for the session
+    // Ensure we have enough unique games for the session
+    const maxQuestions = Math.min(questionsCount, games.length);
+    
+    // Select unique random games for the session
+    const uniqueGames = new Set<number>(); // Track game IDs to ensure uniqueness
+    const sessionGames: BibleGame[] = [];
+    
+    // Create a shuffled copy of games array for random selection
     const shuffledGames = [...games].sort(() => Math.random() - 0.5);
-    const sessionGames = shuffledGames.slice(0, Math.min(questionsCount, games.length));
+    
+    // Select unique games for the session
+    for (const game of shuffledGames) {
+      if (sessionGames.length >= maxQuestions) break;
+      
+      // Check if we already have this game (by ID and content)
+      const isDuplicate = sessionGames.some(existing => 
+        existing.id === game.id || 
+        (existing.question === game.question && existing.correctAnswer === game.correctAnswer)
+      );
+      
+      if (!isDuplicate) {
+        sessionGames.push(game);
+        uniqueGames.add(game.id);
+      }
+    }
+    
+    // If we don't have enough unique games, warn user
+    if (sessionGames.length < questionsCount) {
+      toast({
+        title: "Limited Questions Available",
+        description: `Only ${sessionGames.length} unique questions available for this quiz.`,
+        variant: "default"
+      });
+    }
     
     setGameSession({
       games: sessionGames,
@@ -256,7 +287,21 @@ export default function BibleGames() {
   const startSingleGame = () => {
     if (!games || games.length === 0) return;
     
-    const randomGame = games[Math.floor(Math.random() * games.length)];
+    // For single games, still ensure we don't pick the same game as the current one
+    let availableGames = games;
+    if (gameState.currentGame) {
+      availableGames = games.filter(game => 
+        game.id !== gameState.currentGame!.id && 
+        !(game.question === gameState.currentGame!.question && game.correctAnswer === gameState.currentGame!.correctAnswer)
+      );
+    }
+    
+    // If no different games available, use all games
+    if (availableGames.length === 0) {
+      availableGames = games;
+    }
+    
+    const randomGame = availableGames[Math.floor(Math.random() * availableGames.length)];
     setGameState({
       currentGame: randomGame,
       userAnswer: '',

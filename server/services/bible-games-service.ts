@@ -484,7 +484,7 @@ export class BibleGamesService {
     }
     
     stats.currentStreak = currentStreak;
-    stats.bestStreak = Math.max(stats.bestStreak, bestStreak);
+    stats.bestStreak = Math.max(stats.bestStreak || 0, bestStreak);
     stats.updatedAt = new Date();
     
     this.userStats.set(userId, stats);
