@@ -335,12 +335,27 @@ export default function BibleGames() {
     // Exact match
     if (userNorm === correctNorm) return true;
     
+    // Special handling for John 3:16 - very flexible validation
+    if (correctNorm.includes('for god so loved the world')) {
+      // Check for key phrases in any order
+      const hasGodLoved = userNorm.includes('god') && (userNorm.includes('loved') || userNorm.includes('love'));
+      const hasWorld = userNorm.includes('world');
+      const hasGave = userNorm.includes('gave') || userNorm.includes('give');
+      const hasSon = userNorm.includes('son') || userNorm.includes('jesus');
+      const hasFor = userNorm.includes('for') || userNorm.includes('so');
+      
+      // If it has most key elements, consider it correct
+      if (hasGodLoved && hasWorld && hasGave && hasSon) {
+        return true;
+      }
+    }
+    
     // Handle common variations for biblical answers
     const userWords = userNorm.split(/\s+/).filter(w => w.length > 0);
     const correctWords = correctNorm.split(/\s+/).filter(w => w.length > 0);
     
     // Check if user answer contains all key words from correct answer (ignoring common words)
-    const skipWords = ['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'from', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'up', 'down', 'out', 'off', 'over', 'under', 'again', 'further', 'then', 'once'];
+    const skipWords = ['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'from', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'up', 'down', 'out', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'his', 'he', 'that'];
     const keyCorrectWords = correctWords.filter(w => !skipWords.includes(w));
     const keyUserWords = userWords.filter(w => !skipWords.includes(w));
     
@@ -351,7 +366,9 @@ export default function BibleGames() {
         // Handle common synonyms for biblical content
         (word === 'turned' && (userWord.includes('chang') || userWord.includes('transform'))) ||
         (word === 'wine' && userWord === 'wine') ||
-        (word === 'water' && userWord === 'water')
+        (word === 'water' && userWord === 'water') ||
+        (word === 'loved' && (userWord.includes('love') || userWord.includes('loved'))) ||
+        (word === 'gave' && (userWord.includes('give') || userWord.includes('gave') || userWord.includes('sent')))
       )
     );
     
@@ -371,6 +388,17 @@ export default function BibleGames() {
 
     const attempts = gameState.attempts + 1;
     const isCorrect = isAnswerCorrect(gameState.userAnswer, gameState.currentGame.correctAnswer);
+    
+    // Debug logging for troubleshooting
+    console.log('Answer validation:', {
+      userAnswer: gameState.userAnswer,
+      correctAnswer: gameState.currentGame.correctAnswer,
+      isCorrect,
+      normalized: {
+        user: gameState.userAnswer.toLowerCase().trim().replace(/[^\w\s]/g, ''),
+        correct: gameState.currentGame.correctAnswer.toLowerCase().trim().replace(/[^\w\s]/g, '')
+      }
+    });
     
     if (isCorrect) {
       const timeCompleted = Math.floor((Date.now() - gameState.timeStarted) / 1000);
