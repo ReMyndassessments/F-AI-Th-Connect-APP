@@ -1185,13 +1185,24 @@ export class BibleGamesService {
     const selectedQuestions: BibleGame[] = [];
     
     // Add 3-4 easy questions for warm-up
-    selectedQuestions.push(...this.shuffleArray(easyGames).slice(0, 3));
+    if (easyGames.length > 0) {
+      selectedQuestions.push(...this.shuffleArray(easyGames).slice(0, 3));
+    }
     
     // Add 2-3 medium questions for engagement
-    selectedQuestions.push(...this.shuffleArray(mediumGames).slice(0, 3));
+    if (mediumGames.length > 0) {
+      selectedQuestions.push(...this.shuffleArray(mediumGames).slice(0, 3));
+    }
     
     // Add 1-2 hard questions for challenge
-    selectedQuestions.push(...this.shuffleArray(hardGames).slice(0, 2));
+    if (hardGames.length > 0) {
+      selectedQuestions.push(...this.shuffleArray(hardGames).slice(0, 2));
+    }
+    
+    // If we don't have enough questions by difficulty, just use any available
+    if (selectedQuestions.length === 0 && allGames.length > 0) {
+      selectedQuestions.push(...this.shuffleArray(allGames).slice(0, Math.min(8, allGames.length)));
+    }
     
     // Shuffle final order
     const finalQuestions = this.shuffleArray(selectedQuestions).slice(0, Math.min(8, participants));

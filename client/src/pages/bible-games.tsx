@@ -249,14 +249,26 @@ export default function BibleGames() {
       return response as IcebreakerChallenge;
     },
     onSuccess: (data: IcebreakerChallenge) => {
+      console.log('Icebreaker data received:', data);
+      
+      if (!data || !data.questions || !Array.isArray(data.questions)) {
+        toast({
+          title: "Error",
+          description: "Invalid icebreaker data received. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
       setIcebreakerChallenge(data);
       setActiveMode('icebreaker');
       toast({
         title: "Icebreaker Challenge Created!",
-        description: `Generated ${data.questions?.length || 0} questions for ${data.format || 'group'} format.`,
+        description: `Generated ${data.questions.length} questions for ${data.format || 'group'} format.`,
       });
     },
-    onError: () => {
+    onError: (error) => {
+      console.error('Icebreaker creation error:', error);
       toast({
         title: "Error",
         description: "Failed to create icebreaker challenge. Please try again.",
