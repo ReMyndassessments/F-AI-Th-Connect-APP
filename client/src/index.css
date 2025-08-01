@@ -220,6 +220,50 @@ body {
     -webkit-tap-highlight-color: rgba(59, 130, 246, 0.15);
     touch-action: manipulation;
   }
+
+  /* Enhanced mobile interactions for Bible Games */
+  .mobile-tap:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease-in-out;
+  }
+
+  /* Bible Games mobile optimizations */
+  .game-mode-card {
+    transition: all 0.2s ease-in-out;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .game-mode-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .game-mode-card:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Enhanced button feedback */
+  .faith-button-primary {
+    transition: all 0.2s ease-in-out;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .faith-button-primary:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+  }
+
+  /* Bible Games card animations */
+  .bible-games-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .bible-games-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  }
   
   /* Extra small screen utilities */
   @media (max-width: 640px) {

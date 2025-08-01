@@ -665,153 +665,215 @@ export default function BibleGames() {
           </div>
         </header>
 
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-8">
-          {/* Hero Section */}
-          <div className="text-center mb-8 sm:mb-12">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+          {/* Hero Section - Mobile Optimized */}
+          <div className="text-center mb-6 sm:mb-10 lg:mb-12 px-2">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 leading-tight">
               <span className="text-gray-900">Test Your</span>
               <span className="faith-gradient-text"> Biblical Knowledge</span>
             </h1>
-            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-sm sm:text-base lg:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed px-2">
               Challenge yourself with interactive Bible games covering Scripture, characters, places, and events. 
               Perfect for Bible study groups and personal spiritual growth!
             </p>
           </div>
 
-          {/* User Stats */}
+          {/* User Stats - Mobile Optimized */}
           {userStats && (
-            <Card className="mb-6 sm:mb-8 bg-white/80 backdrop-blur-sm border-0 shadow-lg">
-              <CardHeader className="pb-3 sm:pb-4">
-                <CardTitle className="flex items-center text-lg sm:text-xl">
+            <Card className="mb-5 sm:mb-7 lg:mb-8 bg-white/90 backdrop-blur-sm border-0 shadow-lg bible-games-card">
+              <CardHeader className="pb-3 sm:pb-4 px-4 sm:px-6">
+                <CardTitle className="flex items-center text-base sm:text-lg lg:text-xl">
                   <Trophy className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-amber-500" />
                   Your Progress
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                  <div className="text-center p-3 sm:p-4 rounded-lg bg-blue-50">
-                    <div className="text-xl sm:text-2xl font-bold text-blue-600">{userStats.totalGamesPlayed}</div>
-                    <div className="text-xs sm:text-sm text-gray-600">Games Played</div>
+              <CardContent className="px-4 sm:px-6">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+                  <div className="text-center p-3 sm:p-4 rounded-xl bg-blue-50 border border-blue-100">
+                    <div className="text-lg sm:text-xl lg:text-2xl font-bold text-blue-600">{userStats.totalGamesPlayed}</div>
+                    <div className="text-xs sm:text-sm text-gray-600 font-medium">Games Played</div>
                   </div>
-                  <div className="text-center p-3 sm:p-4 rounded-lg bg-green-50">
-                    <div className="text-xl sm:text-2xl font-bold text-green-600">{userStats.totalScore}</div>
-                    <div className="text-xs sm:text-sm text-gray-600">Total Score</div>
+                  <div className="text-center p-3 sm:p-4 rounded-xl bg-green-50 border border-green-100">
+                    <div className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600">{userStats.totalScore}</div>
+                    <div className="text-xs sm:text-sm text-gray-600 font-medium">Total Score</div>
                   </div>
-                  <div className="text-center p-3 sm:p-4 rounded-lg bg-purple-50">
-                    <div className="text-xl sm:text-2xl font-bold text-purple-600">{userStats.bestStreak}</div>
-                    <div className="text-xs sm:text-sm text-gray-600">Best Streak</div>
+                  <div className="text-center p-3 sm:p-4 rounded-xl bg-purple-50 border border-purple-100">
+                    <div className="text-lg sm:text-xl lg:text-2xl font-bold text-purple-600">{userStats.bestStreak}</div>
+                    <div className="text-xs sm:text-sm text-gray-600 font-medium">Best Streak</div>
                   </div>
-                  <div className="text-center p-3 sm:p-4 rounded-lg bg-orange-50">
-                    <div className="text-xl sm:text-2xl font-bold text-orange-600">{userStats.currentStreak}</div>
-                    <div className="text-xs sm:text-sm text-gray-600">Current Streak</div>
+                  <div className="text-center p-3 sm:p-4 rounded-xl bg-orange-50 border border-orange-100">
+                    <div className="text-lg sm:text-xl lg:text-2xl font-bold text-orange-600">{userStats.currentStreak}</div>
+                    <div className="text-xs sm:text-sm text-gray-600 font-medium">Current Streak</div>
                   </div>
                 </div>
               </CardContent>
             </Card>
           )}
 
-          {/* Game Mode Selection */}
-          <Card className="mb-6 sm:mb-8 bg-white/80 backdrop-blur-sm border-0 shadow-lg">
-            <CardHeader className="pb-3 sm:pb-4">
-              <CardTitle className="flex items-center text-lg sm:text-xl">
+          {/* Game Mode Selection - Mobile Optimized */}
+          <Card className="mb-5 sm:mb-7 lg:mb-8 bg-white/90 backdrop-blur-sm border-0 shadow-lg bible-games-card">
+            <CardHeader className="pb-3 sm:pb-4 px-4 sm:px-6">
+              <CardTitle className="flex items-center text-base sm:text-lg lg:text-xl">
                 <Gamepad2 className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-blue-500" />
                 Choose Your Game Mode
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              {/* Mode Selection Tabs */}
-              <div className="flex flex-wrap gap-2 mb-6 p-1 bg-gray-100 rounded-lg">
-                <Button
+            <CardContent className="px-4 sm:px-6">
+              {/* Mode Selection - Mobile Optimized */}
+              <div className="space-y-3 mb-8">
+                {/* Primary Mode - Individual Play */}
+                <div 
                   onClick={() => setActiveMode('individual')}
-                  variant={activeMode === 'individual' ? 'default' : 'ghost'}
-                  size="sm"
-                  className="flex-1 min-w-fit"
+                  className={`p-4 rounded-xl border-2 cursor-pointer transition-all touch-target game-mode-card mobile-tap ${
+                    activeMode === 'individual' 
+                      ? 'border-blue-500 bg-blue-50 shadow-md' 
+                      : 'border-gray-200 bg-white hover:border-gray-300'
+                  }`}
                 >
-                  <Target className="w-4 h-4 mr-2" />
-                  Individual Play
-                </Button>
-                <Button
-                  onClick={() => setActiveMode('icebreaker')}
-                  variant={activeMode === 'icebreaker' ? 'default' : 'ghost'}
-                  size="sm"
-                  className="flex-1 min-w-fit"
-                >
-                  <Coffee className="w-4 h-4 mr-2" />
-                  Bible Study Icebreaker
-                </Button>
-                <Button
-                  onClick={() => setActiveMode('quickfire')}
-                  variant={activeMode === 'quickfire' ? 'default' : 'ghost'}
-                  size="sm"
-                  className="flex-1 min-w-fit"
-                >
-                  <Zap className="w-4 h-4 mr-2" />
-                  Quick Fire
-                </Button>
-                <Button
-                  onClick={() => setActiveMode('team-building')}
-                  variant={activeMode === 'team-building' ? 'default' : 'ghost'}
-                  size="sm"
-                  className="flex-1 min-w-fit"
-                >
-                  <Users className="w-4 h-4 mr-2" />
-                  Team Building
-                </Button>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                        activeMode === 'individual' ? 'bg-blue-500' : 'bg-gray-100'
+                      }`}>
+                        <Target className={`w-5 h-5 ${
+                          activeMode === 'individual' ? 'text-white' : 'text-gray-600'
+                        }`} />
+                      </div>
+                      <div>
+                        <h3 className={`font-semibold ${
+                          activeMode === 'individual' ? 'text-blue-900' : 'text-gray-900'
+                        }`}>Individual Play</h3>
+                        <p className="text-sm text-gray-600">Test your knowledge solo</p>
+                      </div>
+                    </div>
+                    <div className={`w-5 h-5 rounded-full border-2 ${
+                      activeMode === 'individual' 
+                        ? 'border-blue-500 bg-blue-500' 
+                        : 'border-gray-300'
+                    }`}>
+                      {activeMode === 'individual' && (
+                        <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5"></div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Secondary Modes - Compact Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div 
+                    onClick={() => setActiveMode('icebreaker')}
+                    className={`p-3 rounded-lg border cursor-pointer transition-all touch-target game-mode-card mobile-tap ${
+                      activeMode === 'icebreaker' 
+                        ? 'border-purple-400 bg-purple-50' 
+                        : 'border-gray-200 bg-white hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="flex items-center space-x-2">
+                      <Coffee className={`w-4 h-4 ${
+                        activeMode === 'icebreaker' ? 'text-purple-600' : 'text-gray-500'
+                      }`} />
+                      <span className={`text-sm font-medium ${
+                        activeMode === 'icebreaker' ? 'text-purple-900' : 'text-gray-700'
+                      }`}>Bible Study Icebreaker</span>
+                    </div>
+                  </div>
+                  
+                  <div 
+                    onClick={() => setActiveMode('quickfire')}
+                    className={`p-3 rounded-lg border cursor-pointer transition-all touch-target game-mode-card mobile-tap ${
+                      activeMode === 'quickfire' 
+                        ? 'border-orange-400 bg-orange-50' 
+                        : 'border-gray-200 bg-white hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="flex items-center space-x-2">
+                      <Zap className={`w-4 h-4 ${
+                        activeMode === 'quickfire' ? 'text-orange-600' : 'text-gray-500'
+                      }`} />
+                      <span className={`text-sm font-medium ${
+                        activeMode === 'quickfire' ? 'text-orange-900' : 'text-gray-700'
+                      }`}>Quick Fire</span>
+                    </div>
+                  </div>
+                  
+                  <div 
+                    onClick={() => setActiveMode('team-building')}
+                    className={`p-3 rounded-lg border cursor-pointer transition-all touch-target game-mode-card mobile-tap ${
+                      activeMode === 'team-building' 
+                        ? 'border-green-400 bg-green-50' 
+                        : 'border-gray-200 bg-white hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="flex items-center space-x-2">
+                      <Users className={`w-4 h-4 ${
+                        activeMode === 'team-building' ? 'text-green-600' : 'text-gray-500'
+                      }`} />
+                      <span className={`text-sm font-medium ${
+                        activeMode === 'team-building' ? 'text-green-900' : 'text-gray-700'
+                      }`}>Team Building</span>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              {/* Individual Play Mode */}
+              {/* Individual Play Mode - Mobile Optimized */}
               {activeMode === 'individual' && (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-                  <div>
-                    <label className="text-sm font-medium mb-2 block text-gray-700">Category</label>
-                    <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                      <SelectTrigger className="border-gray-200 focus:border-blue-400">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Categories</SelectItem>
-                        <SelectItem value="characters">Bible Characters</SelectItem>
-                        <SelectItem value="places">Bible Places</SelectItem>
-                        <SelectItem value="verses">Scripture Verses</SelectItem>
-                        <SelectItem value="books">Bible Books</SelectItem>
-                        <SelectItem value="events">Bible Events</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium mb-2 block text-gray-700">Difficulty</label>
-                    <Select value={selectedDifficulty} onValueChange={setSelectedDifficulty}>
-                      <SelectTrigger className="border-gray-200 focus:border-blue-400">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Levels</SelectItem>
-                        <SelectItem value="easy">Easy (10 pts)</SelectItem>
-                        <SelectItem value="medium">Medium (20 pts)</SelectItem>
-                        <SelectItem value="hard">Hard (30 pts)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="flex items-end">
-                    <div className="flex flex-col gap-2">
-                      <Button 
-                        onClick={() => startNewGameSession(5)} 
-                        disabled={!games || games.length === 0 || isLoading}
-                        className="w-full faith-button-primary touch-target mobile-tap"
-                      >
-                        <Play className="w-4 h-4 mr-2" />
-                        Start 5-Question Quiz
-                      </Button>
-                      <Button 
-                        onClick={startSingleGame} 
-                        disabled={!games || games.length === 0 || isLoading}
-                        variant="outline"
-                        className="w-full touch-target mobile-tap"
-                      >
-                        <Shuffle className="w-4 h-4 mr-2" />
-                        Single Question
-                      </Button>
+                <div className="space-y-6">
+                  {/* Category & Difficulty Selection */}
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-sm font-semibold mb-3 block text-gray-800">Category</label>
+                      <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                        <SelectTrigger className="h-12 border-2 border-gray-200 focus:border-blue-400 rounded-xl touch-target">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">All Categories</SelectItem>
+                          <SelectItem value="characters">Bible Characters</SelectItem>
+                          <SelectItem value="places">Bible Places</SelectItem>
+                          <SelectItem value="verses">Scripture Verses</SelectItem>
+                          <SelectItem value="books">Bible Books</SelectItem>
+                          <SelectItem value="events">Bible Events</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
+                    
+                    <div>
+                      <label className="text-sm font-semibold mb-3 block text-gray-800">Difficulty</label>
+                      <Select value={selectedDifficulty} onValueChange={setSelectedDifficulty}>
+                        <SelectTrigger className="h-12 border-2 border-gray-200 focus:border-blue-400 rounded-xl touch-target">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">All Levels</SelectItem>
+                          <SelectItem value="easy">Easy (10 pts)</SelectItem>
+                          <SelectItem value="medium">Medium (20 pts)</SelectItem>
+                          <SelectItem value="hard">Hard (30 pts)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  {/* Action Buttons - Mobile Optimized */}
+                  <div className="space-y-3">
+                    <Button 
+                      onClick={() => startNewGameSession(5)} 
+                      disabled={!games || games.length === 0 || isLoading}
+                      className="w-full h-14 text-base font-semibold faith-button-primary touch-target rounded-xl shadow-lg hover:shadow-xl transition-all"
+                    >
+                      <Play className="w-5 h-5 mr-3" />
+                      Start 5-Question Quiz
+                    </Button>
+                    
+                    <Button 
+                      onClick={startSingleGame} 
+                      disabled={!games || games.length === 0 || isLoading}
+                      variant="outline"
+                      className="w-full h-12 text-base font-medium touch-target rounded-xl border-2 hover:border-blue-300 hover:bg-blue-50 transition-all"
+                    >
+                      <Shuffle className="w-4 h-4 mr-2" />
+                      Single Question
+                    </Button>
                   </div>
                 </div>
               )}
