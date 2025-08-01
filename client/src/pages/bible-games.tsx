@@ -10,7 +10,7 @@ import { Progress } from '@/components/ui/progress';
 import { 
   Gamepad2, Trophy, Clock, Target, Shuffle, BookOpen, 
   Users, MapPin, Star, Play, RotateCcw, CheckCircle, 
-  XCircle, Lightbulb, Award, TrendingUp, ArrowLeft, X
+  XCircle, Lightbulb, Award, TrendingUp, ArrowLeft, X, AlertTriangle
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
@@ -25,6 +25,12 @@ interface GameState {
   isAnswered: boolean;
   isCorrect: boolean;
   attempts: number;
+}
+
+interface SpellCheckSuggestion {
+  word: string;
+  suggestions: string[];
+  isCorrect: boolean;
 }
 
 interface GameSession {
@@ -64,8 +70,119 @@ export default function BibleGames() {
     isSessionActive: false
   });
 
+  const [spellCheckSuggestions, setSpellCheckSuggestions] = useState<SpellCheckSuggestion[]>([]);
+
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  // Biblical terms dictionary for spell check
+  const biblicalTerms = [
+    // People
+    'moses', 'jesus', 'david', 'abraham', 'isaac', 'jacob', 'joseph', 'noah', 'adam', 'eve', 'mary', 'peter', 'paul', 'john', 'matthew', 'mark', 'luke', 'solomon', 'daniel', 'jonah', 'esther', 'ruth', 'samuel', 'joshua', 'caleb', 'aaron', 'miriam', 'sarah', 'rebecca', 'rachel', 'leah', 'benjamin', 'judah', 'levi', 'reuben', 'simeon', 'zebulun', 'issachar', 'dan', 'naphtali', 'gad', 'asher', 'ephraim', 'manasseh', 'samson', 'gideon', 'deborah', 'eli', 'hannah', 'saul', 'jonathan', 'bathsheba', 'nathan', 'elijah', 'elisha', 'isaiah', 'jeremiah', 'ezekiel', 'hosea', 'joel', 'amos', 'obadiah', 'micah', 'nahum', 'habakkuk', 'zephaniah', 'haggai', 'zechariah', 'malachi', 'elizabeth', 'zacharias', 'simeon', 'anna', 'andrew', 'james', 'philip', 'bartholomew', 'thomas', 'thaddeus', 'simon', 'matthias', 'stephen', 'barnabas', 'timothy', 'titus', 'philemon', 'lydia', 'priscilla', 'aquila', 'apollos', 'silas', 'cornelius', 'felix', 'festus', 'agrippa', 'herod', 'pilate', 'caesar', 'pharaoh', 'nebuchadnezzar', 'belshazzar', 'darius', 'cyrus', 'artaxerxes', 'ahasuerus', 'mordecai', 'haman',
+    // Places  
+    'jerusalem', 'bethlehem', 'nazareth', 'galilee', 'judea', 'samaria', 'egypt', 'babylon', 'assyria', 'persia', 'rome', 'antioch', 'damascus', 'jericho', 'gaza', 'beersheba', 'hebron', 'shechem', 'shiloh', 'bethel', 'gilgal', 'ramah', 'mizpah', 'gibeah', 'tekoa', 'bethany', 'emmaus', 'cana', 'capernaum', 'chorazin', 'bethsaida', 'tyre', 'sidon', 'caesarea', 'joppa', 'lydda', 'ephesus', 'corinth', 'thessalonica', 'philippi', 'athens', 'berea', 'crete', 'cyprus', 'malta', 'sinai', 'horeb', 'carmel', 'tabor', 'hermon', 'olivet', 'calvary', 'golgotha', 'gethsemane', 'jordan', 'euphrates', 'tigris', 'nile', 'mediterranean', 'galilee', 'gennesaret', 'dead', 'red', 'canaan', 'promised', 'eden', 'ararat', 'moriah', 'zion', 'temple', 'solomon', 'herod', 'synagogue', 'tabernacle', 'ark', 'covenant', 'mercy', 'seat', 'altar', 'bronze', 'gold', 'holy', 'holies', 'veil', 'curtain',
+    // Books
+    'genesis', 'exodus', 'leviticus', 'numbers', 'deuteronomy', 'joshua', 'judges', 'ruth', 'samuel', 'kings', 'chronicles', 'ezra', 'nehemiah', 'esther', 'job', 'psalms', 'proverbs', 'ecclesiastes', 'song', 'isaiah', 'jeremiah', 'lamentations', 'ezekiel', 'daniel', 'hosea', 'joel', 'amos', 'obadiah', 'jonah', 'micah', 'nahum', 'habakkuk', 'zephaniah', 'haggai', 'zechariah', 'malachi', 'matthew', 'mark', 'luke', 'john', 'acts', 'romans', 'corinthians', 'galatians', 'ephesians', 'philippians', 'colossians', 'thessalonians', 'timothy', 'titus', 'philemon', 'hebrews', 'james', 'peter', 'revelation',
+    // Religious terms
+    'god', 'lord', 'christ', 'jesus', 'holy', 'spirit', 'father', 'son', 'trinity', 'messiah', 'savior', 'redeemer', 'creator', 'almighty', 'yahweh', 'jehovah', 'elohim', 'adonai', 'emmanuel', 'immanuel', 'alpha', 'omega', 'lamb', 'shepherd', 'king', 'priest', 'prophet', 'apostle', 'disciple', 'angel', 'archangel', 'cherub', 'seraph', 'gabriel', 'michael', 'satan', 'devil', 'demon', 'heaven', 'paradise', 'hell', 'hades', 'sheol', 'resurrection', 'ascension', 'crucifixion', 'cross', 'crown', 'thorns', 'blood', 'sacrifice', 'atonement', 'redemption', 'salvation', 'grace', 'mercy', 'love', 'faith', 'hope', 'charity', 'peace', 'joy', 'righteousness', 'holiness', 'sanctification', 'justification', 'forgiveness', 'repentance', 'baptism', 'communion', 'eucharist', 'passover', 'pentecost', 'sabbath', 'worship', 'praise', 'prayer', 'blessing', 'miracle', 'parable', 'covenant', 'testament', 'scripture', 'word', 'gospel', 'law', 'commandment', 'prophecy', 'revelation', 'vision', 'dream', 'voice', 'glory', 'majesty', 'power', 'might', 'strength', 'wisdom', 'knowledge', 'understanding', 'truth', 'light', 'darkness', 'sin', 'evil', 'good', 'pure', 'clean', 'unclean', 'blessed', 'cursed', 'chosen', 'elect', 'church', 'congregation', 'assembly', 'bride', 'body', 'vine', 'branch', 'sheep', 'flock', 'harvest', 'kingdom', 'throne', 'crown', 'scepter', 'robe', 'garment', 'wedding', 'feast', 'banquet', 'bread', 'wine', 'water', 'oil', 'anointing', 'incense', 'fire', 'cloud', 'pillar', 'rock', 'stone', 'mountain', 'valley', 'desert', 'wilderness', 'garden', 'tree', 'fruit', 'seed', 'grain', 'wheat', 'barley', 'vine', 'fig', 'olive', 'palm', 'cedar', 'lily', 'rose', 'lion', 'lamb', 'dove', 'eagle', 'serpent', 'fish', 'loaves', 'fishes', 'manna', 'quail', 'honey', 'milk', 'gold', 'silver', 'bronze', 'iron', 'wood', 'stone', 'precious', 'pearl', 'treasure', 'talent', 'shekel', 'denarius', 'widow', 'mite', 'poor', 'rich', 'beggar', 'leper', 'blind', 'deaf', 'lame', 'sick', 'healing', 'health', 'life', 'death', 'birth', 'child', 'virgin', 'mother', 'father', 'son', 'daughter', 'brother', 'sister', 'husband', 'wife', 'family', 'tribe', 'nation', 'people', 'generation', 'lineage', 'genealogy', 'covenant', 'promise', 'oath', 'vow', 'pledge', 'witness', 'testimony', 'judge', 'judgment', 'justice', 'righteousness', 'wrath', 'anger', 'jealousy', 'vengeance', 'punishment', 'reward', 'blessing', 'curse', 'prosperity', 'abundance', 'famine', 'drought', 'flood', 'earthquake', 'storm', 'thunder', 'lightning', 'rainbow', 'sunrise', 'sunset', 'morning', 'evening', 'night', 'day', 'week', 'month', 'year', 'generation', 'eternity', 'forever', 'everlasting', 'eternal', 'immortal', 'mortal', 'flesh', 'spirit', 'soul', 'heart', 'mind', 'conscience', 'will', 'desire', 'emotion', 'feeling', 'thought', 'memory', 'dream', 'vision', 'revelation', 'prophecy', 'oracle', 'message', 'word', 'voice', 'sound', 'noise', 'silence', 'stillness', 'peace', 'war', 'battle', 'victory', 'defeat', 'enemy', 'friend', 'stranger', 'neighbor', 'servant', 'master', 'lord', 'king', 'queen', 'prince', 'princess', 'ruler', 'leader', 'follower', 'teacher', 'student', 'wise', 'foolish', 'simple', 'understanding', 'knowledge', 'wisdom', 'counsel', 'advice', 'instruction', 'discipline', 'correction', 'rebuke', 'encouragement', 'comfort', 'consolation', 'support', 'help', 'aid', 'assistance', 'rescue', 'deliverance', 'salvation', 'redemption', 'ransom', 'price', 'cost', 'value', 'worth', 'precious', 'valuable', 'treasure', 'jewel', 'crown', 'diadem', 'glory', 'honor', 'praise', 'worship', 'adoration', 'reverence', 'fear', 'awe', 'wonder', 'amazement', 'surprise', 'shock', 'terror', 'dread', 'anxiety', 'worry', 'concern', 'care', 'burden', 'load', 'weight', 'heavy', 'light', 'easy', 'difficult', 'hard', 'soft', 'gentle', 'harsh', 'severe', 'mild', 'kind', 'cruel', 'merciful', 'merciless', 'compassionate', 'caring', 'loving', 'hateful', 'angry', 'peaceful', 'violent', 'calm', 'stormy', 'turbulent', 'serene', 'tranquil', 'quiet', 'loud', 'noisy', 'silent', 'mute', 'speechless', 'eloquent', 'articulate', 'clear', 'unclear', 'confused', 'certain', 'uncertain', 'sure', 'unsure', 'confident', 'doubtful', 'faithful', 'unfaithful', 'loyal', 'disloyal', 'true', 'false', 'honest', 'dishonest', 'sincere', 'insincere', 'genuine', 'fake', 'real', 'imaginary', 'actual', 'potential', 'possible', 'impossible', 'probable', 'improbable', 'likely', 'unlikely', 'certain', 'uncertain', 'definite', 'indefinite', 'specific', 'general', 'particular', 'universal', 'individual', 'collective', 'personal', 'public', 'private', 'secret', 'hidden', 'revealed', 'exposed', 'covered', 'uncovered', 'open', 'closed', 'locked', 'unlocked', 'bound', 'free', 'captive', 'prisoner', 'slave', 'master', 'servant', 'lord', 'subject', 'citizen', 'foreigner', 'alien', 'stranger', 'guest', 'host', 'visitor', 'resident', 'inhabitant', 'dweller', 'sojourner', 'pilgrim', 'traveler', 'journey', 'trip', 'voyage', 'expedition', 'mission', 'quest', 'search', 'seek', 'find', 'discover', 'uncover', 'reveal', 'hide', 'conceal', 'cover', 'protect', 'defend', 'guard', 'watch', 'observe', 'see', 'look', 'gaze', 'stare', 'glance', 'peek', 'glimpse', 'view', 'sight', 'vision', 'appearance', 'look', 'seem', 'appear', 'show', 'display', 'exhibit', 'demonstrate', 'prove', 'evidence', 'sign', 'symbol', 'mark', 'token', 'indication', 'signal', 'warning', 'alarm', 'alert', 'notice', 'announcement', 'declaration', 'proclamation', 'statement', 'assertion', 'claim', 'promise', 'vow', 'oath', 'pledge', 'covenant', 'agreement', 'contract', 'treaty', 'pact', 'alliance', 'union', 'marriage', 'wedding', 'divorce', 'separation', 'division', 'unity', 'harmony', 'discord', 'conflict', 'struggle', 'fight', 'battle', 'war', 'peace', 'truce', 'ceasefire', 'armistice', 'victory', 'triumph', 'success', 'achievement', 'accomplishment', 'failure', 'defeat', 'loss', 'gain', 'profit', 'benefit', 'advantage', 'disadvantage', 'handicap', 'obstacle', 'barrier', 'hindrance', 'impediment', 'difficulty', 'problem', 'trouble', 'issue', 'matter', 'concern', 'worry', 'anxiety', 'fear', 'terror', 'horror', 'dread', 'panic', 'alarm', 'shock', 'surprise', 'amazement', 'wonder', 'awe', 'reverence', 'respect', 'honor', 'dignity', 'pride', 'humility', 'modesty', 'arrogance', 'conceit', 'vanity', 'selfishness', 'selflessness', 'generosity', 'kindness', 'goodness', 'evil', 'wickedness', 'sin', 'righteousness', 'holiness', 'purity', 'cleanliness', 'dirt', 'filth', 'corruption', 'decay', 'rot', 'destruction', 'ruin', 'devastation', 'calamity', 'disaster', 'catastrophe', 'tragedy', 'misfortune', 'bad', 'luck', 'fortune', 'chance', 'opportunity', 'possibility', 'probability', 'certainty', 'uncertainty', 'doubt', 'faith', 'belief', 'trust', 'confidence', 'assurance', 'security', 'safety', 'danger', 'risk', 'hazard', 'peril', 'threat', 'menace', 'warning', 'caution', 'care', 'carefulness', 'carelessness', 'negligence', 'neglect', 'ignore', 'overlook', 'disregard', 'pay', 'attention', 'focus', 'concentrate', 'meditate', 'contemplate', 'consider', 'think', 'ponder', 'reflect', 'remember', 'recall', 'recollect', 'forget', 'forgive', 'pardon', 'excuse', 'absolve', 'acquit', 'condemn', 'blame', 'accuse', 'charge', 'prosecute', 'defend', 'protect', 'save', 'rescue', 'deliver', 'free', 'liberate', 'release', 'let', 'go', 'send', 'away', 'dismiss', 'discharge', 'fire', 'hire', 'employ', 'work', 'labor', 'toil', 'effort', 'try', 'attempt', 'endeavor', 'strive', 'struggle', 'fight', 'resist', 'oppose', 'support', 'help', 'assist', 'aid', 'serve', 'minister', 'care', 'tend', 'nurse', 'heal', 'cure', 'treat', 'medicine', 'remedy', 'solution', 'answer', 'response', 'reply', 'question', 'ask', 'inquire', 'request', 'demand', 'require', 'need', 'want', 'desire', 'wish', 'hope', 'expect', 'anticipate', 'await', 'wait', 'delay', 'postpone', 'defer', 'hurry', 'rush', 'speed', 'fast', 'quick', 'rapid', 'swift', 'slow', 'gradual', 'steady', 'constant', 'continuous', 'intermittent', 'occasional', 'frequent', 'rare', 'common', 'usual', 'normal', 'ordinary', 'regular', 'irregular', 'abnormal', 'unusual', 'strange', 'odd', 'peculiar', 'curious', 'interesting', 'boring', 'dull', 'exciting', 'thrilling', 'amazing', 'wonderful', 'marvelous', 'magnificent', 'glorious', 'beautiful', 'lovely', 'pretty', 'handsome', 'attractive', 'ugly', 'hideous', 'repulsive', 'disgusting', 'pleasant', 'unpleasant', 'agreeable', 'disagreeable', 'nice', 'nasty', 'good', 'bad', 'excellent', 'poor', 'great', 'small', 'large', 'big', 'little', 'tiny', 'huge', 'enormous', 'gigantic', 'massive', 'immense', 'vast', 'infinite', 'finite', 'limited', 'unlimited', 'boundless', 'endless', 'eternal', 'temporary', 'permanent', 'lasting', 'durable', 'fragile', 'weak', 'strong', 'powerful', 'mighty', 'feeble', 'robust', 'healthy', 'sick', 'ill', 'diseased', 'well', 'fit', 'unfit', 'suitable', 'unsuitable', 'appropriate', 'inappropriate', 'proper', 'improper', 'correct', 'incorrect', 'right', 'wrong', 'true', 'false', 'accurate', 'inaccurate', 'precise', 'imprecise', 'exact', 'inexact', 'perfect', 'imperfect', 'flawless', 'flawed', 'complete', 'incomplete', 'whole', 'partial', 'full', 'empty', 'vacant', 'occupied', 'busy', 'free', 'available', 'unavailable', 'present', 'absent', 'here', 'there', 'near', 'far', 'close', 'distant', 'remote', 'local', 'foreign', 'domestic', 'international', 'global', 'universal', 'particular', 'specific', 'general', 'broad', 'narrow', 'wide', 'thin', 'thick', 'fat', 'skinny', 'lean', 'plump', 'round', 'square', 'rectangular', 'triangular', 'circular', 'oval', 'straight', 'curved', 'bent', 'crooked', 'twisted', 'smooth', 'rough', 'bumpy', 'flat', 'steep', 'sloped', 'level', 'high', 'low', 'tall', 'short', 'long', 'brief', 'extended', 'prolonged', 'short-lived', 'long-lasting', 'enduring', 'transient', 'fleeting', 'momentary', 'instant', 'immediate', 'delayed', 'late', 'early', 'timely', 'untimely', 'premature', 'mature', 'ripe', 'unripe', 'green', 'fresh', 'stale', 'old', 'new', 'recent', 'ancient', 'modern', 'contemporary', 'current', 'past', 'future', 'present', 'now', 'then', 'when', 'where', 'why', 'how', 'what', 'who', 'which', 'whose', 'whom'
+  ];
+
+  // Spell check function
+  const spellCheck = (text: string): SpellCheckSuggestion[] => {
+    if (!text.trim()) return [];
+    
+    const words = text.toLowerCase().trim().split(/\s+/);
+    const suggestions: SpellCheckSuggestion[] = [];
+    
+    // Common words to ignore in spell check
+    const commonWords = ['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'into', 'from', 'up', 'down', 'out', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don', 'should', 'now', 'his', 'her', 'him', 'she', 'he', 'it', 'its', 'they', 'them', 'their', 'what', 'which', 'who', 'this', 'that', 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'must', 'shall', 'my', 'your', 'our', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'first', 'second', 'third', 'last', 'next', 'new', 'old', 'great', 'little', 'big', 'small', 'good', 'bad', 'long', 'short', 'high', 'low', 'right', 'left', 'white', 'black', 'red', 'blue', 'green', 'yellow', 'orange', 'purple', 'brown', 'pink', 'gray'];
+    
+    words.forEach(word => {
+      // Remove punctuation
+      const cleanWord = word.replace(/[^\w]/g, '');
+      if (cleanWord.length < 2) return;
+      
+      // Skip common words
+      if (commonWords.includes(cleanWord)) return;
+      
+      // Check if word is in biblical terms dictionary
+      const isCorrect = biblicalTerms.includes(cleanWord);
+      
+      if (!isCorrect) {
+        // Find similar words using simple edit distance
+        const similarWords = biblicalTerms.filter(term => {
+          // More lenient matching for shorter words
+          const maxDistance = cleanWord.length <= 4 ? 1 : 2;
+          const maxLengthDiff = cleanWord.length <= 4 ? 1 : 2;
+          
+          return getEditDistance(cleanWord, term) <= maxDistance && 
+                 (Math.abs(cleanWord.length - term.length) <= maxLengthDiff);
+        })
+        .sort((a, b) => {
+          // Sort by edit distance, then by length similarity
+          const distA = getEditDistance(cleanWord, a);
+          const distB = getEditDistance(cleanWord, b);
+          if (distA !== distB) return distA - distB;
+          return Math.abs(cleanWord.length - a.length) - Math.abs(cleanWord.length - b.length);
+        })
+        .slice(0, 3);
+        
+        if (similarWords.length > 0) {
+          suggestions.push({
+            word: cleanWord,
+            suggestions: similarWords,
+            isCorrect: false
+          });
+        }
+      }
+    });
+    
+    return suggestions;
+  };
+
+  // Simple edit distance calculation
+  const getEditDistance = (str1: string, str2: string): number => {
+    const matrix = Array(str2.length + 1).fill(null).map(() => Array(str1.length + 1).fill(null));
+    
+    for (let i = 0; i <= str1.length; i++) matrix[0][i] = i;
+    for (let j = 0; j <= str2.length; j++) matrix[j][0] = j;
+    
+    for (let j = 1; j <= str2.length; j++) {
+      for (let i = 1; i <= str1.length; i++) {
+        const cost = str1[i - 1] === str2[j - 1] ? 0 : 1;
+        matrix[j][i] = Math.min(
+          matrix[j][i - 1] + 1,
+          matrix[j - 1][i] + 1,
+          matrix[j - 1][i - 1] + cost
+        );
+      }
+    }
+    
+    return matrix[str2.length][str1.length];
+  };
+
+  // Apply spell check suggestion
+  const applySuggestion = (originalWord: string, suggestion: string) => {
+    const newAnswer = gameState.userAnswer.replace(
+      new RegExp(`\\b${originalWord}\\b`, 'gi'), 
+      suggestion
+    );
+    setGameState(prev => ({ ...prev, userAnswer: newAnswer }));
+    
+    // Re-check spelling after applying suggestion
+    const newSuggestions = spellCheck(newAnswer);
+    setSpellCheckSuggestions(newSuggestions);
+  };
+
+  // Check spelling when user types
+  useEffect(() => {
+    if (gameState.userAnswer && !gameState.isAnswered) {
+      const suggestions = spellCheck(gameState.userAnswer);
+      setSpellCheckSuggestions(suggestions);
+    } else {
+      setSpellCheckSuggestions([]);
+    }
+  }, [gameState.userAnswer, gameState.isAnswered]);
 
   // Fetch available games
   const { data: games, isLoading } = useQuery({
@@ -596,8 +713,44 @@ export default function BibleGames() {
                         placeholder="Type your answer here..."
                         onKeyPress={(e) => e.key === 'Enter' && submitAnswer()}
                         className="text-base sm:text-lg border-gray-200 focus:border-blue-400 touch-target mobile-tap"
+                        spellCheck={true}
+                        autoComplete="off"
+                        autoCorrect="on"
                       />
                     </div>
+
+                    {/* Spell Check Suggestions */}
+                    {spellCheckSuggestions.length > 0 && (
+                      <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                        <div className="flex items-center mb-2">
+                          <AlertTriangle className="w-4 h-4 text-amber-600 mr-2" />
+                          <span className="text-sm font-medium text-amber-800">Spelling Suggestions:</span>
+                        </div>
+                        <div className="space-y-2">
+                          {spellCheckSuggestions.map((suggestion, index) => (
+                            <div key={index} className="flex flex-wrap items-center gap-2">
+                              <span className="text-sm text-amber-700">
+                                "<span className="font-medium">{suggestion.word}</span>" might be:
+                              </span>
+                              {suggestion.suggestions.map((word, wordIndex) => (
+                                <Button
+                                  key={wordIndex}
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => applySuggestion(suggestion.word, word)}
+                                  className="text-xs px-2 py-1 h-auto border-amber-300 text-amber-700 hover:bg-amber-100"
+                                >
+                                  {word}
+                                </Button>
+                              ))}
+                            </div>
+                          ))}
+                        </div>
+                        <p className="text-xs text-amber-600 mt-2">
+                          Click a suggestion to replace the word in your answer.
+                        </p>
+                      </div>
+                    )}
                     
                     <div className="flex flex-col sm:flex-row gap-3">
                       <Button 
