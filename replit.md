@@ -35,7 +35,11 @@ The application features a modern full-stack architecture, separating client and
 - **Authentication**: Secure admin authentication with bcrypt password hashing and role-based access.
 - **Content Management**: Feature flag system for rollouts and advertisements, and a complete CRUD system for faith-based promotional content.
 - **Bible Tools**: Dynamic Bible verse loading via `bible-api.com` (formerly API.Bible) with version comparison (KJV, NIV, ESV, NLT, NASB), predictive text, search history, favorites, and text-to-speech for verses and AI responses (using ElevenLabs premium voices).
-- **Bible Games**: Comprehensive system with four game types (Scripture Scramble, Fill-in-the-Blank, Character Guessing, Memory Challenge), multiple difficulty levels, score tracking, hints, multi-question sessions, and intelligent spell check with biblical terms dictionary.
+- **Bible Games**: Comprehensive system with four game types (Scripture Scramble, Fill-in-the-Blank, Character Guessing, Memory Challenge), multiple difficulty levels, score tracking, hints, multi-question sessions, enhanced spell check with biblical terms dictionary, and four distinct game modes:
+  * Individual Play - Original quiz system with enhanced spell check
+  * Bible Study Icebreaker - Customizable group challenges (3-15 people, 10-30 minutes) with balanced difficulty
+  * Quick Fire - Rapid-fire questions for energizing groups (10-20 questions)
+  * Team Building - Structured challenges with warm-up, collaboration, and discussion phases
 - **Ministry Support**: GiveSendGo donation integration and tasteful ministry support reminders.
 - **PWA Support**: Full Progressive Web App (PWA) implementation with service worker, app manifest, install prompts, offline capability, and home screen installation.
 
