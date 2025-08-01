@@ -1166,6 +1166,105 @@ export class BibleGamesService {
     }));
   }
 
+  // Icebreaker game modes for Bible study meetings
+  async getIcebreakerChallenge(participants: number = 6, timeLimit: number = 15): Promise<{
+    questions: BibleGame[];
+    format: string;
+    instructions: string;
+    teamMode: boolean;
+  }> {
+    // Select a diverse mix of questions from all categories and difficulties
+    const allGames = await this.getAllGames();
+    
+    // Ensure good variety: mix of easy, medium, hard across all categories
+    const easyGames = allGames.filter(g => g.difficulty === 'easy');
+    const mediumGames = allGames.filter(g => g.difficulty === 'medium');
+    const hardGames = allGames.filter(g => g.difficulty === 'hard');
+    
+    // Get a balanced mix
+    const selectedQuestions: BibleGame[] = [];
+    
+    // Add 3-4 easy questions for warm-up
+    selectedQuestions.push(...this.shuffleArray(easyGames).slice(0, 3));
+    
+    // Add 2-3 medium questions for engagement
+    selectedQuestions.push(...this.shuffleArray(mediumGames).slice(0, 3));
+    
+    // Add 1-2 hard questions for challenge
+    selectedQuestions.push(...this.shuffleArray(hardGames).slice(0, 2));
+    
+    // Shuffle final order
+    const finalQuestions = this.shuffleArray(selectedQuestions).slice(0, Math.min(8, participants));
+    
+    return {
+      questions: finalQuestions,
+      format: participants <= 4 ? 'individual' : 'team',
+      instructions: this.getIcebreakerInstructions(participants, timeLimit),
+      teamMode: participants > 4
+    };
+  }
+
+  private getIcebreakerInstructions(participants: number, timeLimit: number): string {
+    if (participants <= 4) {
+      return `Individual Challenge (${participants} people, ${timeLimit} minutes):
+      • Each person takes turns answering questions
+      • 1-2 minutes per question
+      • Others can help if stuck
+      • Focus on learning together, not competition
+      • Great for starting discussions about Bible knowledge`;
+    } else {
+      return `Team Challenge (${participants} people, ${timeLimit} minutes):
+      • Split into teams of 2-3 people
+      • Teams collaborate on each question
+      • 1-2 minutes per question per team
+      • Encourage friendly discussion
+      • Perfect for breaking the ice and getting everyone talking`;
+    }
+  }
+
+  async getQuickFireChallenge(count: number = 10): Promise<BibleGame[]> {
+    // Get quick, easy questions perfect for rapid-fire rounds
+    const allGames = await this.getAllGames();
+    const quickGames = allGames.filter(game => 
+      (game.difficulty === 'easy' || game.difficulty === 'medium') &&
+      (game.type === 'fill_blank' || game.type === 'character_guess')
+    );
+    
+    return this.shuffleArray(quickGames).slice(0, count);
+  }
+
+  async getTeamBuildingChallenge(): Promise<{
+    warmUp: BibleGame[];
+    collaboration: BibleGame[];
+    discussion: BibleGame[];
+  }> {
+    const allGames = await this.getAllGames();
+    
+    return {
+      // Easy questions to get everyone comfortable
+      warmUp: this.shuffleArray(allGames.filter(g => g.difficulty === 'easy')).slice(0, 3),
+      
+      // Medium questions that require teamwork
+      collaboration: this.shuffleArray(allGames.filter(g => 
+        g.difficulty === 'medium' && (g.type === 'scramble' || g.type === 'memory_verse')
+      )).slice(0, 4),
+      
+      // Thought-provoking questions for deeper discussion
+      discussion: this.shuffleArray(allGames.filter(g => 
+        g.difficulty === 'hard' && g.category === 'theology'
+      )).slice(0, 2)
+    };
+  }
+
+  private shuffleArray<T>(array: T[]): T[] {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  }
+
   private async updateUserStats(userId: string, newScore: GameScore): Promise<void> {
     let stats = this.userStats.get(userId) || {
       userId,

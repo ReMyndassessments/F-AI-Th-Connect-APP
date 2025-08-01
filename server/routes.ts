@@ -10,6 +10,7 @@ import { elevenLabsTTS } from "./services/elevenlabs-tts";
 
 import { FileProcessor } from "./services/file-processor";
 import { bibleGamesService } from "./services/bible-games-service";
+import { spellCheckService } from "./services/spell-check-service";
 import { z } from "zod";
 import { insertMessageSchema, insertChatSessionSchema, adminLoginSchema, insertFeatureFlagSchema, insertAdvertisementSchema } from "@shared/schema";
 
@@ -706,6 +707,70 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching leaderboard:", error);
       res.status(500).json({ message: "Failed to fetch leaderboard" });
+    }
+  });
+
+  // Icebreaker routes for Bible study meetings
+  app.post("/api/bible-games/icebreaker", async (req: Request, res: Response) => {
+    try {
+      const { participants = 6, timeLimit = 15 } = req.body;
+      const challenge = await bibleGamesService.getIcebreakerChallenge(participants, timeLimit);
+      res.json(challenge);
+    } catch (error) {
+      console.error("Error creating icebreaker challenge:", error);
+      res.status(500).json({ message: "Failed to create icebreaker challenge" });
+    }
+  });
+
+  app.get("/api/bible-games/quickfire", async (req: Request, res: Response) => {
+    try {
+      const count = parseInt(req.query.count as string) || 10;
+      const questions = await bibleGamesService.getQuickFireChallenge(count);
+      res.json(questions);
+    } catch (error) {
+      console.error("Error fetching quickfire questions:", error);
+      res.status(500).json({ message: "Failed to fetch quickfire questions" });
+    }
+  });
+
+  app.get("/api/bible-games/team-building", async (req: Request, res: Response) => {
+    try {
+      const challenge = await bibleGamesService.getTeamBuildingChallenge();
+      res.json(challenge);
+    } catch (error) {
+      console.error("Error creating team building challenge:", error);
+      res.status(500).json({ message: "Failed to create team building challenge" });
+    }
+  });
+
+  // Spell check and predictive text routes
+  app.post("/api/spell-check", async (req: Request, res: Response) => {
+    try {
+      const { text } = req.body;
+      if (!text || typeof text !== 'string') {
+        return res.status(400).json({ message: "Text is required" });
+      }
+      
+      const results = spellCheckService.checkSpelling(text);
+      res.json(results);
+    } catch (error) {
+      console.error("Error checking spelling:", error);
+      res.status(500).json({ message: "Failed to check spelling" });
+    }
+  });
+
+  app.post("/api/predictive-text", async (req: Request, res: Response) => {
+    try {
+      const { input, limit = 5 } = req.body;
+      if (!input || typeof input !== 'string') {
+        return res.status(400).json({ message: "Input is required" });
+      }
+      
+      const results = spellCheckService.getPredictiveText(input, limit);
+      res.json(results);
+    } catch (error) {
+      console.error("Error getting predictive text:", error);
+      res.status(500).json({ message: "Failed to get predictive text" });
     }
   });
 

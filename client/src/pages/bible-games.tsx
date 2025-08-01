@@ -5,12 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { EnhancedInput } from '@/components/ui/enhanced-input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
 import { 
   Gamepad2, Trophy, Clock, Target, Shuffle, BookOpen, 
   Users, MapPin, Star, Play, RotateCcw, CheckCircle, 
-  XCircle, Lightbulb, Award, TrendingUp, ArrowLeft, X, AlertTriangle, SkipForward
+  XCircle, Lightbulb, Award, TrendingUp, ArrowLeft, X, AlertTriangle, SkipForward,
+  Coffee, UserCheck, Zap, MessageCircle, Settings
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
@@ -44,10 +46,30 @@ interface GameSession {
   isSessionActive: boolean;
 }
 
+interface IcebreakerChallenge {
+  questions: BibleGame[];
+  format: string;
+  instructions: string;
+  teamMode: boolean;
+}
+
+interface TeamBuildingChallenge {
+  warmUp: BibleGame[];
+  collaboration: BibleGame[];
+  discussion: BibleGame[];
+}
+
 export default function BibleGames() {
   const [, setLocation] = useLocation();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('all');
+  const [activeMode, setActiveMode] = useState<'individual' | 'icebreaker' | 'quickfire' | 'team-building'>('individual');
+  const [icebreakerChallenge, setIcebreakerChallenge] = useState<IcebreakerChallenge | null>(null);
+  const [teamBuildingChallenge, setTeamBuildingChallenge] = useState<TeamBuildingChallenge | null>(null);
+  const [icebreakerSettings, setIcebreakerSettings] = useState({
+    participants: 6,
+    timeLimit: 15
+  });
   const [gameState, setGameState] = useState<GameState>({
     currentGame: null,
     userAnswer: '',
@@ -217,6 +239,57 @@ export default function BibleGames() {
         title: "Score Recorded!",
         description: "Your progress has been saved.",
       });
+    }
+  });
+
+  // Icebreaker mutations
+  const createIcebreakerMutation = useMutation({
+    mutationFn: async (settings: { participants: number; timeLimit: number }) => {
+      return await apiRequest('POST', '/api/bible-games/icebreaker', settings);
+    },
+    onSuccess: (data) => {
+      setIcebreakerChallenge(data);
+      setActiveMode('icebreaker');
+      toast({
+        title: "Icebreaker Challenge Created!",
+        description: `Generated ${data.questions.length} questions for ${data.format} format.`,
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to create icebreaker challenge. Please try again.",
+        variant: "destructive",
+      });
+    }
+  });
+
+  const getQuickFireMutation = useMutation({
+    mutationFn: async (count: number = 10) => {
+      return apiRequest(`/api/bible-games/quickfire?count=${count}`);
+    },
+    onSuccess: (questions) => {
+      setGameSession({
+        games: questions,
+        currentQuestionIndex: 0,
+        totalQuestions: questions.length,
+        sessionScore: 0,
+        sessionStarted: Date.now(),
+        questionsAnswered: 0,
+        correctAnswers: 0,
+        isSessionActive: true
+      });
+      setActiveMode('quickfire');
+    }
+  });
+
+  const getTeamBuildingMutation = useMutation({
+    mutationFn: async () => {
+      return apiRequest('/api/bible-games/team-building');
+    },
+    onSuccess: (data) => {
+      setTeamBuildingChallenge(data);
+      setActiveMode('team-building');
     }
   });
 
@@ -636,70 +709,221 @@ export default function BibleGames() {
             </Card>
           )}
 
-          {/* Game Filters */}
+          {/* Game Mode Selection */}
           <Card className="mb-6 sm:mb-8 bg-white/80 backdrop-blur-sm border-0 shadow-lg">
             <CardHeader className="pb-3 sm:pb-4">
               <CardTitle className="flex items-center text-lg sm:text-xl">
-                <Target className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-blue-500" />
-                Choose Your Challenge
+                <Gamepad2 className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-blue-500" />
+                Choose Your Game Mode
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-                <div>
-                  <label className="text-sm font-medium mb-2 block text-gray-700">Category</label>
-                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                    <SelectTrigger className="border-gray-200 focus:border-blue-400">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Categories</SelectItem>
-                      <SelectItem value="characters">Bible Characters</SelectItem>
-                      <SelectItem value="places">Bible Places</SelectItem>
-                      <SelectItem value="verses">Scripture Verses</SelectItem>
-                      <SelectItem value="books">Bible Books</SelectItem>
-                      <SelectItem value="events">Bible Events</SelectItem>
-                    </SelectContent>
-                  </Select>
+              {/* Mode Selection Tabs */}
+              <div className="flex flex-wrap gap-2 mb-6 p-1 bg-gray-100 rounded-lg">
+                <Button
+                  onClick={() => setActiveMode('individual')}
+                  variant={activeMode === 'individual' ? 'default' : 'ghost'}
+                  size="sm"
+                  className="flex-1 min-w-fit"
+                >
+                  <Target className="w-4 h-4 mr-2" />
+                  Individual Play
+                </Button>
+                <Button
+                  onClick={() => setActiveMode('icebreaker')}
+                  variant={activeMode === 'icebreaker' ? 'default' : 'ghost'}
+                  size="sm"
+                  className="flex-1 min-w-fit"
+                >
+                  <Coffee className="w-4 h-4 mr-2" />
+                  Bible Study Icebreaker
+                </Button>
+                <Button
+                  onClick={() => setActiveMode('quickfire')}
+                  variant={activeMode === 'quickfire' ? 'default' : 'ghost'}
+                  size="sm"
+                  className="flex-1 min-w-fit"
+                >
+                  <Zap className="w-4 h-4 mr-2" />
+                  Quick Fire
+                </Button>
+                <Button
+                  onClick={() => setActiveMode('team-building')}
+                  variant={activeMode === 'team-building' ? 'default' : 'ghost'}
+                  size="sm"
+                  className="flex-1 min-w-fit"
+                >
+                  <Users className="w-4 h-4 mr-2" />
+                  Team Building
+                </Button>
+              </div>
+
+              {/* Individual Play Mode */}
+              {activeMode === 'individual' && (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+                  <div>
+                    <label className="text-sm font-medium mb-2 block text-gray-700">Category</label>
+                    <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                      <SelectTrigger className="border-gray-200 focus:border-blue-400">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Categories</SelectItem>
+                        <SelectItem value="characters">Bible Characters</SelectItem>
+                        <SelectItem value="places">Bible Places</SelectItem>
+                        <SelectItem value="verses">Scripture Verses</SelectItem>
+                        <SelectItem value="books">Bible Books</SelectItem>
+                        <SelectItem value="events">Bible Events</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium mb-2 block text-gray-700">Difficulty</label>
+                    <Select value={selectedDifficulty} onValueChange={setSelectedDifficulty}>
+                      <SelectTrigger className="border-gray-200 focus:border-blue-400">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Levels</SelectItem>
+                        <SelectItem value="easy">Easy (10 pts)</SelectItem>
+                        <SelectItem value="medium">Medium (20 pts)</SelectItem>
+                        <SelectItem value="hard">Hard (30 pts)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="flex items-end">
+                    <div className="flex flex-col gap-2">
+                      <Button 
+                        onClick={() => startNewGameSession(5)} 
+                        disabled={!games || games.length === 0 || isLoading}
+                        className="w-full faith-button-primary touch-target mobile-tap"
+                      >
+                        <Play className="w-4 h-4 mr-2" />
+                        Start 5-Question Quiz
+                      </Button>
+                      <Button 
+                        onClick={startSingleGame} 
+                        disabled={!games || games.length === 0 || isLoading}
+                        variant="outline"
+                        className="w-full touch-target mobile-tap"
+                      >
+                        <Shuffle className="w-4 h-4 mr-2" />
+                        Single Question
+                      </Button>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <label className="text-sm font-medium mb-2 block text-gray-700">Difficulty</label>
-                  <Select value={selectedDifficulty} onValueChange={setSelectedDifficulty}>
-                    <SelectTrigger className="border-gray-200 focus:border-blue-400">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Levels</SelectItem>
-                      <SelectItem value="easy">Easy (10 pts)</SelectItem>
-                      <SelectItem value="medium">Medium (20 pts)</SelectItem>
-                      <SelectItem value="hard">Hard (30 pts)</SelectItem>
-                    </SelectContent>
-                  </Select>
+              )}
+
+              {/* Icebreaker Mode */}
+              {activeMode === 'icebreaker' && (
+                <div className="space-y-4">
+                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <h3 className="font-semibold text-blue-800 mb-2">Perfect for Bible Study Groups!</h3>
+                    <p className="text-blue-700 text-sm">
+                      Create customized challenges to get your group talking and learning together. 
+                      Questions are automatically balanced across difficulty levels.
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium mb-2 block text-gray-700">Number of Participants</label>
+                      <Select 
+                        value={icebreakerSettings.participants.toString()} 
+                        onValueChange={(value) => setIcebreakerSettings(prev => ({ ...prev, participants: parseInt(value) }))}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="3">3 people</SelectItem>
+                          <SelectItem value="4">4 people</SelectItem>
+                          <SelectItem value="5">5 people</SelectItem>
+                          <SelectItem value="6">6 people</SelectItem>
+                          <SelectItem value="8">8 people</SelectItem>
+                          <SelectItem value="10">10 people</SelectItem>
+                          <SelectItem value="12">12 people</SelectItem>
+                          <SelectItem value="15">15 people</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium mb-2 block text-gray-700">Time Limit (minutes)</label>
+                      <Select 
+                        value={icebreakerSettings.timeLimit.toString()} 
+                        onValueChange={(value) => setIcebreakerSettings(prev => ({ ...prev, timeLimit: parseInt(value) }))}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="10">10 minutes</SelectItem>
+                          <SelectItem value="15">15 minutes</SelectItem>
+                          <SelectItem value="20">20 minutes</SelectItem>
+                          <SelectItem value="25">25 minutes</SelectItem>
+                          <SelectItem value="30">30 minutes</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <Button 
+                    onClick={() => createIcebreakerMutation.mutate(icebreakerSettings)}
+                    disabled={createIcebreakerMutation.isPending}
+                    className="w-full faith-button-primary"
+                  >
+                    <UserCheck className="w-4 h-4 mr-2" />
+                    {createIcebreakerMutation.isPending ? 'Creating Challenge...' : 'Create Icebreaker Challenge'}
+                  </Button>
                 </div>
-                <div className="flex items-end">
-                  <div className="flex flex-col gap-2">
-                    <Button 
-                      onClick={() => startNewGameSession(5)} 
-                      disabled={!games || games.length === 0 || isLoading}
-                      className="w-full faith-button-primary touch-target mobile-tap"
-                    >
-                      <Play className="w-4 h-4 mr-2" />
-                      Start 5-Question Quiz
+              )}
+
+              {/* Quick Fire Mode */}
+              {activeMode === 'quickfire' && (
+                <div className="space-y-4">
+                  <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
+                    <h3 className="font-semibold text-orange-800 mb-2">Rapid-Fire Biblical Knowledge!</h3>
+                    <p className="text-orange-700 text-sm">
+                      Quick questions perfect for energizing your group with fast-paced biblical challenges.
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <Button onClick={() => getQuickFireMutation.mutate(10)} className="faith-button-primary">
+                      <Zap className="w-4 h-4 mr-2" />
+                      10 Questions
                     </Button>
-                    <Button 
-                      onClick={startSingleGame} 
-                      disabled={!games || games.length === 0 || isLoading}
-                      variant="outline"
-                      className="w-full touch-target mobile-tap"
-                    >
-                      <Shuffle className="w-4 h-4 mr-2" />
-                      Single Question
+                    <Button onClick={() => getQuickFireMutation.mutate(15)} className="faith-button-primary">
+                      <Zap className="w-4 h-4 mr-2" />
+                      15 Questions
+                    </Button>
+                    <Button onClick={() => getQuickFireMutation.mutate(20)} className="faith-button-primary">
+                      <Zap className="w-4 h-4 mr-2" />
+                      20 Questions
                     </Button>
                   </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+                </div>
+              )}
+
+              {/* Team Building Mode */}
+              {activeMode === 'team-building' && (
+                <div className="space-y-4">
+                  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                    <h3 className="font-semibold text-green-800 mb-2">Structured Team Challenges!</h3>
+                    <p className="text-green-700 text-sm">
+                      Progressive challenges with warm-up, collaboration, and discussion phases designed to build connections.
+                    </p>
+                  </div>
+                  <Button 
+                    onClick={() => getTeamBuildingMutation.mutate()}
+                    disabled={getTeamBuildingMutation.isPending}
+                    className="w-full faith-button-primary"
+                  >
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    {getTeamBuildingMutation.isPending ? 'Preparing Challenge...' : 'Start Team Building Challenge'}
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
 
           {/* Session Progress */}
           {gameSession.isSessionActive && gameSession.totalQuestions > 1 && (
@@ -798,15 +1022,15 @@ export default function BibleGames() {
                   <div className="space-y-4">
                     <div>
                       <label className="text-sm font-medium mb-2 block text-gray-700">Your Answer:</label>
-                      <Input
+                      <EnhancedInput
                         value={gameState.userAnswer}
-                        onChange={(e) => setGameState(prev => ({ ...prev, userAnswer: e.target.value }))}
+                        onValueChange={(value) => setGameState(prev => ({ ...prev, userAnswer: value }))}
                         placeholder="Type your answer here..."
                         onKeyPress={(e) => e.key === 'Enter' && submitAnswer()}
                         className="text-base sm:text-lg border-gray-200 focus:border-blue-400 touch-target mobile-tap"
-                        spellCheck={true}
+                        enableSpellCheck={true}
+                        enablePredictiveText={true}
                         autoComplete="off"
-                        autoCorrect="on"
                       />
                     </div>
 
