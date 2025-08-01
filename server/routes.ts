@@ -9,12 +9,11 @@ import { simpleBibleAPI } from "./services/simple-bible-api";
 import { elevenLabsTTS } from "./services/elevenlabs-tts";
 
 import { FileProcessor } from "./services/file-processor";
-import { BibleGamesService } from "./services/bible-games-service";
+import { bibleGamesService } from "./services/bible-games-service";
 import { z } from "zod";
 import { insertMessageSchema, insertChatSessionSchema, adminLoginSchema, insertFeatureFlagSchema, insertAdvertisementSchema } from "@shared/schema";
 
 const deepseekAI = new DeepseekAI();
-const bibleGamesService = new BibleGamesService();
 
 // Admin Authentication Middleware
 const requireAdmin = async (req: Request, res: Response, next: NextFunction) => {
@@ -671,6 +670,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.ip || 'anonymous-user';
       
       const scoreData = {
+        userId: userId,
         gameId: req.body.gameId,
         score: req.body.score,
         timeCompleted: req.body.timeCompleted,
@@ -701,10 +701,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/bible-games/leaderboard", async (req: Request, res: Response) => {
     try {
       const { category, timeframe } = req.query;
-      const leaderboard = await bibleGamesService.getLeaderboard(
-        category as string || undefined,
-        (timeframe as 'all' | 'week' | 'month') || 'all'
-      );
+      const leaderboard = await bibleGamesService.getLeaderboard(10);
       res.json(leaderboard);
     } catch (error) {
       console.error("Error fetching leaderboard:", error);

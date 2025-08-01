@@ -1094,7 +1094,7 @@ export class BibleGamesService {
     } as BibleGame;
   }
 
-  async getFilteredGames(category?: string, difficulty?: string, limit: number = 10): Promise<BibleGame[]> {
+  async getGames(category?: string, difficulty?: string, limit: number = 10): Promise<BibleGame[]> {
     let filteredGames = sampleBibleGames.map((game, index) => ({
       id: index + 1,
       ...game
@@ -1113,7 +1113,11 @@ export class BibleGamesService {
     return shuffled.slice(0, limit);
   }
 
-  async addScore(userId: string, score: InsertGameScore): Promise<GameScore> {
+  async getFilteredGames(category?: string, difficulty?: string, limit: number = 10): Promise<BibleGame[]> {
+    return this.getGames(category, difficulty, limit);
+  }
+
+  async submitScore(userId: string, score: InsertGameScore): Promise<GameScore> {
     const userScores = this.gameScores.get(userId) || [];
     const newScore: GameScore = {
       id: userScores.length + 1,
@@ -1131,8 +1135,35 @@ export class BibleGamesService {
     return newScore;
   }
 
+  async addScore(userId: string, score: InsertGameScore): Promise<GameScore> {
+    return this.submitScore(userId, score);
+  }
+
   async getUserStats(userId: string): Promise<UserGameStats | undefined> {
     return this.userStats.get(userId);
+  }
+
+  async getLeaderboard(limit: number = 10): Promise<any[]> {
+    // Get all scores and sort by score descending
+    const allScores: GameScore[] = [];
+    for (const userScores of this.gameScores.values()) {
+      allScores.push(...userScores);
+    }
+    
+    // Sort by score descending and take top scores
+    const topScores = allScores
+      .sort((a, b) => b.score - a.score)
+      .slice(0, limit);
+    
+    // Format for leaderboard display
+    return topScores.map((score, index) => ({
+      rank: index + 1,
+      userId: score.userId,
+      score: score.score,
+      gameId: score.gameId,
+      timeCompleted: score.timeCompleted,
+      submittedAt: score.submittedAt
+    }));
   }
 
   private async updateUserStats(userId: string, newScore: GameScore): Promise<void> {
