@@ -60,42 +60,64 @@
 
 ## Video Content Overview
 
-### Feature Coverage (4:20 total runtime)
-1. **Opening & AI Chat** (0:00-0:45) - Core functionality introduction
-2. **Bible Study Tools** (0:45-1:15) - Multiple translations and TTS
-3. **Individual Games** (1:15-1:45) - Enhanced spell check and multi-question sessions
-4. **Icebreaker Mode** (1:45-2:15) - Group Bible study functionality
-5. **Quick Fire Mode** (2:15-2:35) - Rapid-fire biblical questions
-6. **Team Building Mode** (2:35-2:55) - Ministry team challenges
-7. **Mobile Experience** (2:55-3:15) - Touch-optimized responsive design
-8. **PWA Features** (3:15-3:35) - Installation and offline capabilities
-9. **Help & Support** (3:35-3:50) - Documentation and ministry integration
-10. **Closing CTA** (3:50-4:20) - Final call-to-action and branding
+### Feature Coverage (5:45 total runtime)
+1. **Opening Scene** (0:00-0:20) - Enhanced app introduction
+2. **Core AI Chat** (0:20-0:50) - Comprehensive conversation features
+3. **File Upload & Processing** (0:50-1:20) - Document-based Bible study creation
+4. **Prompt Library** (1:20-1:50) - 30+ professional ministry prompts
+5. **Bible Study Tools** (1:50-2:20) - Multiple translations, favorites, TTS
+6. **Individual Games** (2:20-2:45) - Enhanced spell check and progress tracking
+7. **Group Game Modes** (2:45-3:25) - All three modes in detail
+8. **Advanced Features** (3:25-3:55) - Text highlighting and study tools
+9. **Mobile & PWA** (3:55-4:20) - Complete mobile experience showcase
+10. **Help Center** (4:20-4:40) - Comprehensive documentation
+11. **Ministry Support** (4:40-5:00) - Community and donation features
+12. **Feature Integration** (5:00-5:25) - How all features work together
+13. **Enhanced Closing** (5:25-5:45) - Strong call-to-action with testimonials
 
-### New Features Highlighted
-✅ **Enhanced Bible Games**:
-- Four distinct game modes (Individual, Icebreaker, Quick Fire, Team Building)
-- Improved spell check with biblical terms dictionary
-- Multi-question quiz sessions with progress tracking
-- Mobile-optimized touch interactions
+### Comprehensive Features Showcased
+✅ **AI Chat & Content Creation**:
+- Intelligent biblical conversations with Scripture grounding
+- File upload and document processing for study creation
+- Message actions (copy, download, share)
+- Advanced text highlighting system (5 color categories)
 
-✅ **Group Bible Study Tools**:
-- Customizable icebreaker challenges (3-15 participants)
-- Facilitator instructions and guidance
-- Time-based session management
-- Balanced difficulty distribution
+✅ **Prompt Library System**:
+- 30+ professionally written ministry prompts
+- 8 organized categories (Leadership, Youth, Women's, etc.)
+- Search functionality and favorites
+- Auto-fill to message box with editing capability
 
-✅ **Mobile Optimization**:
-- 48px minimum touch targets
-- Safe area padding for notched devices
-- Keyboard-aware layout adjustments
-- Responsive design across all features
+✅ **Bible Study Tools**:
+- Multiple translation comparison (KJV, NIV, ESV, NLT, NASB)
+- Premium voice playback with Christian-focused voices
+- Favorites system and search history
+- Daily verse feature integration
 
-✅ **Technical Improvements**:
-- Fixed unscramble letter mismatches
-- Resolved API route ordering issues
-- Enhanced TypeScript error handling
-- Real-time spell checking functionality
+✅ **Complete Bible Games System**:
+- Four game types with enhanced spell check
+- Individual Play with multi-question sessions
+- Bible Study Icebreaker (3-15 participants, customizable time)
+- Quick Fire rapid-response mode (10-20 questions)
+- Team Building structured phases (warm-up, collaboration, discussion)
+
+✅ **Advanced Study Features**:
+- Text highlighting for Bible study preparation
+- Export study notes functionality
+- Conversation search and history
+- Predictive text with biblical terms
+
+✅ **Mobile & PWA Excellence**:
+- Touch-optimized interface (48px minimum targets)
+- Progressive Web App installation process
+- Offline functionality demonstration
+- Safe area padding and keyboard handling
+
+✅ **Documentation & Support**:
+- Comprehensive Help Center with search
+- Group leader resources and instructions
+- Ministry support and donation integration
+- Feature integration demonstrations
 
 ## Implementation Requirements
 
@@ -105,12 +127,19 @@
 - **Mobile**: Screen mirroring capability for mobile demonstrations
 - **Editing**: Adobe Premiere Pro, Final Cut Pro, or DaVinci Resolve
 
-### Production Timeline
-- **Preparation**: 2 hours (app setup, script review)
-- **Recording**: 4 hours (multiple takes, mobile segments)
-- **Editing**: 6 hours (transitions, audio, effects)
-- **Review**: 2 hours (quality assurance, final adjustments)
-- **Total**: 14 hours for professional-quality production
+### Extended Production Timeline
+- **Pre-Production**: 3 hours (comprehensive app setup, data preparation, script review)
+- **Recording Sessions**: 8 hours (13 feature segments, multiple takes, mobile demonstrations)
+- **Post-Production**: 12 hours (advanced editing, transitions, audio mixing, effects)
+- **Quality Assurance**: 3 hours (comprehensive review, mobile testing, final adjustments)
+- **Total**: 26 hours for professional comprehensive production
+
+### Recording Session Breakdown
+- **Core Features** (2 hours): AI chat, file upload, prompt library
+- **Bible Tools** (2 hours): Lookup, translations, voice features
+- **Games System** (2 hours): All four modes with detailed gameplay
+- **Advanced Features** (1 hour): Highlighting, study tools, integration
+- **Mobile & PWA** (1 hour): Responsive design, installation, offline features
 
 ### Distribution Formats
 - **Primary**: MP4 (H.264, 1920x1080, 30fps) - Full demo

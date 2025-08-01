@@ -206,54 +206,200 @@
 
 ---
 
-### Scene 15: Closing Call-to-Action (3:30-3:45)
+### Scene 16: File Upload Demo (1:00-1:15)
 **Visual Elements**:
-- F-AI-TH-Connect logo with website URL
-- Download/access buttons
-- "Start Your Spiritual Journey Today" text
-- Social media links
-- Contact information
+- File upload drag-and-drop interface
+- PDF processing animation
+- AI analyzing document content
+- Generated Bible study materials appearing
+- Discussion questions and takeaways
 
-**Final Message**:
-- Clear value proposition
-- Multiple access methods
-- Invitation to explore
+**Callouts**:
+- "Upload Any Document"
+- "AI-Generated Study Materials"
+- "Instant Bible Study Creation"
 
 ---
 
-## Technical Specifications
+### Scene 17: Prompt Library Tour (1:15-1:35)
+**Visual Elements**:
+- Prompt Library opening from chat interface
+- Category browsing (Ministry Leadership, Youth, Women's, etc.)
+- Search functionality demonstration
+- Prompt selection and auto-fill
+- Professional prompt examples
 
-### Visual Standards
-- **Resolution**: 1920x1080 (Full HD)
-- **Frame Rate**: 30fps
-- **Color Palette**: Primary blue (#3B82F6), Gold (#F59E0B), White (#FFFFFF)
-- **Font**: Modern sans-serif (Roboto or similar)
-- **Logo Placement**: Consistent top-left corner
+**Animation Effects**:
+- Smooth category transitions
+- Prompt preview on hover
+- Auto-fill animation to message box
 
-### Animation Guidelines
-- **Transitions**: 0.3-0.5 second fades
-- **Highlighting**: Subtle glow effects (2px, 20% opacity)
-- **Mouse Movement**: Smooth, deliberate cursor paths
-- **Text Animation**: Gentle fade-in effects
+---
 
-### Audio Synchronization
-- **Narration**: Synchronized with visual highlights
-- **Background Music**: Christian instrumental, -24dB
-- **Sound Effects**: Subtle button clicks and transitions
-- **Silence**: 0.5s pause between major sections
+### Scene 18: Advanced Text Highlighting (3:25-3:40)
+**Visual Elements**:
+- Text selection in AI response
+- 5-color highlighting toolbar appearing
+- Multiple highlights in different colors
+- Highlight summary showing counts by category
+- Export study notes functionality
 
-## Post-Production Effects
+**Feature Highlights**:
+- "5 Color Categories"
+- "Export Study Notes"
+- "Perfect for Bible Study Prep"
 
-### Visual Enhancements
-- **Callout Boxes**: Semi-transparent overlays with feature highlights
-- **Arrow Pointers**: Directing attention to specific interface elements
-- **Zoom Effects**: 110% scale for emphasis on detailed features
-- **Screen Boundaries**: Subtle drop shadows for screen recordings
+---
 
-### Brand Consistency
-- **Color Scheme**: Consistent blue/gold Christian theme
-- **Typography**: Uniform font usage throughout
-- **Logo Integration**: Tasteful placement without obstruction
-- **Visual Hierarchy**: Clear information prioritization
+### Scene 19: Group Game Modes Deep Dive (2:45-3:25)
+**Visual Elements**:
+**Icebreaker Detailed (2:45-3:00)**:
+- Group size and time customization
+- Generated facilitator instructions
+- Balanced question difficulty display
+- Group interaction simulation
 
-This comprehensive storyboard ensures every significant feature is properly showcased while maintaining a professional, engaging presentation that effectively communicates the full value of F-AI-TH-Connect.
+**Quick Fire Intensive (3:00-3:10)**:
+- Rapid question succession
+- Timer countdown effects
+- Immediate feedback animations
+- Energy and excitement visual cues
+
+**Team Building Structured (3:10-3:25)**:
+- Three-phase progression display
+- Collaboration instructions
+- Discussion prompt generation
+- Ministry team focus elements
+
+---
+
+### Scene 20: PWA Installation Process (3:55-4:10)
+**Visual Elements**:
+- Browser install prompt appearing
+- "Add to Home Screen" process
+- Home screen icon placement
+- App launching from home screen
+- Offline functionality demonstration
+
+**Technical Highlights**:
+- "Works Offline"
+- "Native App Experience"
+- "One-Tap Access"
+
+---
+
+### Scene 21: Help Center Deep Dive (4:20-4:35)
+**Visual Elements**:
+- Comprehensive help navigation
+- Feature documentation with screenshots
+- Troubleshooting guides
+- Group leader specific sections
+- Search functionality within help
+
+**Documentation Highlights**:
+- "Complete User Guide"
+- "Group Leader Resources"
+- "Step-by-Step Instructions"
+
+---
+
+### Scene 22: Ministry Support & Impact (4:40-4:55)
+**Visual Elements**:
+- Ministry support integration
+- Impact statistics and testimonials
+- Community features showcase
+- Donation process demonstration
+- Global reach visualization
+
+**Community Focus**:
+- "Supporting Christian Ministry"
+- "Global Faith Community"
+- "Transparent Impact"
+
+---
+
+### Scene 23: Feature Integration Demo (5:00-5:20)
+**Visual Elements**:
+- Split-screen showing multiple features working together
+- User workflow from chat → Bible lookup → games → study notes
+- Seamless transitions between features
+- Data persistence across features
+- User success stories overlay
+
+**Integration Points**:
+- "Seamless Experience"
+- "All Features Connected"
+- "Your Spiritual Journey Hub"
+
+---
+
+### Scene 24: Enhanced Closing & CTA (5:20-5:45)
+**Visual Elements**:
+- F-AI-TH-Connect logo with dynamic animation
+- Feature montage rapid-fire showcase
+- User testimonials and success metrics
+- Multiple access methods (web, PWA, mobile)
+- Strong call-to-action with urgency
+
+**Final Messages**:
+- "Join Thousands of Users"
+- "Transform Your Bible Study"
+- "Start Your Journey Today"
+- "Download Now - It's Free"
+
+---
+
+## Extended Technical Specifications
+
+### Enhanced Visual Standards
+- **Resolution**: 1920x1080 (Full HD) with 4K option for premium quality
+- **Frame Rate**: 30fps standard, 60fps for smooth game demonstrations
+- **Extended Color Palette**: 
+  - Primary blue (#3B82F6), Gold (#F59E0B), White (#FFFFFF)
+  - Secondary: Green (#10B981), Purple (#8B5CF6), Orange (#F97316)
+- **Typography**: Roboto for UI, Georgia for Bible text, consistent hierarchy
+- **Logo Placement**: Dynamic positioning based on scene requirements
+
+### Advanced Animation Guidelines
+- **Micro-interactions**: 0.2s for button hovers, 0.3s for transitions
+- **Feature Highlights**: Pulsing glow effects for new features
+- **Screen Recordings**: Smooth cursor movement with deliberate pausing
+- **Text Reveals**: Staggered word-by-word for important messages
+- **Transition Variety**: Fades, slides, zooms based on content type
+
+### Comprehensive Audio Design
+- **Narration**: Professional, warm voice with Christian values tone
+- **Background Music**: Three-layer approach:
+  - Base: Subtle ambient Christian instrumental
+  - Accent: Contextual themes (energetic for games, peaceful for Bible study)
+  - Emphasis: Musical stingers for major reveals
+- **Sound Effects**: 
+  - UI interactions (clicks, swooshes)
+  - Achievement sounds for game completions
+  - Notification sounds for important features
+- **Audio Levels**: Narration -12dB, music -24dB, effects -18dB
+
+### Extended Post-Production Strategy
+
+#### Advanced Visual Effects
+- **Feature Callouts**: Animated boxes with feature icons and brief descriptions
+- **Screen Magnification**: Zoom-in effects for detailed UI elements
+- **Progress Indicators**: Visual timelines showing user journey progression
+- **Split-Screen Comparisons**: Before/after, feature combinations
+- **Overlay Graphics**: Statistics, testimonials, feature highlights
+
+#### Professional Brand Integration
+- **Consistent Visual Language**: Unified color grading across all scenes
+- **Logo Animation**: Subtle breathing effect, contextual sizing
+- **Watermark Strategy**: Transparent logo in corner, non-intrusive
+- **End Screen Optimization**: Clear CTAs with contact information
+- **Social Media Variants**: Optimized versions for different platforms
+
+#### Quality Assurance Standards
+- **Color Consistency**: Professional color grading throughout
+- **Audio Clarity**: Crystal clear narration with noise reduction
+- **Timing Precision**: Exact synchronization between audio and visual
+- **Text Readability**: High contrast, appropriate sizing for all devices
+- **Mobile Optimization**: Ensure all text and UI elements are visible on mobile
+
+This comprehensive approach ensures the demo video effectively showcases all the powerful features F-AI-TH-Connect offers, providing new users with a complete understanding of the platform's capabilities and value proposition.
