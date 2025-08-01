@@ -10,7 +10,7 @@ import { Progress } from '@/components/ui/progress';
 import { 
   Gamepad2, Trophy, Clock, Target, Shuffle, BookOpen, 
   Users, MapPin, Star, Play, RotateCcw, CheckCircle, 
-  XCircle, Lightbulb, Award, TrendingUp, ArrowLeft, X, AlertTriangle
+  XCircle, Lightbulb, Award, TrendingUp, ArrowLeft, X, AlertTriangle, SkipForward
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
@@ -464,6 +464,24 @@ export default function BibleGames() {
     }
   };
 
+  const skipQuestion = () => {
+    if (!gameState.currentGame || !gameSession.isSessionActive) return;
+    
+    // Mark question as answered (but incorrect) and move to next
+    setGameSession(prev => ({
+      ...prev,
+      questionsAnswered: prev.questionsAnswered + 1
+    }));
+    
+    setGameState(prev => ({ ...prev, isAnswered: true, isCorrect: false }));
+    
+    toast({
+      title: "Question Skipped",
+      description: `The answer was: ${gameState.currentGame.correctAnswer}`,
+      variant: "default",
+    });
+  };
+
   const nextQuestion = () => {
     if (!gameSession.isSessionActive || gameSession.currentQuestionIndex >= gameSession.totalQuestions - 1) {
       // Session complete
@@ -844,6 +862,18 @@ export default function BibleGames() {
                         >
                           <Lightbulb className="w-4 h-4 mr-2" />
                           {gameState.showHint ? 'Next Hint' : 'Show Hint'}
+                        </Button>
+                      )}
+                      
+                      {/* Skip Question button - only show in multi-question sessions */}
+                      {gameSession.isSessionActive && gameSession.totalQuestions > 1 && (
+                        <Button 
+                          variant="outline" 
+                          onClick={skipQuestion}
+                          className="border-orange-300 text-orange-700 hover:bg-orange-50 touch-target mobile-tap"
+                        >
+                          <SkipForward className="w-4 h-4 mr-2" />
+                          Skip Question
                         </Button>
                       )}
                       
