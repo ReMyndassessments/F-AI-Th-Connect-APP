@@ -60,9 +60,9 @@
       "id": 8,
       "name": "tts_bible_verses",
       "description": "Enable premium text-to-speech for Bible verse cards, daily verses, and scripture references.",
-      "enabled": true,
+      "enabled": false,
       "createdAt": "2025-07-31T05:02:58.090Z",
-      "updatedAt": "2025-07-31T05:02:58.090Z"
+      "updatedAt": "2025-08-01T09:53:39.714Z"
     },
     {
       "id": 9,
