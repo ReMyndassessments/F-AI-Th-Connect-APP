@@ -6,6 +6,16 @@ F-AI-TH-Connect is a Christian-focused AI chat application that offers biblical 
 ## User Preferences
 Preferred communication style: Simple, everyday language.
 
+## Recent Updates (January 2025)
+- ✅ Fixed all unscramble letter mismatches for Bible character names (Nebuchadnezzar, Abraham, Jeremiah, Ruth, Melchizedek, Zechariah)
+- ✅ Resolved API route order issue preventing Quick Fire and Team Building modes from functioning
+- ✅ All four Bible Games modes now fully operational with proper API endpoints
+- ✅ Enhanced spell check system working correctly with biblical terms dictionary and real-time suggestions
+- ✅ Help Center comprehensively updated with detailed documentation for all new features
+- ✅ Mobile responsiveness verified and optimized across all pages and features
+- ✅ Multi-question quiz sessions with progress tracking and score management
+- ✅ Question skipping functionality and enhanced user experience features implemented
+
 ## System Architecture
 The application features a modern full-stack architecture, separating client and server components, and prioritizing developer experience with fast iteration cycles while maintaining production readiness through scalable design patterns.
 
@@ -36,10 +46,11 @@ The application features a modern full-stack architecture, separating client and
 - **Content Management**: Feature flag system for rollouts and advertisements, and a complete CRUD system for faith-based promotional content.
 - **Bible Tools**: Dynamic Bible verse loading via `bible-api.com` (formerly API.Bible) with version comparison (KJV, NIV, ESV, NLT, NASB), predictive text, search history, favorites, and text-to-speech for verses and AI responses (using ElevenLabs premium voices).
 - **Bible Games**: Comprehensive system with four game types (Scripture Scramble, Fill-in-the-Blank, Character Guessing, Memory Challenge), multiple difficulty levels, score tracking, hints, multi-question sessions, enhanced spell check with biblical terms dictionary, and four distinct game modes:
-  * Individual Play - Original quiz system with enhanced spell check
-  * Bible Study Icebreaker - Customizable group challenges (3-15 people, 10-30 minutes) with balanced difficulty
-  * Quick Fire - Rapid-fire questions for energizing groups (10-20 questions)
-  * Team Building - Structured challenges with warm-up, collaboration, and discussion phases
+  * Individual Play - Original quiz system with enhanced spell check and intelligent biblical term suggestions
+  * Bible Study Icebreaker - Customizable group challenges (3-15 people, 10-30 minutes) with balanced difficulty and facilitator instructions
+  * Quick Fire - Rapid-fire questions for energizing groups (10-20 questions) with immediate feedback
+  * Team Building - Structured challenges with warm-up, collaboration, and discussion phases for ministry teams
+  All scramble questions corrected with exact letter matches, API routes properly ordered, all four modes fully functional with comprehensive mobile optimization.
 - **Ministry Support**: GiveSendGo donation integration and tasteful ministry support reminders.
 - **PWA Support**: Full Progressive Web App (PWA) implementation with service worker, app manifest, install prompts, offline capability, and home screen installation.
 

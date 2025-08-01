@@ -21,7 +21,10 @@ import {
   Volume2,
   RefreshCw,
   Clock,
-  Headphones
+  Headphones,
+  Coffee,
+  Zap,
+  UserCheck
 } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "wouter";
@@ -91,7 +94,31 @@ const faqs: FAQItem[] = [
   },
   {
     question: "What are Bible Games and how do I play them?",
-    answer: "Bible Games are interactive challenges to test your biblical knowledge! Navigate to 'Bible Games' in the menu, choose a category (Characters, Places, Verses, Books, Events) and difficulty level, then click any game card to start. You'll find 4 game types: Scripture Scramble, Fill-in-the-Blank, Character Guessing, and Memory Challenge."
+    answer: "Bible Games are interactive challenges to test your biblical knowledge! Navigate to 'Bible Games' in the menu, choose a category (Characters, Places, Verses, Books, Events) and difficulty level, then click any game card to start. You'll find 4 game types: Scripture Scramble, Fill-in-the-Blank, Character Guessing, and Memory Challenge. The system includes enhanced spell check with biblical terms dictionary and real-time suggestions to help you learn."
+  },
+  {
+    question: "What are the different Bible Games modes available?",
+    answer: "F-AI-TH-Connect offers four distinct game modes: 1) Individual Play - Classic quiz system with enhanced spell check for personal study, 2) Bible Study Icebreaker - Customizable group challenges for 3-15 people with 10-30 minute sessions, perfect for Bible study meetings, 3) Quick Fire - Rapid-fire questions (10-20 questions) for energizing groups and building momentum, 4) Team Building - Structured challenges with warm-up, collaboration, and discussion phases for deeper group engagement."
+  },
+  {
+    question: "How does the Bible Study Icebreaker mode work?",
+    answer: "The Icebreaker mode is designed specifically for Bible study groups and small group meetings. You can customize the number of participants (3-15 people) and time limit (10-30 minutes). The system generates balanced questions appropriate for group interaction, with clear instructions for facilitators. It's perfect for starting meetings, breaking the ice with new members, or adding interactive elements to your Bible study sessions."
+  },
+  {
+    question: "What is Quick Fire mode and when should I use it?",
+    answer: "Quick Fire mode provides rapid-fire Bible questions (10-20 questions) designed to energize groups and create excitement. It's perfect for youth groups, church events, or when you want to add high-energy interaction to your gathering. Questions are delivered quickly with immediate feedback, making it ideal for competitive group settings or as an energizing activity during longer meetings."
+  },
+  {
+    question: "How does Team Building mode enhance group activities?",
+    answer: "Team Building mode provides a structured three-phase approach: Warm-up questions to get everyone comfortable, Collaboration challenges that require teamwork to solve, and Discussion prompts that encourage deeper spiritual conversation. This mode is designed for church groups, ministry teams, or any Christian community wanting to combine fun Bible knowledge with meaningful relationship building."
+  },
+  {
+    question: "What is the enhanced spell check system in Bible Games?",
+    answer: "The enhanced spell check system includes a comprehensive biblical terms dictionary with thousands of names, places, events, and concepts from Scripture. As you type answers, the system provides real-time suggestions for biblical terms, helping you learn correct spellings while playing. It recognizes variant spellings and offers intelligent corrections, making the games both educational and accessible for all knowledge levels."
+  },
+  {
+    question: "Can I play multiple questions in a session?",
+    answer: "Yes! F-AI-TH-Connect supports multi-question quiz sessions with score tracking and progress indicators. You can set up sessions with 5, 10, or 15 questions, and the system tracks your correct answers, total score, and time completion. You can also skip questions if needed and see your overall performance at the end of each session."
   },
   {
     question: "How does the Bible verse lookup work?",
@@ -287,24 +314,59 @@ export default function Help() {
               </CardContent>
             </Card>
 
-            {/* Bible Word Games Feature */}
+            {/* Bible Word Games Feature - Updated with Four Modes */}
             <Card className="mb-8">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <Gamepad2 className="w-5 h-5 text-purple-500" />
-                  <span>Bible Word Games - NEW!</span>
+                  <span>Bible Games - Four Modes for Every Setting!</span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-gray-600 leading-relaxed">
-                  Test your biblical knowledge with 24+ engaging games across 4 different types, covering all difficulty levels 
-                  and ministry categories. Perfect for personal study, group activities, or educational purposes.
+                  Test your biblical knowledge with 24+ engaging games across 4 different types and 4 distinct play modes. 
+                  Features enhanced spell check with biblical terms dictionary, perfect for individual study, group activities, 
+                  Bible study icebreakers, and ministry team building.
                 </p>
                 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-4">
+                    <h4 className="font-semibold text-gray-800">Four Play Modes:</h4>
+                    <div className="space-y-3">
+                      <div className="bg-blue-50 p-3 rounded-lg">
+                        <div className="flex items-center space-x-2 mb-1">
+                          <Users className="w-4 h-4 text-blue-600" />
+                          <span className="font-medium text-blue-800">Individual Play</span>
+                        </div>
+                        <p className="text-blue-600 text-xs">Classic quiz system with enhanced spell check for personal study</p>
+                      </div>
+                      <div className="bg-green-50 p-3 rounded-lg">
+                        <div className="flex items-center space-x-2 mb-1">
+                          <Coffee className="w-4 h-4 text-green-600" />
+                          <span className="font-medium text-green-800">Icebreaker</span>
+                        </div>
+                        <p className="text-green-600 text-xs">Customizable group challenges (3-15 people, 10-30 min) for Bible studies</p>
+                      </div>
+                      <div className="bg-orange-50 p-3 rounded-lg">
+                        <div className="flex items-center space-x-2 mb-1">
+                          <Zap className="w-4 h-4 text-orange-600" />
+                          <span className="font-medium text-orange-800">Quick Fire</span>
+                        </div>
+                        <p className="text-orange-600 text-xs">Rapid-fire questions (10-20) for energizing youth groups and events</p>
+                      </div>
+                      <div className="bg-purple-50 p-3 rounded-lg">
+                        <div className="flex items-center space-x-2 mb-1">
+                          <UserCheck className="w-4 h-4 text-purple-600" />
+                          <span className="font-medium text-purple-800">Team Building</span>
+                        </div>
+                        <p className="text-purple-600 text-xs">Warm-up, collaboration, and discussion phases for ministry teams</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4">
                     <h4 className="font-semibold text-gray-800">Game Types:</h4>
-                    <div className="space-y-2 text-sm">
+                    <div className="space-y-2 text-sm mb-4">
                       <div className="flex items-center space-x-2">
                         <Shuffle className="w-4 h-4 text-blue-600" />
                         <span className="font-medium">Scripture Scramble</span>
@@ -326,28 +388,16 @@ export default function Help() {
                         <span className="text-gray-600">- Memorize key verses</span>
                       </div>
                     </div>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <h4 className="font-semibold text-gray-800">How to Play:</h4>
-                    <ol className="text-sm text-gray-600 space-y-2">
-                      <li className="flex items-start space-x-2">
-                        <span className="bg-purple-100 text-purple-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">1</span>
-                        <span>Navigate to "Bible Games" in the main menu</span>
-                      </li>
-                      <li className="flex items-start space-x-2">
-                        <span className="bg-purple-100 text-purple-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">2</span>
-                        <span>Choose your category and difficulty level</span>
-                      </li>
-                      <li className="flex items-start space-x-2">
-                        <span className="bg-purple-100 text-purple-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">3</span>
-                        <span>Click on any game card to start playing</span>
-                      </li>
-                      <li className="flex items-start space-x-2">
-                        <span className="bg-purple-100 text-purple-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">4</span>
-                        <span>Use hints if needed and track your progress</span>
-                      </li>
-                    </ol>
+                    
+                    <div className="bg-gray-50 p-3 rounded-lg">
+                      <h5 className="font-semibold text-gray-800 mb-2">Enhanced Features:</h5>
+                      <ul className="text-xs text-gray-600 space-y-1">
+                        <li>• Biblical spell check with intelligent suggestions</li>
+                        <li>• Multi-question sessions with progress tracking</li>
+                        <li>• Question skipping and hint system</li>
+                        <li>• Score tracking and performance statistics</li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
                 
@@ -367,13 +417,13 @@ export default function Help() {
                 </div>
                 
                 <div className="bg-green-50 p-4 rounded-lg">
-                  <h5 className="font-semibold text-green-900 mb-2">Game Features:</h5>
+                  <h5 className="font-semibold text-green-900 mb-2">Perfect for Ministry Settings:</h5>
                   <ul className="text-sm text-green-800 space-y-1">
-                    <li>• 5 categories: Characters, Places, Verses, Books, Events</li>
-                    <li>• Progressive hint system for when you get stuck</li>
-                    <li>• Score tracking and personal statistics</li>
-                    <li>• Mobile-friendly interface perfect for any device</li>
-                    <li>• Close button (X) to easily exit and try different games</li>
+                    <li>• <strong>Bible Studies:</strong> Use Icebreaker mode to start meetings with engaging activities</li>
+                    <li>• <strong>Youth Groups:</strong> Quick Fire mode creates high-energy competitive environments</li>
+                    <li>• <strong>Ministry Teams:</strong> Team Building mode strengthens relationships through shared challenges</li>
+                    <li>• <strong>Personal Growth:</strong> Individual Play offers focused learning with intelligent spell assistance</li>
+                    <li>• <strong>All Devices:</strong> Mobile-optimized interface works seamlessly on phones, tablets, and computers</li>
                   </ul>
                 </div>
               </CardContent>
