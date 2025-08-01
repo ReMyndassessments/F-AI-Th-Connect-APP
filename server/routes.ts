@@ -649,6 +649,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Specific routes must come before the :id route
+  app.get("/api/bible-games/quickfire", async (req: Request, res: Response) => {
+    try {
+      const count = parseInt(req.query.count as string) || 10;
+      const questions = await bibleGamesService.getQuickFireChallenge(count);
+      res.json(questions);
+    } catch (error) {
+      console.error("Error fetching quickfire questions:", error);
+      res.status(500).json({ message: "Failed to fetch quickfire questions" });
+    }
+  });
+
+  app.get("/api/bible-games/team-building", async (req: Request, res: Response) => {
+    try {
+      const challenge = await bibleGamesService.getTeamBuildingChallenge();
+      res.json(challenge);
+    } catch (error) {
+      console.error("Error creating team building challenge:", error);
+      res.status(500).json({ message: "Failed to create team building challenge" });
+    }
+  });
+
+  app.get("/api/bible-games/stats", async (req: Request, res: Response) => {
+    try {
+      // For demo purposes, using a simple user ID. In production, get from auth
+      const userId = req.ip || 'anonymous-user';
+      
+      const stats = await bibleGamesService.getUserStats(userId);
+      res.json(stats);
+    } catch (error) {
+      console.error("Error fetching user stats:", error);
+      res.status(500).json({ message: "Failed to fetch stats" });
+    }
+  });
+
+  app.get("/api/bible-games/leaderboard", async (req: Request, res: Response) => {
+    try {
+      const { category, timeframe } = req.query;
+      const leaderboard = await bibleGamesService.getLeaderboard(10);
+      res.json(leaderboard);
+    } catch (error) {
+      console.error("Error fetching leaderboard:", error);
+      res.status(500).json({ message: "Failed to fetch leaderboard" });
+    }
+  });
+
   app.get("/api/bible-games/:id", async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
@@ -686,31 +732,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/bible-games/stats", async (req: Request, res: Response) => {
-    try {
-      // For demo purposes, using a simple user ID. In production, get from auth
-      const userId = req.ip || 'anonymous-user';
-      
-      const stats = await bibleGamesService.getUserStats(userId);
-      res.json(stats);
-    } catch (error) {
-      console.error("Error fetching user stats:", error);
-      res.status(500).json({ message: "Failed to fetch stats" });
-    }
-  });
-
-  app.get("/api/bible-games/leaderboard", async (req: Request, res: Response) => {
-    try {
-      const { category, timeframe } = req.query;
-      const leaderboard = await bibleGamesService.getLeaderboard(10);
-      res.json(leaderboard);
-    } catch (error) {
-      console.error("Error fetching leaderboard:", error);
-      res.status(500).json({ message: "Failed to fetch leaderboard" });
-    }
-  });
-
-  // Icebreaker routes for Bible study meetings
+  // Icebreaker routes for Bible study meetings  
   app.post("/api/bible-games/icebreaker", async (req: Request, res: Response) => {
     try {
       const { participants = 6, timeLimit = 15 } = req.body;
@@ -719,27 +741,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error creating icebreaker challenge:", error);
       res.status(500).json({ message: "Failed to create icebreaker challenge" });
-    }
-  });
-
-  app.get("/api/bible-games/quickfire", async (req: Request, res: Response) => {
-    try {
-      const count = parseInt(req.query.count as string) || 10;
-      const questions = await bibleGamesService.getQuickFireChallenge(count);
-      res.json(questions);
-    } catch (error) {
-      console.error("Error fetching quickfire questions:", error);
-      res.status(500).json({ message: "Failed to fetch quickfire questions" });
-    }
-  });
-
-  app.get("/api/bible-games/team-building", async (req: Request, res: Response) => {
-    try {
-      const challenge = await bibleGamesService.getTeamBuildingChallenge();
-      res.json(challenge);
-    } catch (error) {
-      console.error("Error creating team building challenge:", error);
-      res.status(500).json({ message: "Failed to create team building challenge" });
     }
   });
 

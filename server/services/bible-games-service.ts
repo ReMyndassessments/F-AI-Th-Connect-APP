@@ -52,7 +52,7 @@ export const sampleBibleGames: InsertBibleGame[] = [
   {
     type: 'scramble',
     title: 'Unscramble Bible Character',
-    question: 'Unscramble this name: RAHAM',
+    question: 'Unscramble this name: MAHAARB',
     correctAnswer: 'Abraham',
     hints: JSON.stringify([
       'God called me to leave my homeland',
@@ -420,7 +420,7 @@ export const sampleBibleGames: InsertBibleGame[] = [
   {
     type: 'scramble',
     title: 'Unscramble Bible Character',
-    question: 'Unscramble this name: HAIMEJ',
+    question: 'Unscramble this name: JEMARHIE',
     correctAnswer: 'Jeremiah',
     hints: JSON.stringify([
       'I was known as the weeping prophet',
@@ -448,7 +448,7 @@ export const sampleBibleGames: InsertBibleGame[] = [
   {
     type: 'scramble',
     title: 'Unscramble Bible Character',
-    question: 'Unscramble this name: HTUT',
+    question: 'Unscramble this name: TRUH',
     correctAnswer: 'Ruth',
     hints: JSON.stringify([
       'I was from Moab',
@@ -883,7 +883,7 @@ export const sampleBibleGames: InsertBibleGame[] = [
   {
     type: 'scramble',
     title: 'Unscramble Bible Character',
-    question: 'Unscramble this name: MALEELCHIZED',
+    question: 'Unscramble this name: KEMELHIZDEC',
     correctAnswer: 'Melchizedek',
     hints: JSON.stringify([
       'I was king of Salem',
@@ -897,7 +897,7 @@ export const sampleBibleGames: InsertBibleGame[] = [
   {
     type: 'scramble',
     title: 'Unscramble Bible Character',
-    question: 'Unscramble this name: CHAINEBEZUZDR',
+    question: 'Unscramble this name: ARANDEHCZBUZNE',
     correctAnswer: 'Nebuchadnezzar',
     hints: JSON.stringify([
       'I was a Babylonian king',
@@ -911,7 +911,7 @@ export const sampleBibleGames: InsertBibleGame[] = [
   {
     type: 'scramble',
     title: 'Unscramble Bible Character',
-    question: 'Unscramble this name: HACIRAZE',
+    question: 'Unscramble this name: HAIZHERCA',
     correctAnswer: 'Zechariah',
     hints: JSON.stringify([
       'I was a prophet',
