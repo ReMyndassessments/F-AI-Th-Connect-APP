@@ -28,11 +28,13 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 import DailyVerseCard from "@/components/daily-verse/daily-verse-card";
 
 interface FAQItem {
   question: string;
   answer: string;
+  requiresTTS?: boolean;
 }
 
 const faqs: FAQItem[] = [
@@ -122,11 +124,12 @@ const faqs: FAQItem[] = [
   },
   {
     question: "How does the Bible verse lookup work?",
-    answer: "Go to 'Bible Lookup' in the menu and use the dropdown menus to select your Bible version, book, chapter, and verse. The system supports multiple translations (KJV, WEB, ASV) and includes voice playback using premium AI voices. You can also save favorite verses and view your recent searches."
+    answer: "Go to 'Bible Lookup' in the menu and use the dropdown menus to select your Bible version, book, chapter, and verse. The system supports multiple translations (KJV, WEB, ASV). You can also save favorite verses and view your recent searches."
   },
   {
     question: "What are the premium voices and how do I use them?",
-    answer: "F-AI-TH-Connect features three premium ElevenLabs AI voices (Adam, Bella, Grace) specifically chosen for spiritual content. You'll find voice playback buttons on Bible verses and AI responses. Just click the play button to hear Scripture or spiritual guidance read aloud - perfect for meditation or accessibility."
+    answer: "F-AI-TH-Connect features three premium ElevenLabs AI voices (Adam, Bella, Grace) specifically chosen for spiritual content. You'll find voice playback buttons on Bible verses and AI responses. Just click the play button to hear Scripture or spiritual guidance read aloud - perfect for meditation or accessibility.",
+    requiresTTS: true
   }
 ];
 
@@ -134,9 +137,20 @@ export default function Help() {
   const [, setLocation] = useLocation();
   const [expandedFAQ, setExpandedFAQ] = useState<number | null>(null);
 
+  // Fetch feature flags to conditionally show TTS section
+  const { data: featureFlags } = useQuery({
+    queryKey: ['/api/feature-flags/public'],
+    retry: false,
+  });
+
   const toggleFAQ = (index: number) => {
     setExpandedFAQ(expandedFAQ === index ? null : index);
   };
+
+  // Check if TTS features are enabled
+  const isTTSEnabled = featureFlags?.flags?.some((flag: any) => 
+    (flag.name === 'tts_ai_responses' || flag.name === 'tts_bible_verses') && flag.enabled
+  );
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -469,10 +483,12 @@ export default function Help() {
                   <div className="space-y-4">
                     <h4 className="font-semibold text-gray-800">Available Features:</h4>
                     <div className="space-y-2 text-sm">
-                      <div className="flex items-center space-x-2">
-                        <Volume2 className="w-4 h-4 text-green-600" />
-                        <span className="font-medium">Premium Voice Playback</span>
-                      </div>
+                      {isTTSEnabled && (
+                        <div className="flex items-center space-x-2">
+                          <Volume2 className="w-4 h-4 text-green-600" />
+                          <span className="font-medium">Premium Voice Playback</span>
+                        </div>
+                      )}
                       <div className="flex items-center space-x-2">
                         <RefreshCw className="w-4 h-4 text-blue-600" />
                         <span className="font-medium">Multiple Bible Versions</span>
@@ -507,76 +523,78 @@ export default function Help() {
               </CardContent>
             </Card>
 
-            {/* Premium Text-to-Speech Feature */}
-            <Card className="mb-8">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Volume2 className="w-5 h-5 text-green-500" />
-                  <span>Premium Voice Playback</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-gray-600 leading-relaxed">
-                  Experience Scripture and spiritual guidance through high-quality AI voices specifically chosen for Christian content. 
-                  Perfect for meditation, accessibility, or hands-free listening during prayer time.
-                </p>
-                
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <h4 className="font-semibold text-gray-800">Premium Voices:</h4>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                        <span className="font-medium">Adam</span>
-                        <span className="text-gray-600">- Deep, thoughtful male voice</span>
+            {/* Premium Text-to-Speech Feature - Only show if TTS is enabled */}
+            {isTTSEnabled && (
+              <Card className="mb-8">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Volume2 className="w-5 h-5 text-green-500" />
+                    <span>Premium Voice Playback</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-gray-600 leading-relaxed">
+                    Experience Scripture and spiritual guidance through high-quality AI voices specifically chosen for Christian content. 
+                    Perfect for meditation, accessibility, or hands-free listening during prayer time.
+                  </p>
+                  
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <h4 className="font-semibold text-gray-800">Premium Voices:</h4>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                          <span className="font-medium">Adam</span>
+                          <span className="text-gray-600">- Deep, thoughtful male voice</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
+                          <span className="font-medium">Bella</span>
+                          <span className="text-gray-600">- Gentle, nurturing female voice</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-3 h-3 bg-amber-500 rounded-full"></div>
+                          <span className="font-medium">Grace</span>
+                          <span className="text-gray-600">- Clear, inspiring female voice</span>
+                        </div>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                        <span className="font-medium">Bella</span>
-                        <span className="text-gray-600">- Gentle, nurturing female voice</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-3 h-3 bg-amber-500 rounded-full"></div>
-                        <span className="font-medium">Grace</span>
-                        <span className="text-gray-600">- Clear, inspiring female voice</span>
-                      </div>
+                      <p className="text-xs text-gray-500">
+                        Powered by ElevenLabs AI for natural, spiritual-focused audio experience.
+                      </p>
                     </div>
-                    <p className="text-xs text-gray-500">
-                      Powered by ElevenLabs AI for natural, spiritual-focused audio experience.
-                    </p>
+                    
+                    <div className="space-y-4">
+                      <h4 className="font-semibold text-gray-800">Where You'll Hear Voices:</h4>
+                      <ul className="text-sm text-gray-600 space-y-2">
+                        <li className="flex items-start space-x-2">
+                          <BookOpen className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                          <span>Bible verse lookup and daily memory verses</span>
+                        </li>
+                        <li className="flex items-start space-x-2">
+                          <MessageCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                          <span>AI spiritual guidance and biblical responses</span>
+                        </li>
+                        <li className="flex items-start space-x-2">
+                          <Headphones className="w-4 h-4 text-purple-500 mt-0.5 flex-shrink-0" />
+                          <span>Hands-free listening during prayer or meditation</span>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                   
-                  <div className="space-y-4">
-                    <h4 className="font-semibold text-gray-800">Where You'll Hear Voices:</h4>
-                    <ul className="text-sm text-gray-600 space-y-2">
-                      <li className="flex items-start space-x-2">
-                        <BookOpen className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
-                        <span>Bible verse lookup and daily memory verses</span>
-                      </li>
-                      <li className="flex items-start space-x-2">
-                        <MessageCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span>AI spiritual guidance and biblical responses</span>
-                      </li>
-                      <li className="flex items-start space-x-2">
-                        <Headphones className="w-4 h-4 text-purple-500 mt-0.5 flex-shrink-0" />
-                        <span>Hands-free listening during prayer or meditation</span>
-                      </li>
+                  <div className="bg-green-50 p-4 rounded-lg">
+                    <h5 className="font-semibold text-green-900 mb-2">Voice Features:</h5>
+                    <ul className="text-sm text-green-800 space-y-1">
+                      <li>• Premium quality voices specifically chosen for spiritual content</li>
+                      <li>• Regular 1.0x playback speed optimized for contemplation</li>
+                      <li>• Intelligent content processing removes formatting for clear audio</li>
+                      <li>• Long content automatically split for seamless listening</li>
+                      <li>• Simple play/pause/stop controls in every message and verse</li>
                     </ul>
                   </div>
-                </div>
-                
-                <div className="bg-green-50 p-4 rounded-lg">
-                  <h5 className="font-semibold text-green-900 mb-2">Voice Features:</h5>
-                  <ul className="text-sm text-green-800 space-y-1">
-                    <li>• Premium quality voices specifically chosen for spiritual content</li>
-                    <li>• Regular 1.0x playback speed optimized for contemplation</li>
-                    <li>• Intelligent content processing removes formatting for clear audio</li>
-                    <li>• Long content automatically split for seamless listening</li>
-                    <li>• Simple play/pause/stop controls in every message and verse</li>
-                  </ul>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Bible Study Highlighting Feature */}
             <Card className="mb-8">
@@ -666,7 +684,7 @@ export default function Help() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3 sm:space-y-4">
-                  {faqs.map((faq, index) => (
+                  {faqs.filter(faq => !faq.requiresTTS || isTTSEnabled).map((faq, index) => (
                     <div key={index} className="border-b border-gray-100 last:border-b-0 pb-3 sm:pb-4 last:pb-0">
                       <button
                         onClick={() => toggleFAQ(index)}
