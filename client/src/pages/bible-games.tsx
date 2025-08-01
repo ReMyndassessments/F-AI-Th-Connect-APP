@@ -246,11 +246,10 @@ export default function BibleGames() {
   const createIcebreakerMutation = useMutation({
     mutationFn: async (settings: { participants: number; timeLimit: number }): Promise<IcebreakerChallenge> => {
       const response = await apiRequest('POST', '/api/bible-games/icebreaker', settings);
-      return response as IcebreakerChallenge;
+      const data = await response.json();
+      return data as IcebreakerChallenge;
     },
     onSuccess: (data: IcebreakerChallenge) => {
-      console.log('Icebreaker data received:', data);
-      
       if (!data || !data.questions || !Array.isArray(data.questions)) {
         toast({
           title: "Error",
@@ -268,7 +267,6 @@ export default function BibleGames() {
       });
     },
     onError: (error) => {
-      console.error('Icebreaker creation error:', error);
       toast({
         title: "Error",
         description: "Failed to create icebreaker challenge. Please try again.",
