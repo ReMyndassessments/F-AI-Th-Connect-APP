@@ -370,41 +370,66 @@ function BibleGamesComponent() {
 
   const submitAnswer = () => {
     try {
-      if (!gameState.currentGame || !gameState.userAnswer.trim()) return;
+      // Enhanced validation
+      if (!gameState?.currentGame || !gameState?.userAnswer?.trim()) {
+        console.warn('Submit cancelled: Missing game state or answer');
+        return;
+      }
 
       const attempts = gameState.attempts + 1;
-      const isCorrect = isAnswerCorrect(gameState.userAnswer, gameState.currentGame.correctAnswer);
+      const userAnswer = gameState.userAnswer.trim();
+      const correctAnswer = gameState.currentGame?.correctAnswer;
+      
+      if (!correctAnswer) {
+        console.error('Missing correct answer in game data');
+        toast({
+          title: "Error",
+          description: "Game data is incomplete. Please try a different question.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const isCorrect = isAnswerCorrect(userAnswer, correctAnswer);
       
       // Debug logging for troubleshooting
       console.log('Answer validation:', {
-        userAnswer: gameState.userAnswer,
-        correctAnswer: gameState.currentGame.correctAnswer,
+        userAnswer,
+        correctAnswer,
         isCorrect,
         normalized: {
-          user: gameState.userAnswer.toLowerCase().trim().replace(/[^\w\s]/g, ''),
-          correct: gameState.currentGame.correctAnswer.toLowerCase().trim().replace(/[^\w\s]/g, '')
+          user: userAnswer.toLowerCase().replace(/[^\w\s]/g, ''),
+          correct: correctAnswer.toLowerCase().replace(/[^\w\s]/g, '')
         }
       });
       
       if (isCorrect) {
-        const timeCompleted = Math.floor((Date.now() - gameState.timeStarted) / 1000);
-        const basePoints = gameState.currentGame.points || 10;
+        const timeCompleted = Math.floor((Date.now() - (gameState.timeStarted || Date.now())) / 1000);
+        const basePoints = gameState.currentGame?.points || 10;
         const score = Math.max(1, basePoints - (attempts - 1) * 2); // Penalty for wrong attempts
         
-        submitScoreMutation.mutate({
-          gameId: gameState.currentGame.id,
-          score,
-          timeCompleted,
-          attempts
-        });
+        // Protected mutation call
+        try {
+          submitScoreMutation.mutate({
+            gameId: gameState.currentGame.id,
+            score,
+            timeCompleted,
+            attempts
+          });
+        } catch (mutationError) {
+          console.error('Score submission error:', mutationError);
+        }
 
-        // Update session progress
-        setGameSession(prev => ({
-          ...prev,
-          sessionScore: prev.sessionScore + score,
-          questionsAnswered: prev.questionsAnswered + 1,
-          correctAnswers: prev.correctAnswers + 1
-        }));
+        // Update session progress with null checks
+        setGameSession(prev => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            sessionScore: (prev.sessionScore || 0) + score,
+            questionsAnswered: (prev.questionsAnswered || 0) + 1,
+            correctAnswers: (prev.correctAnswers || 0) + 1
+          };
+        });
 
         setGameState(prev => ({ ...prev, isAnswered: true, isCorrect: true }));
         
