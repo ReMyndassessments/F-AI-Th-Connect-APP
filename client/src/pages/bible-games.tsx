@@ -1135,22 +1135,28 @@ export default function BibleGames() {
                   <div className="space-y-4">
                     <div>
                       <label className="text-sm font-medium mb-2 block text-gray-700">Your Answer:</label>
-                      {gameState.currentGame?.multipleChoiceOptions && gameState.currentGame.multipleChoiceOptions.length > 0 ? (
+                      {gameState.currentGame?.multipleChoiceOptions && Array.isArray(gameState.currentGame.multipleChoiceOptions) && gameState.currentGame.multipleChoiceOptions.length > 0 ? (
                         <Select
                           value={gameState.userAnswer}
-                          onValueChange={(value) => setGameState(prev => ({ ...prev, userAnswer: value }))}
+                          onValueChange={(value) => {
+                            try {
+                              setGameState(prev => ({ ...prev, userAnswer: value }));
+                            } catch (error) {
+                              console.error('Error setting user answer:', error);
+                            }
+                          }}
                         >
                           <SelectTrigger className="text-base sm:text-lg border-gray-200 focus:border-blue-400 touch-target mobile-tap min-h-12">
                             <SelectValue placeholder="Choose your answer..." />
                           </SelectTrigger>
                           <SelectContent>
-                            {gameState.currentGame.multipleChoiceOptions?.map((option, index) => (
+                            {gameState.currentGame.multipleChoiceOptions.map((option, index) => (
                               <SelectItem 
-                                key={index} 
-                                value={option}
+                                key={`option-${index}-${option?.substring(0, 10) || 'empty'}`}
+                                value={option || ''}
                                 className="text-base sm:text-lg py-3 touch-target"
                               >
-                                {option}
+                                {option || 'Invalid option'}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -1204,8 +1210,14 @@ export default function BibleGames() {
                     
                     <div className="flex flex-col sm:flex-row gap-3">
                       <Button 
-                        onClick={submitAnswer} 
-                        disabled={!gameState.userAnswer.trim()}
+                        onClick={() => {
+                          try {
+                            submitAnswer();
+                          } catch (error) {
+                            console.error('Error in submit button click:', error);
+                          }
+                        }} 
+                        disabled={!gameState.userAnswer?.trim()}
                         className="faith-button-primary touch-target mobile-tap"
                       >
                         <CheckCircle className="w-4 h-4 mr-2" />
