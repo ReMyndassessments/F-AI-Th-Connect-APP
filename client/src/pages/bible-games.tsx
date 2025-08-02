@@ -1104,7 +1104,7 @@ export default function BibleGames() {
                             <SelectValue placeholder="Choose your answer..." />
                           </SelectTrigger>
                           <SelectContent>
-                            {gameState.currentGame.multipleChoiceOptions.map((option, index) => (
+                            {gameState.currentGame.multipleChoiceOptions?.map((option, index) => (
                               <SelectItem 
                                 key={index} 
                                 value={option}
@@ -1129,8 +1129,8 @@ export default function BibleGames() {
                       )}
                     </div>
 
-                    {/* Spell Check Suggestions */}
-                    {spellCheckSuggestions.length > 0 && (
+                    {/* Spell Check Suggestions - only show for text input */}
+                    {spellCheckSuggestions.length > 0 && !gameState.currentGame?.multipleChoiceOptions && (
                       <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
                         <div className="flex items-center mb-2">
                           <AlertTriangle className="w-4 h-4 text-amber-600 mr-2" />
