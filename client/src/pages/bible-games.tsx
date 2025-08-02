@@ -185,26 +185,35 @@ export default function BibleGames() {
 
   // Apply spell check suggestion
   const applySuggestion = (originalWord: string, suggestion: string) => {
-    const newAnswer = gameState.userAnswer.replace(
-      new RegExp(`\\b${originalWord}\\b`, 'gi'), 
-      suggestion
-    );
-    setGameState(prev => ({ ...prev, userAnswer: newAnswer }));
-    
-    // Re-check spelling after applying suggestion
-    const newSuggestions = spellCheck(newAnswer);
-    setSpellCheckSuggestions(newSuggestions);
+    try {
+      const newAnswer = gameState.userAnswer.replace(
+        new RegExp(`\\b${originalWord}\\b`, 'gi'), 
+        suggestion
+      );
+      setGameState(prev => ({ ...prev, userAnswer: newAnswer }));
+      
+      // Re-check spelling after applying suggestion
+      const newSuggestions = spellCheck(newAnswer);
+      setSpellCheckSuggestions(newSuggestions);
+    } catch (error) {
+      console.error('Apply suggestion error:', error);
+    }
   };
 
-  // Check spelling when user types
+  // Check spelling when user types (only for text input, not dropdown)
   useEffect(() => {
-    if (gameState.userAnswer && !gameState.isAnswered) {
-      const suggestions = spellCheck(gameState.userAnswer);
-      setSpellCheckSuggestions(suggestions);
+    if (gameState.userAnswer && !gameState.isAnswered && !gameState.currentGame?.multipleChoiceOptions) {
+      try {
+        const suggestions = spellCheck(gameState.userAnswer);
+        setSpellCheckSuggestions(suggestions);
+      } catch (error) {
+        console.error('Spell check error:', error);
+        setSpellCheckSuggestions([]);
+      }
     } else {
       setSpellCheckSuggestions([]);
     }
-  }, [gameState.userAnswer, gameState.isAnswered]);
+  }, [gameState.userAnswer, gameState.isAnswered, gameState.currentGame?.multipleChoiceOptions]);
 
   // Fetch available games
   const { data: games, isLoading } = useQuery({
@@ -538,13 +547,20 @@ export default function BibleGames() {
   const showNextHint = () => {
     if (!gameState.currentGame) return;
     
-    const hints = gameState.currentGame.hints ? JSON.parse(gameState.currentGame.hints) : [];
-    if (gameState.hintIndex < hints.length - 1) {
-      setGameState(prev => ({
-        ...prev,
-        showHint: true,
-        hintIndex: prev.hintIndex + 1
-      }));
+    try {
+      const hints = gameState.currentGame.hints ? JSON.parse(gameState.currentGame.hints) : [];
+      if (gameState.hintIndex < hints.length - 1) {
+        setGameState(prev => ({
+          ...prev,
+          showHint: true,
+          hintIndex: prev.hintIndex + 1
+        }));
+      } else {
+        setGameState(prev => ({ ...prev, showHint: true }));
+      }
+    } catch (error) {
+      console.error('Error parsing hints:', error);
+      setGameState(prev => ({ ...prev, showHint: true }));
     }
   };
 
