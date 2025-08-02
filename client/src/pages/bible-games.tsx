@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
@@ -59,7 +60,7 @@ interface TeamBuildingChallenge {
   discussion: BibleGame[];
 }
 
-export default function BibleGames() {
+function BibleGamesComponent() {
   const [, setLocation] = useLocation();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('all');
@@ -202,15 +203,21 @@ export default function BibleGames() {
 
   // Check spelling when user types (only for text input, not dropdown)
   useEffect(() => {
-    if (gameState.userAnswer && !gameState.isAnswered && !gameState.currentGame?.multipleChoiceOptions) {
-      try {
+    try {
+      // Never run spell check for multiple choice questions
+      if (gameState.currentGame?.multipleChoiceOptions && Array.isArray(gameState.currentGame.multipleChoiceOptions) && gameState.currentGame.multipleChoiceOptions.length > 0) {
+        setSpellCheckSuggestions([]);
+        return;
+      }
+      
+      if (gameState.userAnswer && !gameState.isAnswered) {
         const suggestions = spellCheck(gameState.userAnswer);
         setSpellCheckSuggestions(suggestions);
-      } catch (error) {
-        console.error('Spell check error:', error);
+      } else {
         setSpellCheckSuggestions([]);
       }
-    } else {
+    } catch (error) {
+      console.error('Spell check error:', error);
       setSpellCheckSuggestions([]);
     }
   }, [gameState.userAnswer, gameState.isAnswered, gameState.currentGame?.multipleChoiceOptions]);
@@ -1150,13 +1157,13 @@ export default function BibleGames() {
                             <SelectValue placeholder="Choose your answer..." />
                           </SelectTrigger>
                           <SelectContent>
-                            {gameState.currentGame.multipleChoiceOptions.map((option, index) => (
+                            {gameState.currentGame.multipleChoiceOptions.filter(option => option && typeof option === 'string').map((option, index) => (
                               <SelectItem 
-                                key={`option-${index}-${option?.substring(0, 10) || 'empty'}`}
-                                value={option || ''}
+                                key={`mc-option-${index}-${option.substring(0, 15).replace(/[^a-zA-Z0-9]/g, '')}`}
+                                value={option}
                                 className="text-base sm:text-lg py-3 touch-target"
                               >
-                                {option || 'Invalid option'}
+                                {option}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -1467,5 +1474,13 @@ export default function BibleGames() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function BibleGames() {
+  return (
+    <ErrorBoundary>
+      <BibleGamesComponent />
+    </ErrorBoundary>
   );
 }
