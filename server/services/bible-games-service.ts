@@ -1077,10 +1077,110 @@ export class BibleGamesService {
   private gameScores: Map<string, GameScore[]> = new Map();
   private userStats: Map<string, UserGameStats> = new Map();
 
+  // Generate multiple choice options for a question
+  private generateMultipleChoiceOptions(correctAnswer: string, category: string, type: string): string[] {
+    const options = [correctAnswer];
+    
+    // Create a pool of wrong answers based on category and type
+    const wrongAnswers: string[] = [];
+    
+    // Character names pool
+    const characterNames = [
+      'Moses', 'David', 'Abraham', 'Noah', 'Isaac', 'Jacob', 'Joseph', 'Daniel', 
+      'Jonah', 'Peter', 'Paul', 'John', 'Matthew', 'Mark', 'Luke', 'Mary',
+      'Martha', 'Ruth', 'Esther', 'Sarah', 'Rebecca', 'Rachel', 'Leah',
+      'Joshua', 'Samuel', 'Solomon', 'Elijah', 'Elisha', 'Jeremiah', 'Isaiah',
+      'Ezekiel', 'Nehemiah', 'Ezra', 'Job', 'Gideon', 'Samson', 'Deborah',
+      'Judas', 'Thomas', 'Andrew', 'Philip', 'James', 'Bartholomew',
+      'Zechariah', 'Melchizedek', 'Nebuchadnezzar', 'Adam', 'Eve'
+    ];
+    
+    // Places pool
+    const places = [
+      'Jerusalem', 'Bethlehem', 'Nazareth', 'Egypt', 'Babylon', 'Damascus',
+      'Jericho', 'Galilee', 'Jordan River', 'Mount Sinai', 'Mount Carmel',
+      'Red Sea', 'Dead Sea', 'Euphrates', 'Nile', 'Eden', 'Canaan',
+      'wilderness', 'desert', 'Golgotha', 'Calvary', 'Gethsemane',
+      'Mount Horeb', 'Mount Moriah', 'Mount Zion', 'Capernaum', 'Emmaus'
+    ];
+    
+    // Bible books pool
+    const books = [
+      'Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua',
+      'Judges', 'Ruth', 'Samuel', 'Kings', 'Chronicles', 'Ezra', 'Nehemiah',
+      'Esther', 'Job', 'Psalms', 'Proverbs', 'Ecclesiastes', 'Isaiah',
+      'Jeremiah', 'Ezekiel', 'Daniel', 'Matthew', 'Mark', 'Luke', 'John',
+      'Acts', 'Romans', 'Corinthians', 'Galatians', 'Ephesians', 'Philippians',
+      'Colossians', 'Thessalonians', 'Timothy', 'Titus', 'Hebrews', 'James',
+      'Peter', 'Revelation'
+    ];
+    
+    // General biblical terms
+    const generalTerms = [
+      'faith', 'hope', 'love', 'grace', 'mercy', 'salvation', 'redemption',
+      'covenant', 'temple', 'altar', 'sacrifice', 'prayer', 'worship',
+      'disciple', 'apostle', 'prophet', 'priest', 'king', 'shepherd',
+      'lamb', 'bread', 'water', 'light', 'truth', 'way', 'life',
+      'peace', 'joy', 'strength', 'wisdom', 'righteousness', 'holiness'
+    ];
+    
+    // Numbers and quantities
+    const numbers = ['3', '7', '12', '40', '10', '6', '1', '2', '5', '8', '9', '11'];
+    
+    // Select wrong answers based on category
+    let wrongPool: string[] = [];
+    
+    if (category === 'characters') {
+      wrongPool = characterNames;
+    } else if (category === 'places') {
+      wrongPool = places;
+    } else if (category === 'books') {
+      wrongPool = books;
+    } else if (type === 'fill_blank' && /\d+/.test(correctAnswer)) {
+      wrongPool = numbers;
+    } else {
+      // Mix of all types for general questions
+      wrongPool = [...characterNames.slice(0, 10), ...places.slice(0, 10), ...generalTerms.slice(0, 10)];
+    }
+    
+    // Filter out the correct answer and similar answers
+    const filteredWrongPool = wrongPool.filter(answer => 
+      answer.toLowerCase() !== correctAnswer.toLowerCase() &&
+      !answer.toLowerCase().includes(correctAnswer.toLowerCase()) &&
+      !correctAnswer.toLowerCase().includes(answer.toLowerCase())
+    );
+    
+    // Add 3 random wrong answers
+    while (wrongAnswers.length < 3 && filteredWrongPool.length > 0) {
+      const randomIndex = Math.floor(Math.random() * filteredWrongPool.length);
+      const wrongAnswer = filteredWrongPool.splice(randomIndex, 1)[0];
+      if (!wrongAnswers.includes(wrongAnswer)) {
+        wrongAnswers.push(wrongAnswer);
+      }
+    }
+    
+    // Fill remaining slots with generic options if needed
+    const genericWrongs = ['Not in the Bible', 'Unknown', 'Other'];
+    while (wrongAnswers.length < 3) {
+      const generic = genericWrongs[wrongAnswers.length];
+      if (generic && !wrongAnswers.includes(generic)) {
+        wrongAnswers.push(generic);
+      } else {
+        break;
+      }
+    }
+    
+    options.push(...wrongAnswers);
+    
+    // Shuffle the options
+    return this.shuffleArray(options);
+  }
+
   async getAllGames(): Promise<BibleGame[]> {
     return sampleBibleGames.map((game, index) => ({
       id: index + 1,
-      ...game
+      ...game,
+      multipleChoiceOptions: this.generateMultipleChoiceOptions(game.correctAnswer, game.category, game.type)
     })) as BibleGame[];
   }
 
@@ -1207,8 +1307,14 @@ export class BibleGamesService {
     // Shuffle final order
     const finalQuestions = this.shuffleArray(selectedQuestions).slice(0, Math.min(8, participants));
     
+    // Add multiple choice options to each question
+    const questionsWithOptions = finalQuestions.map(question => ({
+      ...question,
+      multipleChoiceOptions: this.generateMultipleChoiceOptions(question.correctAnswer, question.category, question.type)
+    }));
+
     return {
-      questions: finalQuestions,
+      questions: questionsWithOptions,
       format: participants <= 4 ? 'individual' : 'team',
       instructions: this.getIcebreakerInstructions(participants, timeLimit),
       teamMode: participants > 4
@@ -1241,7 +1347,13 @@ export class BibleGamesService {
       (game.type === 'fill_blank' || game.type === 'character_guess')
     );
     
-    return this.shuffleArray(quickGames).slice(0, count);
+    const selectedGames = this.shuffleArray(quickGames).slice(0, count);
+    
+    // Add multiple choice options to each question
+    return selectedGames.map(game => ({
+      ...game,
+      multipleChoiceOptions: this.generateMultipleChoiceOptions(game.correctAnswer, game.category, game.type)
+    }));
   }
 
   async getTeamBuildingChallenge(): Promise<{
@@ -1251,19 +1363,32 @@ export class BibleGamesService {
   }> {
     const allGames = await this.getAllGames();
     
+    const warmUpGames = this.shuffleArray(allGames.filter(g => g.difficulty === 'easy')).slice(0, 3);
+    const collaborationGames = this.shuffleArray(allGames.filter(g => 
+      g.difficulty === 'medium' && (g.type === 'scramble' || g.type === 'memory_verse')
+    )).slice(0, 4);
+    const discussionGames = this.shuffleArray(allGames.filter(g => 
+      g.difficulty === 'hard' && g.category === 'theology'
+    )).slice(0, 2);
+    
     return {
       // Easy questions to get everyone comfortable
-      warmUp: this.shuffleArray(allGames.filter(g => g.difficulty === 'easy')).slice(0, 3),
+      warmUp: warmUpGames.map(game => ({
+        ...game,
+        multipleChoiceOptions: this.generateMultipleChoiceOptions(game.correctAnswer, game.category, game.type)
+      })),
       
       // Medium questions that require teamwork
-      collaboration: this.shuffleArray(allGames.filter(g => 
-        g.difficulty === 'medium' && (g.type === 'scramble' || g.type === 'memory_verse')
-      )).slice(0, 4),
+      collaboration: collaborationGames.map(game => ({
+        ...game,
+        multipleChoiceOptions: this.generateMultipleChoiceOptions(game.correctAnswer, game.category, game.type)
+      })),
       
       // Thought-provoking questions for deeper discussion
-      discussion: this.shuffleArray(allGames.filter(g => 
-        g.difficulty === 'hard' && g.category === 'theology'
-      )).slice(0, 2)
+      discussion: discussionGames.map(game => ({
+        ...game,
+        multipleChoiceOptions: this.generateMultipleChoiceOptions(game.correctAnswer, game.category, game.type)
+      }))
     };
   }
 

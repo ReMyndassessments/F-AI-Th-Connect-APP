@@ -1095,16 +1095,38 @@ export default function BibleGames() {
                   <div className="space-y-4">
                     <div>
                       <label className="text-sm font-medium mb-2 block text-gray-700">Your Answer:</label>
-                      <EnhancedInput
-                        value={gameState.userAnswer}
-                        onValueChange={(value) => setGameState(prev => ({ ...prev, userAnswer: value }))}
-                        placeholder="Type your answer here..."
-                        onKeyPress={(e) => e.key === 'Enter' && submitAnswer()}
-                        className="text-base sm:text-lg border-gray-200 focus:border-blue-400 touch-target mobile-tap"
-                        enableSpellCheck={true}
-                        enablePredictiveText={true}
-                        autoComplete="off"
-                      />
+                      {gameState.currentGame?.multipleChoiceOptions && gameState.currentGame.multipleChoiceOptions.length > 0 ? (
+                        <Select
+                          value={gameState.userAnswer}
+                          onValueChange={(value) => setGameState(prev => ({ ...prev, userAnswer: value }))}
+                        >
+                          <SelectTrigger className="text-base sm:text-lg border-gray-200 focus:border-blue-400 touch-target mobile-tap min-h-12">
+                            <SelectValue placeholder="Choose your answer..." />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {gameState.currentGame.multipleChoiceOptions.map((option, index) => (
+                              <SelectItem 
+                                key={index} 
+                                value={option}
+                                className="text-base sm:text-lg py-3 touch-target"
+                              >
+                                {option}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      ) : (
+                        <EnhancedInput
+                          value={gameState.userAnswer}
+                          onValueChange={(value) => setGameState(prev => ({ ...prev, userAnswer: value }))}
+                          placeholder="Type your answer here..."
+                          onKeyPress={(e) => e.key === 'Enter' && submitAnswer()}
+                          className="text-base sm:text-lg border-gray-200 focus:border-blue-400 touch-target mobile-tap"
+                          enableSpellCheck={true}
+                          enablePredictiveText={true}
+                          autoComplete="off"
+                        />
+                      )}
                     </div>
 
                     {/* Spell Check Suggestions */}

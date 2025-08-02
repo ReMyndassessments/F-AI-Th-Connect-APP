@@ -59,7 +59,9 @@ export const insertUserGameStatsSchema = createInsertSchema(userGameStats).omit(
 });
 
 // Types
-export type BibleGame = typeof bibleGames.$inferSelect;
+export type BibleGame = typeof bibleGames.$inferSelect & {
+  multipleChoiceOptions?: string[];
+};
 export type InsertBibleGame = z.infer<typeof insertBibleGameSchema>;
 export type GameScore = typeof gameScores.$inferSelect;
 export type InsertGameScore = z.infer<typeof insertGameScoreSchema>;
