@@ -1190,14 +1190,16 @@ export class BibleGamesService {
     
     return {
       id,
-      ...game
+      ...game,
+      multipleChoiceOptions: this.generateMultipleChoiceOptions(game.correctAnswer, game.category, game.type)
     } as BibleGame;
   }
 
   async getGames(category?: string, difficulty?: string, limit: number = 10): Promise<BibleGame[]> {
     let filteredGames = sampleBibleGames.map((game, index) => ({
       id: index + 1,
-      ...game
+      ...game,
+      multipleChoiceOptions: this.generateMultipleChoiceOptions(game.correctAnswer, game.category, game.type)
     })) as BibleGame[];
 
     if (category && category !== 'all') {
