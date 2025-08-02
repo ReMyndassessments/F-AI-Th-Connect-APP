@@ -1101,7 +1101,15 @@ export default function BibleGames() {
                       <span className="font-medium text-amber-800">Helpful Hint:</span>
                     </div>
                     <p className="text-amber-700 text-sm sm:text-base">
-                      {JSON.parse(gameState.currentGame.hints)[gameState.hintIndex]}
+                      {(() => {
+                        try {
+                          const hints = JSON.parse(gameState.currentGame.hints);
+                          return hints[gameState.hintIndex] || 'No hint available';
+                        } catch (error) {
+                          console.error('Error parsing hints:', error);
+                          return 'Hint not available';
+                        }
+                      })()}
                     </p>
                   </div>
                 )}
@@ -1192,7 +1200,14 @@ export default function BibleGames() {
                         <Button 
                           variant="outline" 
                           onClick={showNextHint}
-                          disabled={gameState.showHint && gameState.hintIndex >= JSON.parse(gameState.currentGame.hints).length - 1}
+                          disabled={gameState.showHint && (() => {
+                            try {
+                              const hints = JSON.parse(gameState.currentGame.hints);
+                              return gameState.hintIndex >= hints.length - 1;
+                            } catch (error) {
+                              return true;
+                            }
+                          })()}
                           className="border-amber-300 text-amber-700 hover:bg-amber-50 touch-target mobile-tap"
                         >
                           <Lightbulb className="w-4 h-4 mr-2" />
