@@ -215,17 +215,24 @@ export default function BibleGames() {
     }
   }, [gameState.userAnswer, gameState.isAnswered, gameState.currentGame?.multipleChoiceOptions]);
 
-  // Fetch available games
-  const { data: games, isLoading } = useQuery({
+  // Fetch available games with error handling
+  const { data: games, isLoading, error } = useQuery({
     queryKey: ['/api/bible-games', selectedCategory, selectedDifficulty],
     queryFn: async () => {
-      const params = new URLSearchParams();
-      if (selectedCategory !== 'all') params.append('category', selectedCategory);
-      if (selectedDifficulty !== 'all') params.append('difficulty', selectedDifficulty);
-      
-      const response = await apiRequest(`/api/bible-games?${params.toString()}`);
-      return response as BibleGame[];
-    }
+      try {
+        const params = new URLSearchParams();
+        if (selectedCategory !== 'all') params.append('category', selectedCategory);
+        if (selectedDifficulty !== 'all') params.append('difficulty', selectedDifficulty);
+        
+        const response = await apiRequest(`/api/bible-games?${params.toString()}`);
+        return response as BibleGame[];
+      } catch (error) {
+        console.error('Error fetching games:', error);
+        throw error;
+      }
+    },
+    retry: 1,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
   // Fetch user stats
@@ -477,70 +484,79 @@ export default function BibleGames() {
   };
 
   const submitAnswer = () => {
-    if (!gameState.currentGame || !gameState.userAnswer.trim()) return;
+    try {
+      if (!gameState.currentGame || !gameState.userAnswer.trim()) return;
 
-    const attempts = gameState.attempts + 1;
-    const isCorrect = isAnswerCorrect(gameState.userAnswer, gameState.currentGame.correctAnswer);
-    
-    // Debug logging for troubleshooting
-    console.log('Answer validation:', {
-      userAnswer: gameState.userAnswer,
-      correctAnswer: gameState.currentGame.correctAnswer,
-      isCorrect,
-      normalized: {
-        user: gameState.userAnswer.toLowerCase().trim().replace(/[^\w\s]/g, ''),
-        correct: gameState.currentGame.correctAnswer.toLowerCase().trim().replace(/[^\w\s]/g, '')
-      }
-    });
-    
-    if (isCorrect) {
-      const timeCompleted = Math.floor((Date.now() - gameState.timeStarted) / 1000);
-      const basePoints = gameState.currentGame.points || 10;
-      const score = Math.max(1, basePoints - (attempts - 1) * 2); // Penalty for wrong attempts
+      const attempts = gameState.attempts + 1;
+      const isCorrect = isAnswerCorrect(gameState.userAnswer, gameState.currentGame.correctAnswer);
       
-      submitScoreMutation.mutate({
-        gameId: gameState.currentGame.id,
-        score,
-        timeCompleted,
-        attempts
+      // Debug logging for troubleshooting
+      console.log('Answer validation:', {
+        userAnswer: gameState.userAnswer,
+        correctAnswer: gameState.currentGame.correctAnswer,
+        isCorrect,
+        normalized: {
+          user: gameState.userAnswer.toLowerCase().trim().replace(/[^\w\s]/g, ''),
+          correct: gameState.currentGame.correctAnswer.toLowerCase().trim().replace(/[^\w\s]/g, '')
+        }
       });
-
-      // Update session progress
-      setGameSession(prev => ({
-        ...prev,
-        sessionScore: prev.sessionScore + score,
-        questionsAnswered: prev.questionsAnswered + 1,
-        correctAnswers: prev.correctAnswers + 1
-      }));
-
-      setGameState(prev => ({ ...prev, isAnswered: true, isCorrect: true }));
       
-      toast({
-        title: "Correct! 🎉",
-        description: `You earned ${score} points!`,
-      });
-    } else {
-      setGameState(prev => ({ ...prev, attempts }));
-      
-      // After 3 wrong attempts, update session for incorrect answer
-      if (attempts >= 3) {
+      if (isCorrect) {
+        const timeCompleted = Math.floor((Date.now() - gameState.timeStarted) / 1000);
+        const basePoints = gameState.currentGame.points || 10;
+        const score = Math.max(1, basePoints - (attempts - 1) * 2); // Penalty for wrong attempts
+        
+        submitScoreMutation.mutate({
+          gameId: gameState.currentGame.id,
+          score,
+          timeCompleted,
+          attempts
+        });
+
+        // Update session progress
         setGameSession(prev => ({
           ...prev,
-          questionsAnswered: prev.questionsAnswered + 1
+          sessionScore: prev.sessionScore + score,
+          questionsAnswered: prev.questionsAnswered + 1,
+          correctAnswers: prev.correctAnswers + 1
         }));
-        setGameState(prev => ({ ...prev, isAnswered: true, isCorrect: false }));
+
+        setGameState(prev => ({ ...prev, isAnswered: true, isCorrect: true }));
+        
         toast({
-          title: "Answer revealed",
-          description: `The correct answer was: ${gameState.currentGame.correctAnswer}`,
-          variant: "destructive",
+          title: "Correct! 🎉",
+          description: `You earned ${score} points!`,
         });
       } else {
-        toast({
-          title: "Not quite right",
-          description: "Try again! Use a hint if you need help.",
-          variant: "destructive",
-        });
+        setGameState(prev => ({ ...prev, attempts }));
+        
+        // After 3 wrong attempts, update session for incorrect answer
+        if (attempts >= 3) {
+          setGameSession(prev => ({
+            ...prev,
+            questionsAnswered: prev.questionsAnswered + 1
+          }));
+          setGameState(prev => ({ ...prev, isAnswered: true, isCorrect: false }));
+          toast({
+            title: "Answer revealed",
+            description: `The correct answer was: ${gameState.currentGame.correctAnswer}`,
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Not quite right",
+            description: "Try again! Use a hint if you need help.",
+            variant: "destructive",
+          });
+        }
       }
+    } catch (error) {
+      console.error('Error submitting answer:', error);
+      toast({
+        title: "Error",
+        description: "Failed to submit answer. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
