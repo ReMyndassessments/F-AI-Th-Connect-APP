@@ -132,14 +132,30 @@ function BibleGamesComponent() {
   // Submit score mutation
   const submitScoreMutation = useMutation({
     mutationFn: async (scoreData: { gameId: number; score: number; timeCompleted: number; attempts: number }) => {
-      return await apiRequest('POST', '/api/bible-games/score', scoreData);
+      try {
+        const response = await apiRequest('/api/bible-games/score', {
+          method: 'POST',
+          body: scoreData
+        });
+        return response;
+      } catch (error) {
+        console.error('API request failed:', error);
+        throw error;
+      }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/bible-games/stats'] });
-      toast({
-        title: "Score Recorded!",
-        description: "Your progress has been saved.",
-      });
+      try {
+        queryClient.invalidateQueries({ queryKey: ['/api/bible-games/stats'] });
+        toast({
+          title: "Score Recorded!",
+          description: "Your progress has been saved.",
+        });
+      } catch (error) {
+        console.error('Post-success error:', error);
+      }
+    },
+    onError: (error) => {
+      console.error('Score submission failed:', error);
     }
   });
 
@@ -408,17 +424,19 @@ function BibleGamesComponent() {
         const basePoints = gameState.currentGame?.points || 10;
         const score = Math.max(1, basePoints - (attempts - 1) * 2); // Penalty for wrong attempts
         
-        // Protected mutation call
-        try {
-          submitScoreMutation.mutate({
-            gameId: gameState.currentGame.id,
-            score,
-            timeCompleted,
-            attempts
-          });
-        } catch (mutationError) {
-          console.error('Score submission error:', mutationError);
-        }
+        // Protected mutation call - don't await to prevent blocking
+        setTimeout(() => {
+          try {
+            submitScoreMutation.mutate({
+              gameId: gameState.currentGame.id,
+              score,
+              timeCompleted,
+              attempts
+            });
+          } catch (mutationError) {
+            console.error('Score submission error:', mutationError);
+          }
+        }, 0);
 
         // Update session progress with null checks
         setGameSession(prev => {
@@ -1046,35 +1064,37 @@ function BibleGamesComponent() {
                     <div>
                       <label className="text-sm font-medium mb-2 block text-gray-700">Your Answer:</label>
                       {gameState.currentGame?.multipleChoiceOptions && Array.isArray(gameState.currentGame.multipleChoiceOptions) && gameState.currentGame.multipleChoiceOptions.length > 0 ? (
-                        <Select
-                          value={gameState.userAnswer}
-                          onValueChange={(value) => {
-                            try {
-                              if (value && typeof value === 'string') {
-                                setGameState(prev => ({ ...prev, userAnswer: value }));
-                              }
-                            } catch (error) {
-                              console.error('Error setting user answer:', error);
-                            }
-                          }}
-                        >
-                          <SelectTrigger className="text-base sm:text-lg border-gray-200 focus:border-blue-400 touch-target mobile-tap">
-                            <SelectValue placeholder="Choose your answer..." />
-                          </SelectTrigger>
-                          <SelectContent>
+                        <div className="space-y-2">
+                          <label className="text-sm text-gray-600">Multiple Choice Options:</label>
+                          <div className="space-y-2">
                             {gameState.currentGame.multipleChoiceOptions
                               .filter(option => option && typeof option === 'string' && option.trim())
                               .map((option, index) => (
-                                <SelectItem 
-                                  key={`mc-option-${index}-${option.substring(0, 15).replace(/[^a-zA-Z0-9]/g, '')}`}
-                                  value={option}
-                                  className="text-base sm:text-lg py-3 touch-target"
+                                <button
+                                  key={`option-${index}`}
+                                  onClick={() => {
+                                    try {
+                                      setGameState(prev => ({ ...prev, userAnswer: option }));
+                                    } catch (error) {
+                                      console.error('Error setting answer:', error);
+                                    }
+                                  }}
+                                  className={`w-full p-3 text-left border-2 rounded-lg transition-all ${
+                                    gameState.userAnswer === option
+                                      ? 'border-blue-500 bg-blue-50 text-blue-900'
+                                      : 'border-gray-200 bg-white hover:border-blue-300'
+                                  }`}
                                 >
                                   {option}
-                                </SelectItem>
+                                </button>
                               ))}
-                          </SelectContent>
-                        </Select>
+                          </div>
+                          {gameState.userAnswer && (
+                            <div className="text-sm text-green-600 bg-green-50 p-2 rounded">
+                              Selected: {gameState.userAnswer}
+                            </div>
+                          )}
+                        </div>
                       ) : (
                         <input
                           type="text"
