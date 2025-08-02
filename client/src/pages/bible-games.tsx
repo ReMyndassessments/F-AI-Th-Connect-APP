@@ -1025,25 +1025,29 @@ function BibleGamesComponent() {
                           value={gameState.userAnswer}
                           onValueChange={(value) => {
                             try {
-                              setGameState(prev => ({ ...prev, userAnswer: value }));
+                              if (value && typeof value === 'string') {
+                                setGameState(prev => ({ ...prev, userAnswer: value }));
+                              }
                             } catch (error) {
                               console.error('Error setting user answer:', error);
                             }
                           }}
                         >
-                          <SelectTrigger className="text-base sm:text-lg border-gray-200 focus:border-blue-400 touch-target mobile-tap min-h-12">
+                          <SelectTrigger className="text-base sm:text-lg border-gray-200 focus:border-blue-400 touch-target mobile-tap">
                             <SelectValue placeholder="Choose your answer..." />
                           </SelectTrigger>
                           <SelectContent>
-                            {gameState.currentGame.multipleChoiceOptions.filter(option => option && typeof option === 'string').map((option, index) => (
-                              <SelectItem 
-                                key={`mc-option-${index}-${option.substring(0, 15).replace(/[^a-zA-Z0-9]/g, '')}`}
-                                value={option}
-                                className="text-base sm:text-lg py-3 touch-target"
-                              >
-                                {option}
-                              </SelectItem>
-                            ))}
+                            {gameState.currentGame.multipleChoiceOptions
+                              .filter(option => option && typeof option === 'string' && option.trim())
+                              .map((option, index) => (
+                                <SelectItem 
+                                  key={`mc-option-${index}-${option.substring(0, 15).replace(/[^a-zA-Z0-9]/g, '')}`}
+                                  value={option}
+                                  className="text-base sm:text-lg py-3 touch-target"
+                                >
+                                  {option}
+                                </SelectItem>
+                              ))}
                           </SelectContent>
                         </Select>
                       ) : (
