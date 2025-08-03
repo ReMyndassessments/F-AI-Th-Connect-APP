@@ -20,6 +20,7 @@ Preferred communication style: Simple, everyday language.
 - ✅ Added file upload processing, Prompt Library, advanced text highlighting, and feature integration demos
 - ✅ Professional marketing visuals generated for video thumbnail and app interface showcases
 - ✅ **Multiple Choice Dropdown System Implemented** - Replaced text input with 4-option dropdowns for all quiz questions, including smart answer generation and comprehensive error handling (February 2025)
+- ✅ **Predictive Bible Verse Search** - Added real-time verse content search allowing users to find verses by typing remembered words or phrases, with 300ms debounced search and formatted results display (February 2025)
 
 ## System Architecture
 The application features a modern full-stack architecture, separating client and server components, and prioritizing developer experience with fast iteration cycles while maintaining production readiness through scalable design patterns.
@@ -49,7 +50,7 @@ The application features a modern full-stack architecture, separating client and
 - **Data Flow**: Supports text input, voice transcription (removed), file uploads (text, PDFs, images up to 5MB), AI message processing, and user interaction features like message actions (copy, download, share).
 - **Authentication**: Secure admin authentication with bcrypt password hashing and role-based access.
 - **Content Management**: Feature flag system for rollouts and advertisements, and a complete CRUD system for faith-based promotional content.
-- **Bible Tools**: Dynamic Bible verse loading via `bible-api.com` (formerly API.Bible) with version comparison (KJV, NIV, ESV, NLT, NASB), predictive text, search history, favorites, and text-to-speech for verses and AI responses (using ElevenLabs premium voices).
+- **Bible Tools**: Dynamic Bible verse loading via `bible-api.com` (formerly API.Bible) with version comparison (KJV, NIV, ESV, NLT, NASB), predictive text, search history, favorites, predictive verse content search, and text-to-speech for verses and AI responses (using ElevenLabs premium voices).
 - **Bible Games**: Comprehensive system with four game types (Scripture Scramble, Fill-in-the-Blank, Character Guessing, Memory Challenge), multiple difficulty levels, score tracking, hints, multi-question sessions, enhanced spell check with biblical terms dictionary, and **multiple choice dropdown interface** with smart answer generation. Features four distinct game modes:
   * Individual Play - Original quiz system with enhanced spell check and intelligent biblical term suggestions
   * Bible Study Icebreaker - Customizable group challenges (3-15 people, 10-30 minutes) with balanced difficulty and facilitator instructions

@@ -427,6 +427,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Predictive verse search endpoint
+  app.get('/api/bible/search', async (req, res) => {
+    try {
+      const { query, version = 'kjv', limit = 10 } = req.query;
+      
+      if (!query || typeof query !== 'string' || query.trim().length < 3) {
+        return res.json({ verses: [] });
+      }
+
+      const searchResults = await simpleBibleAPI.searchVerses(query.trim(), version as string, parseInt(limit as string));
+      res.json({ verses: searchResults || [] });
+    } catch (error) {
+      console.error("Bible search error:", error);
+      res.status(500).json({ error: "Failed to search verses" });
+    }
+  });
+
   // Text-to-Speech API routes
   app.get('/api/tts/voices', async (req, res) => {
     try {

@@ -47,6 +47,11 @@ export default function BibleLookup() {
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
   
+  // Predictive search states
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showPredictiveResults, setShowPredictiveResults] = useState(false);
+  const [searchDebounceTimer, setSearchDebounceTimer] = useState<NodeJS.Timeout | null>(null);
+  
   // Dropdown states
   const [selectedVersion, setSelectedVersion] = useState('kjv');
   const [selectedBook, setSelectedBook] = useState('');
@@ -264,6 +269,18 @@ export default function BibleLookup() {
     retry: false
   });
 
+  // Query for predictive search results
+  const { data: searchResults, isLoading: isSearching } = useQuery({
+    queryKey: ['/api/bible/search', searchQuery, selectedVersion],
+    queryFn: async () => {
+      const response = await apiRequest(`/api/bible/search?query=${encodeURIComponent(searchQuery)}&version=${selectedVersion}&limit=8`);
+      return response;
+    },
+    enabled: Boolean(searchQuery && searchQuery.length >= 3),
+    retry: false,
+    staleTime: 30000, // 30 seconds
+  });
+
   const handleSearch = (searchRef?: string) => {
     const refToSearch = searchRef || reference;
     if (refToSearch.trim()) {
@@ -298,6 +315,33 @@ export default function BibleLookup() {
     setReference(suggestion);
     setShowSuggestions(false);
     handleSearch(suggestion);
+  };
+
+  // Handle predictive search input change
+  const handlePredictiveSearch = (value: string) => {
+    setSearchQuery(value);
+    
+    if (searchDebounceTimer) {
+      clearTimeout(searchDebounceTimer);
+    }
+    
+    if (value.length >= 3) {
+      setShowPredictiveResults(true);
+      const timer = setTimeout(() => {
+        setSearchQuery(value);
+      }, 300); // 300ms debounce
+      setSearchDebounceTimer(timer);
+    } else {
+      setShowPredictiveResults(false);
+    }
+  };
+
+  // Select a predictive search result
+  const selectPredictiveResult = (result: BibleVerse) => {
+    setSearchQuery('');
+    setShowPredictiveResults(false);
+    setSearchTrigger(result.reference);
+    setReference(result.reference);
   };
 
   // Generate chapter numbers based on selected book
@@ -461,6 +505,66 @@ export default function BibleLookup() {
                     Search
                   </Button>
                 </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Predictive Verse Search */}
+          <Card className="mb-6 faith-card">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white">
+                <Search className="h-5 w-5 text-blue-600" />
+                Search by Verse Content
+              </CardTitle>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                Can't remember the reference? Type words from the verse and we'll find it for you
+              </p>
+            </CardHeader>
+            <CardContent>
+              <div className="relative">
+                <Input
+                  placeholder="Type words you remember from the verse... (e.g., 'God so loved the world')"
+                  value={searchQuery}
+                  onChange={(e) => handlePredictiveSearch(e.target.value)}
+                  className="text-lg"
+                />
+                
+                {/* Loading indicator for search */}
+                {isSearching && searchQuery.length >= 3 && (
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                    <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+                  </div>
+                )}
+                
+                {/* Predictive search results */}
+                {showPredictiveResults && searchResults?.verses && searchResults.verses.length > 0 && (
+                  <div className="absolute top-full left-0 right-0 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-md shadow-lg z-20 max-h-80 overflow-y-auto">
+                    {searchResults.verses.map((result: BibleVerse, index: number) => (
+                      <button
+                        key={index}
+                        onClick={() => selectPredictiveResult(result)}
+                        className="w-full text-left px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border-b border-gray-100 dark:border-gray-700 last:border-b-0"
+                      >
+                        <div className="font-medium text-blue-600 dark:text-blue-400 text-sm">
+                          {result.reference}
+                        </div>
+                        <div className="text-sm text-gray-900 dark:text-white mt-1 line-clamp-2">
+                          {result.text}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+                
+                {/* No results message */}
+                {showPredictiveResults && searchQuery.length >= 3 && !isSearching && 
+                 searchResults?.verses && searchResults.verses.length === 0 && (
+                  <div className="absolute top-full left-0 right-0 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-md shadow-lg z-20 p-4">
+                    <div className="text-sm text-gray-600 dark:text-gray-400 text-center">
+                      No verses found matching "{searchQuery}"
+                    </div>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

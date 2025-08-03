@@ -28,6 +28,43 @@ export interface BibleVerse {
 }
 
 export class SimpleBibleAPIService {
+  
+  async searchVerses(query: string, version: string = 'kjv', limit: number = 10): Promise<any[]> {
+    try {
+      // Use bible-api.com search endpoint (free alternative to API.Bible)
+      const searchUrl = `https://bible-api.com/search?q=${encodeURIComponent(query)}&limit=${limit}`;
+      
+      const response = await fetch(searchUrl, {
+        headers: {
+          'User-Agent': 'F-AI-TH-Connect/1.0'
+        }
+      });
+
+      if (!response.ok) {
+        console.error(`Bible search API error: ${response.status}`);
+        return [];
+      }
+
+      const data = await response.json();
+      
+      // Format search results to match our expected structure
+      if (data.results && Array.isArray(data.results)) {
+        return data.results.map((result: any) => ({
+          reference: result.reference,
+          text: result.text,
+          book: result.book_name || result.book,
+          chapter: result.chapter,
+          verse: result.verse,
+          version: version.toUpperCase()
+        }));
+      }
+
+      return [];
+    } catch (error) {
+      console.error('Bible search error:', error);
+      return [];
+    }
+  }
   private apiKey: string;
   private baseUrl = 'https://api.scripture.api.bible/v1';
   
