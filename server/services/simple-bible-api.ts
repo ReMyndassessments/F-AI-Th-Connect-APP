@@ -31,7 +31,38 @@ export class SimpleBibleAPIService {
   
   async searchVerses(query: string, version: string = 'kjv', limit: number = 10): Promise<any[]> {
     try {
-      // Comprehensive database of popular and commonly searched Bible verses
+      // First try API.Bible if we have an API key
+      if (this.apiKey) {
+        try {
+          const bibleId = this.versionMap[version] || this.versionMap['kjv'];
+          const searchUrl = `${this.baseUrl}/bibles/${bibleId}/search?query=${encodeURIComponent(query)}&limit=${limit}`;
+          
+          const response = await fetch(searchUrl, {
+            headers: {
+              'api-key': this.apiKey,
+              'User-Agent': 'F-AI-TH-Connect/1.0'
+            }
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            if (data.data?.verses) {
+              return data.data.verses.map((verse: any) => ({
+                reference: verse.reference,
+                text: verse.text,
+                book: verse.bookId,
+                chapter: verse.chapterId,
+                verse: verse.verseId,
+                version: version.toUpperCase()
+              }));
+            }
+          }
+        } catch (error) {
+          console.log('API.Bible search failed, falling back to local search');
+        }
+      }
+
+      // Comprehensive database of Bible verses for search functionality
       const popularVerses = [
         // Salvation and Grace
         {
@@ -334,15 +365,217 @@ export class SimpleBibleAPIService {
           reference: "Micah 6:8",
           text: "He has shown you, O mortal, what is good. And what does the Lord require of you? To act justly and to love mercy and to walk humbly with your God.",
           book: "Micah", chapter: 6, verse: "8", version: "NIV"
+        },
+        
+        // Additional verses covering more books and themes
+        {
+          reference: "Genesis 1:1",
+          text: "In the beginning God created the heavens and the earth.",
+          book: "Genesis", chapter: 1, verse: "1", version: "NIV"
+        },
+        {
+          reference: "Genesis 1:27",
+          text: "So God created mankind in his own image, in the image of God he created them; male and female he created them.",
+          book: "Genesis", chapter: 1, verse: "27", version: "NIV"
+        },
+        {
+          reference: "Exodus 20:3",
+          text: "You shall have no other gods before me.",
+          book: "Exodus", chapter: 20, verse: "3", version: "NIV"
+        },
+        {
+          reference: "Deuteronomy 6:4",
+          text: "Hear, O Israel: The Lord our God, the Lord is one.",
+          book: "Deuteronomy", chapter: 6, verse: "4", version: "NIV"
+        },
+        {
+          reference: "1 Samuel 16:7",
+          text: "But the Lord said to Samuel, 'Do not consider his appearance or his height, for I have rejected him. The Lord does not look at the things people look at. People look at the outward appearance, but the Lord looks at the heart.'",
+          book: "1 Samuel", chapter: 16, verse: "7", version: "NIV"
+        },
+        {
+          reference: "1 Kings 19:12",
+          text: "After the earthquake came a fire, but the Lord was not in the fire. And after the fire came a gentle whisper.",
+          book: "1 Kings", chapter: 19, verse: "12", version: "NIV"
+        },
+        {
+          reference: "2 Chronicles 7:14",
+          text: "If my people, who are called by my name, will humble themselves and pray and seek my face and turn from their wicked ways, then I will hear from heaven, and I will forgive their sin and will heal their land.",
+          book: "2 Chronicles", chapter: 7, verse: "14", version: "NIV"
+        },
+        {
+          reference: "Nehemiah 8:10",
+          text: "Nehemiah said, 'Go and enjoy choice food and sweet drinks, and send some to those who have nothing prepared. This day is holy to our Lord. Do not grieve, for the joy of the Lord is your strength.'",
+          book: "Nehemiah", chapter: 8, verse: "10", version: "NIV"
+        },
+        {
+          reference: "Job 19:25",
+          text: "I know that my redeemer lives, and that in the end he will stand on the earth.",
+          book: "Job", chapter: 19, verse: "25", version: "NIV"
+        },
+        {
+          reference: "Proverbs 31:25",
+          text: "She is clothed with strength and dignity; she can laugh at the days to come.",
+          book: "Proverbs", chapter: 31, verse: "25", version: "NIV"
+        },
+        {
+          reference: "Isaiah 53:5",
+          text: "But he was pierced for our transgressions, he was crushed for our iniquities; the punishment that brought us peace was on him, and by his wounds we are healed.",
+          book: "Isaiah", chapter: 53, verse: "5", version: "NIV"
+        },
+        {
+          reference: "Daniel 3:17-18",
+          text: "If we are thrown into the blazing furnace, the God we serve is able to deliver us from it, and he will deliver us from Your Majesty's hand. But even if he does not, we want you to know, Your Majesty, that we will not serve your gods or worship the image of gold you have set up.",
+          book: "Daniel", chapter: 3, verse: "17-18", version: "NIV"
+        },
+        {
+          reference: "Malachi 3:10",
+          text: "Bring the whole tithe into the storehouse, that there may be food in my house. Test me in this, says the Lord Almighty, and see if I will not throw open the floodgates of heaven and pour out so much blessing that there will not be room enough to store it.",
+          book: "Malachi", chapter: 3, verse: "10", version: "NIV"
+        },
+        {
+          reference: "Matthew 5:16",
+          text: "In the same way, let your light shine before others, that they may see your good deeds and glorify your Father in heaven.",
+          book: "Matthew", chapter: 5, verse: "16", version: "NIV"
+        },
+        {
+          reference: "Matthew 7:7",
+          text: "Ask and it will be given to you; seek and you will find; knock and the door will be opened to you.",
+          book: "Matthew", chapter: 7, verse: "7", version: "NIV"
+        },
+        {
+          reference: "Luke 2:10-11",
+          text: "But the angel said to them, 'Do not be afraid. I bring you good news that will cause great joy for all the people. Today in the town of David a Savior has been born to you; he is the Messiah, the Lord.'",
+          book: "Luke", chapter: 2, verse: "10-11", version: "NIV"
+        },
+        {
+          reference: "John 1:1",
+          text: "In the beginning was the Word, and the Word was with God, and the Word was God.",
+          book: "John", chapter: 1, verse: "1", version: "NIV"
+        },
+        {
+          reference: "John 14:6",
+          text: "Jesus answered, 'I am the way and the truth and the life. No one comes to the Father except through me.'",
+          book: "John", chapter: 14, verse: "6", version: "NIV"
+        },
+        {
+          reference: "Acts 1:8",
+          text: "But you will receive power when the Holy Spirit comes on you; and you will be my witnesses in Jerusalem, and in all Judea and Samaria, and to the ends of the earth.",
+          book: "Acts", chapter: 1, verse: "8", version: "NIV"
+        },
+        {
+          reference: "Romans 3:23",
+          text: "For all have sinned and fall short of the glory of God.",
+          book: "Romans", chapter: 3, verse: "23", version: "NIV"
+        },
+        {
+          reference: "Romans 5:8",
+          text: "But God demonstrates his own love for us in this: While we were still sinners, Christ died for us.",
+          book: "Romans", chapter: 5, verse: "8", version: "NIV"
+        },
+        {
+          reference: "1 Corinthians 10:13",
+          text: "No temptation has overtaken you except what is common to mankind. And God is faithful; he will not let you be tempted beyond what you can bear. But when you are tempted, he will also provide a way out so that you can endure it.",
+          book: "1 Corinthians", chapter: 10, verse: "13", version: "NIV"
+        },
+        {
+          reference: "2 Corinthians 12:9",
+          text: "But he said to me, 'My grace is sufficient for you, for my power is made perfect in weakness.' Therefore I will boast all the more gladly about my weaknesses, so that Christ's power may rest on me.",
+          book: "2 Corinthians", chapter: 12, verse: "9", version: "NIV"
+        },
+        {
+          reference: "Ephesians 6:10-11",
+          text: "Finally, be strong in the Lord and in his mighty power. Put on the full armor of God, so that you can take your stand against the devil's schemes.",
+          book: "Ephesians", chapter: 6, verse: "10-11", version: "NIV"
+        },
+        {
+          reference: "Philippians 2:10-11",
+          text: "That at the name of Jesus every knee should bow, in heaven and on earth and under the earth, and every tongue acknowledge that Jesus Christ is Lord, to the glory of God the Father.",
+          book: "Philippians", chapter: 2, verse: "10-11", version: "NIV"
+        },
+        {
+          reference: "Colossians 3:23",
+          text: "Whatever you do, work at it with all your heart, as working for the Lord, not for human masters.",
+          book: "Colossians", chapter: 3, verse: "23", version: "NIV"
+        },
+        {
+          reference: "1 Timothy 4:12",
+          text: "Don't let anyone look down on you because you are young, but set an example for the believers in speech, in conduct, in love, in faith and in purity.",
+          book: "1 Timothy", chapter: 4, verse: "12", version: "NIV"
+        },
+        {
+          reference: "2 Timothy 1:7",
+          text: "For God has not given us a spirit of fear, but of power, love and sound mind.",
+          book: "2 Timothy", chapter: 1, verse: "7", version: "NIV"
+        },
+        {
+          reference: "Hebrews 4:16",
+          text: "Let us then approach God's throne of grace with confidence, so that we may receive mercy and find grace to help us in our time of need.",
+          book: "Hebrews", chapter: 4, verse: "16", version: "NIV"
+        },
+        {
+          reference: "James 4:7",
+          text: "Submit yourselves, then, to God. Resist the devil, and he will flee from you.",
+          book: "James", chapter: 4, verse: "7", version: "NIV"
+        },
+        {
+          reference: "1 Peter 2:9",
+          text: "But you are a chosen people, a royal priesthood, a holy nation, God's special possession, that you may declare the praises of him who called you out of darkness into his wonderful light.",
+          book: "1 Peter", chapter: 2, verse: "9", version: "NIV"
+        },
+        {
+          reference: "1 John 3:16",
+          text: "This is how we know what love is: Jesus Christ laid down his life for us. And we ought to lay down our lives for our brothers and sisters.",
+          book: "1 John", chapter: 3, verse: "16", version: "NIV"
+        },
+        {
+          reference: "Revelation 3:20",
+          text: "Here I am! I stand at the door and knock. If anyone hears my voice and opens the door, I will come in and eat with that person, and they with me.",
+          book: "Revelation", chapter: 3, verse: "20", version: "NIV"
         }
       ];
 
-      // Perform case-insensitive search through verse texts
+      // Enhanced search with multiple matching strategies
       const queryLower = query.toLowerCase();
-      const matchingVerses = popularVerses.filter(verse => 
-        verse.text.toLowerCase().includes(queryLower) ||
-        verse.reference.toLowerCase().includes(queryLower)
-      );
+      const words = queryLower.split(/\s+/).filter(word => word.length > 2); // Filter out short words
+      
+      const matchingVerses = popularVerses.filter(verse => {
+        const textLower = verse.text.toLowerCase();
+        const referenceLower = verse.reference.toLowerCase();
+        
+        // Exact phrase match (highest priority)
+        if (textLower.includes(queryLower) || referenceLower.includes(queryLower)) {
+          return true;
+        }
+        
+        // Word-based matching (for partial matches)
+        if (words.length > 0) {
+          const wordMatches = words.filter(word => textLower.includes(word) || referenceLower.includes(word));
+          return wordMatches.length >= Math.min(2, words.length); // Match at least 2 words or all words if fewer
+        }
+        
+        return false;
+      });
+
+      // Sort by relevance (exact phrase matches first, then by number of word matches)
+      matchingVerses.sort((a, b) => {
+        const aText = a.text.toLowerCase();
+        const bText = b.text.toLowerCase();
+        const aRef = a.reference.toLowerCase();
+        const bRef = b.reference.toLowerCase();
+        
+        const aExact = aText.includes(queryLower) || aRef.includes(queryLower);
+        const bExact = bText.includes(queryLower) || bRef.includes(queryLower);
+        
+        if (aExact && !bExact) return -1;
+        if (!aExact && bExact) return 1;
+        
+        // Count word matches for secondary sorting
+        const aWordMatches = words.filter(word => aText.includes(word) || aRef.includes(word)).length;
+        const bWordMatches = words.filter(word => bText.includes(word) || bRef.includes(word)).length;
+        
+        return bWordMatches - aWordMatches;
+      });
 
       // Return limited results
       return matchingVerses.slice(0, limit).map(verse => ({
