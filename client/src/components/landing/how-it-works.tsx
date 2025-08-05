@@ -1,4 +1,5 @@
 import { Check } from "lucide-react";
+import psalmImage from '@assets/psalm-53-3-trust.png';
 
 const steps = [
   {
@@ -68,8 +69,8 @@ export default function HowItWorks() {
             
             <div className="relative">
               <img 
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&h=400" 
-                alt="Bible study group in peaceful discussion" 
+                src={psalmImage}
+                alt="Whenever I am afraid, I will trust in You - Psalm 53:3 with person jumping joyfully against sunset sky" 
                 className="rounded-xl shadow-lg w-full h-auto" 
               />
             </div>
