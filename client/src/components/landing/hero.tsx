@@ -94,21 +94,6 @@ export default function Hero() {
               alt="Come to me, all you who are weary and burdened, and I will give you rest - Matthew 11:28 with praying hands over open Bible" 
               className="rounded-2xl shadow-2xl w-full h-auto" 
             />
-            
-            {/* Floating chat preview */}
-            <div className="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-xl p-4 max-w-xs border border-gray-100">
-              <div className="flex items-start space-x-3">
-                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-xs">AI</span>
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm text-gray-700">
-                    Consider Matthew 11:28: "Come to me, all you who are weary and burdened, and I will give you rest."
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1">F-AI-TH-Connect • Now</p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
