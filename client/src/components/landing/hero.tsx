@@ -89,8 +89,8 @@ export default function Hero() {
           
           <div className="relative">
             <img 
-              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&h=600" 
-              alt="People praying together in community" 
+              src="/attached_assets/Dark Moody Photocentric Religion Bible Verse Easter Facebook Post_1754394694450.png" 
+              alt="Take a moment to reflect on the power of the resurrection - praying hands over open Bible" 
               className="rounded-2xl shadow-2xl w-full h-auto" 
             />
             
