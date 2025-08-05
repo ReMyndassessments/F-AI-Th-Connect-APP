@@ -91,7 +91,7 @@ export default function Hero() {
           <div className="relative">
             <img 
               src={easterImage}
-              alt="Take a moment to reflect on the power of the resurrection - praying hands over open Bible" 
+              alt="Come to me, all you who are weary and burdened, and I will give you rest - Matthew 11:28 with praying hands over open Bible" 
               className="rounded-2xl shadow-2xl w-full h-auto" 
             />
             
