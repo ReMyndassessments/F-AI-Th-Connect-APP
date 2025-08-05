@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Check, Play } from "lucide-react";
 import { useLocation } from "wouter";
 import DemoVideoModal from "@/components/demo/demo-video-modal";
+import easterImage from "@assets/easter-hero-image.png";
 
 export default function Hero() {
   const [, setLocation] = useLocation();
@@ -89,7 +90,7 @@ export default function Hero() {
           
           <div className="relative">
             <img 
-              src="/attached_assets/Dark Moody Photocentric Religion Bible Verse Easter Facebook Post_1754394694450.png" 
+              src={easterImage}
               alt="Take a moment to reflect on the power of the resurrection - praying hands over open Bible" 
               className="rounded-2xl shadow-2xl w-full h-auto" 
             />
