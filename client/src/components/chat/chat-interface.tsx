@@ -164,15 +164,15 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
     setSpellCheckSuggestions(newSuggestions);
   };
 
-  // Check spelling when user types
+  // Check spelling when user types (exclude file content from spell check)
   useEffect(() => {
-    if (inputValue && !isSending) {
+    if (inputValue && !isSending && !fileContent) {
       const suggestions = spellCheck(inputValue);
       setSpellCheckSuggestions(suggestions);
     } else {
       setSpellCheckSuggestions([]);
     }
-  }, [inputValue, isSending]);
+  }, [inputValue, isSending, fileContent]);
 
   if (isLoading) {
     return (
