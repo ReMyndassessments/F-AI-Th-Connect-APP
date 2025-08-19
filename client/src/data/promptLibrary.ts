@@ -251,7 +251,7 @@ export const promptLibrary: PromptCategory[] = [
       {
         id: "godly-responses",
         title: "Making Godly Responses",
-        text: "When someone has hurt my feelings or made an inappropriate comment in person or during Bible study, how can I respond in a Christ-like manner? Please provide biblical guidance for gracious, wise responses that honor God.",
+        text: "When someone has hurt my feelings or made an inappropriate comment in person or during Bible study, how can I respond in a Christ-like manner? Please provide biblical guidance for gracious, wise responses that honor God. Here is my situation:",
         tags: ["conflict", "grace", "wisdom", "responses", "relationships"]
       }
     ]
