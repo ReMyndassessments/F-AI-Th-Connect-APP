@@ -247,6 +247,12 @@ export const promptLibrary: PromptCategory[] = [
         title: "Overcoming Sin Patterns",
         text: "How does the Bible teach us to overcome persistent sin and develop holy habits? Please provide Scripture and practical steps.",
         tags: ["sin", "holiness", "victory", "habits"]
+      },
+      {
+        id: "godly-responses",
+        title: "Making Godly Responses",
+        text: "When someone has hurt my feelings or made an inappropriate comment in person or during Bible study, how can I respond in a Christ-like manner? Please provide biblical guidance for gracious, wise responses that honor God.",
+        tags: ["conflict", "grace", "wisdom", "responses", "relationships"]
       }
     ]
   },
