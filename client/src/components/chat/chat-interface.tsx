@@ -28,6 +28,7 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
   const [inputValue, setInputValue] = useState("");
   const [fileContent, setFileContent] = useState("");
   const [spellCheckSuggestions, setSpellCheckSuggestions] = useState<SpellCheckSuggestion[]>([]);
+  const [isSystemPrompt, setIsSystemPrompt] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -53,10 +54,17 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
   const handleFileContent = (content: string, fileName: string) => {
     setFileContent(content);
     // Clear any existing input and set a helpful prompt
+    setIsSystemPrompt(true);
     setInputValue(`Please create a comprehensive Bible study based on this ${fileName.endsWith('.pdf') ? 'document' : fileName.endsWith('.docx') ? 'Word document' : 'content'}. Include discussion questions and practical applications.`);
   };
 
   const handlePromptSelect = (promptText: string) => {
+    setIsSystemPrompt(true);
+    setInputValue(promptText);
+  };
+
+  const handleSystemPrompt = (promptText: string) => {
+    setIsSystemPrompt(true);
     setInputValue(promptText);
   };
 
@@ -164,15 +172,23 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
     setSpellCheckSuggestions(newSuggestions);
   };
 
-  // Check spelling when user types (exclude file content from spell check)
+  // Check spelling when user types (exclude file content and system prompts from spell check)
   useEffect(() => {
-    if (inputValue && !isSending && !fileContent) {
+    if (inputValue && !isSending && !fileContent && !isSystemPrompt) {
       const suggestions = spellCheck(inputValue);
       setSpellCheckSuggestions(suggestions);
     } else {
       setSpellCheckSuggestions([]);
     }
-  }, [inputValue, isSending, fileContent]);
+  }, [inputValue, isSending, fileContent, isSystemPrompt]);
+
+  // Reset system prompt flag when user starts typing
+  const handleInputChange = (value: string) => {
+    if (isSystemPrompt) {
+      setIsSystemPrompt(false);
+    }
+    setInputValue(value);
+  };
 
   if (isLoading) {
     return (
@@ -216,25 +232,25 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
             </p>
             <div className="flex flex-wrap gap-2 justify-center px-2">
               <button
-                onClick={() => setInputValue("I'm feeling anxious about my future. What does the Bible say about worry?")}
+                onClick={() => handleSystemPrompt("I'm feeling anxious about my future. What does the Bible say about worry?")}
                 className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
               >
                 Anxiety and worry
               </button>
               <button
-                onClick={() => setInputValue("How can I deepen my relationship with God?")}
+                onClick={() => handleSystemPrompt("How can I deepen my relationship with God?")}
                 className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
               >
                 Spiritual growth
               </button>
               <button
-                onClick={() => setInputValue("Can you help me with a prayer for my family?")}
+                onClick={() => handleSystemPrompt("Can you help me with a prayer for my family?")}
                 className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
               >
                 Prayer requests
               </button>
               <button
-                onClick={() => setInputValue("When someone has hurt my feelings or made an inappropriate comment in person or during Bible study, how can I respond in a Christ-like manner? Please provide biblical guidance for gracious, wise responses that honor God. Here is my situation:")}
+                onClick={() => handleSystemPrompt("When someone has hurt my feelings or made an inappropriate comment in person or during Bible study, how can I respond in a Christ-like manner? Please provide biblical guidance for gracious, wise responses that honor God. Here is my situation:")}
                 className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
               >
                 Godly responses
@@ -269,7 +285,7 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
               <Textarea
                 placeholder="Ask about faith, prayer, or guidance..."
                 value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
+                onChange={(e) => handleInputChange(e.target.value)}
                 onKeyDown={handleKeyDown}
                 className="w-full border border-gray-300 rounded-xl px-3 sm:px-4 py-2 sm:py-3 min-h-[44px] sm:min-h-[48px] max-h-32 resize-none text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 disabled={isSending}
