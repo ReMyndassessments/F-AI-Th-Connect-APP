@@ -51,7 +51,7 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  const isTTSEnabled = featureFlags?.flags?.find((f: any) => f.name === 'tts_ai_responses')?.enabled || false;
+  const isTTSEnabled = (featureFlags as any)?.flags?.find((f: any) => f.name === 'tts_ai_responses')?.enabled || false;
 
   // Load voices and check speech support
   useEffect(() => {
