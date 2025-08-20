@@ -216,22 +216,28 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
             </p>
             <div className="flex flex-wrap gap-2 justify-center px-2">
               <button
-                onClick={() => onSendMessage("I'm feeling anxious about my future. What does the Bible say about worry?")}
+                onClick={() => setInputValue("I'm feeling anxious about my future. What does the Bible say about worry?")}
                 className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
               >
                 Anxiety and worry
               </button>
               <button
-                onClick={() => onSendMessage("How can I deepen my relationship with God?")}
+                onClick={() => setInputValue("How can I deepen my relationship with God?")}
                 className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
               >
                 Spiritual growth
               </button>
               <button
-                onClick={() => onSendMessage("Can you help me with a prayer for my family?")}
+                onClick={() => setInputValue("Can you help me with a prayer for my family?")}
                 className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
               >
                 Prayer requests
+              </button>
+              <button
+                onClick={() => setInputValue("When someone has hurt my feelings or made an inappropriate comment in person or during Bible study, how can I respond in a Christ-like manner? Please provide biblical guidance for gracious, wise responses that honor God. Here is my situation:")}
+                className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
+              >
+                Godly responses
               </button>
             </div>
           </div>
