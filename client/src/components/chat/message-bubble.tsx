@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import type { Message } from "@/lib/chat-api";
-import ScriptureReference from "@/components/chat/scripture-reference";
 import MessageActions from "@/components/chat/message-actions";
 import TextHighlighter from "@/components/chat/text-highlighter";
 import { Button } from "@/components/ui/button";
@@ -384,14 +383,6 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
       </div>
       <div className="bg-gray-100 rounded-2xl rounded-bl-md px-3 sm:px-4 py-2 sm:py-3 max-w-[280px] sm:max-w-md lg:max-w-lg">
         <TextHighlighter content={message.content} messageId={message.id} sessionId={message.sessionId} />
-        
-        {scriptureReferences.length > 0 && (
-          <div className="space-y-2 mt-3">
-            {scriptureReferences.map((ref: any, index: number) => (
-              <ScriptureReference key={index} reference={ref} />
-            ))}
-          </div>
-        )}
         
         <div className="flex items-center justify-between mt-2">
           <p className="text-xs text-gray-500">
