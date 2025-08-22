@@ -630,11 +630,13 @@ export class SimpleBibleAPIService {
         return this.getFallbackVerse(reference, version);
       }
 
-      // Try direct verse ID lookup first (more reliable)
-      const verseId = this.buildVerseId(parsed.book, parsed.chapter, parsed.verse);
+      // Try direct verse/passage ID lookup first (more reliable)
+      const verseId = this.buildVerseId(parsed.book, parsed.chapter, parsed.verse, parsed.endVerse);
       
       if (verseId) {
-        const verseResult = await this.fetchVerseById(bibleId, verseId, reference, parsed);
+        // For verse ranges, use passages endpoint; for single verses, use verses endpoint
+        const isRange = !!(parsed.endVerse && parsed.endVerse > parsed.verse);
+        const verseResult = await this.fetchVerseById(bibleId, verseId, reference, parsed, isRange);
         if (verseResult) return verseResult;
       }
 
@@ -668,7 +670,7 @@ export class SimpleBibleAPIService {
       } else if (searchData.data?.verses && searchData.data.verses.length > 0) {
         // Search returned verses - fetch the verse content
         const verseResult = searchData.data.verses[0];
-        const verseData = await this.fetchVerseById(bibleId, verseResult.id, reference, parsed);
+        const verseData = await this.fetchVerseById(bibleId, verseResult.id, reference, parsed, false);
         if (verseData) return verseData;
       }
 
@@ -676,12 +678,17 @@ export class SimpleBibleAPIService {
         return this.getFallbackVerse(reference, version);
       }
 
+      // For verse ranges, construct proper verse reference
+      const verseReference = parsed.endVerse && parsed.endVerse > parsed.verse 
+        ? `${parsed.verse}-${parsed.endVerse}`
+        : parsed.verse.toString();
+
       return {
         reference: reference,
         text: content.trim(),
         book: parsed.book,
         chapter: parsed.chapter,
-        verse: parsed.verse.toString(),
+        verse: verseReference,
         version: this.displayNames[bibleId] || 'King James Version'
       };
 
@@ -691,33 +698,46 @@ export class SimpleBibleAPIService {
     }
   }
 
-  private async fetchVerseById(bibleId: string, verseId: string, reference: string, parsed: { book: string; chapter: number; verse: number }): Promise<BibleVerse | null> {
+  private async fetchVerseById(bibleId: string, verseId: string, reference: string, parsed: { book: string; chapter: number; verse: number; endVerse?: number }, isRange?: boolean): Promise<BibleVerse | null> {
     try {
-      const verseUrl = `${this.baseUrl}/bibles/${bibleId}/verses/${verseId}?content-type=text&include-notes=false&include-titles=false&include-chapter-numbers=false&include-verse-numbers=false`;
+      let url: string;
       
-      const verseResponse = await fetch(verseUrl, {
+      if (isRange) {
+        // Use passages endpoint for verse ranges
+        url = `${this.baseUrl}/bibles/${bibleId}/passages/${verseId}?content-type=text&include-notes=false&include-titles=false&include-chapter-numbers=false&include-verse-numbers=false`;
+      } else {
+        // Use verses endpoint for single verses
+        url = `${this.baseUrl}/bibles/${bibleId}/verses/${verseId}?content-type=text&include-notes=false&include-titles=false&include-chapter-numbers=false&include-verse-numbers=false`;
+      }
+      
+      const response = await fetch(url, {
         headers: {
           'api-key': this.apiKey,
         },
         signal: AbortSignal.timeout(10000),
       });
 
-      if (!verseResponse.ok) {
+      if (!response.ok) {
         return null;
       }
 
-      const verseData = await verseResponse.json();
+      const data = await response.json();
       
-      if (!verseData.data?.content) {
+      if (!data.data?.content) {
         return null;
       }
+
+      // For verse ranges, construct proper verse reference
+      const verseReference = parsed.endVerse && parsed.endVerse > parsed.verse 
+        ? `${parsed.verse}-${parsed.endVerse}`
+        : parsed.verse.toString();
 
       return {
         reference: reference,
-        text: verseData.data.content.trim(),
+        text: this.stripHtmlTags(data.data.content.trim()),
         book: parsed.book,
         chapter: parsed.chapter,
-        verse: parsed.verse.toString(),
+        verse: verseReference,
         version: this.displayNames[bibleId] || 'King James Version'
       };
     } catch (error) {
@@ -725,7 +745,7 @@ export class SimpleBibleAPIService {
     }
   }
 
-  private buildVerseId(book: string, chapter: number, verse: number): string | null {
+  private buildVerseId(book: string, chapter: number, verse: number, endVerse?: number): string | null {
     // Map common book names to API.Bible book IDs
     const bookMap: Record<string, string> = {
       'Genesis': 'GEN', 'Exodus': 'EXO', 'Leviticus': 'LEV', 'Numbers': 'NUM', 'Deuteronomy': 'DEU',
@@ -748,6 +768,11 @@ export class SimpleBibleAPIService {
     const bookCode = bookMap[book];
     if (!bookCode) return null;
 
+    // For verse ranges, return passage ID format
+    if (endVerse && endVerse > verse) {
+      return `${bookCode}.${chapter}.${verse}-${bookCode}.${chapter}.${endVerse}`;
+    }
+    
     return `${bookCode}.${chapter}.${verse}`;
   }
 
@@ -805,17 +830,18 @@ export class SimpleBibleAPIService {
     }
   }
 
-  private parseReference(reference: string): { book: string; chapter: number; verse: number } | null {
+  private parseReference(reference: string): { book: string; chapter: number; verse: number; endVerse?: number } | null {
     try {
-      // Handle references like "John 3:16", "2 Corinthians 5:9", "1 Kings 2:3"
-      const match = reference.match(/^(.+?)\s+(\d+):(\d+)(?:-\d+)?$/);
+      // Handle references like "John 3:16", "2 Corinthians 5:9", "1 Kings 2:3", "Romans 1:18-20"
+      const match = reference.match(/^(.+?)\s+(\d+):(\d+)(?:-(\d+))?$/);
       if (!match) return null;
 
       const book = match[1].trim();
       const chapter = parseInt(match[2]);
-      const verse = parseInt(match[3]); // Take first verse if range
+      const verse = parseInt(match[3]);
+      const endVerse = match[4] ? parseInt(match[4]) : undefined;
 
-      return { book, chapter, verse };
+      return { book, chapter, verse, endVerse };
     } catch (error) {
       console.warn('Error parsing reference:', reference, error);
       return null;
