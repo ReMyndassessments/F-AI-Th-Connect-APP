@@ -256,7 +256,7 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
                 Godly responses
               </button>
               <button
-                onClick={() => handleSystemPrompt(`Create a comprehensive Men's Bible Study Guide for a one-hour session that is biblically faithful, spiritually engaging, and highly relevant to modern men's challenges (leadership, identity, perseverance, fear, family, faith, and purpose).
+                onClick={() => handleSystemPrompt(`Create a comprehensive Men's Bible Study Guide for a one-hour session that directly addresses the real everyday challenges men face and shows how Scripture speaks to these specific issues.
 
 REQUIRED STRUCTURE:
 
@@ -264,7 +264,7 @@ REQUIRED STRUCTURE:
 - Create an inspiring title with subtitle
 - State the central message (1 paragraph)
 - Include a Key Verse in full (book, chapter, verse, translation, and complete text)
-- Connect the theme to real men's lives (identity, work, relationships, faith struggles)
+- CRITICAL: Directly connect the Scripture to specific men's issues like: pressure to provide financially, workplace stress and competition, temptation and sexual purity, feeling isolated or unable to share struggles, balancing work and family time, finding purpose beyond career, leading family spiritually when feeling inadequate, anger management, addiction struggles, fear of failure
 
 2. ONE-HOUR STUDY PLAN TABLE
 Provide time allotments:
@@ -278,24 +278,24 @@ Provide time allotments:
 For each section include:
 - Section Title
 - Full Scripture Texts (quote completely with reference and translation)
-- Teaching Point: 1-2 paragraphs connecting Scripture to modern men's experiences
-- Discussion Questions: 3-4 open-ended questions relevant to men's real challenges
-- Practical Application: 1-2 actionable exercises (journaling, reflection, daily habit, accountability task)
+- Teaching Point: 1-2 paragraphs DIRECTLY linking the Scripture to specific men's everyday challenges (example: "When you're facing pressure at work and feel like you're failing as a provider, this verse reminds us..." or "As men, we often struggle with asking for help or admitting weakness, but this passage shows...")
+- Discussion Questions: 3-4 questions that address real situations men face daily (work pressures, marriage conflicts, parenting challenges, personal struggles, spiritual doubts)
+- Practical Application: Specific actionable steps for the coming week related to their actual lives (how to handle next Monday's work stress, conversation starters with spouse or kids, accountability with another man, daily practices)
 
 4. FINAL CHALLENGE & CLOSING
 - One summarizing Scripture (quoted fully)
-- Brief reflection on biblical manhood and perseverance
-- Commitment Exercise: "This week, I will persevere by ____________"
-- Short closing prayer (2-4 sentences)
+- Brief reflection connecting biblical manhood to practical daily living
+- Commitment Exercise: "This week, in my work/family/personal life, I will ____________"
+- Short closing prayer addressing men's specific needs
 
-STYLE: Use warm, pastoral, motivational tone. Write in accessible modern English. Integrate themes of leadership, integrity, courage, and dependence on God. Quote ALL Bible verses in full. Connect biblical truth to practical real-life application.`)}
+STYLE: Speak man-to-man with honesty about real struggles. Address issues men actually face but may not talk about. Make Scripture directly applicable to Monday morning at work, Tuesday evening with kids, Wednesday's temptations, etc. Quote ALL Bible verses in full.`)}
                 className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
                 data-testid="button-mens-bible-study"
               >
                 Men's Bible Study
               </button>
               <button
-                onClick={() => handleSystemPrompt(`Create a comprehensive Women's Bible Study Guide for a one-hour session that is biblically faithful, spiritually engaging, and highly relevant to modern women's challenges (identity in Christ, faith, relationships, purpose, motherhood, spiritual growth, and biblical womanhood).
+                onClick={() => handleSystemPrompt(`Create a comprehensive Women's Bible Study Guide for a one-hour session that directly addresses the real everyday challenges women face and shows how Scripture speaks to these specific issues.
 
 REQUIRED STRUCTURE:
 
@@ -303,7 +303,7 @@ REQUIRED STRUCTURE:
 - Create an inspiring title with subtitle (example: "Daughters of the King: Walking in Grace and Strength")
 - State the central message (1 paragraph)
 - Include a Key Verse in full (book, chapter, verse, translation, and complete text)
-- Connect the theme to real women's lives (identity, relationships, family, faith journey, purpose)
+- CRITICAL: Directly connect the Scripture to specific women's issues like: comparison and feeling not enough, juggling multiple roles (mom, wife, professional, friend), mom guilt and parenting pressures, struggling with self-worth and body image, caring for everyone else while neglecting self, difficult relationships with other women, marriage challenges, loneliness or feeling unseen, perfectionism and people-pleasing, anxiety about children's futures, aging parents care
 
 2. ONE-HOUR STUDY PLAN TABLE
 Provide time allotments:
@@ -317,17 +317,17 @@ Provide time allotments:
 For each section include:
 - Section Title
 - Full Scripture Texts (quote completely with reference and translation)
-- Teaching Point: 1-2 paragraphs connecting Scripture to modern women's experiences
-- Discussion Questions: 3-4 open-ended questions relevant to women's real challenges
-- Practical Application: 1-2 actionable exercises (journaling, reflection, daily habit, accountability task)
+- Teaching Point: 1-2 paragraphs DIRECTLY linking the Scripture to specific women's everyday challenges (example: "When you're scrolling social media comparing yourself to other moms, this verse reminds us..." or "As women, we often pour into everyone else until we're empty, but this passage shows..." or "When you feel invisible in your daily tasks, God sees...")
+- Discussion Questions: 3-4 questions that address real situations women face daily (overwhelm with responsibilities, comparison struggles, relationship tensions, self-care vs. selfishness concerns, identity beyond roles)
+- Practical Application: Specific actionable steps for the coming week related to their actual lives (setting one boundary, practicing self-compassion, having an honest conversation, releasing one comparison trigger, one act of self-care without guilt)
 
 4. FINAL CHALLENGE & CLOSING
 - One summarizing Scripture (quoted fully)
-- Brief reflection on biblical womanhood and spiritual strength
-- Commitment Exercise: "This week, I will grow in faith by ____________"
-- Short closing prayer (2-4 sentences)
+- Brief reflection connecting biblical womanhood to embracing grace in imperfection
+- Commitment Exercise: "This week, I will extend grace to myself by ____________"
+- Short closing prayer addressing women's specific needs
 
-STYLE: Use warm, pastoral, encouraging tone. Write in accessible modern English. Integrate themes of grace, strength, identity in Christ, faithfulness, and trusting God. Quote ALL Bible verses in full. Connect biblical truth to practical real-life application for women.`)}
+STYLE: Speak woman-to-woman with empathy about real struggles. Address the emotional weight women carry. Make Scripture directly applicable to the carpool line, bedtime routines, difficult conversations, moments of overwhelm, quiet morning coffee, etc. Quote ALL Bible verses in full.`)}
                 className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
                 data-testid="button-womens-bible-study"
               >
