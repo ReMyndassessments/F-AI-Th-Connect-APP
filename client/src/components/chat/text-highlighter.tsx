@@ -365,8 +365,8 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
         onMouseUp={handleTextSelection}
         onTouchEnd={handleTextSelection}
       >
-        {bibleLinkEnabled ? (
-          <MarkdownRenderer content={content} enableBibleLinks={true} />
+        {highlights.length === 0 ? (
+          <MarkdownRenderer content={content} enableBibleLinks={bibleLinkEnabled} />
         ) : (
           renderHighlightedContent()
         )}
