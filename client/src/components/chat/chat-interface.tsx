@@ -253,32 +253,38 @@ IMPORTANT: Start your response with a prominent heading that displays the group 
               I'm here to provide biblical guidance, prayer support, and spiritual encouragement. 
               How can I help you in your faith journey today?
             </p>
-            <div className="flex flex-wrap gap-2 justify-center px-2">
-              <button
-                onClick={() => handleSystemPrompt("I'm feeling anxious about my future. What does the Bible say about worry?")}
-                className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
-              >
-                Anxiety and worry
-              </button>
-              <button
-                onClick={() => handleSystemPrompt("How can I deepen my relationship with God?")}
-                className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
-              >
-                Spiritual growth
-              </button>
-              <button
-                onClick={() => handleSystemPrompt("Can you help me with a prayer for my family?")}
-                className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
-              >
-                Prayer requests
-              </button>
-              <button
-                onClick={() => handleSystemPrompt("When someone has hurt my feelings or made an inappropriate comment in person or during Bible study, how can I respond in a Christ-like manner? Please provide biblical guidance for gracious, wise responses that honor God. Here is my situation:")}
-                className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
-              >
-                Godly responses
-              </button>
-              <button
+            <div className="space-y-2 px-2">
+              {/* First row: Original 4 buttons */}
+              <div className="flex flex-wrap gap-2 justify-center">
+                <button
+                  onClick={() => handleSystemPrompt("I'm feeling anxious about my future. What does the Bible say about worry?")}
+                  className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
+                >
+                  Anxiety and worry
+                </button>
+                <button
+                  onClick={() => handleSystemPrompt("How can I deepen my relationship with God?")}
+                  className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
+                >
+                  Spiritual growth
+                </button>
+                <button
+                  onClick={() => handleSystemPrompt("Can you help me with a prayer for my family?")}
+                  className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
+                >
+                  Prayer requests
+                </button>
+                <button
+                  onClick={() => handleSystemPrompt("When someone has hurt my feelings or made an inappropriate comment in person or during Bible study, how can I respond in a Christ-like manner? Please provide biblical guidance for gracious, wise responses that honor God. Here is my situation:")}
+                  className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
+                >
+                  Godly responses
+                </button>
+              </div>
+              
+              {/* Second row: Bible Study buttons */}
+              <div className="flex flex-wrap gap-2 justify-center">
+                <button
                 onClick={() => handleBibleStudyPrompt(`Create a comprehensive Men's Bible Study Guide for a one-hour session that directly addresses the real everyday challenges men face and shows how Scripture speaks to these specific issues.
 
 IMPORTANT: If the user has attached a file (sermon notes, article, devotional, etc.), use that content as the foundation for this Bible study. Build the study around the themes, Scripture references, and topics from the attached file. If no file is attached, create a study on a relevant men's topic.
@@ -360,6 +366,7 @@ STYLE: Speak woman-to-woman with empathy about real struggles. Address the emoti
               >
                 Women's Bible Study
               </button>
+              </div>
             </div>
           </div>
         ) : (
