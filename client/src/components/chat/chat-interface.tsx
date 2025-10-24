@@ -295,7 +295,39 @@ STYLE: Use warm, pastoral, motivational tone. Write in accessible modern English
                 Men's Bible Study
               </button>
               <button
-                onClick={() => handleSystemPrompt("Help me prepare for a women's Bible study. What are key biblical principles for Christian womanhood, faith, and spiritual growth?")}
+                onClick={() => handleSystemPrompt(`Create a comprehensive Women's Bible Study Guide for a one-hour session that is biblically faithful, spiritually engaging, and highly relevant to modern women's challenges (identity in Christ, faith, relationships, purpose, motherhood, spiritual growth, and biblical womanhood).
+
+REQUIRED STRUCTURE:
+
+1. TITLE & THEME OVERVIEW
+- Create an inspiring title with subtitle (example: "Daughters of the King: Walking in Grace and Strength")
+- State the central message (1 paragraph)
+- Include a Key Verse in full (book, chapter, verse, translation, and complete text)
+- Connect the theme to real women's lives (identity, relationships, family, faith journey, purpose)
+
+2. ONE-HOUR STUDY PLAN TABLE
+Provide time allotments:
+- Welcome & Prayer (5 min)
+- Teaching (15 min)
+- Discussion (25 min)
+- Application & Challenge (10 min)
+- Closing Prayer (5 min)
+
+3. THREE CORE TEACHING SECTIONS
+For each section include:
+- Section Title
+- Full Scripture Texts (quote completely with reference and translation)
+- Teaching Point: 1-2 paragraphs connecting Scripture to modern women's experiences
+- Discussion Questions: 3-4 open-ended questions relevant to women's real challenges
+- Practical Application: 1-2 actionable exercises (journaling, reflection, daily habit, accountability task)
+
+4. FINAL CHALLENGE & CLOSING
+- One summarizing Scripture (quoted fully)
+- Brief reflection on biblical womanhood and spiritual strength
+- Commitment Exercise: "This week, I will grow in faith by ____________"
+- Short closing prayer (2-4 sentences)
+
+STYLE: Use warm, pastoral, encouraging tone. Write in accessible modern English. Integrate themes of grace, strength, identity in Christ, faithfulness, and trusting God. Quote ALL Bible verses in full. Connect biblical truth to practical real-life application for women.`)}
                 className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
                 data-testid="button-womens-bible-study"
               >
