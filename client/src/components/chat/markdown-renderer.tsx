@@ -139,16 +139,91 @@ function processAutoLinks(text: string, enableBibleLinks: boolean, startIndex: n
   return result;
 }
 
+function formatLine(line: string, enableBibleLinks: boolean, lineIndex: number): ReactNode {
+  const trimmedLine = line.trim();
+  
+  // Group name heading (e.g., "GROUP NAME: Fishers of Men" or just the group name alone at start)
+  if (lineIndex === 0 && (trimmedLine.startsWith('GROUP NAME:') || trimmedLine.length > 0)) {
+    const groupName = trimmedLine.replace('GROUP NAME:', '').trim();
+    if (groupName.length > 0 && !groupName.includes('\n')) {
+      return (
+        <div className="mb-6 pb-3 border-b-2 border-blue-400">
+          <h1 className="text-2xl sm:text-3xl font-bold text-blue-700 text-center">
+            {renderTextWithBibleLinks(groupName, enableBibleLinks)}
+          </h1>
+        </div>
+      );
+    }
+  }
+  
+  // Section headers in ALL CAPS followed by colon (e.g., "BIBLICAL FOUNDATION:", "REQUIRED STRUCTURE:")
+  if (/^[A-Z][A-Z\s&]+:/.test(trimmedLine)) {
+    return (
+      <h2 className="text-lg sm:text-xl font-bold text-blue-700 mt-6 mb-3 pb-2 border-b border-blue-200">
+        {renderTextWithBibleLinks(trimmedLine, enableBibleLinks)}
+      </h2>
+    );
+  }
+  
+  // Numbered headings (e.g., "1. TITLE & THEME OVERVIEW")
+  if (/^\d+\.\s+[A-Z][A-Z\s&]+/.test(trimmedLine)) {
+    return (
+      <h3 className="text-base sm:text-lg font-bold text-gray-800 mt-5 mb-2">
+        {renderTextWithBibleLinks(trimmedLine, enableBibleLinks)}
+      </h3>
+    );
+  }
+  
+  // Bullet points with dash (e.g., "- Item")
+  if (/^-\s+/.test(trimmedLine)) {
+    const content = trimmedLine.substring(2);
+    return (
+      <div className="flex items-start ml-4 mb-2">
+        <span className="text-blue-600 font-bold mr-2 mt-1">•</span>
+        <span className="flex-1 text-gray-700 leading-relaxed">
+          {renderTextWithBibleLinks(content, enableBibleLinks)}
+        </span>
+      </div>
+    );
+  }
+  
+  // Numbered lists (e.g., "1. Item", "2. Item")
+  if (/^\d+\.\s+(?![A-Z][A-Z\s&]+)/.test(trimmedLine)) {
+    const match = trimmedLine.match(/^(\d+)\.\s+(.+)$/);
+    if (match) {
+      return (
+        <div className="flex items-start ml-4 mb-2">
+          <span className="text-blue-600 font-semibold mr-3 min-w-[1.5rem]">{match[1]}.</span>
+          <span className="flex-1 text-gray-700 leading-relaxed">
+            {renderTextWithBibleLinks(match[2], enableBibleLinks)}
+          </span>
+        </div>
+      );
+    }
+  }
+  
+  // Empty lines for spacing
+  if (trimmedLine === '') {
+    return <div className="h-2"></div>;
+  }
+  
+  // Regular paragraphs
+  return (
+    <p className="text-gray-700 leading-relaxed mb-3">
+      {renderTextWithBibleLinks(line, enableBibleLinks)}
+    </p>
+  );
+}
+
 export default function MarkdownRenderer({ content, enableBibleLinks = false }: MarkdownRendererProps) {
   // Split content by line breaks to preserve formatting
   const lines = content.split('\n');
   
   return (
-    <div className="whitespace-pre-wrap break-words">
+    <div className="space-y-1">
       {lines.map((line, lineIndex) => (
         <div key={lineIndex}>
-          {renderTextWithBibleLinks(line, enableBibleLinks)}
-          {lineIndex < lines.length - 1 && <br />}
+          {formatLine(line, enableBibleLinks, lineIndex)}
         </div>
       ))}
     </div>
