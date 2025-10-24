@@ -61,7 +61,7 @@ Provide rich, substantive responses that truly help believers grow in their fait
       ];
 
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000); // Reduced to 30 seconds for faster responses
+      const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 seconds to allow complete responses for Bible studies
 
       const response = await fetch(`${this.baseUrl}/chat/completions`, {
         method: 'POST',
@@ -73,7 +73,7 @@ Provide rich, substantive responses that truly help believers grow in their fait
           model: 'deepseek-chat',
           messages,
           temperature: 0.6, // Slightly lower temperature for faster, more focused responses
-          max_tokens: userMessage.length > 1000 ? 1200 : 800, // Increased token limits for more detailed responses
+          max_tokens: userMessage.length > 1000 ? 4000 : 1500, // Sufficient tokens for complete Bible study guides
           stream: false,
           top_p: 0.9, // Add nucleus sampling for more efficient generation
         }),
