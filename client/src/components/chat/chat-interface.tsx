@@ -67,6 +67,30 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
     setInputValue(promptText);
   };
 
+  const handleBibleStudyPrompt = (promptText: string, studyType: 'men' | 'women') => {
+    const groupName = window.prompt(
+      `Enter the name of your ${studyType === 'men' ? "men's" : "women's"} Bible study group:`,
+      studyType === 'men' ? 'Fishers of Men' : 'Daughters of the King'
+    );
+    
+    if (groupName === null) {
+      // User cancelled
+      return;
+    }
+    
+    const finalGroupName = groupName.trim() || (studyType === 'men' ? 'Fishers of Men' : 'Daughters of the King');
+    
+    // Add group name heading instruction to the prompt
+    const promptWithGroupName = `GROUP NAME: ${finalGroupName}
+
+${promptText}
+
+IMPORTANT: Start your response with a prominent heading that displays the group name "${finalGroupName}" at the very top of the study guide.`;
+    
+    setIsSystemPrompt(true);
+    setInputValue(promptWithGroupName);
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -255,7 +279,7 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
                 Godly responses
               </button>
               <button
-                onClick={() => handleSystemPrompt(`Create a comprehensive Men's Bible Study Guide for a one-hour session that directly addresses the real everyday challenges men face and shows how Scripture speaks to these specific issues.
+                onClick={() => handleBibleStudyPrompt(`Create a comprehensive Men's Bible Study Guide for a one-hour session that directly addresses the real everyday challenges men face and shows how Scripture speaks to these specific issues.
 
 IMPORTANT: If the user has attached a file (sermon notes, article, devotional, etc.), use that content as the foundation for this Bible study. Build the study around the themes, Scripture references, and topics from the attached file. If no file is attached, create a study on a relevant men's topic.
 
@@ -289,14 +313,14 @@ For each section include:
 - Commitment Exercise: "This week, in my work/family/personal life, I will ____________"
 - Short closing prayer addressing men's specific needs
 
-STYLE: Speak man-to-man with honesty about real struggles. Address issues men actually face but may not talk about. Make Scripture directly applicable to Monday morning at work, Tuesday evening with kids, Wednesday's temptations, etc. Quote ALL Bible verses in full.`)}
+STYLE: Speak man-to-man with honesty about real struggles. Address issues men actually face but may not talk about. Make Scripture directly applicable to Monday morning at work, Tuesday evening with kids, Wednesday's temptations, etc. Quote ALL Bible verses in full.`, 'men')}
                 className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
                 data-testid="button-mens-bible-study"
               >
                 Men's Bible Study
               </button>
               <button
-                onClick={() => handleSystemPrompt(`Create a comprehensive Women's Bible Study Guide for a one-hour session that directly addresses the real everyday challenges women face and shows how Scripture speaks to these specific issues.
+                onClick={() => handleBibleStudyPrompt(`Create a comprehensive Women's Bible Study Guide for a one-hour session that directly addresses the real everyday challenges women face and shows how Scripture speaks to these specific issues.
 
 IMPORTANT: If the user has attached a file (sermon notes, article, devotional, etc.), use that content as the foundation for this Bible study. Build the study around the themes, Scripture references, and topics from the attached file. If no file is attached, create a study on a relevant women's topic.
 
@@ -330,7 +354,7 @@ For each section include:
 - Commitment Exercise: "This week, I will extend grace to myself by ____________"
 - Short closing prayer addressing women's specific needs
 
-STYLE: Speak woman-to-woman with empathy about real struggles. Address the emotional weight women carry. Make Scripture directly applicable to the carpool line, bedtime routines, difficult conversations, moments of overwhelm, quiet morning coffee, etc. Quote ALL Bible verses in full.`)}
+STYLE: Speak woman-to-woman with empathy about real struggles. Address the emotional weight women carry. Make Scripture directly applicable to the carpool line, bedtime routines, difficult conversations, moments of overwhelm, quiet morning coffee, etc. Quote ALL Bible verses in full.`, 'women')}
                 className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
                 data-testid="button-womens-bible-study"
               >
