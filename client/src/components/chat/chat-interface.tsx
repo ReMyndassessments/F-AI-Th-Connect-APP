@@ -255,6 +255,20 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
               >
                 Godly responses
               </button>
+              <button
+                onClick={() => handleSystemPrompt("Help me prepare for a men's Bible study. What are key biblical principles for Christian manhood, leadership, and spiritual growth?")}
+                className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
+                data-testid="button-mens-bible-study"
+              >
+                Men's Bible Study
+              </button>
+              <button
+                onClick={() => handleSystemPrompt("Help me prepare for a women's Bible study. What are key biblical principles for Christian womanhood, faith, and spiritual growth?")}
+                className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
+                data-testid="button-womens-bible-study"
+              >
+                Women's Bible Study
+              </button>
             </div>
           </div>
         ) : (
