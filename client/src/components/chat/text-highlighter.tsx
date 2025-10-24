@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Highlighter, Palette, Bookmark, Heart, Star, MessageCircle, Download, Printer } from "lucide-react";
+import { Highlighter, Palette, Bookmark, Heart, Star, MessageCircle, Download, Printer, X } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import MarkdownRenderer from "./markdown-renderer";
 
@@ -375,9 +375,19 @@ ${highlights.map((h, index) => `${index + 1}. [${h.category}] "${h.text}"`).join
       {/* Show highlighting toolbar when text is selected */}
       {selectedText && showPopover && (
         <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-          <div className="flex items-center gap-2 mb-2">
-            <Highlighter className="w-4 h-4 text-blue-600" />
-            <span className="text-sm font-medium text-blue-900">Highlight for Bible Study</span>
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <Highlighter className="w-4 h-4 text-blue-600" />
+              <span className="text-sm font-medium text-blue-900">Highlight for Bible Study</span>
+            </div>
+            <button
+              onClick={() => setShowPopover(false)}
+              className="text-gray-500 hover:text-gray-700 transition-colors"
+              aria-label="Close"
+              data-testid="button-close-highlight-modal"
+            >
+              <X className="w-4 h-4" />
+            </button>
           </div>
           <p className="text-xs text-gray-600 mb-3">
             Selected: "{selectedText.slice(0, 40)}{selectedText.length > 40 ? '...' : ''}"
