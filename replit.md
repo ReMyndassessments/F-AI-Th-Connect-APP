@@ -7,7 +7,7 @@ F-AI-TH-Connect is a Christian-focused AI chat application that offers biblical 
 Preferred communication style: Simple, everyday language.
 
 ## Recent Updates (October 2025)
-- ✅ **Complete Bible Study Generation** - Increased AI token limits from 1200 to 4000 tokens for comprehensive Bible studies, ensuring Men's and Women's Bible Study guides generate completely without truncation (October 2025)
+- ✅ **Complete Bible Study Generation** - Increased AI token limits from 1200 to 8000 tokens and timeout from 30s to 120s for comprehensive Bible studies, ensuring Men's and Women's Bible Study guides generate completely without truncation (October 2025)
 - ✅ **Men's & Women's Bible Study Prompts** - Added comprehensive prompt buttons with gender-specific challenges, file upload support, group name input, and professional formatting (October 2025)
 - ✅ **Highlight Modal Close Button** - Added X button to Bible study highlight modal for better user control (October 2025)
 - ✅ **Removed Stripe Dependencies** - Cleaned up unnecessary Stripe packages that were never used in the application (October 2025)
