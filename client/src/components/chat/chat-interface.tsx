@@ -256,7 +256,39 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
                 Godly responses
               </button>
               <button
-                onClick={() => handleSystemPrompt("Help me prepare for a men's Bible study. What are key biblical principles for Christian manhood, leadership, and spiritual growth?")}
+                onClick={() => handleSystemPrompt(`Create a comprehensive Men's Bible Study Guide for a one-hour session that is biblically faithful, spiritually engaging, and highly relevant to modern men's challenges (leadership, identity, perseverance, fear, family, faith, and purpose).
+
+REQUIRED STRUCTURE:
+
+1. TITLE & THEME OVERVIEW
+- Create an inspiring title with subtitle
+- State the central message (1 paragraph)
+- Include a Key Verse in full (book, chapter, verse, translation, and complete text)
+- Connect the theme to real men's lives (identity, work, relationships, faith struggles)
+
+2. ONE-HOUR STUDY PLAN TABLE
+Provide time allotments:
+- Welcome & Prayer (5 min)
+- Teaching (15 min)
+- Discussion (25 min)
+- Application & Challenge (10 min)
+- Closing Prayer (5 min)
+
+3. THREE CORE TEACHING SECTIONS
+For each section include:
+- Section Title
+- Full Scripture Texts (quote completely with reference and translation)
+- Teaching Point: 1-2 paragraphs connecting Scripture to modern men's experiences
+- Discussion Questions: 3-4 open-ended questions relevant to men's real challenges
+- Practical Application: 1-2 actionable exercises (journaling, reflection, daily habit, accountability task)
+
+4. FINAL CHALLENGE & CLOSING
+- One summarizing Scripture (quoted fully)
+- Brief reflection on biblical manhood and perseverance
+- Commitment Exercise: "This week, I will persevere by ____________"
+- Short closing prayer (2-4 sentences)
+
+STYLE: Use warm, pastoral, motivational tone. Write in accessible modern English. Integrate themes of leadership, integrity, courage, and dependence on God. Quote ALL Bible verses in full. Connect biblical truth to practical real-life application.`)}
                 className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
                 data-testid="button-mens-bible-study"
               >
