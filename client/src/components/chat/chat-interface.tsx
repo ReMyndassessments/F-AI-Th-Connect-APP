@@ -258,6 +258,8 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
               <button
                 onClick={() => handleSystemPrompt(`Create a comprehensive Men's Bible Study Guide for a one-hour session that directly addresses the real everyday challenges men face and shows how Scripture speaks to these specific issues.
 
+IMPORTANT: If the user has attached a file (sermon notes, article, devotional, etc.), use that content as the foundation for this Bible study. Build the study around the themes, Scripture references, and topics from the attached file. If no file is attached, create a study on a relevant men's topic.
+
 REQUIRED STRUCTURE:
 
 1. TITLE & THEME OVERVIEW
@@ -296,6 +298,8 @@ STYLE: Speak man-to-man with honesty about real struggles. Address issues men ac
               </button>
               <button
                 onClick={() => handleSystemPrompt(`Create a comprehensive Women's Bible Study Guide for a one-hour session that directly addresses the real everyday challenges women face and shows how Scripture speaks to these specific issues.
+
+IMPORTANT: If the user has attached a file (sermon notes, article, devotional, etc.), use that content as the foundation for this Bible study. Build the study around the themes, Scripture references, and topics from the attached file. If no file is attached, create a study on a relevant women's topic.
 
 REQUIRED STRUCTURE:
 
@@ -368,7 +372,7 @@ STYLE: Speak woman-to-woman with empathy about real struggles. Address the emoti
                 className="w-full border border-gray-300 rounded-xl px-3 sm:px-4 py-2 sm:py-3 min-h-[44px] sm:min-h-[48px] max-h-32 resize-none text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 disabled={isSending}
                 rows={1}
-                spellCheck={true}
+                spellCheck={false}
               />
               
               {/* Spell Check Suggestions */}
