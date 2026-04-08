@@ -73,7 +73,7 @@ export default function Hero() {
                 className="px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium border-amber-300 text-amber-700 hover:bg-amber-50 hover:border-amber-400 touch-target mobile-tap text-sm sm:text-base"
               >
                 <a href="https://www.givesendgo.com/CodeandCoffeeforChrist" target="_blank" rel="noopener noreferrer">
-                  💝 Support This Ministry
+                  💝 We Support Missions
                 </a>
               </Button>
             </div>
