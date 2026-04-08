@@ -732,27 +732,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const upstream = await fetch('https://www.ccf.org.ph/download/40059/', {
         headers: {
-          'User-Agent': 'Mozilla/5.0 (compatible; FaithConnect/1.0)',
-          'Accept': '*/*',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+          'Accept': 'application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,*/*',
+          'Accept-Language': 'en-US,en;q=0.9',
+          'Referer': 'https://www.ccf.org.ph/',
         },
         redirect: 'follow',
       });
 
       if (!upstream.ok) {
-        return res.status(502).json({ error: 'Could not fetch CCF weekly guide. The link may have changed.' });
+        return res.status(502).json({ error: 'CCF website returned an error. Try opening the page directly.', url: 'https://www.ccf.org.ph/download/40059/' });
       }
 
       const contentType = upstream.headers.get('content-type') || 'application/octet-stream';
-      const contentDisposition = upstream.headers.get('content-disposition');
 
+      // Detect if CCF returned an HTML page instead of a file (access denied / redirect)
+      if (contentType.includes('text/html')) {
+        return res.status(400).json({
+          error: 'The CCF website requires you to download the guide manually.',
+          url: 'https://www.ccf.org.ph/download/40059/',
+          blocked: true,
+        });
+      }
+
+      const contentDisposition = upstream.headers.get('content-disposition');
       res.set('Content-Type', contentType);
       if (contentDisposition) res.set('Content-Disposition', contentDisposition);
-      res.set('Cache-Control', 'public, max-age=86400'); // cache 24 hours
+      res.set('Cache-Control', 'public, max-age=3600');
 
       const buffer = await upstream.arrayBuffer();
       res.send(Buffer.from(buffer));
     } catch (err) {
-      res.status(502).json({ error: 'Network error fetching CCF weekly guide.' });
+      res.status(502).json({ error: 'Network error fetching CCF weekly guide.', url: 'https://www.ccf.org.ph/download/40059/' });
     }
   });
 

@@ -390,6 +390,7 @@ export default function BibleStudy() {
   const [showTip, setShowTip] = useState(true);
 
   const [isLoadingCcf, setIsLoadingCcf] = useState(false);
+  const [ccfBlocked, setCcfBlocked] = useState(false);
 
   // Meeting room state
   const [isCreatingRoom, setIsCreatingRoom] = useState(false);
@@ -514,15 +515,28 @@ Closing Prayer`;
     setIsLoadingCcf(true);
     try {
       const res = await fetch('/api/dgroups/ccf-weekly');
+
       if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || 'Could not load CCF weekly guide');
+        let errData: any = {};
+        try { errData = await res.json(); } catch {}
+
+        if (errData.blocked) {
+          // CCF requires manual download — show a helpful prompt instead of an error
+          toast({
+            title: 'Manual download required',
+            description: 'The CCF website blocks automated downloads. Tap "Open CCF Page" below to download the guide, then upload it using the Upload button.',
+          });
+          setCcfBlocked(true);
+          return;
+        }
+        throw new Error(errData.error || 'Could not load CCF weekly guide');
       }
+
       const contentType = res.headers.get('content-type') || '';
       const blob = await res.blob();
       const ext = contentType.includes('pdf') ? 'pdf' : contentType.includes('word') ? 'docx' : 'txt';
-      const fileName = `CCF-Weekly-Guide.${ext}`;
-      const file = new File([blob], fileName, { type: blob.type });
+      const ccfFileName = `CCF-Weekly-Guide.${ext}`;
+      const file = new File([blob], ccfFileName, { type: blob.type });
 
       // Extract text so we can show a preview AND use it as AI context
       let extractedText = '';
@@ -538,15 +552,12 @@ Closing Prayer`;
         }
       }
 
-      // Store as file context for AI generation
-      setFileContent(`[CCF WEEKLY GUIDE: ${fileName}]\n\n${extractedText}`);
-      setFileName(fileName);
-
-      // Also show in the result/preview area so user can verify the content
-      setResult(extractedText || '[The guide was loaded but no text could be extracted — it may be a scanned image PDF. Try generating a study guide from it anyway, or upload a different file.]');
+      setFileContent(`[CCF WEEKLY GUIDE: ${ccfFileName}]\n\n${extractedText}`);
+      setFileName(ccfFileName);
+      setResult(extractedText || '[The guide loaded but text could not be extracted — it may be a scanned image PDF. Try generating a study guide from it anyway.]');
       setActiveType(null);
       setMeetingRoom(null);
-
+      setCcfBlocked(false);
       toast({ title: 'CCF Weekly Guide loaded!', description: 'Review the content below, then choose a study type or use the 4 W\'s template.' });
     } catch (err: any) {
       toast({ title: 'Could not load CCF guide', description: err.message || 'Please check your connection and try again.', variant: 'destructive' });
@@ -718,11 +729,24 @@ Closing Prayer`;
               </button>
 
               {/* CCF Weekly */}
-              <button onClick={loadCcfWeekly} disabled={isLoadingCcf}
-                className="flex flex-col items-center gap-1.5 p-3 bg-white border-2 border-green-300 hover:border-green-500 rounded-xl text-green-700 hover:text-green-900 transition-all text-sm font-semibold text-center disabled:opacity-50">
-                {isLoadingCcf ? <Loader2 className="w-5 h-5 animate-spin"/> : <span className="text-xl">📥</span>}
-                <span>{isLoadingCcf ? 'Loading...' : 'CCF Weekly Guide'}<br/><span className="text-xs font-normal text-gray-500">Auto-load this week's CCF guide</span></span>
-              </button>
+              {ccfBlocked ? (
+                <div className="flex flex-col items-center gap-1.5 p-3 bg-amber-50 border-2 border-amber-400 rounded-xl text-center">
+                  <span className="text-xl">⬇️</span>
+                  <span className="text-xs font-bold text-amber-800">Manual download needed</span>
+                  <a href="https://www.ccf.org.ph/download/40059/" target="_blank" rel="noopener noreferrer"
+                    className="text-xs text-white bg-amber-500 hover:bg-amber-600 px-3 py-1.5 rounded-lg font-semibold">
+                    Open CCF Page
+                  </a>
+                  <span className="text-xs text-gray-500">Then upload with the button above</span>
+                  <button onClick={() => setCcfBlocked(false)} className="text-xs text-gray-400 underline mt-0.5">Retry auto-load</button>
+                </div>
+              ) : (
+                <button onClick={loadCcfWeekly} disabled={isLoadingCcf}
+                  className="flex flex-col items-center gap-1.5 p-3 bg-white border-2 border-green-300 hover:border-green-500 rounded-xl text-green-700 hover:text-green-900 transition-all text-sm font-semibold text-center disabled:opacity-50">
+                  {isLoadingCcf ? <Loader2 className="w-5 h-5 animate-spin"/> : <span className="text-xl">📥</span>}
+                  <span>{isLoadingCcf ? 'Loading...' : 'CCF Weekly Guide'}<br/><span className="text-xs font-normal text-gray-500">Auto-load this week's CCF guide</span></span>
+                </button>
+              )}
             </div>
             <p className="text-xs text-indigo-500 text-center">Or scroll down to let AI generate a guide using the study type buttons below.</p>
           </div>
