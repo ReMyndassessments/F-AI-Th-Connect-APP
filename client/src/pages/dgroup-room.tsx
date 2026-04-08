@@ -113,11 +113,25 @@ export default function DGroupRoom() {
           startWithVideoMuted: false,
           prejoinPageEnabled: false,
           disableDeepLinking: true,
+          // Disable lobby / moderator-wait entirely
+          lobby: { enabled: false },
+          enableLobbyChat: false,
+          hideLobbyButton: true,
+          disableModeratorIndicator: true,
+          enableInsecureRoomNameWarning: false,
+          requireDisplayName: false,
+          // Let everyone start/join the call immediately
+          startAudioOnly: false,
+          enableWelcomePage: false,
+          disableInitialGUM: false,
+          disableAEC: false,
         },
         interfaceConfigOverwrite: {
           SHOW_JITSI_WATERMARK: false,
           SHOW_BRAND_WATERMARK: false,
           TOOLBAR_ALWAYS_VISIBLE: false,
+          HIDE_INVITE_MORE_HEADER: false,
+          DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,
         },
       });
       jitsiApiRef.current = api;
@@ -223,6 +237,15 @@ export default function DGroupRoom() {
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${showShare ? 'bg-blue-500 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}>
             <Share2 className="w-3.5 h-3.5"/> Invite
           </button>
+          <a
+            href={`https://meet.jit.si/${room.jitsiRoom}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-700 hover:bg-blue-600 text-white rounded-lg text-xs font-semibold transition-colors"
+            title="Open meeting in browser if you see a login prompt"
+          >
+            <Video className="w-3.5 h-3.5"/> Open in Browser
+          </a>
           <Link href="/bible">
             <button className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-700 text-gray-300 hover:bg-red-700 hover:text-white rounded-lg text-xs font-semibold transition-colors">
               <X className="w-3.5 h-3.5"/> Leave
@@ -289,7 +312,7 @@ export default function DGroupRoom() {
       )}
 
       {/* Jitsi frame — fills all remaining space */}
-      <div className="flex-1 min-h-0" ref={jitsiContainerRef}/>
+      <div className="flex-1 min-h-0 bg-gray-900" ref={jitsiContainerRef}/>
     </div>
   );
 }

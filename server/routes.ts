@@ -709,7 +709,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let code = generateCode();
       while (dgroupRooms.has(code)) code = generateCode();
 
-      const jitsiRoom = `FaithConnect-${code}`;
+      const jitsiRoom = `faithconnect${code.toLowerCase()}`;
       const room: DGroupRoom = {
         code,
         jitsiRoom,
