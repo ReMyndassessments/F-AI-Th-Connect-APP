@@ -828,7 +828,7 @@ Closing Prayer`;
                 )}
 
                 {/* Confirm + bypass — only show when file is not yet set as study guide */}
-                {studySource !== 'uploaded' && studySource !== 'ccf-4ws' && (
+                {studySource !== 'uploaded' && studySource !== 'ccf-4ws' && !isGenerating && fileName && !fileContent && (
                   <div className="space-y-2">
                     {/* Warning + paste fallback if PDF text extraction failed */}
                     {!pendingUploadText && (
