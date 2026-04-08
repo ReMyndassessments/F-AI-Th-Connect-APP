@@ -521,12 +521,33 @@ Closing Prayer`;
       const contentType = res.headers.get('content-type') || '';
       const blob = await res.blob();
       const ext = contentType.includes('pdf') ? 'pdf' : contentType.includes('word') ? 'docx' : 'txt';
-      const file = new File([blob], `CCF-Weekly-Guide.${ext}`, { type: blob.type });
+      const fileName = `CCF-Weekly-Guide.${ext}`;
+      const file = new File([blob], fileName, { type: blob.type });
 
-      // Re-use the same processing path as manual uploads
-      const fakeEvent = { target: { files: [file], value: '' } } as unknown as React.ChangeEvent<HTMLInputElement>;
-      await handleFileChange(fakeEvent);
-      toast({ title: 'CCF Weekly Guide loaded!', description: 'Now choose a study type to generate a guide based on it, or use the 4 W\'s template.' });
+      // Extract text so we can show a preview AND use it as AI context
+      let extractedText = '';
+      if (file.type === 'text/plain') {
+        extractedText = await file.text();
+      } else {
+        const formData = new FormData();
+        formData.append('file', file);
+        const parseRes = await fetch('/api/process-file', { method: 'POST', body: formData });
+        if (parseRes.ok) {
+          const data = await parseRes.json();
+          extractedText = data.content || data.text || '';
+        }
+      }
+
+      // Store as file context for AI generation
+      setFileContent(`[CCF WEEKLY GUIDE: ${fileName}]\n\n${extractedText}`);
+      setFileName(fileName);
+
+      // Also show in the result/preview area so user can verify the content
+      setResult(extractedText || '[The guide was loaded but no text could be extracted — it may be a scanned image PDF. Try generating a study guide from it anyway, or upload a different file.]');
+      setActiveType(null);
+      setMeetingRoom(null);
+
+      toast({ title: 'CCF Weekly Guide loaded!', description: 'Review the content below, then choose a study type or use the 4 W\'s template.' });
     } catch (err: any) {
       toast({ title: 'Could not load CCF guide', description: err.message || 'Please check your connection and try again.', variant: 'destructive' });
     } finally {
@@ -784,9 +805,19 @@ Closing Prayer`;
             <div className="bg-gradient-to-r from-blue-500 to-amber-500 px-5 py-4 flex items-center justify-between">
               <div>
                 <h2 className="text-white font-bold text-lg">
-                  {STUDY_TYPES.find(s => s.id === activeType)?.label} Guide
+                  {activeType
+                    ? `${STUDY_TYPES.find(s => s.id === activeType)?.label} Guide`
+                    : fileName.includes('CCF')
+                      ? 'CCF Weekly Study Guide — Preview'
+                      : '4 W\'s Study Guide'}
                 </h2>
-                <p className="text-white text-opacity-80 text-sm">{groupName || STUDY_TYPES.find(s => s.id === activeType)?.defaultGroup}</p>
+                <p className="text-white text-opacity-80 text-sm">
+                  {activeType
+                    ? (groupName || STUDY_TYPES.find(s => s.id === activeType)?.defaultGroup)
+                    : fileName.includes('CCF')
+                      ? 'Review the content below — edit or generate a guide from it'
+                      : (groupName || 'My D-Group')}
+                </p>
               </div>
               <div className="flex gap-2">
                 <button onClick={copyResult}
