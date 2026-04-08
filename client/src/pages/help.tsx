@@ -123,10 +123,6 @@ const faqs: FAQItem[] = [
     answer: "Yes! F-AI-TH-Connect supports multi-question quiz sessions with score tracking and progress indicators. You can set up sessions with 5, 10, or 15 questions, and the system tracks your correct answers, total score, and time completion. You can also skip questions if needed and see your overall performance at the end of each session."
   },
   {
-    question: "How does the Bible verse lookup work?",
-    answer: "Go to 'Bible Lookup' in the menu and use the dropdown menus to select your Bible version, book, chapter, and verse. The system supports multiple translations (KJV, WEB, ASV). You can also save favorite verses and view your recent searches."
-  },
-  {
     question: "What are the premium voices and how do I use them?",
     answer: "F-AI-TH-Connect features three premium ElevenLabs AI voices (Adam, Bella, Grace) specifically chosen for spiritual content. You'll find voice playback buttons on Bible verses and AI responses. Just click the play button to hear Scripture or spiritual guidance read aloud - perfect for meditation or accessibility.",
     requiresTTS: true
@@ -443,86 +439,6 @@ export default function Help() {
               </CardContent>
             </Card>
 
-            {/* Bible Lookup Feature */}
-            <Card className="mb-8">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <BookOpen className="w-5 h-5 text-blue-500" />
-                  <span>Bible Verse Lookup</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-gray-600 leading-relaxed">
-                  Look up any Bible verse instantly with our comprehensive Bible lookup system. Features authentic translations, 
-                  voice playback, and mobile-friendly interface designed for Bible study participants.
-                </p>
-                
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <h4 className="font-semibold text-gray-800">How to Use:</h4>
-                    <ol className="text-sm text-gray-600 space-y-2">
-                      <li className="flex items-start space-x-2">
-                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">1</span>
-                        <span>Navigate to "Bible Lookup" in the main menu</span>
-                      </li>
-                      <li className="flex items-start space-x-2">
-                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">2</span>
-                        <span>Select Bible version, book, chapter, and verse using dropdowns</span>
-                      </li>
-                      <li className="flex items-start space-x-2">
-                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">3</span>
-                        <span>Click "Look Up Verse" to display the Scripture</span>
-                      </li>
-                      <li className="flex items-start space-x-2">
-                        <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">4</span>
-                        <span>Use voice playback for audio Bible reading</span>
-                      </li>
-                    </ol>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <h4 className="font-semibold text-gray-800">Available Features:</h4>
-                    <div className="space-y-2 text-sm">
-                      {isTTSEnabled && (
-                        <div className="flex items-center space-x-2">
-                          <Volume2 className="w-4 h-4 text-green-600" />
-                          <span className="font-medium">Premium Voice Playback</span>
-                        </div>
-                      )}
-                      <div className="flex items-center space-x-2">
-                        <RefreshCw className="w-4 h-4 text-blue-600" />
-                        <span className="font-medium">Multiple Bible Versions</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Clock className="w-4 h-4 text-purple-600" />
-                        <span className="font-medium">Recent Searches History</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Bookmark className="w-4 h-4 text-amber-600" />
-                        <span className="font-medium">Favorite Verses (Save up to 20)</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Star className="w-4 h-4 text-yellow-600" />
-                        <span className="font-medium">Popular Verses Quick Access</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="bg-blue-50 p-4 rounded-lg">
-                  <h5 className="font-semibold text-blue-900 mb-2">Bible Versions Available:</h5>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm text-blue-800">
-                    <div>• King James Version (KJV)</div>
-                    <div>• World English Bible (WEB)</div>
-                    <div>• American Standard Version (ASV)</div>
-                  </div>
-                  <p className="text-sm text-blue-700 mt-2">
-                    All translations are authentic and sourced from official Bible API services.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-
             {/* Premium Text-to-Speech Feature - Only show if TTS is enabled */}
             {isTTSEnabled && (
               <Card className="mb-8">
@@ -761,14 +677,6 @@ export default function Help() {
                 >
                   <Gamepad2 className="w-4 h-4 mr-2" />
                   Play Bible Games
-                </Button>
-                <Button
-                  onClick={() => setLocation("/bible-lookup")}
-                  variant="outline"
-                  className="w-full justify-center sm:justify-start text-sm sm:text-base py-2 sm:py-3"
-                >
-                  <BookOpen className="w-4 h-4 mr-2" />
-                  Bible Lookup
                 </Button>
                 <Button
                   onClick={() => setLocation("/contact")}
