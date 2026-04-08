@@ -818,10 +818,6 @@ export default function BibleStudy() {
 
               {/* Share buttons */}
               <div className="flex gap-2 flex-wrap">
-                <button onClick={shareWhatsApp}
-                  className="flex items-center gap-1.5 px-4 py-2.5 bg-green-500 hover:bg-green-600 text-white rounded-xl text-sm font-semibold">
-                  <MessageSquare className="w-4 h-4"/> Share on WhatsApp
-                </button>
                 <button onClick={() => setMeetingRoom(null)}
                   className="flex items-center gap-1.5 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl text-sm font-semibold">
                   <X className="w-4 h-4"/> New Room
