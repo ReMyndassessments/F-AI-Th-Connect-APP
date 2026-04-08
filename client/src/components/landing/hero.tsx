@@ -10,7 +10,7 @@ export default function Hero() {
   const [isDemoOpen, setIsDemoOpen] = useState(false);
 
   const startDGroup = () => {
-    setLocation("/bible-study");
+    setLocation("/bible");
   };
 
   const openDemo = () => {
