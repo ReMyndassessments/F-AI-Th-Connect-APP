@@ -388,7 +388,7 @@ export default function BibleStudy() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [activeType, setActiveType] = useState<string | null>(null);
   const [result, setResult] = useState('');
-  const [studySource, setStudySource] = useState<'ccf-4ws' | 'generated' | 'template' | null>(null);
+  const [studySource, setStudySource] = useState<'ccf-4ws' | 'generated' | 'template' | 'uploaded' | null>(null);
   const [showTip, setShowTip] = useState(true);
 
   const [isLoadingCcf, setIsLoadingCcf] = useState(false);
@@ -430,9 +430,10 @@ export default function BibleStudy() {
 
     setFileName(file.name);
 
+    let extractedText = '';
     if (file.type === 'text/plain') {
-      const text = await file.text();
-      setFileContent(`[SERMON/NOTES FILE: ${file.name}]\n\n${text}`);
+      extractedText = await file.text();
+      setFileContent(`[SERMON/NOTES FILE: ${file.name}]\n\n${extractedText}`);
     } else {
       try {
         const formData = new FormData();
@@ -440,7 +441,8 @@ export default function BibleStudy() {
         const res = await fetch('/api/process-file', { method: 'POST', body: formData });
         if (res.ok) {
           const data = await res.json();
-          setFileContent(`[SERMON/NOTES FILE: ${file.name}]\n\n${data.content || data.text || 'File content processed.'}`);
+          extractedText = data.content || data.text || '';
+          setFileContent(`[SERMON/NOTES FILE: ${file.name}]\n\n${extractedText}`);
         } else {
           setFileContent(`[ATTACHED FILE: ${file.name}] - Use the themes and content from this file as the foundation for the Bible study.`);
         }
@@ -449,7 +451,15 @@ export default function BibleStudy() {
       }
     }
 
-    toast({ title: "File attached", description: `${file.name} will be used as the study foundation.` });
+    // Set the file content as the study guide so it's immediately ready to share
+    if (extractedText) {
+      setResult(extractedText);
+      setStudySource('uploaded');
+      setActiveType(null);
+      setMeetingRoom(null);
+    }
+
+    toast({ title: "File loaded as study guide!", description: `${file.name} is ready to share in a meeting room. You can also generate an AI study from it.` });
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -948,6 +958,7 @@ Closing Prayer`;
                 {studySource === 'ccf-4ws' ? 'CCF 4 W\'s guide will be shared with your group'
                   : studySource === 'generated' ? 'AI study guide will be shared with your group'
                   : studySource === 'template' ? 'Your 4 W\'s template will be shared with your group'
+                  : studySource === 'uploaded' ? 'Your uploaded guide will be shared with your group'
                   : 'Create a free video room and optionally attach a study guide'}
               </p>
             </div>
@@ -955,6 +966,7 @@ Closing Prayer`;
               <span className="ml-auto flex-shrink-0 bg-white bg-opacity-20 text-white text-xs font-semibold px-2 py-1 rounded-lg whitespace-nowrap">
                 {studySource === 'ccf-4ws' ? '📋 CCF 4W\'s ✓'
                   : studySource === 'generated' ? '✨ AI Guide ✓'
+                  : studySource === 'uploaded' ? '📄 Uploaded ✓'
                   : '✏️ Template ✓'}
               </span>
             )}
@@ -970,6 +982,7 @@ Closing Prayer`;
                   {studySource === 'ccf-4ws' && '📋'}
                   {studySource === 'generated' && '✨'}
                   {studySource === 'template' && '✏️'}
+                  {studySource === 'uploaded' && '📄'}
                   {!studySource && '📹'}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -977,12 +990,14 @@ Closing Prayer`;
                     {studySource === 'ccf-4ws' && 'CCF Weekly 4 W\'s Guide attached'}
                     {studySource === 'generated' && 'AI-generated study guide attached'}
                     {studySource === 'template' && '4 W\'s template attached'}
+                    {studySource === 'uploaded' && 'Your uploaded guide attached'}
                     {!studySource && 'No study guide — plain meeting room'}
                   </p>
                   <p className={`text-xs mt-0.5 ${studySource ? 'text-green-600' : 'text-amber-600'}`}>
                     {studySource === 'ccf-4ws' && 'This week\'s CCF 4 W\'s will be accessible to all participants inside the meeting room'}
                     {studySource === 'generated' && 'Your custom study guide will be accessible to all participants inside the meeting room'}
                     {studySource === 'template' && 'Your filled-in 4 W\'s template will be shared with all participants'}
+                    {studySource === 'uploaded' && 'Your uploaded file will be accessible to all participants inside the meeting room'}
                     {!studySource && 'Load the CCF guide, use a template, or generate an AI study above to attach one'}
                   </p>
                 </div>
@@ -1036,6 +1051,7 @@ Closing Prayer`;
                     <p className="text-xs text-green-500 mt-0.5">
                       {studySource === 'ccf-4ws' ? '📋 CCF 4 W\'s guide included'
                         : studySource === 'generated' ? '✨ AI study guide included'
+                        : studySource === 'uploaded' ? '📄 Your uploaded guide included'
                         : '✏️ 4 W\'s template included'}
                     </p>
                   )}
