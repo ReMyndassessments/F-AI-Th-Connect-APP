@@ -933,6 +933,39 @@ Closing Prayer`;
           </div>
         </div>
 
+        {/* Two-path CTA — shown immediately after a CCF 4W's guide is loaded */}
+        {studySource === 'ccf-4ws' && (
+          <div className="bg-white rounded-2xl shadow-sm border border-indigo-200 p-5">
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">What would you like to do?</p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <button
+                onClick={() => {
+                  if (meetingRef.current) {
+                    const top = meetingRef.current.getBoundingClientRect().top + window.pageYOffset - 90;
+                    window.scrollTo({ top, behavior: 'smooth' });
+                  }
+                }}
+                className="flex-1 flex items-center justify-center gap-2 py-3.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold transition-colors shadow-sm"
+              >
+                <Video className="w-4 h-4"/>
+                Share in Meeting Room →
+              </button>
+              <button
+                onClick={() => {
+                  if (studyTypesRef.current) {
+                    const top = studyTypesRef.current.getBoundingClientRect().top + window.pageYOffset - 90;
+                    window.scrollTo({ top, behavior: 'smooth' });
+                  }
+                }}
+                className="flex-1 flex items-center justify-center gap-2 py-3.5 px-4 bg-white border-2 border-indigo-300 hover:border-indigo-500 text-indigo-700 rounded-xl text-sm font-bold transition-colors"
+              >
+                <Sparkles className="w-4 h-4"/>
+                Generate a Themed Study ↓
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Study Type Buttons */}
         <div ref={studyTypesRef} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
           <h2 className="font-bold text-gray-900 text-lg mb-1">
@@ -1006,39 +1039,6 @@ Closing Prayer`;
                 </button>
               </div>
             </div>
-
-            {/* Two-path CTA for CCF 4W's guide */}
-            {studySource === 'ccf-4ws' && (
-              <div className="border-b border-gray-100 px-5 py-4 bg-gradient-to-r from-indigo-50 to-blue-50">
-                <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-3">What would you like to do?</p>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <button
-                    onClick={() => {
-                      if (meetingRef.current) {
-                        const top = meetingRef.current.getBoundingClientRect().top + window.pageYOffset - 90;
-                        window.scrollTo({ top, behavior: 'smooth' });
-                      }
-                    }}
-                    className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold transition-colors shadow-sm"
-                  >
-                    <Video className="w-4 h-4"/>
-                    Share in Meeting Room →
-                  </button>
-                  <button
-                    onClick={() => {
-                      if (studyTypesRef.current) {
-                        const top = studyTypesRef.current.getBoundingClientRect().top + window.pageYOffset - 90;
-                        window.scrollTo({ top, behavior: 'smooth' });
-                      }
-                    }}
-                    className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-white border-2 border-indigo-300 hover:border-indigo-500 text-indigo-700 rounded-xl text-sm font-bold transition-colors"
-                  >
-                    <Sparkles className="w-4 h-4"/>
-                    Generate a Themed Study ↓
-                  </button>
-                </div>
-              </div>
-            )}
 
             {/* Editable guide notice */}
             <div className="bg-amber-50 border-b border-amber-100 px-5 py-2 flex items-center gap-2 text-xs text-amber-700">
