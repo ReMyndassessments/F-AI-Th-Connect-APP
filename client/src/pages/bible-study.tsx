@@ -828,10 +828,10 @@ Closing Prayer`;
                 )}
 
                 {/* Confirm + bypass — only show when file is not yet set as study guide */}
-                {studySource !== 'uploaded' && studySource !== 'ccf-4ws' && !isGenerating && fileName && !fileContent && (
+                {studySource !== 'uploaded' && studySource !== 'ccf-4ws' && !isGenerating && fileName && (
                   <div className="space-y-2">
-                    {/* Warning + paste fallback if PDF text extraction failed */}
-                    {!pendingUploadText && (
+                    {/* Warning + paste fallback — only when PDF text genuinely couldn't be extracted */}
+                    {!fileContent && !pendingUploadText && (
                       <div className="bg-amber-50 border border-amber-300 rounded-xl p-3 space-y-2">
                         <p className="text-xs font-semibold text-amber-800">
                           ⚠️ Text could not be read from this PDF (it may be a scanned image).
@@ -850,7 +850,7 @@ Closing Prayer`;
                     <div className="flex flex-col sm:flex-row gap-2">
                       <button
                         onClick={() => {
-                          const text = pendingUploadText.trim() || `[${fileName}]`;
+                          const text = pendingUploadText.trim() || fileContent || `[${fileName}]`;
                           setResult(text);
                           setStudySource('uploaded');
                           setActiveType(null);
@@ -863,7 +863,7 @@ Closing Prayer`;
                           }, 150);
                           toast({ title: '✓ Study guide saved!', description: 'Scroll down to create your meeting room.' });
                         }}
-                        disabled={!pendingUploadText.trim()}
+                        disabled={!pendingUploadText.trim() && !fileContent}
                         className="flex-1 flex items-center justify-center gap-2 py-3 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl text-sm font-bold transition-colors shadow-sm"
                       >
                         <BookOpen className="w-4 h-4"/> Save as Study Guide & Go to Meeting Room ↓
