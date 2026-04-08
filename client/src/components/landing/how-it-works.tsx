@@ -1,6 +1,3 @@
-import { Check } from "lucide-react";
-import psalmImage from '@assets/psalm-53-3-trust.png';
-
 const steps = [
   {
     number: 1,
@@ -19,17 +16,6 @@ const steps = [
   }
 ];
 
-const highlights = [
-  "CCF 4 W's PDF upload and sharing",
-  "AI study guides for 8 group types",
-  "Free video meeting rooms — no sign-in required",
-  "Bible games to engage your group",
-  "Sermon notes and PDF upload for AI study generation",
-  "Mission and outreach study resources",
-  "Equip your group to share their faith",
-  "Works on any phone, tablet, or computer",
-];
-
 export default function HowItWorks() {
   return (
     <section id="how-it-works" className="py-20 bg-white">
@@ -41,7 +27,7 @@ export default function HowItWorks() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
+        <div className="grid md:grid-cols-3 gap-8">
           {steps.map((step, index) => (
             <div key={index} className="text-center">
               <div className="w-20 h-20 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
@@ -51,36 +37,6 @@ export default function HowItWorks() {
               <p className="text-gray-600 leading-relaxed">{step.description}</p>
             </div>
           ))}
-        </div>
-
-        <div className="bg-gray-50 rounded-2xl p-8 shadow-sm border border-gray-100">
-          <div className="grid lg:grid-cols-2 gap-10 items-center">
-            <div className="text-center lg:text-left">
-              <h3 className="text-3xl font-bold text-gray-900 mb-4">Built for D-Groups and Bible Study Communities</h3>
-              <p className="text-gray-600 mb-8 leading-relaxed">
-                F-AI-TH-Connect is designed specifically for DGroups — small, intentional communities studying God's Word together. Whether you are leading a CCF cell group, an independent Bible study, or equipping your group for missions and outreach, every tool you need is here.
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {highlights.map((item, index) => (
-                  <div key={index} className="flex items-start gap-3">
-                    <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-3 h-3 text-green-600" />
-                    </div>
-                    <span className="text-gray-700 text-sm leading-snug">{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="relative">
-              <img
-                src={psalmImage}
-                alt="Trust in God — Psalm 56:3"
-                className="rounded-xl shadow-lg w-full h-auto"
-              />
-            </div>
-          </div>
         </div>
       </div>
     </section>
