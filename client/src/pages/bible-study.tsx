@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Home, Upload, X, Copy, Download, Loader2, FileText, BookOpen, Video, Share2, Mail, Check, MessageSquare, Users } from "lucide-react";
 import { chatApi } from "@/lib/chat-api";
@@ -377,6 +377,8 @@ export default function BibleStudy() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const resultRef = useRef<HTMLDivElement>(null);
+  const meetingRef = useRef<HTMLDivElement>(null);
 
   const [groupName, setGroupName] = useState('');
   const [topic, setTopic] = useState('');
@@ -393,6 +395,18 @@ export default function BibleStudy() {
   const [inviteEmails, setInviteEmails] = useState('');
   const [roomLinkCopied, setRoomLinkCopied] = useState(false);
   const [leaderName, setLeaderName] = useState('');
+
+  // Auto-scroll to result when it appears (offset 80px for sticky header)
+  useEffect(() => {
+    if (result && resultRef.current) {
+      setTimeout(() => {
+        const el = resultRef.current;
+        if (!el) return;
+        const top = el.getBoundingClientRect().top + window.pageYOffset - 90;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }, 200);
+    }
+  }, [result]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -440,6 +454,7 @@ export default function BibleStudy() {
     setIsGenerating(true);
     setActiveType(studyType.id);
     setResult('');
+    setMeetingRoom(null);
 
     const finalGroupName = groupName.trim() || studyType.defaultGroup;
     const prompt = studyType.prompt(finalGroupName, topic.trim(), !!fileContent);
@@ -449,6 +464,7 @@ export default function BibleStudy() {
       const session = await chatApi.createSession();
       const response = await chatApi.sendMessage(session.sessionId, fullMessage);
       setResult(response.aiMessage.content);
+      toast({ title: "Study guide ready!", description: "Scroll down to view your guide and start a meeting." });
     } catch (err) {
       toast({ title: "Generation failed", description: "Please try again. Check your connection.", variant: "destructive" });
     } finally {
@@ -651,7 +667,7 @@ export default function BibleStudy() {
 
         {/* Result */}
         {result && (
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+          <div ref={resultRef} className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
             <div className="bg-gradient-to-r from-blue-500 to-amber-500 px-5 py-4 flex items-center justify-between">
               <div>
                 <h2 className="text-white font-bold text-lg">
