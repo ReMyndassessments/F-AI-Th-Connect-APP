@@ -34,8 +34,8 @@ export default function Hero() {
             </div>
 
             <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight mb-4 sm:mb-6">
-              <span className="faith-gradient-text">Bible Study</span>
-              <span className="text-gray-900"> for Your D-Group</span>
+              <span className="faith-gradient-text">Built for D-Groups</span>
+              <span className="text-gray-900"> and Bible Study Communities</span>
             </h1>
 
             <p className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 leading-relaxed px-4 sm:px-0">
