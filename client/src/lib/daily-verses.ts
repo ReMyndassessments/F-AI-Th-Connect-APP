@@ -7,6 +7,11 @@ export interface DailyVerse {
 
 export const DAILY_VERSES: DailyVerse[] = [
   {
+    reference: "Matthew 28:19",
+    text: "Therefore go and make disciples of all nations, baptizing them in the name of the Father and of the Son and of the Holy Spirit.",
+    theme: "The Great Commission"
+  },
+  {
     reference: "Matthew 11:28",
     text: "Come to me, all you who are weary and burdened, and I will give you rest.",
     theme: "Rest and Peace"

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Check, Play } from "lucide-react";
 import { useLocation } from "wouter";
 import DemoVideoModal from "@/components/demo/demo-video-modal";
-import easterImage from "@assets/easter-hero-image.png";
+import commissionImage from "@assets/great-commission-matthew-28-19.png";
 
 export default function Hero() {
   const [, setLocation] = useLocation();
@@ -96,8 +96,8 @@ export default function Hero() {
           
           <div className="relative">
             <img 
-              src={easterImage}
-              alt="Come to me, all you who are weary and burdened, and I will give you rest - Matthew 11:28 with praying hands over open Bible" 
+              src={commissionImage}
+              alt="Go and make disciples of all nations — Matthew 28:19, The Great Commission" 
               className="rounded-2xl shadow-2xl w-full h-auto" 
             />
           </div>
