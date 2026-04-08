@@ -728,15 +728,17 @@ Closing Prayer`;
 
               {/* CCF Weekly */}
               {ccfBlocked ? (
-                <div className="flex flex-col items-center gap-1.5 p-3 bg-amber-50 border-2 border-amber-400 rounded-xl text-center">
+                <div className="flex flex-col items-center gap-2 p-3 bg-amber-50 border-2 border-amber-400 rounded-xl text-center">
                   <span className="text-xl">⬇️</span>
                   <span className="text-xs font-bold text-amber-800">Manual download needed</span>
                   <a href="https://www.ccf.org.ph/download/40059/" target="_blank" rel="noopener noreferrer"
-                    className="text-xs text-white bg-amber-500 hover:bg-amber-600 px-3 py-1.5 rounded-lg font-semibold">
-                    Open CCF Page
+                    className="w-full text-xs text-white bg-amber-500 hover:bg-amber-600 px-3 py-2 rounded-lg font-semibold">
+                    1. Open CCF Page &amp; Download
                   </a>
-                  <span className="text-xs text-gray-500">Then upload with the button above</span>
-                  <button onClick={() => setCcfBlocked(false)} className="text-xs text-gray-400 underline mt-0.5">Retry auto-load</button>
+                  <button onClick={() => fileInputRef.current?.click()}
+                    className="w-full text-xs text-white bg-indigo-600 hover:bg-indigo-700 px-3 py-2 rounded-lg font-semibold flex items-center justify-center gap-1">
+                    <Upload className="w-3.5 h-3.5"/> 2. Upload Downloaded Guide
+                  </button>
                 </div>
               ) : (
                 <button onClick={loadCcfWeekly} disabled={isLoadingCcf}
