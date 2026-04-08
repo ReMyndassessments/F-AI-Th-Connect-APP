@@ -28,6 +28,16 @@ export default function Home() {
       <main>
         <Hero />
 
+        {/* Official Verse — Matthew 28:19 */}
+        <section className="py-8 bg-white border-b border-gray-100">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p className="text-xl sm:text-2xl font-semibold text-gray-800 italic leading-relaxed">
+              "Therefore go and make disciples of all nations, baptizing them in the name of the Father and of the Son and of the Holy Spirit."
+            </p>
+            <p className="mt-3 text-indigo-600 font-bold tracking-wide text-sm uppercase">Matthew 28:19 — The Great Commission</p>
+          </div>
+        </section>
+
         {/* D-Group Community Banner */}
         <section className="py-14 bg-indigo-50 border-y border-indigo-100">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
