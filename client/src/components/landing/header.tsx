@@ -83,7 +83,7 @@ export default function Header() {
               variant="outline"
               className="px-3 lg:px-4 py-2 rounded-lg font-medium border-amber-300 text-amber-700 hover:bg-amber-50 hover:border-amber-400 text-sm lg:text-base touch-target mobile-tap"
             >
-              <a href="https://www.givesendgo.com/CodeandCoffeeforChrist" target="_blank" rel="noopener noreferrer">
+              <a href="https://pay.airwallex.com/hkhhexfr4367" target="_blank" rel="noopener noreferrer">
                 💝 Support
               </a>
             </Button>
@@ -167,7 +167,7 @@ export default function Header() {
                 variant="outline"
                 className="w-full border-amber-300 text-amber-700 hover:bg-amber-50 hover:border-amber-400 py-3 touch-target mobile-tap"
               >
-                <a href="https://www.givesendgo.com/CodeandCoffeeforChrist" target="_blank" rel="noopener noreferrer">
+                <a href="https://pay.airwallex.com/hkhhexfr4367" target="_blank" rel="noopener noreferrer">
                   💝 Support This Ministry
                 </a>
               </Button>

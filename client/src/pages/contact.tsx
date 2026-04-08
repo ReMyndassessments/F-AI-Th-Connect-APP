@@ -293,7 +293,7 @@ export default function Contact() {
                       F-AI-TH-Connect is supported by faithful partners who believe in our mission to provide biblical guidance through technology.
                     </p>
                     <Button
-                      onClick={() => window.open("https://www.givesendgo.com/CodeandCoffeeforChrist", "_blank")}
+                      onClick={() => window.open("https://pay.airwallex.com/hkhhexfr4367", "_blank")}
                       className="w-full faith-button-primary"
                     >
                       <Heart className="w-4 h-4 mr-2" />

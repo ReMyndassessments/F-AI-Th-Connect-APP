@@ -76,7 +76,7 @@ const faqs: FAQItem[] = [
   },
   {
     question: "How can I support this ministry?",
-    answer: "F-AI-TH-Connect is supported through faithful partnerships. You can contribute through our GiveSendGo campaign linked in the navigation. Your support helps us serve more believers with biblical guidance."
+    answer: "F-AI-TH-Connect is supported through faithful partnerships. You can contribute through the Support link in the navigation. Your support helps us serve more believers with biblical guidance."
   },
   {
     question: "Where is the prompt library and how do I use it?",
@@ -779,7 +779,7 @@ export default function Help() {
                   Contact Us
                 </Button>
                 <Button
-                  onClick={() => window.open("https://www.givesendgo.com/CodeandCoffeeforChrist", "_blank")}
+                  onClick={() => window.open("https://pay.airwallex.com/hkhhexfr4367", "_blank")}
                   variant="outline"
                   className="w-full justify-center sm:justify-start text-sm sm:text-base py-2 sm:py-3"
                 >
