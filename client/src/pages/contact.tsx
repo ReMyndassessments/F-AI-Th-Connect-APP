@@ -289,8 +289,11 @@ export default function Contact() {
                     <CardTitle>Ministry Partnership</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-600 mb-4">
+                    <p className="text-gray-600 mb-1">
                       F-AI-TH-Connect is supported by faithful partners who believe in our mission to provide biblical guidance through technology.
+                    </p>
+                    <p className="text-gray-500 text-sm mb-4">
+                      F-AI-TH Connect is a corporate ministry of <span className="font-medium text-gray-700">ReMynd Student Services</span>.
                     </p>
                     <Button
                       onClick={() => window.open("https://pay.airwallex.com/hkhhexfr4367", "_blank")}
