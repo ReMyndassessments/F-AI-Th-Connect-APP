@@ -737,7 +737,7 @@ Closing Prayer`;
                   </a>
                   <button onClick={() => fileInputRef.current?.click()}
                     className="w-full text-xs text-white bg-indigo-600 hover:bg-indigo-700 px-3 py-2 rounded-lg font-semibold flex items-center justify-center gap-1">
-                    <Upload className="w-3.5 h-3.5"/> 2. Upload Downloaded Guide
+                    <Upload className="w-3.5 h-3.5"/> 2. Upload Latest 4W's
                   </button>
                 </div>
               ) : (
