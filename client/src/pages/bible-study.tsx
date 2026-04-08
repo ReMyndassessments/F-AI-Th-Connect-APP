@@ -828,6 +828,11 @@ Closing Prayer`;
                   className="flex items-center gap-1.5 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-3 py-2 rounded-xl text-sm font-semibold transition-colors">
                   <Download className="w-4 h-4"/> Save
                 </button>
+                <button onClick={() => { setResult(''); setMeetingRoom(null); }}
+                  className="flex items-center gap-1.5 bg-white bg-opacity-20 hover:bg-red-500 text-white px-3 py-2 rounded-xl text-sm font-semibold transition-colors"
+                  title="Dismiss">
+                  <X className="w-4 h-4"/> Dismiss
+                </button>
               </div>
             </div>
 
