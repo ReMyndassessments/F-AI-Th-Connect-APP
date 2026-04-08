@@ -439,11 +439,12 @@ export default function BibleStudy() {
       try {
         const formData = new FormData();
         formData.append('file', file);
-        const res = await fetch('/api/process-file', { method: 'POST', body: formData });
+        const res = await fetch('/api/files/process', { method: 'POST', body: formData });
         if (res.ok) {
           const data = await res.json();
-          extractedText = data.content || data.text || '';
+          extractedText = data.content || '';
           setFileContent(`[SERMON/NOTES FILE: ${file.name}]\n\n${extractedText}`);
+          if (data.wordCount) toast({ title: "File read successfully", description: `Extracted ${data.wordCount.toLocaleString()} words from ${file.name}` });
         } else {
           setFileContent(`[ATTACHED FILE: ${file.name}] - Use the themes and content from this file as the foundation for the Bible study.`);
         }
@@ -455,7 +456,7 @@ export default function BibleStudy() {
     // Store extracted text as pending — user must click "Use as Study Guide" to confirm
     setPendingUploadText(extractedText);
 
-    toast({ title: "File attached!", description: `${file.name} is ready. Click "Use as Study Guide" below to attach it to your meeting room.` });
+    if (!extractedText) toast({ title: "File attached", description: `${file.name} attached. Paste the content below to share it with your group.` });
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -483,10 +484,10 @@ export default function BibleStudy() {
       try {
         const formData = new FormData();
         formData.append('file', file);
-        const res = await fetch('/api/process-file', { method: 'POST', body: formData });
+        const res = await fetch('/api/files/process', { method: 'POST', body: formData });
         if (res.ok) {
           const data = await res.json();
-          extractedText = data.content || data.text || '';
+          extractedText = data.content || '';
         }
       } catch { /* ignore */ }
     }
@@ -587,10 +588,10 @@ Closing Prayer`;
       } else {
         const formData = new FormData();
         formData.append('file', file);
-        const parseRes = await fetch('/api/process-file', { method: 'POST', body: formData });
+        const parseRes = await fetch('/api/files/process', { method: 'POST', body: formData });
         if (parseRes.ok) {
           const data = await parseRes.json();
-          extractedText = data.content || data.text || '';
+          extractedText = data.content || '';
         }
       }
 
