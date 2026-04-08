@@ -557,7 +557,7 @@ export default function BibleStudy() {
             </button>
           </Link>
           <div className="flex-1">
-            <h1 className="text-xl font-bold text-gray-900">DGroup Bible Study Generator</h1>
+            <h1 className="text-xl font-bold text-gray-900">D-Group Bible Study Generator</h1>
             <p className="text-sm text-gray-500">Create tailored study guides for your D-Group or Bible study</p>
           </div>
           <BookOpen className="w-6 h-6 text-blue-500"/>

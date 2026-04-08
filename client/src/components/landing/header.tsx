@@ -37,7 +37,7 @@ export default function Header() {
               onClick={() => setLocation("/bible")}
               className="text-gray-600 hover:text-blue-500 transition-colors font-medium"
             >
-              DGroups
+              D-Groups
             </button>
             <button
               onClick={() => setLocation("/bible-games")}
@@ -120,7 +120,7 @@ export default function Header() {
                 }}
                 className="text-gray-600 hover:text-blue-500 transition-colors text-left font-medium py-3 px-2 rounded-lg hover:bg-gray-50 touch-target mobile-tap"
               >
-                DGroups
+                D-Groups
               </button>
               <button
                 onClick={() => {
