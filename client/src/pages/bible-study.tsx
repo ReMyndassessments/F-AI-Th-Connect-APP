@@ -1111,7 +1111,7 @@ Closing Prayer`;
         )}
 
         {/* ── D-Group Meeting Room — always visible ─────────────── */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+        <div ref={meetingRef} className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
           <div className="bg-gradient-to-r from-indigo-600 to-blue-700 px-5 py-4 flex items-center gap-3">
             <Video className="w-6 h-6 text-white flex-shrink-0"/>
             <div>
