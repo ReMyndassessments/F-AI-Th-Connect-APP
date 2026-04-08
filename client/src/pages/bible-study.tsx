@@ -750,7 +750,7 @@ Closing Prayer`;
             <span className="text-2xl flex-shrink-0">💡</span>
             <div className="flex-1">
               <p className="text-sm text-blue-800 font-medium">Pro tip for group leaders</p>
-              <p className="text-sm text-blue-700 mt-0.5">Upload your pastor's sermon notes or a Scripture passage, enter your group name, then tap your group type. The AI will generate a complete, tailored study guide in seconds.</p>
+              <p className="text-sm text-blue-700 mt-0.5">Upload your latest CCF 4W's, sermon notes or a Scripture passage, enter your group name, then tap your group type. The AI will generate a complete, tailored study guide in seconds.</p>
             </div>
             <button onClick={() => setShowTip(false)} className="text-blue-400 hover:text-blue-600 flex-shrink-0">
               <X className="w-4 h-4"/>
