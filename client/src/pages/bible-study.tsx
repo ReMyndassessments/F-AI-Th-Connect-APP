@@ -706,101 +706,129 @@ export default function BibleStudy() {
           </div>
         )}
 
-        {/* ── D-Group Meeting Room ─────────────────────────────── */}
-        {result && (
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-            <div className="bg-gradient-to-r from-indigo-600 to-blue-700 px-5 py-4 flex items-center gap-3">
-              <Video className="w-6 h-6 text-white flex-shrink-0"/>
-              <div>
-                <h2 className="text-white font-bold text-lg">Start a D-Group Meeting</h2>
-                <p className="text-white text-opacity-80 text-sm">Launch a free Jitsi video room — share the study guide with your group live</p>
-              </div>
+        {/* ── D-Group Meeting Room — always visible ─────────────── */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+          <div className="bg-gradient-to-r from-indigo-600 to-blue-700 px-5 py-4 flex items-center gap-3">
+            <Video className="w-6 h-6 text-white flex-shrink-0"/>
+            <div>
+              <h2 className="text-white font-bold text-lg">D-Group Video Meeting Room</h2>
+              <p className="text-white text-opacity-80 text-sm">
+                {result ? 'Your study guide will be shared in the room' : 'Launch a free Jitsi video room for your group'}
+              </p>
             </div>
+            {result && (
+              <span className="ml-auto flex-shrink-0 bg-white bg-opacity-20 text-white text-xs font-semibold px-2 py-1 rounded-lg">
+                Study ready ✓
+              </span>
+            )}
+          </div>
 
-            {!meetingRoom ? (
-              <div className="p-5 space-y-4">
+          {!meetingRoom ? (
+            <div className="p-5 space-y-4">
+              {result && (
+                <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-3 flex items-start gap-2 text-sm text-indigo-800">
+                  <BookOpen className="w-4 h-4 flex-shrink-0 mt-0.5 text-indigo-500"/>
+                  <span>Your generated study guide will automatically be included in the meeting room so all participants can read along.</span>
+                </div>
+              )}
+              <div className="grid sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Your Name (shown to participants)</label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Your Name <span className="text-gray-400 font-normal">(leader)</span></label>
                   <input
                     type="text"
                     value={leaderName}
                     onChange={e => setLeaderName(e.target.value)}
-                    placeholder="e.g. Pastor Mike, Leader Sarah..."
+                    placeholder="e.g. Pastor Mike, Sarah..."
                     className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Group Name <span className="text-gray-400 font-normal">(for the room)</span></label>
+                  <input
+                    type="text"
+                    value={groupName}
+                    onChange={e => setGroupName(e.target.value)}
+                    placeholder="e.g. Fishers of Men..."
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+              </div>
+              <button
+                onClick={createMeetingRoom}
+                disabled={isCreatingRoom}
+                className="w-full flex items-center justify-center gap-2 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold text-lg disabled:opacity-50 transition-all shadow-md hover:shadow-lg"
+              >
+                {isCreatingRoom ? <Loader2 className="w-5 h-5 animate-spin"/> : <Video className="w-5 h-5"/>}
+                {isCreatingRoom ? 'Creating Room...' : 'Create D-Group Meeting Room'}
+              </button>
+              <p className="text-xs text-gray-400 text-center">Free video calls via Jitsi Meet — no account or download needed for anyone</p>
+            </div>
+          ) : (
+            <div className="p-5 space-y-4">
+              {/* Room created */}
+              <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3">
+                <Check className="w-6 h-6 text-green-600 flex-shrink-0"/>
+                <div>
+                  <p className="font-bold text-green-800">Meeting room is live!</p>
+                  <p className="text-sm text-green-600">Room code: <strong className="text-lg tracking-widest">{meetingRoom.code}</strong></p>
+                </div>
                 <button
-                  onClick={createMeetingRoom}
-                  disabled={isCreatingRoom}
-                  className="w-full flex items-center justify-center gap-2 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold text-base disabled:opacity-50 transition-all"
+                  onClick={() => setLocation(`/dgroup/${meetingRoom.code}`)}
+                  className="ml-auto flex items-center gap-1.5 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold flex-shrink-0"
                 >
-                  {isCreatingRoom ? <Loader2 className="w-5 h-5 animate-spin"/> : <Video className="w-5 h-5"/>}
-                  {isCreatingRoom ? 'Creating Room...' : 'Create Meeting Room'}
+                  <Video className="w-4 h-4"/> Join Now
                 </button>
-                <p className="text-xs text-gray-400 text-center">Free video calls via Jitsi Meet — no account or download required for participants</p>
               </div>
-            ) : (
-              <div className="p-5 space-y-4">
-                {/* Room created success */}
-                <div className="bg-green-50 border border-green-200 rounded-xl p-3 flex items-center gap-2">
-                  <Check className="w-5 h-5 text-green-600 flex-shrink-0"/>
-                  <div>
-                    <p className="text-sm font-semibold text-green-800">Meeting room ready!</p>
-                    <p className="text-xs text-green-600">Room code: <strong>{meetingRoom.code}</strong></p>
-                  </div>
-                </div>
 
-                {/* Share link */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Shareable Meeting Link</label>
-                  <div className="flex gap-2">
-                    <input readOnly value={getRoomLink()}
-                      className="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 text-sm bg-gray-50 text-gray-600 min-w-0"/>
-                    <button onClick={copyRoomLink}
-                      className={`flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-sm font-semibold flex-shrink-0 transition-colors ${roomLinkCopied ? 'bg-green-500 text-white' : 'bg-indigo-600 text-white hover:bg-indigo-700'}`}>
-                      {roomLinkCopied ? <Check className="w-4 h-4"/> : <Copy className="w-4 h-4"/>}
-                      {roomLinkCopied ? 'Copied!' : 'Copy'}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Share buttons */}
-                <div className="flex gap-2 flex-wrap">
-                  <button onClick={shareWhatsApp}
-                    className="flex items-center gap-1.5 px-4 py-2.5 bg-green-500 hover:bg-green-600 text-white rounded-xl text-sm font-semibold">
-                    <MessageSquare className="w-4 h-4"/> WhatsApp
-                  </button>
-                  <button
-                    onClick={() => setLocation(`/dgroup/${meetingRoom.code}`)}
-                    className="flex items-center gap-1.5 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold">
-                    <Video className="w-4 h-4"/> Join as Leader
+              {/* Share link */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Shareable Meeting Link</label>
+                <div className="flex gap-2">
+                  <input readOnly value={getRoomLink()}
+                    className="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 text-sm bg-gray-50 text-gray-600 min-w-0"/>
+                  <button onClick={copyRoomLink}
+                    className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold flex-shrink-0 transition-colors ${roomLinkCopied ? 'bg-green-500 text-white' : 'bg-indigo-600 text-white hover:bg-indigo-700'}`}>
+                    {roomLinkCopied ? <Check className="w-4 h-4"/> : <Copy className="w-4 h-4"/>}
+                    {roomLinkCopied ? 'Copied!' : 'Copy Link'}
                   </button>
                 </div>
-
-                {/* Email invite */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    <Users className="w-4 h-4 inline mr-1"/>Email Invitations
-                  </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={inviteEmails}
-                      onChange={e => setInviteEmails(e.target.value)}
-                      placeholder="member1@email.com, member2@email.com..."
-                      className="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 min-w-0"
-                    />
-                    <button onClick={shareEmail}
-                      className="flex items-center gap-1.5 px-3 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-sm font-semibold flex-shrink-0">
-                      <Mail className="w-4 h-4"/> Send
-                    </button>
-                  </div>
-                  <p className="text-xs text-gray-400 mt-1">Separate multiple emails with commas. Opens your email app with an invite pre-written.</p>
-                </div>
               </div>
-            )}
-          </div>
-        )}
+
+              {/* Share buttons */}
+              <div className="flex gap-2 flex-wrap">
+                <button onClick={shareWhatsApp}
+                  className="flex items-center gap-1.5 px-4 py-2.5 bg-green-500 hover:bg-green-600 text-white rounded-xl text-sm font-semibold">
+                  <MessageSquare className="w-4 h-4"/> Share on WhatsApp
+                </button>
+                <button onClick={() => setMeetingRoom(null)}
+                  className="flex items-center gap-1.5 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl text-sm font-semibold">
+                  <X className="w-4 h-4"/> New Room
+                </button>
+              </div>
+
+              {/* Email invite */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <Mail className="w-4 h-4 inline mr-1"/>Invite by Email
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={inviteEmails}
+                    onChange={e => setInviteEmails(e.target.value)}
+                    placeholder="member@email.com, another@email.com..."
+                    className="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 min-w-0"
+                  />
+                  <button onClick={shareEmail}
+                    className="flex items-center gap-1.5 px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-sm font-semibold flex-shrink-0">
+                    <Mail className="w-4 h-4"/> Send
+                  </button>
+                </div>
+                <p className="text-xs text-gray-400 mt-1.5">Separate emails with commas — opens your email app with a pre-written invite.</p>
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* Footer quote */}
         <div className="text-center pb-6">
