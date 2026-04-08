@@ -818,8 +818,16 @@ Closing Prayer`;
                   </button>
                 </div>
 
+                {/* Success state — CCF guide already loaded into result */}
+                {studySource === 'ccf-4ws' && (
+                  <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-xl px-4 py-3">
+                    <Check className="w-4 h-4 text-green-600 flex-shrink-0"/>
+                    <p className="text-xs text-green-800 font-semibold">Guide loaded successfully — scroll down to create your meeting room.</p>
+                  </div>
+                )}
+
                 {/* Confirm + bypass — only show when file is not yet set as study guide */}
-                {studySource !== 'uploaded' && (
+                {studySource !== 'uploaded' && studySource !== 'ccf-4ws' && (
                   <div className="space-y-2">
                     {/* Warning + paste fallback if PDF text extraction failed */}
                     {!pendingUploadText && (
