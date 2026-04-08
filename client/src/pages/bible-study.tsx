@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Home, Upload, X, Copy, Download, Loader2, FileText, BookOpen, Video, Share2, Mail, Check, MessageSquare, Users, Pencil, ExternalLink } from "lucide-react";
+import { Home, Upload, X, Copy, Download, Loader2, FileText, BookOpen, Video, Share2, Mail, Check, MessageSquare, Users, Pencil, ExternalLink, Sparkles } from "lucide-react";
 import { chatApi } from "@/lib/chat-api";
 import { useToast } from "@/hooks/use-toast";
 
@@ -380,6 +380,7 @@ export default function BibleStudy() {
   const ccfFileInputRef = useRef<HTMLInputElement>(null);
   const resultRef = useRef<HTMLDivElement>(null);
   const meetingRef = useRef<HTMLDivElement>(null);
+  const studyTypesRef = useRef<HTMLDivElement>(null);
 
   const [groupName, setGroupName] = useState('');
   const [topic, setTopic] = useState('');
@@ -933,9 +934,15 @@ Closing Prayer`;
         </div>
 
         {/* Study Type Buttons */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
-          <h2 className="font-bold text-gray-900 text-lg mb-1">Choose Your Study Type</h2>
-          <p className="text-sm text-gray-500 mb-4">Tap a group type to generate a complete, tailored Bible study guide</p>
+        <div ref={studyTypesRef} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
+          <h2 className="font-bold text-gray-900 text-lg mb-1">
+            {studySource === 'ccf-4ws' ? 'Generate a Themed Study from this 4 W\'s Guide' : 'Choose Your Study Type'}
+          </h2>
+          <p className="text-sm text-gray-500 mb-4">
+            {studySource === 'ccf-4ws'
+              ? 'Pick a study type and the AI will build a complete guide tailored to your group, using the 4 W\'s content as its foundation.'
+              : 'Tap a group type to generate a complete, tailored Bible study guide'}
+          </p>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {STUDY_TYPES.map(type => (
@@ -999,6 +1006,39 @@ Closing Prayer`;
                 </button>
               </div>
             </div>
+
+            {/* Two-path CTA for CCF 4W's guide */}
+            {studySource === 'ccf-4ws' && (
+              <div className="border-b border-gray-100 px-5 py-4 bg-gradient-to-r from-indigo-50 to-blue-50">
+                <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-3">What would you like to do?</p>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <button
+                    onClick={() => {
+                      if (meetingRef.current) {
+                        const top = meetingRef.current.getBoundingClientRect().top + window.pageYOffset - 90;
+                        window.scrollTo({ top, behavior: 'smooth' });
+                      }
+                    }}
+                    className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold transition-colors shadow-sm"
+                  >
+                    <Video className="w-4 h-4"/>
+                    Share in Meeting Room →
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (studyTypesRef.current) {
+                        const top = studyTypesRef.current.getBoundingClientRect().top + window.pageYOffset - 90;
+                        window.scrollTo({ top, behavior: 'smooth' });
+                      }
+                    }}
+                    className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-white border-2 border-indigo-300 hover:border-indigo-500 text-indigo-700 rounded-xl text-sm font-bold transition-colors"
+                  >
+                    <Sparkles className="w-4 h-4"/>
+                    Generate a Themed Study ↓
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Editable guide notice */}
             <div className="bg-amber-50 border-b border-amber-100 px-5 py-2 flex items-center gap-2 text-xs text-amber-700">
