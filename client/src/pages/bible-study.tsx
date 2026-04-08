@@ -716,7 +716,7 @@ Closing Prayer`;
               <button onClick={() => fileInputRef.current?.click()}
                 className="flex flex-col items-center gap-1.5 p-3 bg-white border-2 border-dashed border-indigo-300 hover:border-indigo-500 rounded-xl text-indigo-700 hover:text-indigo-900 transition-all text-sm font-semibold text-center">
                 <Upload className="w-5 h-5"/>
-                <span>Upload My Own<br/><span className="text-xs font-normal text-gray-500">Study guide or sermon notes</span></span>
+                <span>Upload My Own<br/><span className="text-xs font-normal text-gray-500">Past 4W's, personal study guides or sermon notes</span></span>
               </button>
 
               {/* 4 W's template */}
