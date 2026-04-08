@@ -27,11 +27,6 @@ export default function Hero() {
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div className="text-center lg:text-left">
 
-            {/* D-Group badge */}
-            <div className="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold px-3 py-1.5 rounded-full mb-5">
-              <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"/>
-              Built for CCF D-Groups, Bible Study &amp; Missions
-            </div>
 
             <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight mb-4 sm:mb-6">
               <span className="faith-gradient-text">Built for D-Groups</span>
