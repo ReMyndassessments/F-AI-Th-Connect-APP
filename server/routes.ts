@@ -703,8 +703,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/dgroups', (req: Request, res: Response) => {
     try {
       const { groupName, studyType, studyContent, leaderName } = req.body;
-      if (!groupName || !studyType) {
-        return res.status(400).json({ error: 'groupName and studyType are required' });
+      if (!groupName) {
+        return res.status(400).json({ error: 'groupName is required' });
       }
       let code = generateCode();
       while (dgroupRooms.has(code)) code = generateCode();
