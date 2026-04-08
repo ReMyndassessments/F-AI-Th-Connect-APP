@@ -56,7 +56,7 @@ function JoinScreen({ room, onJoin }: { room: DGroupRoom; onJoin: (name: string)
           Join Meeting
         </button>
 
-        <p className="text-xs text-gray-400 mt-4">Powered by Jitsi Meet — free, encrypted video calls</p>
+        <p className="text-xs text-gray-400 mt-4">Powered by Jitsi — free, encrypted video calls. No login required.</p>
 
         <Link href="/bible">
           <button className="mt-3 text-sm text-gray-400 hover:text-gray-600 flex items-center gap-1 mx-auto">
@@ -104,7 +104,7 @@ export default function DGroupRoom() {
 
     const loadJitsi = () => {
       if (jitsiApiRef.current) return; // Already loaded
-      const api = new window.JitsiMeetExternalAPI('meet.jit.si', {
+      const api = new window.JitsiMeetExternalAPI('jitsi.systemli.org', {
         roomName: room.jitsiRoom,
         parentNode: jitsiContainerRef.current,
         userInfo: { displayName },
@@ -113,24 +113,15 @@ export default function DGroupRoom() {
           startWithVideoMuted: false,
           prejoinPageEnabled: false,
           disableDeepLinking: true,
-          // Disable lobby / moderator-wait entirely
-          lobby: { enabled: false },
-          enableLobbyChat: false,
-          hideLobbyButton: true,
-          disableModeratorIndicator: true,
-          enableInsecureRoomNameWarning: false,
           requireDisplayName: false,
-          // Let everyone start/join the call immediately
-          startAudioOnly: false,
           enableWelcomePage: false,
-          disableInitialGUM: false,
-          disableAEC: false,
+          enableInsecureRoomNameWarning: false,
+          disableModeratorIndicator: true,
         },
         interfaceConfigOverwrite: {
           SHOW_JITSI_WATERMARK: false,
           SHOW_BRAND_WATERMARK: false,
           TOOLBAR_ALWAYS_VISIBLE: false,
-          HIDE_INVITE_MORE_HEADER: false,
           DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,
         },
       });
@@ -141,7 +132,7 @@ export default function DGroupRoom() {
       loadJitsi();
     } else {
       const script = document.createElement('script');
-      script.src = 'https://meet.jit.si/external_api.js';
+      script.src = 'https://jitsi.systemli.org/external_api.js';
       script.async = true;
       script.onload = loadJitsi;
       document.head.appendChild(script);
@@ -238,7 +229,7 @@ export default function DGroupRoom() {
             <Share2 className="w-3.5 h-3.5"/> Invite
           </button>
           <a
-            href={`https://meet.jit.si/${room.jitsiRoom}`}
+            href={`https://jitsi.systemli.org/${room.jitsiRoom}`}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-700 hover:bg-blue-600 text-white rounded-lg text-xs font-semibold transition-colors"
@@ -304,9 +295,15 @@ export default function DGroupRoom() {
             <h3 className="font-bold text-amber-900 mb-2 flex items-center gap-2">
               <BookOpen className="w-4 h-4"/> Study Guide — {room.groupName}
             </h3>
-            <pre className="whitespace-pre-wrap text-xs text-gray-800 font-sans leading-relaxed">
-              {formatStudy(room.studyContent)}
-            </pre>
+            {room.studyContent.startsWith('[') && room.studyContent.length < 200 ? (
+              <p className="text-sm text-amber-700 italic">
+                The study guide is a PDF file. Your group leader will share the content via WhatsApp or email — ask them for a copy if you don't have it yet.
+              </p>
+            ) : (
+              <pre className="whitespace-pre-wrap text-xs text-gray-800 font-sans leading-relaxed">
+                {formatStudy(room.studyContent)}
+              </pre>
+            )}
           </div>
         </div>
       )}

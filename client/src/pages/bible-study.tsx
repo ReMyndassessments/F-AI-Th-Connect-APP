@@ -819,39 +819,57 @@ Closing Prayer`;
 
                 {/* Confirm + bypass — only show when file is not yet set as study guide */}
                 {studySource !== 'uploaded' && (
-                  <div className="flex flex-col sm:flex-row gap-2">
-                    <button
-                      onClick={() => {
-                        const text = pendingUploadText || `[File: ${fileName} — share with meeting participants]`;
-                        setResult(text);
-                        setStudySource('uploaded');
-                        setActiveType(null);
-                        setMeetingRoom(null);
-                        // Scroll to meeting room section
-                        setTimeout(() => {
+                  <div className="space-y-2">
+                    {/* Warning + paste fallback if PDF text extraction failed */}
+                    {!pendingUploadText && (
+                      <div className="bg-amber-50 border border-amber-300 rounded-xl p-3 space-y-2">
+                        <p className="text-xs font-semibold text-amber-800">
+                          ⚠️ Text could not be read from this PDF (it may be a scanned image).
+                        </p>
+                        <p className="text-xs text-amber-700">
+                          Paste the 4 W's content below so participants can read it in the meeting room:
+                        </p>
+                        <textarea
+                          rows={6}
+                          placeholder="Paste your 4 W's or study guide text here…"
+                          onChange={e => setPendingUploadText(e.target.value)}
+                          className="w-full border border-amber-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-amber-400 resize-y"
+                        />
+                      </div>
+                    )}
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <button
+                        onClick={() => {
+                          const text = pendingUploadText.trim() || `[${fileName}]`;
+                          setResult(text);
+                          setStudySource('uploaded');
+                          setActiveType(null);
+                          setMeetingRoom(null);
+                          setTimeout(() => {
+                            if (meetingRef.current) {
+                              const top = meetingRef.current.getBoundingClientRect().top + window.pageYOffset - 90;
+                              window.scrollTo({ top, behavior: 'smooth' });
+                            }
+                          }, 150);
+                          toast({ title: '✓ Study guide saved!', description: 'Scroll down to create your meeting room.' });
+                        }}
+                        disabled={!pendingUploadText.trim()}
+                        className="flex-1 flex items-center justify-center gap-2 py-3 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed text-white rounded-xl text-sm font-bold transition-colors shadow-sm"
+                      >
+                        <BookOpen className="w-4 h-4"/> Save as Study Guide & Go to Meeting Room ↓
+                      </button>
+                      <button
+                        onClick={() => {
                           if (meetingRef.current) {
                             const top = meetingRef.current.getBoundingClientRect().top + window.pageYOffset - 90;
                             window.scrollTo({ top, behavior: 'smooth' });
                           }
-                        }, 150);
-                        toast({ title: '✓ Study guide saved!', description: 'Scroll down to create your meeting room.' });
-                      }}
-                      className="flex-1 flex items-center justify-center gap-2 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold transition-colors shadow-sm"
-                    >
-                      <BookOpen className="w-4 h-4"/> Save as Study Guide & Go to Meeting Room ↓
-                    </button>
-                    <button
-                      onClick={() => {
-                        // Just scroll to meeting room without attaching guide
-                        if (meetingRef.current) {
-                          const top = meetingRef.current.getBoundingClientRect().top + window.pageYOffset - 90;
-                          window.scrollTo({ top, behavior: 'smooth' });
-                        }
-                      }}
-                      className="sm:w-auto flex items-center justify-center gap-1.5 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl text-sm font-semibold transition-colors"
-                    >
-                      Skip to Meeting Room
-                    </button>
+                        }}
+                        className="sm:w-auto flex items-center justify-center gap-1.5 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl text-sm font-semibold transition-colors"
+                      >
+                        Skip to Meeting Room
+                      </button>
+                    </div>
                   </div>
                 )}
 
