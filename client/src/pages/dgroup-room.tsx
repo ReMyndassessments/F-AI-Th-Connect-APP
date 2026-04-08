@@ -49,17 +49,30 @@ function StudyGuideRenderer({ content }: { content: string }) {
   let bodyBuffer: string[] = [];
 
   const flushBuffer = (key: string) => {
-    if (bodyBuffer.length > 0) {
+    if (bodyBuffer.length === 0) return;
+
+    // Split on blank lines to get paragraph groups, then join each group's lines into one string
+    const paragraphs: string[] = [];
+    let current: string[] = [];
+    for (const l of bodyBuffer) {
+      if (l.trim() === '') {
+        if (current.length > 0) { paragraphs.push(current.join(' ')); current = []; }
+      } else {
+        current.push(l.replace(/\s{2,}/g, ' ').trim());
+      }
+    }
+    if (current.length > 0) paragraphs.push(current.join(' '));
+
+    if (paragraphs.length > 0) {
       elements.push(
-        <div key={`buf-${key}`} className="space-y-1.5 mb-3">
-          {bodyBuffer.map((l, i) =>
-            l.trim() === '' ? <div key={i} className="h-2"/> :
-            <p key={i} className="text-sm text-gray-700 leading-relaxed">{l.replace(/\s{2,}/g, ' ').trim()}</p>
-          )}
+        <div key={`buf-${key}`} className="space-y-3 mb-2">
+          {paragraphs.map((p, i) => (
+            <p key={i} className="text-sm text-gray-700 leading-relaxed">{p}</p>
+          ))}
         </div>
       );
-      bodyBuffer = [];
     }
+    bodyBuffer = [];
   };
 
   lines.forEach((raw, i) => {
