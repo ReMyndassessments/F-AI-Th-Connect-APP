@@ -13,12 +13,6 @@ interface DGroupRoom {
   createdAt: string;
 }
 
-// Declare Jitsi global
-declare global {
-  interface Window {
-    JitsiMeetExternalAPI: any;
-  }
-}
 
 // =====================================================================
 // JOIN SCREEN — asks for display name before entering
@@ -86,8 +80,7 @@ export default function DGroupRoom() {
   const [copied, setCopied] = useState(false);
   const [inviteEmails, setInviteEmails] = useState('');
 
-  const jitsiContainerRef = useRef<HTMLDivElement>(null);
-  const jitsiApiRef = useRef<any>(null);
+  const jitsiIframeRef = useRef<HTMLIFrameElement>(null);
 
   // Fetch room data
   useEffect(() => {
@@ -98,53 +91,18 @@ export default function DGroupRoom() {
       .catch(() => { setError('This meeting room was not found or has expired. Rooms last as long as the server is running.'); setLoading(false); });
   }, [code]);
 
-  // Load Jitsi and launch meeting when joined
-  useEffect(() => {
-    if (!joined || !room || !jitsiContainerRef.current) return;
-
-    const loadJitsi = () => {
-      if (jitsiApiRef.current) return; // Already loaded
-      const api = new window.JitsiMeetExternalAPI('jitsi.systemli.org', {
-        roomName: room.jitsiRoom,
-        parentNode: jitsiContainerRef.current,
-        userInfo: { displayName },
-        configOverwrite: {
-          startWithAudioMuted: false,
-          startWithVideoMuted: false,
-          prejoinPageEnabled: false,
-          disableDeepLinking: true,
-          requireDisplayName: false,
-          enableWelcomePage: false,
-          enableInsecureRoomNameWarning: false,
-          disableModeratorIndicator: true,
-        },
-        interfaceConfigOverwrite: {
-          SHOW_JITSI_WATERMARK: false,
-          SHOW_BRAND_WATERMARK: false,
-          TOOLBAR_ALWAYS_VISIBLE: false,
-          DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,
-        },
-      });
-      jitsiApiRef.current = api;
-    };
-
-    if (window.JitsiMeetExternalAPI) {
-      loadJitsi();
-    } else {
-      const script = document.createElement('script');
-      script.src = 'https://jitsi.systemli.org/external_api.js';
-      script.async = true;
-      script.onload = loadJitsi;
-      document.head.appendChild(script);
-    }
-
-    return () => {
-      if (jitsiApiRef.current) {
-        try { jitsiApiRef.current.dispose(); } catch {}
-        jitsiApiRef.current = null;
-      }
-    };
-  }, [joined, room, displayName]);
+  // Build Jitsi iframe URL when joined
+  const jitsiSrc = (joined && room)
+    ? `https://jitsi.systemli.org/${room.jitsiRoom}` +
+      `#config.prejoinPageEnabled=false` +
+      `&config.startWithAudioMuted=false` +
+      `&config.startWithVideoMuted=false` +
+      `&config.requireDisplayName=false` +
+      `&config.disableDeepLinking=true` +
+      `&config.enableWelcomePage=false` +
+      `&config.disableModeratorIndicator=true` +
+      `&userInfo.displayName=${encodeURIComponent(displayName)}`
+    : null;
 
   const roomLink = `${window.location.origin}/dgroup/${code}`;
 
@@ -309,7 +267,27 @@ export default function DGroupRoom() {
       )}
 
       {/* Jitsi frame — fills all remaining space */}
-      <div className="flex-1 min-h-0 bg-gray-900" ref={jitsiContainerRef}/>
+      <div className="flex-1 min-h-0 bg-gray-900 relative flex flex-col">
+        {jitsiSrc ? (
+          <>
+            <iframe
+              ref={jitsiIframeRef}
+              key={jitsiSrc}
+              src={jitsiSrc}
+              allow="camera; microphone; fullscreen; display-capture; autoplay; clipboard-write"
+              style={{ flex: 1, width: '100%', border: 'none', display: 'block', minHeight: 0 }}
+              title={room?.groupName ?? 'Meeting Room'}
+            />
+            <div className="text-center text-xs text-gray-500 bg-gray-900 py-1 shrink-0">
+              If the meeting is blank, click <strong className="text-blue-400">Open in Browser</strong> above.
+            </div>
+          </>
+        ) : (
+          <div className="flex items-center justify-center h-full text-gray-400">
+            Waiting for meeting to start…
+          </div>
+        )}
+      </div>
     </div>
   );
 }
