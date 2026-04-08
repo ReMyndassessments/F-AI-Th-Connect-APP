@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Home, Upload, X, Copy, Download, Loader2, FileText, BookOpen, Video, Share2, Mail, Check, MessageSquare, Users, Pencil } from "lucide-react";
+import { Home, Upload, X, Copy, Download, Loader2, FileText, BookOpen, Video, Share2, Mail, Check, MessageSquare, Users, Pencil, ExternalLink } from "lucide-react";
 import { chatApi } from "@/lib/chat-api";
 import { useToast } from "@/hooks/use-toast";
 
@@ -1114,73 +1114,74 @@ Closing Prayer`;
             </div>
           ) : (
             <div className="p-5 space-y-4">
-              {/* Room created */}
-              <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3">
-                <Check className="w-6 h-6 text-green-600 flex-shrink-0"/>
-                <div>
-                  <p className="font-bold text-green-800">Meeting room is live!</p>
-                  <p className="text-sm text-green-600">
-                    Room code: <strong className="text-lg tracking-widest">{meetingRoom.code}</strong>
-                  </p>
-                  {studySource && (
-                    <p className="text-xs text-green-500 mt-0.5">
-                      {studySource === 'ccf-4ws' ? '📋 CCF 4 W\'s guide included'
-                        : studySource === 'generated' ? '✨ AI study guide included'
-                        : studySource === 'uploaded' ? '📄 Your uploaded guide included'
-                        : '✏️ 4 W\'s template included'}
-                    </p>
-                  )}
+              {/* Quick Meet card */}
+              <div className="flex items-center gap-3 mb-1">
+                <div className="w-9 h-9 bg-green-100 rounded-xl flex items-center justify-center">
+                  <Video className="w-5 h-5 text-green-600"/>
                 </div>
-                <button
-                  onClick={() => setLocation(`/dgroup/${meetingRoom.code}`)}
-                  className="ml-auto flex items-center gap-1.5 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold flex-shrink-0"
-                >
-                  <Video className="w-4 h-4"/> Join Now
-                </button>
+                <div>
+                  <p className="font-bold text-gray-900">D-Group Quick Meet</p>
+                  <p className="text-xs text-gray-500">Branded join page — no account or download needed</p>
+                </div>
               </div>
 
-              {/* Share link */}
+              {studySource && (
+                <div className="bg-green-50 border border-green-200 rounded-xl px-3 py-2 text-xs text-green-700 font-semibold flex items-center gap-2">
+                  <Check className="w-3.5 h-3.5 text-green-600 flex-shrink-0"/>
+                  {studySource === 'ccf-4ws' ? '📋 CCF 4 W\'s guide included in this room'
+                    : studySource === 'generated' ? '✨ AI study guide included in this room'
+                    : studySource === 'uploaded' ? '📄 Your uploaded guide included in this room'
+                    : '✏️ 4 W\'s template included in this room'}
+                </div>
+              )}
+
+              {/* Room name */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Shareable Meeting Link</label>
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Room Name</p>
+                <div className="flex gap-2 items-center">
+                  <div className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 font-mono tracking-widest">
+                    {meetingRoom.groupName} — {meetingRoom.code}
+                  </div>
+                </div>
+              </div>
+
+              {/* Guest link */}
+              <div>
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Guest Link — Share This</p>
                 <div className="flex gap-2">
                   <input readOnly value={getRoomLink()}
                     className="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 text-sm bg-gray-50 text-gray-600 min-w-0"/>
                   <button onClick={copyRoomLink}
-                    className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold flex-shrink-0 transition-colors ${roomLinkCopied ? 'bg-green-500 text-white' : 'bg-indigo-600 text-white hover:bg-indigo-700'}`}>
+                    className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold flex-shrink-0 transition-colors ${roomLinkCopied ? 'bg-green-500 text-white' : 'bg-gray-800 text-white hover:bg-gray-700'}`}>
                     {roomLinkCopied ? <Check className="w-4 h-4"/> : <Copy className="w-4 h-4"/>}
-                    {roomLinkCopied ? 'Copied!' : 'Copy Link'}
+                    {roomLinkCopied ? 'Copied!' : 'Copy'}
                   </button>
                 </div>
               </div>
 
-              {/* Share buttons */}
+              {/* Action buttons */}
               <div className="flex gap-2 flex-wrap">
+                <a
+                  href={`https://meet.ffmuc.net/${meetingRoom.jitsiRoom}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold text-sm shadow-sm transition-all"
+                >
+                  <ExternalLink className="w-4 h-4"/> Join as Leader
+                </a>
                 <button onClick={() => setMeetingRoom(null)}
-                  className="flex items-center gap-1.5 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl text-sm font-semibold">
-                  <X className="w-4 h-4"/> New Room
+                  className="flex items-center gap-1.5 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl text-sm font-semibold">
+                  <X className="w-4 h-4"/> Close
                 </button>
               </div>
 
-              {/* Email invite */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  <Mail className="w-4 h-4 inline mr-1"/>Invite by Email
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={inviteEmails}
-                    onChange={e => setInviteEmails(e.target.value)}
-                    placeholder="member@email.com, another@email.com..."
-                    className="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 min-w-0"
-                  />
-                  <button onClick={shareEmail}
-                    className="flex items-center gap-1.5 px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-sm font-semibold flex-shrink-0">
-                    <Mail className="w-4 h-4"/> Send
-                  </button>
-                </div>
-                <p className="text-xs text-gray-400 mt-1.5">Separate emails with commas — opens your email app with a pre-written invite.</p>
-              </div>
+              {/* WhatsApp share */}
+              <button onClick={shareWhatsApp}
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-green-50 hover:bg-green-100 border border-green-200 text-green-700 rounded-xl text-sm font-semibold transition-colors">
+                <MessageSquare className="w-4 h-4"/> Share via WhatsApp
+              </button>
+
+              <p className="text-xs text-gray-400 text-center">Room links are not stored — anyone with the link can join. Share only with your group.</p>
             </div>
           )}
         </div>
