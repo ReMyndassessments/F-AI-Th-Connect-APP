@@ -24,7 +24,7 @@ const highlights = [
   "AI study guides for 8 group types",
   "Free video meeting rooms — no sign-in required",
   "Bible games to engage your group",
-  "Bible verse lookup across 5 translations",
+  "Sermon notes and PDF upload for AI study generation",
   "Works on any phone, tablet, or computer",
 ];
 

@@ -1,4 +1,4 @@
-import { Book, Video, Users, Gamepad2, FileText, MessageCircle } from "lucide-react";
+import { Upload, Video, Users, Gamepad2, FileText, MessageCircle } from "lucide-react";
 
 const features = [
   {
@@ -26,12 +26,12 @@ const features = [
     badge: "Free Video Calls",
   },
   {
-    icon: Book,
-    title: "Bible Lookup & Tools",
-    description: "Look up any verse across 5 Bible versions (KJV, NIV, ESV, NLT, NASB), compare translations side by side, search by remembered phrases, and listen with text-to-speech.",
+    icon: Upload,
+    title: "Sermon & Notes Upload",
+    description: "Upload your pastor's sermon notes, a PDF study resource, or any document — the AI reads it and uses it to generate a fully grounded Bible study for your group.",
     bgColor: "bg-amber-50",
     iconColor: "text-amber-500",
-    badge: "5 Translations",
+    badge: "PDF & DOCX",
   },
   {
     icon: Users,
