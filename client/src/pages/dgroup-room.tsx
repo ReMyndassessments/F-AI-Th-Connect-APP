@@ -93,7 +93,7 @@ export default function DGroupRoom() {
 
   // Build Jitsi iframe URL when joined
   const jitsiSrc = (joined && room)
-    ? `https://jitsi.systemli.org/${room.jitsiRoom}` +
+    ? `https://framatalk.org/${room.jitsiRoom}` +
       `#config.prejoinPageEnabled=false` +
       `&config.startWithAudioMuted=false` +
       `&config.startWithVideoMuted=false` +
@@ -187,7 +187,7 @@ export default function DGroupRoom() {
             <Share2 className="w-3.5 h-3.5"/> Invite
           </button>
           <a
-            href={`https://jitsi.systemli.org/${room.jitsiRoom}`}
+            href={`https://framatalk.org/${room.jitsiRoom}`}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-700 hover:bg-blue-600 text-white rounded-lg text-xs font-semibold transition-colors"
@@ -279,7 +279,7 @@ export default function DGroupRoom() {
               title={room?.groupName ?? 'Meeting Room'}
             />
             <div className="text-center text-xs text-gray-500 bg-gray-900 py-1 shrink-0">
-              If the meeting is blank, click <strong className="text-blue-400">Open in Browser</strong> above.
+              If the video is blank, use <strong className="text-blue-400">Open in Browser</strong> above to join the video call in a new tab — the Study Guide stays here.
             </div>
           </>
         ) : (
