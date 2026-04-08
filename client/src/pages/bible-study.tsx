@@ -933,75 +933,111 @@ Closing Prayer`;
           </div>
         </div>
 
-        {/* Two-path CTA — shown immediately after a CCF 4W's guide is loaded */}
-        {studySource === 'ccf-4ws' && (
-          <div className="bg-white rounded-2xl shadow-sm border border-indigo-200 p-5">
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">What would you like to do?</p>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <button
-                onClick={() => {
-                  if (meetingRef.current) {
-                    const top = meetingRef.current.getBoundingClientRect().top + window.pageYOffset - 90;
-                    window.scrollTo({ top, behavior: 'smooth' });
-                  }
-                }}
-                className="flex-1 flex items-center justify-center gap-2 py-3.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold transition-colors shadow-sm"
-              >
-                <Video className="w-4 h-4"/>
-                Share in Meeting Room →
-              </button>
-              <button
-                onClick={() => {
-                  if (studyTypesRef.current) {
-                    const top = studyTypesRef.current.getBoundingClientRect().top + window.pageYOffset - 90;
-                    window.scrollTo({ top, behavior: 'smooth' });
-                  }
-                }}
-                className="flex-1 flex items-center justify-center gap-2 py-3.5 px-4 bg-white border-2 border-indigo-300 hover:border-indigo-500 text-indigo-700 rounded-xl text-sm font-bold transition-colors"
-              >
-                <Sparkles className="w-4 h-4"/>
-                Generate a Themed Study ↓
-              </button>
+        {/* Unified "Guide Ready" card — CCF 4W's mode */}
+        {studySource === 'ccf-4ws' ? (
+          <div ref={studyTypesRef} className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-green-500 to-emerald-600 px-5 py-4 flex items-center gap-3">
+              <Check className="w-5 h-5 text-white flex-shrink-0"/>
+              <div>
+                <h2 className="text-white font-bold text-lg">4 W's Guide Ready — What's Next?</h2>
+                <p className="text-green-100 text-xs">Choose to share it directly, or let AI build a themed study from it</p>
+              </div>
             </div>
+
+            {/* Two-column paths */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
+
+              {/* Path A — Share directly */}
+              <div className="p-5 flex flex-col gap-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
+                    <Video className="w-3.5 h-3.5 text-indigo-600"/>
+                  </div>
+                  <h3 className="font-bold text-gray-900 text-sm">Share the 4 W's as-is</h3>
+                </div>
+                <p className="text-xs text-gray-500 leading-relaxed">
+                  Use the original CCF guide in your meeting room. Your group members can read it together during the video call.
+                </p>
+                <button
+                  onClick={() => {
+                    if (meetingRef.current) {
+                      const top = meetingRef.current.getBoundingClientRect().top + window.pageYOffset - 90;
+                      window.scrollTo({ top, behavior: 'smooth' });
+                    }
+                  }}
+                  className="mt-auto flex items-center justify-center gap-2 w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold transition-colors shadow-sm"
+                >
+                  <Video className="w-4 h-4"/> Open Meeting Room →
+                </button>
+              </div>
+
+              {/* Path B — Generate themed study */}
+              <div className="p-5 flex flex-col gap-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-600"/>
+                  </div>
+                  <h3 className="font-bold text-gray-900 text-sm">Generate a themed study</h3>
+                </div>
+                <p className="text-xs text-gray-500 leading-relaxed">
+                  AI will build a tailored guide for your group type, using the 4 W's content as its foundation. Pick your group:
+                </p>
+                <div className="grid grid-cols-2 gap-2">
+                  {STUDY_TYPES.map(type => (
+                    <button
+                      key={type.id}
+                      onClick={() => generate(type)}
+                      disabled={isGenerating}
+                      className={`relative flex items-center gap-2 px-3 py-2.5 rounded-xl text-white font-semibold text-xs shadow-sm hover:shadow-md transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-br ${type.color} ${activeType===type.id && isGenerating ? 'ring-2 ring-offset-1 ring-blue-300' : ''}`}
+                    >
+                      {activeType === type.id && isGenerating
+                        ? <Loader2 className="w-4 h-4 animate-spin flex-shrink-0"/>
+                        : <span className="text-base leading-none">{type.emoji}</span>
+                      }
+                      <span className="leading-tight text-left">{type.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {isGenerating && (
+              <div className="mx-5 mb-4 bg-blue-50 border border-blue-200 rounded-xl p-3 flex items-center gap-3 text-sm text-blue-800">
+                <Loader2 className="w-4 h-4 animate-spin flex-shrink-0"/>
+                <span>Generating your complete study guide — this takes 30–60 seconds for a thorough result...</span>
+              </div>
+            )}
+          </div>
+        ) : (
+          /* Standard Study Type Buttons — non-CCF mode */
+          <div ref={studyTypesRef} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
+            <h2 className="font-bold text-gray-900 text-lg mb-1">Choose Your Study Type</h2>
+            <p className="text-sm text-gray-500 mb-4">Tap a group type to generate a complete, tailored Bible study guide</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {STUDY_TYPES.map(type => (
+                <button
+                  key={type.id}
+                  onClick={() => generate(type)}
+                  disabled={isGenerating}
+                  className={`relative flex flex-col items-center gap-2 p-4 rounded-2xl text-white font-semibold text-sm text-center shadow-sm hover:shadow-md transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-br ${type.color} ${activeType===type.id && isGenerating ? 'ring-4 ring-offset-2 ring-blue-300' : ''}`}
+                >
+                  {activeType === type.id && isGenerating
+                    ? <Loader2 className="w-6 h-6 animate-spin"/>
+                    : <span className="text-2xl">{type.emoji}</span>
+                  }
+                  <span className="leading-tight">{type.label}</span>
+                </button>
+              ))}
+            </div>
+            {isGenerating && (
+              <div className="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-3 flex items-center gap-3 text-sm text-blue-800">
+                <Loader2 className="w-4 h-4 animate-spin flex-shrink-0"/>
+                <span>Generating your complete study guide — this takes 30–60 seconds for a thorough result...</span>
+              </div>
+            )}
           </div>
         )}
-
-        {/* Study Type Buttons */}
-        <div ref={studyTypesRef} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
-          <h2 className="font-bold text-gray-900 text-lg mb-1">
-            {studySource === 'ccf-4ws' ? 'Generate a Themed Study from this 4 W\'s Guide' : 'Choose Your Study Type'}
-          </h2>
-          <p className="text-sm text-gray-500 mb-4">
-            {studySource === 'ccf-4ws'
-              ? 'Pick a study type and the AI will build a complete guide tailored to your group, using the 4 W\'s content as its foundation.'
-              : 'Tap a group type to generate a complete, tailored Bible study guide'}
-          </p>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {STUDY_TYPES.map(type => (
-              <button
-                key={type.id}
-                onClick={() => generate(type)}
-                disabled={isGenerating}
-                className={`relative flex flex-col items-center gap-2 p-4 rounded-2xl text-white font-semibold text-sm text-center shadow-sm hover:shadow-md transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-br ${type.color} ${activeType===type.id && isGenerating ? 'ring-4 ring-offset-2 ring-blue-300' : ''}`}
-              >
-                {activeType === type.id && isGenerating ? (
-                  <Loader2 className="w-6 h-6 animate-spin"/>
-                ) : (
-                  <span className="text-2xl">{type.emoji}</span>
-                )}
-                <span className="leading-tight">{type.label}</span>
-              </button>
-            ))}
-          </div>
-
-          {isGenerating && (
-            <div className="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-3 flex items-center gap-3 text-sm text-blue-800">
-              <Loader2 className="w-4 h-4 animate-spin flex-shrink-0"/>
-              <span>Generating your complete study guide — this takes 30–60 seconds for a thorough result...</span>
-            </div>
-          )}
-        </div>
 
         {/* Result */}
         {result && (
