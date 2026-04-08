@@ -681,6 +681,57 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // ============================================================
+  // D-GROUP MEETING ROOMS (in-memory, Jitsi-powered)
+  // ============================================================
+  interface DGroupRoom {
+    code: string;
+    jitsiRoom: string;
+    groupName: string;
+    studyType: string;
+    studyContent: string;
+    leaderName: string;
+    createdAt: string;
+  }
+  const dgroupRooms = new Map<string, DGroupRoom>();
+
+  const generateCode = () => {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    return Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+  };
+
+  app.post('/api/dgroups', (req: Request, res: Response) => {
+    try {
+      const { groupName, studyType, studyContent, leaderName } = req.body;
+      if (!groupName || !studyType) {
+        return res.status(400).json({ error: 'groupName and studyType are required' });
+      }
+      let code = generateCode();
+      while (dgroupRooms.has(code)) code = generateCode();
+
+      const jitsiRoom = `FaithConnect-${code}`;
+      const room: DGroupRoom = {
+        code,
+        jitsiRoom,
+        groupName: groupName.trim(),
+        studyType,
+        studyContent: studyContent || '',
+        leaderName: leaderName?.trim() || 'Leader',
+        createdAt: new Date().toISOString(),
+      };
+      dgroupRooms.set(code, room);
+      res.json(room);
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to create meeting room' });
+    }
+  });
+
+  app.get('/api/dgroups/:code', (req: Request, res: Response) => {
+    const room = dgroupRooms.get(req.params.code.toUpperCase());
+    if (!room) return res.status(404).json({ error: 'Room not found or expired' });
+    res.json(room);
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

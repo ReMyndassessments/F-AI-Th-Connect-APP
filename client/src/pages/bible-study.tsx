@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
-import { Link } from "wouter";
-import { Home, Upload, X, Copy, Download, Loader2, FileText, ChevronDown, ChevronUp, BookOpen } from "lucide-react";
+import { Link, useLocation } from "wouter";
+import { Home, Upload, X, Copy, Download, Loader2, FileText, BookOpen, Video, Share2, Mail, Check, MessageSquare, Users } from "lucide-react";
 import { chatApi } from "@/lib/chat-api";
 import { useToast } from "@/hooks/use-toast";
 
@@ -371,8 +371,11 @@ STYLE: Inclusive, accessible, and deep. Works for both new and mature believers.
 // =====================================================================
 // MAIN PAGE
 // =====================================================================
+interface MeetingRoom { code: string; jitsiRoom: string; groupName: string; studyType: string; }
+
 export default function BibleStudy() {
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [groupName, setGroupName] = useState('');
@@ -383,6 +386,13 @@ export default function BibleStudy() {
   const [activeType, setActiveType] = useState<string | null>(null);
   const [result, setResult] = useState('');
   const [showTip, setShowTip] = useState(true);
+
+  // Meeting room state
+  const [isCreatingRoom, setIsCreatingRoom] = useState(false);
+  const [meetingRoom, setMeetingRoom] = useState<MeetingRoom | null>(null);
+  const [inviteEmails, setInviteEmails] = useState('');
+  const [roomLinkCopied, setRoomLinkCopied] = useState(false);
+  const [leaderName, setLeaderName] = useState('');
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -460,6 +470,54 @@ export default function BibleStudy() {
     a.download = `${studyType?.label || 'Bible Study'} - ${groupName || 'Group'}.txt`;
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  const createMeetingRoom = async () => {
+    const studyType = STUDY_TYPES.find(s => s.id === activeType);
+    const finalGroupName = groupName.trim() || studyType?.defaultGroup || 'D-Group';
+    setIsCreatingRoom(true);
+    try {
+      const res = await fetch('/api/dgroups', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          groupName: finalGroupName,
+          studyType: activeType,
+          studyContent: result,
+          leaderName: leaderName.trim() || 'Leader',
+        }),
+      });
+      if (!res.ok) throw new Error('Failed');
+      const room = await res.json();
+      setMeetingRoom(room);
+    } catch {
+      toast({ title: 'Could not create meeting room', description: 'Please try again.', variant: 'destructive' });
+    } finally {
+      setIsCreatingRoom(false);
+    }
+  };
+
+  const getRoomLink = () => meetingRoom ? `${window.location.origin}/dgroup/${meetingRoom.code}` : '';
+
+  const copyRoomLink = () => {
+    navigator.clipboard.writeText(getRoomLink());
+    setRoomLinkCopied(true);
+    toast({ title: 'Link copied!', description: 'Share this with your group members.' });
+    setTimeout(() => setRoomLinkCopied(false), 2500);
+  };
+
+  const shareWhatsApp = () => {
+    if (!meetingRoom) return;
+    const text = encodeURIComponent(`You're invited to ${meetingRoom.groupName} D-Group!\n\nJoin the meeting: ${getRoomLink()}\n\nRoom code: ${meetingRoom.code}`);
+    window.open(`https://wa.me/?text=${text}`, '_blank');
+  };
+
+  const shareEmail = () => {
+    if (!meetingRoom) return;
+    const emails = inviteEmails.split(/[\n,;]+/).map(e => e.trim()).filter(Boolean);
+    const subject = encodeURIComponent(`You're invited: ${meetingRoom.groupName} D-Group Meeting`);
+    const body = encodeURIComponent(`Hi,\n\nYou're invited to join our D-Group Bible study meeting!\n\nGroup: ${meetingRoom.groupName}\nRoom Code: ${meetingRoom.code}\n\nClick to join:\n${getRoomLink()}\n\nSee you there!`);
+    window.open(`mailto:${emails.join(',')}?subject=${subject}&body=${body}`, '_blank');
   };
 
   // Format the result for display (convert basic markdown to readable text)
@@ -617,6 +675,7 @@ export default function BibleStudy() {
                 {formatResult(result)}
               </pre>
             </div>
+            {/* Download / copy row */}
             <div className="border-t border-gray-100 px-5 py-4 bg-gray-50 flex gap-3 flex-wrap">
               <button onClick={copyResult} className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700">
                 <Copy className="w-4 h-4"/> Copy Study Guide
@@ -624,10 +683,106 @@ export default function BibleStudy() {
               <button onClick={downloadResult} className="flex items-center gap-1.5 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-200">
                 <Download className="w-4 h-4"/> Download as Text
               </button>
-              <button onClick={() => setResult('')} className="flex items-center gap-1.5 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-200">
+              <button onClick={() => { setResult(''); setMeetingRoom(null); }} className="flex items-center gap-1.5 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-200">
                 <X className="w-4 h-4"/> Clear
               </button>
             </div>
+          </div>
+        )}
+
+        {/* ── D-Group Meeting Room ─────────────────────────────── */}
+        {result && (
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="bg-gradient-to-r from-indigo-600 to-blue-700 px-5 py-4 flex items-center gap-3">
+              <Video className="w-6 h-6 text-white flex-shrink-0"/>
+              <div>
+                <h2 className="text-white font-bold text-lg">Start a D-Group Meeting</h2>
+                <p className="text-white text-opacity-80 text-sm">Launch a free Jitsi video room — share the study guide with your group live</p>
+              </div>
+            </div>
+
+            {!meetingRoom ? (
+              <div className="p-5 space-y-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Your Name (shown to participants)</label>
+                  <input
+                    type="text"
+                    value={leaderName}
+                    onChange={e => setLeaderName(e.target.value)}
+                    placeholder="e.g. Pastor Mike, Leader Sarah..."
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+                <button
+                  onClick={createMeetingRoom}
+                  disabled={isCreatingRoom}
+                  className="w-full flex items-center justify-center gap-2 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold text-base disabled:opacity-50 transition-all"
+                >
+                  {isCreatingRoom ? <Loader2 className="w-5 h-5 animate-spin"/> : <Video className="w-5 h-5"/>}
+                  {isCreatingRoom ? 'Creating Room...' : 'Create Meeting Room'}
+                </button>
+                <p className="text-xs text-gray-400 text-center">Free video calls via Jitsi Meet — no account or download required for participants</p>
+              </div>
+            ) : (
+              <div className="p-5 space-y-4">
+                {/* Room created success */}
+                <div className="bg-green-50 border border-green-200 rounded-xl p-3 flex items-center gap-2">
+                  <Check className="w-5 h-5 text-green-600 flex-shrink-0"/>
+                  <div>
+                    <p className="text-sm font-semibold text-green-800">Meeting room ready!</p>
+                    <p className="text-xs text-green-600">Room code: <strong>{meetingRoom.code}</strong></p>
+                  </div>
+                </div>
+
+                {/* Share link */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Shareable Meeting Link</label>
+                  <div className="flex gap-2">
+                    <input readOnly value={getRoomLink()}
+                      className="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 text-sm bg-gray-50 text-gray-600 min-w-0"/>
+                    <button onClick={copyRoomLink}
+                      className={`flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-sm font-semibold flex-shrink-0 transition-colors ${roomLinkCopied ? 'bg-green-500 text-white' : 'bg-indigo-600 text-white hover:bg-indigo-700'}`}>
+                      {roomLinkCopied ? <Check className="w-4 h-4"/> : <Copy className="w-4 h-4"/>}
+                      {roomLinkCopied ? 'Copied!' : 'Copy'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Share buttons */}
+                <div className="flex gap-2 flex-wrap">
+                  <button onClick={shareWhatsApp}
+                    className="flex items-center gap-1.5 px-4 py-2.5 bg-green-500 hover:bg-green-600 text-white rounded-xl text-sm font-semibold">
+                    <MessageSquare className="w-4 h-4"/> WhatsApp
+                  </button>
+                  <button
+                    onClick={() => setLocation(`/dgroup/${meetingRoom.code}`)}
+                    className="flex items-center gap-1.5 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold">
+                    <Video className="w-4 h-4"/> Join as Leader
+                  </button>
+                </div>
+
+                {/* Email invite */}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <Users className="w-4 h-4 inline mr-1"/>Email Invitations
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={inviteEmails}
+                      onChange={e => setInviteEmails(e.target.value)}
+                      placeholder="member1@email.com, member2@email.com..."
+                      className="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 min-w-0"
+                    />
+                    <button onClick={shareEmail}
+                      className="flex items-center gap-1.5 px-3 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-sm font-semibold flex-shrink-0">
+                      <Mail className="w-4 h-4"/> Send
+                    </button>
+                  </div>
+                  <p className="text-xs text-gray-400 mt-1">Separate multiple emails with commas. Opens your email app with an invite pre-written.</p>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
