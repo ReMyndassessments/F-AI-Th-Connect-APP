@@ -1,0 +1,641 @@
+import { useState, useRef } from "react";
+import { Link } from "wouter";
+import { Home, Upload, X, Copy, Download, Loader2, FileText, ChevronDown, ChevronUp, BookOpen } from "lucide-react";
+import { chatApi } from "@/lib/chat-api";
+import { useToast } from "@/hooks/use-toast";
+
+// =====================================================================
+// STUDY TYPES
+// =====================================================================
+interface StudyType {
+  id: string;
+  label: string;
+  emoji: string;
+  color: string;
+  defaultGroup: string;
+  prompt: (groupName: string, topic: string, hasFile: boolean) => string;
+}
+
+const STUDY_TYPES: StudyType[] = [
+  {
+    id: 'mens',
+    label: "Men's Bible Study",
+    emoji: '👨',
+    color: 'from-blue-500 to-blue-700',
+    defaultGroup: 'Fishers of Men',
+    prompt: (group, topic, hasFile) => `Create a comprehensive Men's Bible Study Guide for the group "${group}"${topic ? ` focused on: ${topic}` : ''} for a one-hour session that directly addresses the real everyday challenges men face and shows how Scripture speaks to these specific issues.
+
+${hasFile ? 'IMPORTANT: The user has attached a sermon script or sermon notes above. Use that content as the PRIMARY foundation for this Bible study. Build the study around the themes, Scripture references, and topics from the attached content.' : 'Create a study on a relevant topic for men today.'}
+
+REQUIRED STRUCTURE:
+
+1. GROUP NAME & TITLE
+- Start with the group name "${group}" as a prominent heading
+- Create an inspiring title with subtitle
+- State the central message (1 paragraph)
+- Key Verse in full (book, chapter, verse, translation, and complete text)
+- Connect Scripture to specific men's issues: financial pressure, workplace stress, temptation, isolation, family balance, spiritual leadership, anger, purpose beyond career
+
+2. ONE-HOUR STUDY PLAN
+- Welcome & Prayer: 5 min
+- Teaching: 15 min
+- Discussion: 25 min
+- Application & Challenge: 10 min
+- Closing Prayer: 5 min
+
+3. THREE CORE TEACHING SECTIONS
+For each section:
+- Section Title
+- Full Scripture Texts (quoted completely with reference and translation)
+- Teaching Point: 1-2 paragraphs linking Scripture directly to men's everyday challenges
+- Discussion Questions: 3-4 questions about real situations (work pressures, marriage, parenting, personal struggles)
+- Practical Application: Specific actionable steps for the coming week
+
+4. FINAL CHALLENGE & CLOSING
+- One summarizing Scripture (quoted fully)
+- Commitment Exercise: "This week, in my work/family/personal life, I will ____________"
+- Short closing prayer
+
+STYLE: Man-to-man honesty. Address issues men actually face but don't talk about. Make Scripture directly applicable to Monday morning at work, Tuesday evening with kids, Wednesday's temptations. Quote ALL Bible verses in full.`
+  },
+  {
+    id: 'womens',
+    label: "Women's Bible Study",
+    emoji: '👩',
+    color: 'from-rose-400 to-pink-600',
+    defaultGroup: 'Daughters of the King',
+    prompt: (group, topic, hasFile) => `Create a comprehensive Women's Bible Study Guide for the group "${group}"${topic ? ` focused on: ${topic}` : ''} for a one-hour session that directly addresses the real everyday challenges women face and shows how Scripture speaks to these specific issues.
+
+${hasFile ? 'IMPORTANT: The user has attached a sermon script or sermon notes above. Use that content as the PRIMARY foundation for this Bible study. Build the study around the themes, Scripture references, and topics from the attached content.' : 'Create a study on a relevant topic for women today.'}
+
+REQUIRED STRUCTURE:
+
+1. GROUP NAME & TITLE
+- Start with the group name "${group}" as a prominent heading
+- Create an inspiring title with subtitle (example: "Daughters of the King: Walking in Grace and Strength")
+- State the central message (1 paragraph)
+- Key Verse in full (book, chapter, verse, translation, and complete text)
+- Connect Scripture to specific women's issues: comparison and feeling not enough, juggling multiple roles (mom/wife/professional), mom guilt, self-worth, caring for everyone else, difficult relationships, marriage challenges, loneliness, perfectionism, people-pleasing, anxiety about children
+
+2. ONE-HOUR STUDY PLAN
+- Welcome & Prayer: 5 min
+- Teaching: 15 min
+- Discussion: 25 min
+- Application & Challenge: 10 min
+- Closing Prayer: 5 min
+
+3. THREE CORE TEACHING SECTIONS
+For each section:
+- Section Title
+- Full Scripture Texts (quoted completely with reference and translation)
+- Teaching Point: 1-2 paragraphs linking Scripture directly to women's everyday challenges
+- Discussion Questions: 3-4 questions about real situations (overwhelm, comparison, identity, relationships)
+- Practical Application: Specific actionable steps (setting one boundary, releasing one comparison trigger, one act of self-care without guilt)
+
+4. FINAL CHALLENGE & CLOSING
+- One summarizing Scripture (quoted fully)
+- Commitment Exercise: "This week, I will extend grace to myself by ____________"
+- Short closing prayer
+
+STYLE: Woman-to-woman empathy. Address the emotional weight women carry. Make Scripture applicable to carpool, bedtime routines, quiet morning coffee, moments of overwhelm. Quote ALL Bible verses in full.`
+  },
+  {
+    id: 'business',
+    label: 'Business & Marketplace',
+    emoji: '💼',
+    color: 'from-slate-500 to-gray-700',
+    defaultGroup: 'Marketplace Ministers',
+    prompt: (group, topic, hasFile) => `Create a comprehensive Business & Marketplace Bible Study Guide for the group "${group}"${topic ? ` focused on: ${topic}` : ''} for a one-hour session specifically for Christian business people, entrepreneurs, and professionals.
+
+${hasFile ? 'IMPORTANT: The user has attached a sermon script or sermon notes above. Use that content as the PRIMARY foundation for this Bible study. Build the study around the themes, Scripture references, and topics from the attached content.' : 'Create a study on faith and work integration for business professionals.'}
+
+REQUIRED STRUCTURE:
+
+1. GROUP NAME & TITLE
+- Start with the group name "${group}" as a prominent heading
+- Create an inspiring title (e.g., "Kingdom Business: Serving God in the Marketplace")
+- Key Verse in full with complete text
+- Connect Scripture to: ethical dilemmas at work, leading with integrity, competing as a Christian, honoring God in profit decisions, treating employees as image-bearers, business failure and faith, work-life stewardship, using wealth for the Kingdom
+
+2. ONE-HOUR STUDY PLAN
+- Welcome & Prayer: 5 min
+- Business Case/Teaching: 20 min
+- Discussion: 25 min
+- Application: 5 min
+- Closing Prayer: 5 min
+
+3. THREE CORE TEACHING SECTIONS
+For each section:
+- Section Title
+- Full Scripture Texts (quoted completely)
+- Teaching Point linking Scripture to real business and professional challenges
+- Discussion Questions: 3-4 practical workplace dilemmas (negotiation ethics, competitive behavior, financial decisions, team management, client relationships)
+- Monday Application: Specific action for the coming work week
+
+4. FINAL CHALLENGE & CLOSING
+- One summarizing Scripture (quoted fully)
+- Commitment: "This week in my business/career, I will ____________"
+- Short prayer for Kingdom impact through work
+
+STYLE: Speak as one professional to another. Address real boardroom and business challenges with Biblical wisdom. Practical and applicable. Quote ALL Bible verses in full.`
+  },
+  {
+    id: 'sundayschool',
+    label: 'Sunday School',
+    emoji: '🧒',
+    color: 'from-yellow-400 to-orange-500',
+    defaultGroup: 'Sunday School Class',
+    prompt: (group, topic, hasFile) => `Create a comprehensive Sunday School Bible Lesson for the class "${group}"${topic ? ` focused on: ${topic}` : ''} that is engaging, age-appropriate, and helps children (ages 6-12) understand and apply God's Word.
+
+${hasFile ? 'IMPORTANT: The user has attached a sermon script or sermon notes above. Use that content as the PRIMARY foundation for this lesson. Build the lesson around the themes, Scripture references, and topics from the attached content.' : 'Create a fun, engaging lesson for primary school aged children.'}
+
+REQUIRED STRUCTURE:
+
+1. CLASS NAME & LESSON TITLE
+- Start with the class name "${group}" as a heading
+- Create a fun, memorable title children will love
+- Key Verse (simple translation like NIrV or NIV - quoted in full)
+- Central truth statement (one simple sentence a child can memorize)
+
+2. LESSON PLAN (45-60 minutes)
+- Welcome & Icebreaker Game: 10 min
+- Bible Story Teaching: 15 min
+- Interactive Activity: 10 min
+- Discussion Circle: 10 min
+- Craft/Memory Work: 10 min
+- Prayer: 5 min
+
+3. BIBLE STORY TEACHING
+- Tell the Bible story engagingly (narrative style)
+- Include actions/motions children can do during the story
+- 3 key points explained simply
+- Questions children can answer (level-appropriate)
+
+4. INTERACTIVE ELEMENTS
+- Opening icebreaker game that connects to the theme
+- Discussion questions for children (relatable: school, friends, family)
+- Practical application (what can I do this week at school, at home, with friends?)
+- Memory verse activity (fun way to learn the verse)
+- Simple craft or activity idea
+
+5. PARENT TAKE-HOME
+- One sentence summary of today's lesson
+- How parents can reinforce at home this week
+- A family activity or dinner table question
+
+STYLE: Energetic, simple, story-driven. Use analogies children understand (school, sports, video games, friendships). Make the Bible come alive. Use simple language throughout.`
+  },
+  {
+    id: 'youth',
+    label: 'Youth Group',
+    emoji: '🎯',
+    color: 'from-violet-500 to-purple-700',
+    defaultGroup: 'Youth Group',
+    prompt: (group, topic, hasFile) => `Create a comprehensive Youth Group Bible Study for "${group}"${topic ? ` focused on: ${topic}` : ''} that is relevant, honest, and engages teenagers (ages 13-18) where they actually are in life.
+
+${hasFile ? 'IMPORTANT: The user has attached a sermon script or sermon notes above. Use that content as the PRIMARY foundation for this study. Build the study around the themes, Scripture references, and topics from the attached content.' : 'Create a study addressing the real challenges teens face today.'}
+
+REQUIRED STRUCTURE:
+
+1. GROUP NAME & TITLE
+- Start with "${group}" as a heading
+- Create a title that sounds interesting to a teenager
+- Key Verse (quoted fully in a modern translation like NIV or NLT)
+- The BIG question this study answers
+
+2. SESSION PLAN (60-75 minutes)
+- Opener/Game: 10-15 min
+- Icebreaker Discussion: 5 min
+- Bible Teaching: 15-20 min
+- Small Group Discussion: 20 min
+- Response/Application: 10 min
+- Worship/Prayer: 5-10 min
+
+3. THREE TEACHING POINTS
+For each point:
+- Relatable opener (social media, school, relationships, peer pressure, identity)
+- Scripture (quoted in full with modern translation)
+- Honest explanation connecting Scripture to teen life
+- Discussion questions about real struggles: identity, dating, social media comparison, anxiety, belonging, faith doubts, parents, future fears
+- A challenge they can actually do
+
+4. REAL TALK SECTION
+- Address a hard question teenagers actually ask about faith
+- Give an honest, Biblical answer (don't dodge it)
+- How to handle this with their friends
+
+5. CLOSING
+- Summarizing Scripture (quoted fully)
+- One challenge for the week
+- Prayer that sounds like a real conversation with God
+
+STYLE: Talk to teens, not at them. Be honest about doubt and struggle. Use current cultural references. Don't be cheesy. Respect their intelligence. Quote ALL Bible verses in full.`
+  },
+  {
+    id: 'couples',
+    label: 'Couples Group',
+    emoji: '💑',
+    color: 'from-red-400 to-rose-600',
+    defaultGroup: 'Couples Bible Study',
+    prompt: (group, topic, hasFile) => `Create a comprehensive Couples Bible Study Guide for "${group}"${topic ? ` focused on: ${topic}` : ''} that strengthens marriages and helps couples build a Christ-centered relationship together.
+
+${hasFile ? 'IMPORTANT: The user has attached a sermon script or sermon notes above. Use that content as the PRIMARY foundation for this study. Build the study around the themes, Scripture references, and topics from the attached content.' : 'Create a study on building a strong, Christ-centered marriage.'}
+
+REQUIRED STRUCTURE:
+
+1. GROUP NAME & TITLE
+- Start with "${group}" as a heading
+- Create an inspiring title (e.g., "Two Becoming One: God's Design for Marriage")
+- Key Verse (quoted fully)
+- Central truth about marriage or relationships
+
+2. SESSION PLAN (75 minutes)
+- Welcome & Couple Icebreaker: 10 min
+- Teaching: 20 min
+- Couple Discussion (private): 15 min
+- Group Discussion: 20 min
+- Practical Application: 5 min
+- Couple Prayer Time: 5 min
+
+3. THREE TEACHING SECTIONS
+For each section:
+- Section Title
+- Scripture (quoted fully with reference and translation)
+- Teaching Point addressing real marriage challenges (communication breakdown, intimacy, financial disagreements, parenting differences, spiritual leadership, forgiveness cycles, in-law dynamics, work-life balance as a couple)
+- Couple Questions (to discuss privately): 2-3 honest questions
+- Group Discussion: 2-3 questions to share as couples
+- This Week's Couple Challenge: A specific activity or conversation
+
+4. INDIVIDUAL REFLECTION
+- A moment for each spouse to reflect privately (1-2 prompts)
+- How to express appreciation to your spouse using this study
+
+5. CLOSING
+- Summarizing Scripture (quoted fully)
+- Couple Commitment: "Together this week we will ____________"
+- Closing prayer for the marriages in the room
+
+STYLE: Warm, safe, and honest. Create space for vulnerability. Address real marriage struggles without shame. Celebrate the beauty of covenant love. Quote ALL Bible verses in full.`
+  },
+  {
+    id: 'seniors',
+    label: 'Senior Adults',
+    emoji: '🌿',
+    color: 'from-green-500 to-emerald-700',
+    defaultGroup: 'Senior Bible Fellowship',
+    prompt: (group, topic, hasFile) => `Create a comprehensive Senior Adults Bible Study Guide for "${group}"${topic ? ` focused on: ${topic}` : ''} that honors the wisdom and life experience of older adults while addressing the unique challenges of the senior season of life.
+
+${hasFile ? 'IMPORTANT: The user has attached a sermon script or sermon notes above. Use that content as the PRIMARY foundation for this study. Build the study around the themes, Scripture references, and topics from the attached content.' : 'Create a study honoring the senior season of life with biblical wisdom.'}
+
+REQUIRED STRUCTURE:
+
+1. GROUP NAME & TITLE
+- Start with "${group}" as a heading
+- Create a dignified, meaningful title
+- Key Verse (quoted fully - KJV or NIV preferred)
+- Central message that honors a life of faith
+
+2. SESSION PLAN (60 minutes)
+- Welcome & Sharing Time: 10 min
+- Opening Devotion: 5 min
+- Bible Teaching: 20 min
+- Discussion: 20 min
+- Prayer Requests & Closing: 5 min
+
+3. THREE TEACHING SECTIONS
+For each section:
+- Scripture (quoted fully with reference and translation)
+- Teaching Point addressing senior life realities: legacy and meaning, health challenges and suffering, loss and grief, fear of death/dying, feeling forgotten or less useful, grandparenting and family roles, living on fixed income, caring for spouse, end-of-life hope, the gift of hard-won wisdom
+- Discussion Questions: 3-4 reflective questions that draw on life experience
+- Application: Simple, accessible practical step
+
+4. LEGACY SECTION
+- How seniors can pour their wisdom into younger generations
+- The unique spiritual gifts of the senior season
+- Scripture about finishing strong
+
+5. CLOSING
+- Summarizing Scripture (quoted fully)
+- A blessing to speak over the group
+- Prayer focusing on hope, peace, and eternal perspective
+
+STYLE: Respectful, dignified, reflective. Honor their lifetime of experience. Don't talk down to them. Connect deeply with themes of hope, legacy, and eternity. Quote ALL Bible verses in full.`
+  },
+  {
+    id: 'general',
+    label: 'General / Mixed Group',
+    emoji: '✝️',
+    color: 'from-amber-500 to-amber-700',
+    defaultGroup: 'Bible Study Group',
+    prompt: (group, topic, hasFile) => `Create a comprehensive Bible Study Guide for the group "${group}"${topic ? ` focused on: ${topic}` : ''} for a one-hour session that works well for a mixed group of adults of different ages and backgrounds.
+
+${hasFile ? 'IMPORTANT: The user has attached a sermon script or sermon notes above. Use that content as the PRIMARY foundation for this Bible study. Build the study around the themes, Scripture references, and topics from the attached content.' : 'Create a well-rounded, inclusive study for a general adult group.'}
+
+REQUIRED STRUCTURE:
+
+1. GROUP NAME & TITLE
+- Start with "${group}" as a prominent heading
+- Create an engaging title with subtitle
+- Key Verse (quoted fully with translation)
+- Central message of the study
+
+2. ONE-HOUR STUDY PLAN
+- Welcome & Prayer: 5 min
+- Teaching: 15 min
+- Discussion: 25 min
+- Application & Response: 10 min
+- Closing Prayer: 5 min
+
+3. THREE CORE TEACHING SECTIONS
+For each section:
+- Section Title
+- Full Scripture Texts (quoted completely with reference and translation)
+- Teaching Point: 1-2 paragraphs connecting Scripture to everyday life (relationships, work, family, personal struggles, society)
+- Discussion Questions: 3-4 open questions accessible to people at different points in their faith journey
+- Practical Application: Specific actionable steps for the coming week
+
+4. DEEPER DIVE (optional for leaders)
+- A theological insight or historical context point
+- A challenge for more mature believers
+- A bridge question for newer believers
+
+5. FINAL CHALLENGE & CLOSING
+- One summarizing Scripture (quoted fully)
+- Commitment Exercise: "This week I will ____________"
+- Short closing prayer
+
+STYLE: Inclusive, accessible, and deep. Works for both new and mature believers. Practical and applicable to everyday life. Quote ALL Bible verses in full.`
+  },
+];
+
+// =====================================================================
+// MAIN PAGE
+// =====================================================================
+export default function BibleStudy() {
+  const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [groupName, setGroupName] = useState('');
+  const [topic, setTopic] = useState('');
+  const [fileContent, setFileContent] = useState('');
+  const [fileName, setFileName] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [activeType, setActiveType] = useState<string | null>(null);
+  const [result, setResult] = useState('');
+  const [showTip, setShowTip] = useState(true);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ title: "File too large", description: "Please use a file under 5MB.", variant: "destructive" });
+      return;
+    }
+
+    const allowed = ['text/plain', 'application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword'];
+    if (!allowed.includes(file.type)) {
+      toast({ title: "Unsupported file", description: "Please upload a .txt, .pdf, or .docx file.", variant: "destructive" });
+      return;
+    }
+
+    setFileName(file.name);
+
+    if (file.type === 'text/plain') {
+      const text = await file.text();
+      setFileContent(`[SERMON/NOTES FILE: ${file.name}]\n\n${text}`);
+    } else {
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        const res = await fetch('/api/process-file', { method: 'POST', body: formData });
+        if (res.ok) {
+          const data = await res.json();
+          setFileContent(`[SERMON/NOTES FILE: ${file.name}]\n\n${data.content || data.text || 'File content processed.'}`);
+        } else {
+          setFileContent(`[ATTACHED FILE: ${file.name}] - Use the themes and content from this file as the foundation for the Bible study.`);
+        }
+      } catch {
+        setFileContent(`[ATTACHED FILE: ${file.name}] - Use the themes and content from this file as the foundation for the Bible study.`);
+      }
+    }
+
+    toast({ title: "File attached", description: `${file.name} will be used as the study foundation.` });
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const removeFile = () => { setFileContent(''); setFileName(''); };
+
+  const generate = async (studyType: StudyType) => {
+    setIsGenerating(true);
+    setActiveType(studyType.id);
+    setResult('');
+
+    const finalGroupName = groupName.trim() || studyType.defaultGroup;
+    const prompt = studyType.prompt(finalGroupName, topic.trim(), !!fileContent);
+    const fullMessage = fileContent ? `${fileContent}\n\n${prompt}` : prompt;
+
+    try {
+      const session = await chatApi.createSession();
+      const response = await chatApi.sendMessage(session.sessionId, fullMessage);
+      setResult(response.aiMessage.content);
+    } catch (err) {
+      toast({ title: "Generation failed", description: "Please try again. Check your connection.", variant: "destructive" });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const copyResult = () => {
+    navigator.clipboard.writeText(result);
+    toast({ title: "Copied!", description: "Study guide copied to clipboard." });
+  };
+
+  const downloadResult = () => {
+    const studyType = STUDY_TYPES.find(s => s.id === activeType);
+    const blob = new Blob([result], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${studyType?.label || 'Bible Study'} - ${groupName || 'Group'}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // Format the result for display (convert basic markdown to readable text)
+  const formatResult = (text: string) => {
+    return text
+      .replace(/\*\*(.+?)\*\*/g, '$1')
+      .replace(/\*(.+?)\*/g, '$1')
+      .replace(/#{1,4}\s+/g, '')
+      .replace(/---+/g, '────────────────────')
+      .trim();
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-amber-50">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-10">
+        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center gap-3">
+          <Link href="/">
+            <button className="p-2 rounded-xl hover:bg-gray-100 transition-colors">
+              <Home className="w-5 h-5 text-gray-600"/>
+            </button>
+          </Link>
+          <div className="flex-1">
+            <h1 className="text-xl font-bold text-gray-900">Bible Study Generator</h1>
+            <p className="text-sm text-gray-500">Create tailored study guides for your D-Group or Bible study</p>
+          </div>
+          <BookOpen className="w-6 h-6 text-blue-500"/>
+        </div>
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
+
+        {/* Tip Banner */}
+        {showTip && (
+          <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 flex items-start gap-3">
+            <span className="text-2xl flex-shrink-0">💡</span>
+            <div className="flex-1">
+              <p className="text-sm text-blue-800 font-medium">Pro tip for group leaders</p>
+              <p className="text-sm text-blue-700 mt-0.5">Upload your pastor's sermon notes or a Scripture passage, enter your group name, then tap your group type. The AI will generate a complete, tailored study guide in seconds.</p>
+            </div>
+            <button onClick={() => setShowTip(false)} className="text-blue-400 hover:text-blue-600 flex-shrink-0">
+              <X className="w-4 h-4"/>
+            </button>
+          </div>
+        )}
+
+        {/* Setup Card */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 space-y-4">
+          <h2 className="font-bold text-gray-900 text-lg">Study Setup</h2>
+
+          {/* File Upload */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Sermon Script or Notes <span className="text-gray-400 font-normal">(optional — .txt, .pdf, .docx)</span>
+            </label>
+            {fileName ? (
+              <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-xl px-4 py-3">
+                <FileText className="w-5 h-5 text-green-600 flex-shrink-0"/>
+                <span className="text-sm font-medium text-green-800 flex-1 truncate">{fileName}</span>
+                <button onClick={removeFile} className="text-green-500 hover:text-green-700">
+                  <X className="w-4 h-4"/>
+                </button>
+              </div>
+            ) : (
+              <button onClick={() => fileInputRef.current?.click()}
+                className="w-full border-2 border-dashed border-gray-300 hover:border-blue-400 rounded-xl py-4 px-4 flex items-center justify-center gap-3 text-gray-500 hover:text-blue-600 transition-colors">
+                <Upload className="w-5 h-5"/>
+                <span className="text-sm font-medium">Upload sermon notes to use as study foundation</span>
+              </button>
+            )}
+            <input ref={fileInputRef} type="file" accept=".txt,.pdf,.doc,.docx" className="hidden" onChange={handleFileChange}/>
+          </div>
+
+          {/* Group Name */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Group Name</label>
+            <input
+              type="text"
+              value={groupName}
+              onChange={e => setGroupName(e.target.value)}
+              placeholder="e.g. Fishers of Men, Daughters of the King, Youth Group..."
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+
+          {/* Topic / Focus */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Specific Topic or Focus <span className="text-gray-400 font-normal">(optional)</span>
+            </label>
+            <input
+              type="text"
+              value={topic}
+              onChange={e => setTopic(e.target.value)}
+              placeholder="e.g. Forgiveness, Identity in Christ, Dealing with anxiety, Leadership..."
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+        </div>
+
+        {/* Study Type Buttons */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
+          <h2 className="font-bold text-gray-900 text-lg mb-1">Choose Your Study Type</h2>
+          <p className="text-sm text-gray-500 mb-4">Tap a group type to generate a complete, tailored Bible study guide</p>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {STUDY_TYPES.map(type => (
+              <button
+                key={type.id}
+                onClick={() => generate(type)}
+                disabled={isGenerating}
+                className={`relative flex flex-col items-center gap-2 p-4 rounded-2xl text-white font-semibold text-sm text-center shadow-sm hover:shadow-md transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-br ${type.color} ${activeType===type.id && isGenerating ? 'ring-4 ring-offset-2 ring-blue-300' : ''}`}
+              >
+                {activeType === type.id && isGenerating ? (
+                  <Loader2 className="w-6 h-6 animate-spin"/>
+                ) : (
+                  <span className="text-2xl">{type.emoji}</span>
+                )}
+                <span className="leading-tight">{type.label}</span>
+              </button>
+            ))}
+          </div>
+
+          {isGenerating && (
+            <div className="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-3 flex items-center gap-3 text-sm text-blue-800">
+              <Loader2 className="w-4 h-4 animate-spin flex-shrink-0"/>
+              <span>Generating your complete study guide — this takes 30–60 seconds for a thorough result...</span>
+            </div>
+          )}
+        </div>
+
+        {/* Result */}
+        {result && (
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="bg-gradient-to-r from-blue-500 to-amber-500 px-5 py-4 flex items-center justify-between">
+              <div>
+                <h2 className="text-white font-bold text-lg">
+                  {STUDY_TYPES.find(s => s.id === activeType)?.label} Guide
+                </h2>
+                <p className="text-white text-opacity-80 text-sm">{groupName || STUDY_TYPES.find(s => s.id === activeType)?.defaultGroup}</p>
+              </div>
+              <div className="flex gap-2">
+                <button onClick={copyResult}
+                  className="flex items-center gap-1.5 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-3 py-2 rounded-xl text-sm font-semibold transition-colors">
+                  <Copy className="w-4 h-4"/> Copy
+                </button>
+                <button onClick={downloadResult}
+                  className="flex items-center gap-1.5 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-3 py-2 rounded-xl text-sm font-semibold transition-colors">
+                  <Download className="w-4 h-4"/> Save
+                </button>
+              </div>
+            </div>
+            <div className="p-5">
+              <pre className="whitespace-pre-wrap text-sm text-gray-800 font-sans leading-relaxed">
+                {formatResult(result)}
+              </pre>
+            </div>
+            <div className="border-t border-gray-100 px-5 py-4 bg-gray-50 flex gap-3 flex-wrap">
+              <button onClick={copyResult} className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700">
+                <Copy className="w-4 h-4"/> Copy Study Guide
+              </button>
+              <button onClick={downloadResult} className="flex items-center gap-1.5 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-200">
+                <Download className="w-4 h-4"/> Download as Text
+              </button>
+              <button onClick={() => setResult('')} className="flex items-center gap-1.5 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-200">
+                <X className="w-4 h-4"/> Clear
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Footer quote */}
+        <div className="text-center pb-6">
+          <p className="text-gray-400 text-sm italic">"Where two or three gather in my name, there am I with them." — Matthew 18:20</p>
+        </div>
+      </div>
+    </div>
+  );
+}

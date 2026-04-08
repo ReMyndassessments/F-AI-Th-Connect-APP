@@ -7,6 +7,8 @@ F-AI-TH-Connect is a Christian-focused AI chat application that offers biblical 
 Preferred communication style: Simple, everyday language.
 
 ## Recent Updates (April 2026)
+- ✅ **Bible Study Script Generator** - Replaced the "Bible Lookup" nav item with a dedicated Bible Study Generator page at `/bible`. Supports 8 study types (Men's, Women's, Business/Marketplace, Sunday School, Youth Group, Couples, Senior Adults, General). Leaders can upload a sermon script, enter their group name and optional topic, then generate a complete tailored study guide. Removed Men's/Women's Bible Study buttons from the chat interface (moved here).
+- ✅ **Bible Games Difficulty Levels** - Added Easy/Medium/Hard difficulty settings and a "New" refresh button to all 6 visual Bible games. Each game adjusts its challenge level based on the selected difficulty.
 - ✅ **6 New Visual Bible Games** - Completely replaced all quiz-based games with 6 fully interactive visual games: Bible Path (Zip-style grid puzzle), Bible Wordle (5-letter word guessing), Memory Match (card-flip verse matching), Bible Word Search (10x10 letter grid), Verse Unscramble (click-to-order words), and Books in Order (arrange biblical canon). All games are frontend-only with no server dependencies. Removed old bible-games API routes and bible-games-service from the server.
 
 ## Previous Updates (October 2025)
