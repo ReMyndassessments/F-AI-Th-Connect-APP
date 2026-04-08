@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import { useParams, Link } from "wouter";
 import { Copy, Share2, Mail, ArrowLeft, BookOpen, Users, Video, X, Check, MessageSquare, ExternalLink } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -13,10 +13,91 @@ interface DGroupRoom {
   createdAt: string;
 }
 
-function formatStudy(text: string) {
+// Strip metadata wrappers and clean raw text
+function cleanStudyText(text: string) {
   return text
-    .replace(/\[(?:CCF WEEKLY GUIDE|SERMON\/NOTES FILE|ATTACHED FILE)[^\]]*\]\s*/g, '')
+    .replace(/\[(?:CCF WEEKLY GUIDE|SERMON\/NOTES FILE|ATTACHED FILE|Uploaded \w+ Document)[^\]]*\]\s*/gi, '')
+    .replace(/^Word count:.*$/gm, '')
+    .replace(/^Content:\s*$/gm, '')
+    .replace(/^-{3,}\s*$/gm, '')
+    .replace(/^Please provide biblical guidance.*$/gm, '')
+    .replace(/\n{3,}/g, '\n\n')
     .trim();
+}
+
+const SECTION_COLORS: Record<string, { bg: string; text: string; border: string; dot: string }> = {
+  WORSHIP:    { bg: 'bg-purple-50',  text: 'text-purple-800',  border: 'border-purple-300',  dot: 'bg-purple-500' },
+  WELCOME:    { bg: 'bg-blue-50',    text: 'text-blue-800',    border: 'border-blue-300',    dot: 'bg-blue-500' },
+  WORD:       { bg: 'bg-amber-50',   text: 'text-amber-800',   border: 'border-amber-300',   dot: 'bg-amber-500' },
+  WITNESS:    { bg: 'bg-green-50',   text: 'text-green-800',   border: 'border-green-300',   dot: 'bg-green-500' },
+  PRAYER:     { bg: 'bg-pink-50',    text: 'text-pink-800',    border: 'border-pink-300',    dot: 'bg-pink-500' },
+  DISCUSSION: { bg: 'bg-indigo-50',  text: 'text-indigo-800',  border: 'border-indigo-300',  dot: 'bg-indigo-500' },
+  CLOSING:    { bg: 'bg-teal-50',    text: 'text-teal-800',    border: 'border-teal-300',    dot: 'bg-teal-500' },
+};
+
+function getSectionColor(line: string) {
+  const key = Object.keys(SECTION_COLORS).find(k => line.toUpperCase().startsWith(k));
+  return key ? SECTION_COLORS[key] : { bg: 'bg-gray-50', text: 'text-gray-800', border: 'border-gray-300', dot: 'bg-gray-500' };
+}
+
+function StudyGuideRenderer({ content }: { content: string }) {
+  const cleaned = cleanStudyText(content);
+  const lines = cleaned.split('\n');
+
+  const elements: ReactNode[] = [];
+  let titleFound = false;
+  let bodyBuffer: string[] = [];
+
+  const flushBuffer = (key: string) => {
+    if (bodyBuffer.length > 0) {
+      elements.push(
+        <div key={`buf-${key}`} className="space-y-1.5 mb-3">
+          {bodyBuffer.map((l, i) =>
+            l.trim() === '' ? <div key={i} className="h-2"/> :
+            <p key={i} className="text-sm text-gray-700 leading-relaxed">{l}</p>
+          )}
+        </div>
+      );
+      bodyBuffer = [];
+    }
+  };
+
+  lines.forEach((raw, i) => {
+    const line = raw.trim();
+    const isAllCaps = line.length >= 3 && line === line.toUpperCase() && /[A-Z]{2}/.test(line) && !/^\d/.test(line);
+    const isDate = /^(January|February|March|April|May|June|July|August|September|October|November|December|\w+ \d{1,2},?\s*\d{4}|APRIL|MARCH|MAY|JUNE|JULY|AUGUST|SEPTEMBER|OCTOBER|NOVEMBER|DECEMBER|JANUARY|FEBRUARY)/i.test(line) && line.length < 40;
+
+    if (!titleFound && isAllCaps && line.length < 60 && !Object.keys(SECTION_COLORS).some(k => line.startsWith(k))) {
+      // Document title — could be multi-line (e.g. "4WS" then "THE SIGNIFICANCE...")
+      elements.push(<h1 key={i} className="text-xl font-bold text-gray-900 leading-snug">{line}</h1>);
+      titleFound = true;
+    } else if (titleFound && isAllCaps && line.length < 60 && !Object.keys(SECTION_COLORS).some(k => line.startsWith(k)) && elements.length <= 2) {
+      // Subtitle (e.g. second title line)
+      elements.push(<h2 key={i} className="text-lg font-bold text-gray-800 leading-snug">{line}</h2>);
+    } else if (isDate && elements.length <= 3) {
+      // Date line near top
+      flushBuffer(`d${i}`);
+      elements.push(<p key={i} className="text-sm text-gray-500 mb-4">{line}</p>);
+    } else if (isAllCaps && line.length < 60) {
+      // Section header
+      flushBuffer(`s${i}`);
+      const colors = getSectionColor(line);
+      elements.push(
+        <div key={i} className={`flex items-center gap-2.5 mt-5 mb-2 px-3 py-2 rounded-lg border ${colors.bg} ${colors.border}`}>
+          <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${colors.dot}`}/>
+          <span className={`font-bold text-sm tracking-wide uppercase ${colors.text}`}>{line}</span>
+        </div>
+      );
+    } else if (line === '') {
+      bodyBuffer.push('');
+    } else {
+      bodyBuffer.push(raw);
+    }
+  });
+
+  flushBuffer('end');
+
+  return <div className="space-y-0.5">{elements}</div>;
 }
 
 // =====================================================================
@@ -152,8 +233,7 @@ export default function DGroupRoom() {
   }
 
   // ── Main room ──────────────────────────────────────────────────────
-  const studyText = room.studyContent ? formatStudy(room.studyContent) : '';
-  const hasStudy = Boolean(studyText && studyText.length > 30);
+  const hasStudy = Boolean(room.studyContent && cleanStudyText(room.studyContent).length > 30);
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
@@ -264,9 +344,7 @@ export default function DGroupRoom() {
               </div>
             </div>
             <div className="p-5">
-              <pre className="whitespace-pre-wrap text-sm text-gray-800 font-sans leading-relaxed">
-                {studyText}
-              </pre>
+              <StudyGuideRenderer content={room.studyContent} />
             </div>
           </div>
         ) : (

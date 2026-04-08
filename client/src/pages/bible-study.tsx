@@ -442,8 +442,8 @@ export default function BibleStudy() {
         const res = await fetch('/api/files/process', { method: 'POST', body: formData });
         if (res.ok) {
           const data = await res.json();
-          extractedText = data.content || '';
-          setFileContent(`[SERMON/NOTES FILE: ${file.name}]\n\n${extractedText}`);
+          extractedText = data.rawContent || data.content || '';
+          setFileContent(data.content || extractedText); // full formatted version for AI context
           if (data.wordCount) toast({ title: "File read successfully", description: `Extracted ${data.wordCount.toLocaleString()} words from ${file.name}` });
         } else {
           setFileContent(`[ATTACHED FILE: ${file.name}] - Use the themes and content from this file as the foundation for the Bible study.`);
@@ -487,7 +487,7 @@ export default function BibleStudy() {
         const res = await fetch('/api/files/process', { method: 'POST', body: formData });
         if (res.ok) {
           const data = await res.json();
-          extractedText = data.content || '';
+          extractedText = data.rawContent || data.content || '';
         }
       } catch { /* ignore */ }
     }
@@ -591,7 +591,7 @@ Closing Prayer`;
         const parseRes = await fetch('/api/files/process', { method: 'POST', body: formData });
         if (parseRes.ok) {
           const data = await parseRes.json();
-          extractedText = data.content || '';
+          extractedText = data.rawContent || data.content || '';
         }
       }
 

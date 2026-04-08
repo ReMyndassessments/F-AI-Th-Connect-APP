@@ -638,6 +638,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         fileType: processedFile.fileType,
         wordCount: processedFile.wordCount,
         content: formattedContent,
+        rawContent: processedFile.content,
       });
 
     } catch (error) {
