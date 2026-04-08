@@ -377,6 +377,7 @@ export default function BibleStudy() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const ccfFileInputRef = useRef<HTMLInputElement>(null);
   const resultRef = useRef<HTMLDivElement>(null);
   const meetingRef = useRef<HTMLDivElement>(null);
 
@@ -387,6 +388,7 @@ export default function BibleStudy() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [activeType, setActiveType] = useState<string | null>(null);
   const [result, setResult] = useState('');
+  const [studySource, setStudySource] = useState<'ccf-4ws' | 'generated' | 'template' | null>(null);
   const [showTip, setShowTip] = useState(true);
 
   const [isLoadingCcf, setIsLoadingCcf] = useState(false);
@@ -453,6 +455,46 @@ export default function BibleStudy() {
 
   const removeFile = () => { setFileContent(''); setFileName(''); };
 
+  // Separate handler for uploading CCF 4W's guide directly as the study guide
+  const handleCcfUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ title: "File too large", description: "Please use a file under 5MB.", variant: "destructive" });
+      return;
+    }
+    const allowed = ['text/plain', 'application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword'];
+    if (!allowed.includes(file.type)) {
+      toast({ title: "Unsupported file", description: "Please upload a .txt, .pdf, or .docx file.", variant: "destructive" });
+      return;
+    }
+
+    let extractedText = '';
+    setFileName(file.name);
+    if (file.type === 'text/plain') {
+      extractedText = await file.text();
+    } else {
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        const res = await fetch('/api/process-file', { method: 'POST', body: formData });
+        if (res.ok) {
+          const data = await res.json();
+          extractedText = data.content || data.text || '';
+        }
+      } catch { /* ignore */ }
+    }
+
+    const displayText = extractedText || '[Guide loaded but text could not be extracted — it may be a scanned image PDF.]';
+    setFileContent(`[CCF WEEKLY GUIDE: ${file.name}]\n\n${extractedText}`);
+    setResult(displayText);
+    setStudySource('ccf-4ws');
+    setActiveType(null);
+    setMeetingRoom(null);
+    if (ccfFileInputRef.current) ccfFileInputRef.current.value = '';
+    toast({ title: 'CCF 4 W\'s Guide loaded!', description: 'Ready to share in a meeting room. You can also generate an AI study from it below.' });
+  };
+
   const use4WsTemplate = () => {
     const today = new Date();
     const dateStr = today.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -507,6 +549,7 @@ Accountability:
 
 Closing Prayer`;
     setResult(template);
+    setStudySource('template');
     setActiveType(null);
     toast({ title: '4 W\'s template ready!', description: 'Edit it to fit your group, then create your meeting room.' });
   };
@@ -548,10 +591,11 @@ Closing Prayer`;
       setFileContent(`[CCF WEEKLY GUIDE: ${ccfFileName}]\n\n${extractedText}`);
       setFileName(ccfFileName);
       setResult(extractedText || '[The guide loaded but text could not be extracted — it may be a scanned image PDF. Try generating a study guide from it anyway.]');
+      setStudySource('ccf-4ws');
       setActiveType(null);
       setMeetingRoom(null);
       setCcfBlocked(false);
-      toast({ title: 'CCF Weekly Guide loaded!', description: 'Review the content below, then choose a study type or use the 4 W\'s template.' });
+      toast({ title: 'CCF Weekly Guide loaded!', description: 'The 4 W\'s guide is ready — create your meeting room to share it, or generate an AI study below.' });
     } catch {
       // Any failure at all → show manual download UI, never a raw error
       setCcfBlocked(true);
@@ -568,6 +612,7 @@ Closing Prayer`;
     setIsGenerating(true);
     setActiveType(studyType.id);
     setResult('');
+    setStudySource(null);
     setMeetingRoom(null);
 
     const finalGroupName = groupName.trim() || studyType.defaultGroup;
@@ -578,6 +623,7 @@ Closing Prayer`;
       const session = await chatApi.createSession();
       const response = await chatApi.sendMessage(session.sessionId, fullMessage);
       setResult(response.aiMessage.content);
+      setStudySource('generated');
       toast({ title: "Study guide ready!", description: "Scroll down to view your guide and start a meeting." });
     } catch (err) {
       toast({ title: "Generation failed", description: "Please try again. Check your connection.", variant: "destructive" });
@@ -735,10 +781,11 @@ Closing Prayer`;
                     className="w-full text-xs text-white bg-amber-500 hover:bg-amber-600 px-3 py-2 rounded-lg font-semibold">
                     1. Open CCF Page &amp; Download
                   </a>
-                  <button onClick={() => fileInputRef.current?.click()}
+                  <button onClick={() => ccfFileInputRef.current?.click()}
                     className="w-full text-xs text-white bg-indigo-600 hover:bg-indigo-700 px-3 py-2 rounded-lg font-semibold flex items-center justify-center gap-1">
                     <Upload className="w-3.5 h-3.5"/> 2. Upload Latest 4W's
                   </button>
+                  <input ref={ccfFileInputRef} type="file" accept=".txt,.pdf,.doc,.docx" className="hidden" onChange={handleCcfUpload}/>
                 </div>
               ) : (
                 <button onClick={loadCcfWeekly} disabled={isLoadingCcf}
@@ -852,7 +899,7 @@ Closing Prayer`;
                   className="flex items-center gap-1.5 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-3 py-2 rounded-xl text-sm font-semibold transition-colors">
                   <Download className="w-4 h-4"/> Save
                 </button>
-                <button onClick={() => { setResult(''); setMeetingRoom(null); }}
+                <button onClick={() => { setResult(''); setStudySource(null); setMeetingRoom(null); }}
                   className="flex items-center gap-1.5 bg-white bg-opacity-20 hover:bg-red-500 text-white px-3 py-2 rounded-xl text-sm font-semibold transition-colors"
                   title="Dismiss">
                   <X className="w-4 h-4"/> Dismiss
@@ -884,7 +931,7 @@ Closing Prayer`;
               <button onClick={downloadResult} className="flex items-center gap-1.5 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-200">
                 <Download className="w-4 h-4"/> Download as Text
               </button>
-              <button onClick={() => { setResult(''); setMeetingRoom(null); }} className="flex items-center gap-1.5 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-200">
+              <button onClick={() => { setResult(''); setStudySource(null); setMeetingRoom(null); }} className="flex items-center gap-1.5 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-200">
                 <X className="w-4 h-4"/> Clear
               </button>
             </div>
@@ -898,24 +945,51 @@ Closing Prayer`;
             <div>
               <h2 className="text-white font-bold text-lg">D-Group Video Meeting Room</h2>
               <p className="text-white text-opacity-80 text-sm">
-                {result ? 'Your study guide will be shared in the room' : 'Launch a free Jitsi video room for your group'}
+                {studySource === 'ccf-4ws' ? 'CCF 4 W\'s guide will be shared with your group'
+                  : studySource === 'generated' ? 'AI study guide will be shared with your group'
+                  : studySource === 'template' ? 'Your 4 W\'s template will be shared with your group'
+                  : 'Create a free video room and optionally attach a study guide'}
               </p>
             </div>
-            {result && (
-              <span className="ml-auto flex-shrink-0 bg-white bg-opacity-20 text-white text-xs font-semibold px-2 py-1 rounded-lg">
-                Study ready ✓
+            {studySource && (
+              <span className="ml-auto flex-shrink-0 bg-white bg-opacity-20 text-white text-xs font-semibold px-2 py-1 rounded-lg whitespace-nowrap">
+                {studySource === 'ccf-4ws' ? '📋 CCF 4W\'s ✓'
+                  : studySource === 'generated' ? '✨ AI Guide ✓'
+                  : '✏️ Template ✓'}
               </span>
             )}
           </div>
 
           {!meetingRoom ? (
             <div className="p-5 space-y-4">
-              {result && (
-                <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-3 flex items-start gap-2 text-sm text-indigo-800">
-                  <BookOpen className="w-4 h-4 flex-shrink-0 mt-0.5 text-indigo-500"/>
-                  <span>Your generated study guide will automatically be included in the meeting room so all participants can read along.</span>
+              {/* Study Guide Status — always shown, makes the distinction explicit */}
+              <div className={`rounded-xl p-3.5 flex items-center gap-3 ${
+                studySource ? 'bg-green-50 border border-green-200' : 'bg-amber-50 border border-amber-200'}`}>
+                <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-lg ${
+                  studySource ? 'bg-green-100' : 'bg-amber-100'}`}>
+                  {studySource === 'ccf-4ws' && '📋'}
+                  {studySource === 'generated' && '✨'}
+                  {studySource === 'template' && '✏️'}
+                  {!studySource && '📹'}
                 </div>
-              )}
+                <div className="flex-1 min-w-0">
+                  <p className={`text-sm font-bold ${studySource ? 'text-green-800' : 'text-amber-800'}`}>
+                    {studySource === 'ccf-4ws' && 'CCF Weekly 4 W\'s Guide attached'}
+                    {studySource === 'generated' && 'AI-generated study guide attached'}
+                    {studySource === 'template' && '4 W\'s template attached'}
+                    {!studySource && 'No study guide — plain meeting room'}
+                  </p>
+                  <p className={`text-xs mt-0.5 ${studySource ? 'text-green-600' : 'text-amber-600'}`}>
+                    {studySource === 'ccf-4ws' && 'This week\'s CCF 4 W\'s will be accessible to all participants inside the meeting room'}
+                    {studySource === 'generated' && 'Your custom study guide will be accessible to all participants inside the meeting room'}
+                    {studySource === 'template' && 'Your filled-in 4 W\'s template will be shared with all participants'}
+                    {!studySource && 'Load the CCF guide, use a template, or generate an AI study above to attach one'}
+                  </p>
+                </div>
+                {studySource && (
+                  <span className="flex-shrink-0 bg-green-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg">Ready ✓</span>
+                )}
+              </div>
               <div className="grid sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Your Name <span className="text-gray-400 font-normal">(leader)</span></label>
@@ -955,7 +1029,16 @@ Closing Prayer`;
                 <Check className="w-6 h-6 text-green-600 flex-shrink-0"/>
                 <div>
                   <p className="font-bold text-green-800">Meeting room is live!</p>
-                  <p className="text-sm text-green-600">Room code: <strong className="text-lg tracking-widest">{meetingRoom.code}</strong></p>
+                  <p className="text-sm text-green-600">
+                    Room code: <strong className="text-lg tracking-widest">{meetingRoom.code}</strong>
+                  </p>
+                  {studySource && (
+                    <p className="text-xs text-green-500 mt-0.5">
+                      {studySource === 'ccf-4ws' ? '📋 CCF 4 W\'s guide included'
+                        : studySource === 'generated' ? '✨ AI study guide included'
+                        : '✏️ 4 W\'s template included'}
+                    </p>
+                  )}
                 </div>
                 <button
                   onClick={() => setLocation(`/dgroup/${meetingRoom.code}`)}
