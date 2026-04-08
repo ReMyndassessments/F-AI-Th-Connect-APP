@@ -726,6 +726,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Proxy: fetch the CCF weekly study guide and forward it to the client
+  // MUST be before /api/dgroups/:code so the wildcard doesn't swallow it
+  app.get('/api/dgroups/ccf-weekly', async (req: Request, res: Response) => {
+    try {
+      const upstream = await fetch('https://www.ccf.org.ph/download/40059/', {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (compatible; FaithConnect/1.0)',
+          'Accept': '*/*',
+        },
+        redirect: 'follow',
+      });
+
+      if (!upstream.ok) {
+        return res.status(502).json({ error: 'Could not fetch CCF weekly guide. The link may have changed.' });
+      }
+
+      const contentType = upstream.headers.get('content-type') || 'application/octet-stream';
+      const contentDisposition = upstream.headers.get('content-disposition');
+
+      res.set('Content-Type', contentType);
+      if (contentDisposition) res.set('Content-Disposition', contentDisposition);
+      res.set('Cache-Control', 'public, max-age=86400'); // cache 24 hours
+
+      const buffer = await upstream.arrayBuffer();
+      res.send(Buffer.from(buffer));
+    } catch (err) {
+      res.status(502).json({ error: 'Network error fetching CCF weekly guide.' });
+    }
+  });
+
   app.get('/api/dgroups/:code', (req: Request, res: Response) => {
     const room = dgroupRooms.get(req.params.code.toUpperCase());
     if (!room) return res.status(404).json({ error: 'Room not found or expired' });

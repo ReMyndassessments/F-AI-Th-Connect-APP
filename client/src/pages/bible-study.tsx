@@ -389,6 +389,8 @@ export default function BibleStudy() {
   const [result, setResult] = useState('');
   const [showTip, setShowTip] = useState(true);
 
+  const [isLoadingCcf, setIsLoadingCcf] = useState(false);
+
   // Meeting room state
   const [isCreatingRoom, setIsCreatingRoom] = useState(false);
   const [meetingRoom, setMeetingRoom] = useState<MeetingRoom | null>(null);
@@ -449,6 +451,88 @@ export default function BibleStudy() {
   };
 
   const removeFile = () => { setFileContent(''); setFileName(''); };
+
+  const use4WsTemplate = () => {
+    const today = new Date();
+    const dateStr = today.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    const name = groupName.trim() || 'My D-Group';
+    const template = `D-GROUP STUDY GUIDE — 4 W's
+Group: ${name}
+Date: ${dateStr}
+Passage: [Enter Scripture reference here]
+
+────────────────────────────────────
+
+WELCOME  (10–15 min)
+Icebreaker / opening question:
+[Write your question here — e.g. "What is one thing you are grateful for this week?"]
+
+────────────────────────────────────
+
+WORSHIP  (10 min)
+Prayer focus for today:
+• Praise:
+• Thanksgiving:
+• Intercession:
+
+[Leader opens in prayer, or open it up to the group]
+
+────────────────────────────────────
+
+WORD  (30–40 min)
+Scripture: [Passage]
+
+Read the passage aloud together, then discuss:
+
+1. WHAT DOES IT SAY?  (Observation)
+   [What are the key facts, characters, or events in this passage?]
+
+2. WHAT DOES IT MEAN?  (Interpretation)
+   [What is the main truth or message God is communicating?]
+
+3. WHAT DOES IT MEAN TO ME?  (Application)
+   [How does this truth apply to your life right now?]
+
+4. WHAT WILL I DO?  (Response)
+   [What is one specific, measurable step you will take this week?]
+
+────────────────────────────────────
+
+WORKS  (10–15 min)
+Accountability:
+• Last week's commitment — How did it go?
+• This week's commitment — What will you do differently?
+• Prayer partner — Who will you check in with this week?
+
+Closing Prayer`;
+    setResult(template);
+    setActiveType(null);
+    toast({ title: '4 W\'s template ready!', description: 'Edit it to fit your group, then create your meeting room.' });
+  };
+
+  const loadCcfWeekly = async () => {
+    setIsLoadingCcf(true);
+    try {
+      const res = await fetch('/api/dgroups/ccf-weekly');
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || 'Could not load CCF weekly guide');
+      }
+      const contentType = res.headers.get('content-type') || '';
+      const blob = await res.blob();
+      const ext = contentType.includes('pdf') ? 'pdf' : contentType.includes('word') ? 'docx' : 'txt';
+      const file = new File([blob], `CCF-Weekly-Guide.${ext}`, { type: blob.type });
+
+      // Re-use the same processing path as manual uploads
+      const fakeEvent = { target: { files: [file], value: '' } } as unknown as React.ChangeEvent<HTMLInputElement>;
+      await handleFileChange(fakeEvent);
+      toast({ title: 'CCF Weekly Guide loaded!', description: 'Now choose a study type to generate a guide based on it, or use the 4 W\'s template.' });
+    } catch (err: any) {
+      toast({ title: 'Could not load CCF guide', description: err.message || 'Please check your connection and try again.', variant: 'destructive' });
+    } finally {
+      setIsLoadingCcf(false);
+    }
+  };
 
   const generate = async (studyType: StudyType) => {
     setIsGenerating(true);
@@ -594,12 +678,37 @@ export default function BibleStudy() {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 space-y-4">
           <h2 className="font-bold text-gray-900 text-lg">Study Setup</h2>
 
-          {/* File Upload */}
+          {/* Quick Start Options */}
+          <div className="bg-gradient-to-r from-indigo-50 to-blue-50 border border-indigo-200 rounded-2xl p-4 space-y-3">
+            <p className="text-sm font-bold text-indigo-900">Quick Start — choose how to begin:</p>
+            <div className="grid sm:grid-cols-3 gap-2">
+              {/* Upload own */}
+              <button onClick={() => fileInputRef.current?.click()}
+                className="flex flex-col items-center gap-1.5 p-3 bg-white border-2 border-dashed border-indigo-300 hover:border-indigo-500 rounded-xl text-indigo-700 hover:text-indigo-900 transition-all text-sm font-semibold text-center">
+                <Upload className="w-5 h-5"/>
+                <span>Upload My Own<br/><span className="text-xs font-normal text-gray-500">Study guide or sermon notes</span></span>
+              </button>
+
+              {/* 4 W's template */}
+              <button onClick={use4WsTemplate}
+                className="flex flex-col items-center gap-1.5 p-3 bg-white border-2 border-amber-300 hover:border-amber-500 rounded-xl text-amber-700 hover:text-amber-900 transition-all text-sm font-semibold text-center">
+                <span className="text-xl">✏️</span>
+                <span>4 W's Template<br/><span className="text-xs font-normal text-gray-500">Blank guide to fill yourself</span></span>
+              </button>
+
+              {/* CCF Weekly */}
+              <button onClick={loadCcfWeekly} disabled={isLoadingCcf}
+                className="flex flex-col items-center gap-1.5 p-3 bg-white border-2 border-green-300 hover:border-green-500 rounded-xl text-green-700 hover:text-green-900 transition-all text-sm font-semibold text-center disabled:opacity-50">
+                {isLoadingCcf ? <Loader2 className="w-5 h-5 animate-spin"/> : <span className="text-xl">📥</span>}
+                <span>{isLoadingCcf ? 'Loading...' : 'CCF Weekly Guide'}<br/><span className="text-xs font-normal text-gray-500">Auto-load this week's CCF guide</span></span>
+              </button>
+            </div>
+            <p className="text-xs text-indigo-500 text-center">Or scroll down to let AI generate a guide using the study type buttons below.</p>
+          </div>
+
+          {/* File Upload — shown when a file is attached */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Sermon Script or Notes <span className="text-gray-400 font-normal">(optional — .txt, .pdf, .docx)</span>
-            </label>
-            {fileName ? (
+            {fileName && (
               <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-xl px-4 py-3">
                 <FileText className="w-5 h-5 text-green-600 flex-shrink-0"/>
                 <span className="text-sm font-medium text-green-800 flex-1 truncate">{fileName}</span>
@@ -607,12 +716,6 @@ export default function BibleStudy() {
                   <X className="w-4 h-4"/>
                 </button>
               </div>
-            ) : (
-              <button onClick={() => fileInputRef.current?.click()}
-                className="w-full border-2 border-dashed border-gray-300 hover:border-blue-400 rounded-xl py-4 px-4 flex items-center justify-center gap-3 text-gray-500 hover:text-blue-600 transition-colors">
-                <Upload className="w-5 h-5"/>
-                <span className="text-sm font-medium">Upload sermon notes to use as study foundation</span>
-              </button>
             )}
             <input ref={fileInputRef} type="file" accept=".txt,.pdf,.doc,.docx" className="hidden" onChange={handleFileChange}/>
           </div>
