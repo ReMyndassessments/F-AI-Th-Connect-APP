@@ -1,21 +1,15 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Check, Play } from "lucide-react";
+import { Check } from "lucide-react";
 import { useLocation } from "wouter";
-import DemoVideoModal from "@/components/demo/demo-video-modal";
 import commissionImage from "@assets/great-commission-matthew-28-19.png";
 
 export default function Hero() {
   const [, setLocation] = useLocation();
-  const [isDemoOpen, setIsDemoOpen] = useState(false);
 
   const startDGroup = () => {
     setLocation("/bible");
   };
 
-  const openDemo = () => {
-    setIsDemoOpen(true);
-  };
 
   return (
     <section className="relative bg-gradient-to-br from-blue-50 via-white to-amber-50 py-12 sm:py-16 lg:py-32 overflow-hidden">
@@ -54,14 +48,6 @@ export default function Hero() {
                 className="faith-button-primary px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg shadow-lg touch-target mobile-tap"
               >
                 Start Your D-Group Study
-              </Button>
-              <Button
-                onClick={openDemo}
-                variant="outline"
-                className="faith-button-secondary px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg touch-target mobile-tap"
-              >
-                <Play className="w-4 sm:w-5 h-4 sm:h-5 mr-2" />
-                Watch Demo
               </Button>
             </div>
 
@@ -113,10 +99,6 @@ export default function Hero() {
         </div>
       </div>
       
-      <DemoVideoModal 
-        isOpen={isDemoOpen} 
-        onClose={() => setIsDemoOpen(false)} 
-      />
     </section>
   );
 }
