@@ -54,7 +54,7 @@ function StudyGuideRenderer({ content }: { content: string }) {
         <div key={`buf-${key}`} className="space-y-1.5 mb-3">
           {bodyBuffer.map((l, i) =>
             l.trim() === '' ? <div key={i} className="h-2"/> :
-            <p key={i} className="text-sm text-gray-700 leading-relaxed">{l}</p>
+            <p key={i} className="text-sm text-gray-700 leading-relaxed">{l.replace(/\s{2,}/g, ' ').trim()}</p>
           )}
         </div>
       );
