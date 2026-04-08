@@ -29,7 +29,7 @@ export default function Home() {
         <Hero />
 
         {/* D-Group Community Banner */}
-        <section className="py-14 bg-white border-b border-gray-100">
+        <section className="py-14 bg-indigo-50 border-y border-indigo-100">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
               Built for D-Groups and Bible Study Communities
