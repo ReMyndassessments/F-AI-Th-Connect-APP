@@ -45,11 +45,16 @@ export default function ChatDemo() {
   return (
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Experience Biblical AI Conversations</h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            See how F-AI-TH-Connect provides thoughtful, Scripture-based responses to your spiritual questions.
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">More Than a Chat — Your Ministry AI Companion</h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-6">
+            Ask biblical questions, prepare sermons, get ministry guidance, and access 35 ready-made prompts across Missions, Men's, Women's, Youth, Church, and more.
           </p>
+          <div className="flex flex-wrap justify-center gap-2 text-sm">
+            {["Sermon Preparation", "Missions & Outreach", "Men's Ministry", "Women's Ministry", "Youth Group", "Church Leadership", "Prayer Guidance", "Bible Study"].map((tag) => (
+              <span key={tag} className="bg-indigo-50 text-indigo-700 border border-indigo-200 px-3 py-1 rounded-full font-medium">{tag}</span>
+            ))}
+          </div>
         </div>
         
         <div className="max-w-4xl mx-auto">
