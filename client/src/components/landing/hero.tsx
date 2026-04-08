@@ -9,8 +9,8 @@ export default function Hero() {
   const [, setLocation] = useLocation();
   const [isDemoOpen, setIsDemoOpen] = useState(false);
 
-  const startChat = () => {
-    setLocation("/chat");
+  const startDGroup = () => {
+    setLocation("/bible-study");
   };
 
   const openDemo = () => {
@@ -21,33 +21,41 @@ export default function Hero() {
     <section className="relative bg-gradient-to-br from-blue-50 via-white to-amber-50 py-12 sm:py-16 lg:py-32 overflow-hidden">
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-5">
-        <div 
-          className="absolute inset-0" 
+        <div
+          className="absolute inset-0"
           style={{
             backgroundImage: `radial-gradient(circle at 25% 25%, hsl(207, 90%, 54%) 0%, transparent 50%), radial-gradient(circle at 75% 75%, hsl(43, 96%, 56%) 0%, transparent 50%)`
           }}
         />
       </div>
-      
+
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div className="text-center lg:text-left">
+
+            {/* D-Group badge */}
+            <div className="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold px-3 py-1.5 rounded-full mb-5">
+              <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"/>
+              Built for CCF D-Groups &amp; Bible Study Communities
+            </div>
+
             <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight mb-4 sm:mb-6">
-              <span className="text-gray-900">Find</span>
-              <span className="faith-gradient-text"> Biblical Wisdom</span>
-              <span className="text-gray-900"> Through AI</span>
+              <span className="text-gray-900">Your D-Group</span>
+              <span className="faith-gradient-text"> Bible Study,</span>
+              <br />
+              <span className="text-gray-900">Powered by AI</span>
             </h1>
-            
+
             <p className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 leading-relaxed px-4 sm:px-0">
-              Experience personalized Christian guidance, Scripture-based answers, and spiritual support powered by advanced AI. Connect with your faith in meaningful conversations.
+              Upload your CCF 4&nbsp;W's guide, generate a themed study for your group, and meet live in a free video room — all in one place. Built for small, intentional communities studying God's Word together.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start px-4 sm:px-0">
               <Button
-                onClick={startChat}
+                onClick={startDGroup}
                 className="faith-button-primary px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg shadow-lg touch-target mobile-tap"
               >
-                Start Free Conversation
+                Start Your D-Group Study
               </Button>
               <Button
                 onClick={openDemo}
@@ -58,7 +66,7 @@ export default function Hero() {
                 Watch Demo
               </Button>
             </div>
-            
+
             {/* Support Ministry Button */}
             <div className="mt-4 sm:mt-6 flex justify-center lg:justify-start px-4 sm:px-0">
               <Button
@@ -71,19 +79,19 @@ export default function Hero() {
                 </a>
               </Button>
             </div>
-            
-            <div className="mt-8 flex items-center justify-center lg:justify-start space-x-6 text-sm text-gray-500">
+
+            <div className="mt-8 flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-2 text-sm text-gray-500">
+              <div className="flex items-center space-x-2">
+                <Check className="w-5 h-5 text-green-500" />
+                <span>CCF 4 W's Ready</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Check className="w-5 h-5 text-green-500" />
+                <span>Free Video Rooms</span>
+              </div>
               <div className="flex items-center space-x-2">
                 <Check className="w-5 h-5 text-green-500" />
                 <span>Always Free</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Check className="w-5 h-5 text-green-500" />
-                <span>Scripture-Based</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Check className="w-5 h-5 text-green-500" />
-                <span>24/7 Available</span>
               </div>
             </div>
           </div>
