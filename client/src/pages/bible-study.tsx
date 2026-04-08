@@ -515,30 +515,23 @@ Closing Prayer`;
     setIsLoadingCcf(true);
     try {
       const res = await fetch('/api/dgroups/ccf-weekly');
+      const contentType = res.headers.get('content-type') || '';
 
-      if (!res.ok) {
-        let errData: any = {};
-        try { errData = await res.json(); } catch {}
-
-        if (errData.blocked) {
-          // CCF requires manual download — show a helpful prompt instead of an error
-          toast({
-            title: 'Manual download required',
-            description: 'The CCF website blocks automated downloads. Tap "Open CCF Page" below to download the guide, then upload it using the Upload button.',
-          });
-          setCcfBlocked(true);
-          return;
-        }
-        throw new Error(errData.error || 'Could not load CCF weekly guide');
+      // If anything other than a real file comes back (HTML error page, blocked, etc.) → manual mode
+      if (!res.ok || contentType.includes('text/html')) {
+        setCcfBlocked(true);
+        toast({
+          title: 'Manual download needed',
+          description: 'Tap "Open CCF Page" to download this week\'s guide, then upload it with the Upload button.',
+        });
+        return;
       }
 
-      const contentType = res.headers.get('content-type') || '';
       const blob = await res.blob();
       const ext = contentType.includes('pdf') ? 'pdf' : contentType.includes('word') ? 'docx' : 'txt';
       const ccfFileName = `CCF-Weekly-Guide.${ext}`;
       const file = new File([blob], ccfFileName, { type: blob.type });
 
-      // Extract text so we can show a preview AND use it as AI context
       let extractedText = '';
       if (file.type === 'text/plain') {
         extractedText = await file.text();
@@ -559,8 +552,13 @@ Closing Prayer`;
       setMeetingRoom(null);
       setCcfBlocked(false);
       toast({ title: 'CCF Weekly Guide loaded!', description: 'Review the content below, then choose a study type or use the 4 W\'s template.' });
-    } catch (err: any) {
-      toast({ title: 'Could not load CCF guide', description: err.message || 'Please check your connection and try again.', variant: 'destructive' });
+    } catch {
+      // Any failure at all → show manual download UI, never a raw error
+      setCcfBlocked(true);
+      toast({
+        title: 'Manual download needed',
+        description: 'Tap "Open CCF Page" to download this week\'s guide, then upload it with the Upload button.',
+      });
     } finally {
       setIsLoadingCcf(false);
     }
