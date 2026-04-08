@@ -1175,12 +1175,6 @@ Closing Prayer`;
                 </button>
               </div>
 
-              {/* WhatsApp share */}
-              <button onClick={shareWhatsApp}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-green-50 hover:bg-green-100 border border-green-200 text-green-700 rounded-xl text-sm font-semibold transition-colors">
-                <MessageSquare className="w-4 h-4"/> Share via WhatsApp
-              </button>
-
               <p className="text-xs text-gray-400 text-center">Room links are not stored — anyone with the link can join. Share only with your group.</p>
             </div>
           )}
