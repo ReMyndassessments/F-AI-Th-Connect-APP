@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Home, Upload, X, Copy, Download, Loader2, FileText, BookOpen, Video, Share2, Mail, Check, MessageSquare, Users } from "lucide-react";
+import { Home, Upload, X, Copy, Download, Loader2, FileText, BookOpen, Video, Share2, Mail, Check, MessageSquare, Users, Pencil } from "lucide-react";
 import { chatApi } from "@/lib/chat-api";
 import { useToast } from "@/hooks/use-toast";
 
@@ -524,7 +524,12 @@ export default function BibleStudy() {
 
   const shareWhatsApp = () => {
     if (!meetingRoom) return;
-    const text = encodeURIComponent(`You're invited to ${meetingRoom.groupName} D-Group!\n\nJoin the meeting: ${getRoomLink()}\n\nRoom code: ${meetingRoom.code}`);
+    const studySection = result
+      ? `\n\n--- STUDY GUIDE ---\n${result.slice(0, 1000)}${result.length > 1000 ? '\n\n[Full guide available in the meeting room]' : ''}`
+      : '';
+    const text = encodeURIComponent(
+      `You're invited to ${meetingRoom.groupName} D-Group!\n\nJoin the meeting: ${getRoomLink()}\nRoom code: ${meetingRoom.code}${studySection}`
+    );
     window.open(`https://wa.me/?text=${text}`, '_blank');
   };
 
@@ -532,7 +537,12 @@ export default function BibleStudy() {
     if (!meetingRoom) return;
     const emails = inviteEmails.split(/[\n,;]+/).map(e => e.trim()).filter(Boolean);
     const subject = encodeURIComponent(`You're invited: ${meetingRoom.groupName} D-Group Meeting`);
-    const body = encodeURIComponent(`Hi,\n\nYou're invited to join our D-Group Bible study meeting!\n\nGroup: ${meetingRoom.groupName}\nRoom Code: ${meetingRoom.code}\n\nClick to join:\n${getRoomLink()}\n\nSee you there!`);
+    const studySection = result
+      ? `\n\n--- BIBLE STUDY GUIDE ---\n\n${result}\n\n---`
+      : '';
+    const body = encodeURIComponent(
+      `Hi,\n\nYou're invited to join our D-Group Bible study meeting!\n\nGroup: ${meetingRoom.groupName}\nRoom Code: ${meetingRoom.code}\n\nClick to join:\n${getRoomLink()}${studySection}\n\nSee you there!`
+    );
     window.open(`mailto:${emails.join(',')}?subject=${subject}&body=${body}`, '_blank');
   };
 
@@ -686,12 +696,24 @@ export default function BibleStudy() {
                 </button>
               </div>
             </div>
-            <div className="p-5">
-              <pre className="whitespace-pre-wrap text-sm text-gray-800 font-sans leading-relaxed">
-                {formatResult(result)}
-              </pre>
+
+            {/* Editable guide notice */}
+            <div className="bg-amber-50 border-b border-amber-100 px-5 py-2 flex items-center gap-2 text-xs text-amber-700">
+              <Pencil className="w-3.5 h-3.5 flex-shrink-0"/>
+              <span>You can tap anywhere in the text below to edit the guide before copying or sharing it.</span>
             </div>
-            {/* Download / copy row */}
+
+            {/* Editable textarea */}
+            <div className="p-5">
+              <textarea
+                value={result}
+                onChange={e => setResult(e.target.value)}
+                className="w-full min-h-[420px] text-sm text-gray-800 font-sans leading-relaxed resize-y border border-gray-200 rounded-xl p-4 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-50"
+                spellCheck={false}
+              />
+            </div>
+
+            {/* Action row */}
             <div className="border-t border-gray-100 px-5 py-4 bg-gray-50 flex gap-3 flex-wrap">
               <button onClick={copyResult} className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700">
                 <Copy className="w-4 h-4"/> Copy Study Guide
