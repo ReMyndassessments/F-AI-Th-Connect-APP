@@ -389,6 +389,7 @@ export default function BibleStudy() {
   const [activeType, setActiveType] = useState<string | null>(null);
   const [result, setResult] = useState('');
   const [studySource, setStudySource] = useState<'ccf-4ws' | 'generated' | 'template' | 'uploaded' | null>(null);
+  const [pendingUploadText, setPendingUploadText] = useState('');
   const [showTip, setShowTip] = useState(true);
 
   const [isLoadingCcf, setIsLoadingCcf] = useState(false);
@@ -451,19 +452,14 @@ export default function BibleStudy() {
       }
     }
 
-    // Set the file content as the study guide so it's immediately ready to share
-    if (extractedText) {
-      setResult(extractedText);
-      setStudySource('uploaded');
-      setActiveType(null);
-      setMeetingRoom(null);
-    }
+    // Store extracted text as pending — user must click "Use as Study Guide" to confirm
+    setPendingUploadText(extractedText);
 
-    toast({ title: "File loaded as study guide!", description: `${file.name} is ready to share in a meeting room. You can also generate an AI study from it.` });
+    toast({ title: "File attached!", description: `${file.name} is ready. Click "Use as Study Guide" below to attach it to your meeting room.` });
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  const removeFile = () => { setFileContent(''); setFileName(''); };
+  const removeFile = () => { setFileContent(''); setFileName(''); setPendingUploadText(''); };
 
   // Separate handler for uploading CCF 4W's guide directly as the study guide
   const handleCcfUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -809,15 +805,75 @@ Closing Prayer`;
           </div>
 
           {/* File Upload — shown when a file is attached */}
-          <div>
+          <div className="space-y-2">
             {fileName && (
-              <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-xl px-4 py-3">
-                <FileText className="w-5 h-5 text-green-600 flex-shrink-0"/>
-                <span className="text-sm font-medium text-green-800 flex-1 truncate">{fileName}</span>
-                <button onClick={removeFile} className="text-green-500 hover:text-green-700">
-                  <X className="w-4 h-4"/>
-                </button>
-              </div>
+              <>
+                {/* File attached row */}
+                <div className="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-xl px-4 py-3">
+                  <FileText className="w-5 h-5 text-blue-600 flex-shrink-0"/>
+                  <span className="text-sm font-medium text-blue-800 flex-1 truncate">{fileName}</span>
+                  <button onClick={removeFile} className="text-blue-400 hover:text-red-500 ml-2 flex-shrink-0">
+                    <X className="w-4 h-4"/>
+                  </button>
+                </div>
+
+                {/* Confirm + bypass — only show when file is not yet set as study guide */}
+                {studySource !== 'uploaded' && (
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <button
+                      onClick={() => {
+                        const text = pendingUploadText || `[File: ${fileName} — share with meeting participants]`;
+                        setResult(text);
+                        setStudySource('uploaded');
+                        setActiveType(null);
+                        setMeetingRoom(null);
+                        // Scroll to meeting room section
+                        setTimeout(() => {
+                          if (meetingRef.current) {
+                            const top = meetingRef.current.getBoundingClientRect().top + window.pageYOffset - 90;
+                            window.scrollTo({ top, behavior: 'smooth' });
+                          }
+                        }, 150);
+                        toast({ title: '✓ Study guide saved!', description: 'Scroll down to create your meeting room.' });
+                      }}
+                      className="flex-1 flex items-center justify-center gap-2 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold transition-colors shadow-sm"
+                    >
+                      <BookOpen className="w-4 h-4"/> Save as Study Guide & Go to Meeting Room ↓
+                    </button>
+                    <button
+                      onClick={() => {
+                        // Just scroll to meeting room without attaching guide
+                        if (meetingRef.current) {
+                          const top = meetingRef.current.getBoundingClientRect().top + window.pageYOffset - 90;
+                          window.scrollTo({ top, behavior: 'smooth' });
+                        }
+                      }}
+                      className="sm:w-auto flex items-center justify-center gap-1.5 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl text-sm font-semibold transition-colors"
+                    >
+                      Skip to Meeting Room
+                    </button>
+                  </div>
+                )}
+
+                {/* Already saved confirmation */}
+                {studySource === 'uploaded' && (
+                  <div className="flex items-center gap-2 px-3 py-2 bg-green-50 border border-green-200 rounded-xl text-sm text-green-700 font-semibold">
+                    <Check className="w-4 h-4 text-green-600 flex-shrink-0"/>
+                    Study guide saved — scroll down to create your meeting room
+                    <button
+                      onClick={() => {
+                        if (meetingRef.current) {
+                          const top = meetingRef.current.getBoundingClientRect().top + window.pageYOffset - 90;
+                          window.scrollTo({ top, behavior: 'smooth' });
+                        }
+                      }}
+                      className="ml-auto text-xs text-indigo-600 font-bold hover:underline whitespace-nowrap"
+                    >
+                      Go ↓
+                    </button>
+                  </div>
+                )}
+              </>
             )}
             <input ref={fileInputRef} type="file" accept=".txt,.pdf,.doc,.docx" className="hidden" onChange={handleFileChange}/>
           </div>
