@@ -8,6 +8,18 @@ import CTA from "@/components/landing/cta";
 import Footer from "@/components/landing/footer";
 import AdvertisementDisplay from "@/components/ads/advertisement-display";
 import DailyVerseCard from "@/components/daily-verse/daily-verse-card";
+import { Check } from "lucide-react";
+
+const dGroupHighlights = [
+  "CCF 4 W's PDF upload and sharing",
+  "AI study guides for 8 group types",
+  "Free video meeting rooms — no sign-in required",
+  "Bible games to engage your group",
+  "Sermon notes and PDF upload for AI study generation",
+  "Mission and outreach study resources",
+  "Equip your group to share their faith",
+  "Works on any phone, tablet, or computer",
+];
 
 export default function Home() {
   return (
@@ -15,14 +27,36 @@ export default function Home() {
       <Header />
       <main>
         <Hero />
-        
+
+        {/* D-Group Community Banner */}
+        <section className="py-14 bg-white border-b border-gray-100">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              Built for D-Groups and Bible Study Communities
+            </h2>
+            <p className="text-lg text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+              F-AI-TH-Connect is designed specifically for DGroups — small, intentional communities studying God's Word together. Whether you are leading a CCF cell group, an independent Bible study, or equipping your group for missions and outreach, every tool you need is here.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4 text-left max-w-2xl mx-auto">
+              {dGroupHighlights.map((item, i) => (
+                <div key={i} className="flex items-start gap-3">
+                  <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Check className="w-3 h-3 text-green-600" />
+                  </div>
+                  <span className="text-gray-700 text-sm">{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Daily Memory Verse Banner */}
         <DailyVerseCard variant="banner" />
-        
+
         <div className="px-4 sm:px-6 lg:px-8 py-4">
           <AdvertisementDisplay placement="home_banner" />
         </div>
-        
+
         <Features />
         <ChatDemo />
         <HowItWorks />

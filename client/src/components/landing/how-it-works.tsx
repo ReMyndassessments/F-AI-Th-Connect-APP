@@ -25,6 +25,8 @@ const highlights = [
   "Free video meeting rooms — no sign-in required",
   "Bible games to engage your group",
   "Sermon notes and PDF upload for AI study generation",
+  "Mission and outreach study resources",
+  "Equip your group to share their faith",
   "Works on any phone, tablet, or computer",
 ];
 
@@ -56,7 +58,7 @@ export default function HowItWorks() {
             <div className="text-center lg:text-left">
               <h3 className="text-3xl font-bold text-gray-900 mb-4">Built for D-Groups and Bible Study Communities</h3>
               <p className="text-gray-600 mb-8 leading-relaxed">
-                F-AI-TH-Connect is designed specifically for DGroups — small, intentional communities studying God's Word together. Whether you are leading a CCF cell group or an independent Bible study, every tool you need is here.
+                F-AI-TH-Connect is designed specifically for DGroups — small, intentional communities studying God's Word together. Whether you are leading a CCF cell group, an independent Bible study, or equipping your group for missions and outreach, every tool you need is here.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
