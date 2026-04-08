@@ -359,7 +359,7 @@ function BibleWordle({ onBack }: { onBack: () => void }) {
                   const letter=displayWord[colIdx]?.trim()||'';
                   const state=guess?getLetterState(guess[colIdx],colIdx,guess):'empty';
                   return(
-                    <div key={colIdx} className={`w-11 h-11 sm:w-13 sm:h-13 border-2 flex items-center justify-center text-lg font-bold rounded-lg transition-colors
+                    <div key={colIdx} className={`w-10 h-10 sm:w-12 sm:h-12 border-2 flex items-center justify-center text-base sm:text-lg font-bold rounded-lg transition-colors
                       ${guess?tileColor(state):isCurrentRow&&letter?'border-gray-500 bg-white':'border-gray-200 bg-white'}`}>
                       {letter}
                     </div>
@@ -375,7 +375,7 @@ function BibleWordle({ onBack }: { onBack: () => void }) {
             <div key={ri} className="flex gap-1">
               {row.map(key=>(
                 <button key={key} onClick={()=>handleKey(key)}
-                  className={`${key.length>1?'px-2 text-xs min-w-[44px]':'w-9'} h-12 rounded-lg font-bold text-sm flex items-center justify-center select-none touch-manipulation ${keyColor(getKeyState(key))}`}>
+                  className={`${key.length>1?'px-1.5 text-xs min-w-[36px] sm:min-w-[44px]':'w-7 sm:w-9'} h-10 sm:h-12 rounded-lg font-bold text-xs sm:text-sm flex items-center justify-center select-none touch-manipulation ${keyColor(getKeyState(key))}`}>
                   {key}
                 </button>
               ))}

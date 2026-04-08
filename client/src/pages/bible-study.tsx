@@ -728,17 +728,17 @@ Closing Prayer`;
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-amber-50">
       {/* Header */}
       <div className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center gap-3">
+        <div className="max-w-4xl mx-auto px-3 sm:px-4 py-3 sm:py-4 flex items-center gap-2 sm:gap-3">
           <Link href="/">
-            <button className="p-2 rounded-xl hover:bg-gray-100 transition-colors">
+            <button className="p-2 rounded-xl hover:bg-gray-100 transition-colors flex-shrink-0">
               <Home className="w-5 h-5 text-gray-600"/>
             </button>
           </Link>
-          <div className="flex-1">
-            <h1 className="text-xl font-bold text-gray-900">D-Group Bible Study Generator</h1>
-            <p className="text-sm text-gray-500">Create tailored study guides for your D-Group or Bible study</p>
+          <div className="flex-1 min-w-0">
+            <h1 className="text-base sm:text-xl font-bold text-gray-900 truncate">D-Group Bible Study Generator</h1>
+            <p className="text-xs sm:text-sm text-gray-500 hidden sm:block">Create tailored study guides for your D-Group or Bible study</p>
           </div>
-          <BookOpen className="w-6 h-6 text-blue-500"/>
+          <BookOpen className="w-5 sm:w-6 h-5 sm:h-6 text-blue-500 flex-shrink-0"/>
         </div>
       </div>
 
@@ -1042,16 +1042,16 @@ Closing Prayer`;
         {/* Result */}
         {result && (
           <div ref={resultRef} className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-            <div className="bg-gradient-to-r from-blue-500 to-amber-500 px-5 py-4 flex items-center justify-between">
-              <div>
-                <h2 className="text-white font-bold text-lg">
+            <div className="bg-gradient-to-r from-blue-500 to-amber-500 px-4 sm:px-5 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-0 sm:justify-between">
+              <div className="min-w-0">
+                <h2 className="text-white font-bold text-base sm:text-lg truncate">
                   {activeType
                     ? `${STUDY_TYPES.find(s => s.id === activeType)?.label} Guide`
                     : fileName.includes('CCF')
                       ? 'CCF Weekly Study Guide — Preview'
                       : '4 W\'s Study Guide'}
                 </h2>
-                <p className="text-white text-opacity-80 text-sm">
+                <p className="text-white text-opacity-80 text-xs sm:text-sm truncate">
                   {activeType
                     ? (groupName || STUDY_TYPES.find(s => s.id === activeType)?.defaultGroup)
                     : fileName.includes('CCF')
@@ -1059,19 +1059,22 @@ Closing Prayer`;
                       : (groupName || 'My D-Group')}
                 </p>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-1.5 sm:gap-2 flex-shrink-0">
                 <button onClick={copyResult}
-                  className="flex items-center gap-1.5 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-3 py-2 rounded-xl text-sm font-semibold transition-colors">
-                  <Copy className="w-4 h-4"/> Copy
+                  className="flex items-center gap-1 sm:gap-1.5 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-2.5 sm:px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-colors">
+                  <Copy className="w-3.5 sm:w-4 h-3.5 sm:h-4"/>
+                  <span className="hidden sm:inline">Copy</span>
                 </button>
                 <button onClick={downloadResult}
-                  className="flex items-center gap-1.5 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-3 py-2 rounded-xl text-sm font-semibold transition-colors">
-                  <Download className="w-4 h-4"/> Save
+                  className="flex items-center gap-1 sm:gap-1.5 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-2.5 sm:px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-colors">
+                  <Download className="w-3.5 sm:w-4 h-3.5 sm:h-4"/>
+                  <span className="hidden sm:inline">Save</span>
                 </button>
                 <button onClick={() => { setResult(''); setStudySource(null); setMeetingRoom(null); }}
-                  className="flex items-center gap-1.5 bg-white bg-opacity-20 hover:bg-red-500 text-white px-3 py-2 rounded-xl text-sm font-semibold transition-colors"
+                  className="flex items-center gap-1 sm:gap-1.5 bg-white bg-opacity-20 hover:bg-red-500 text-white px-2.5 sm:px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-colors"
                   title="Dismiss">
-                  <X className="w-4 h-4"/> Dismiss
+                  <X className="w-3.5 sm:w-4 h-3.5 sm:h-4"/>
+                  <span className="hidden sm:inline">Dismiss</span>
                 </button>
               </div>
             </div>

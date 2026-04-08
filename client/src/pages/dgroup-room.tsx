@@ -251,29 +251,34 @@ export default function DGroupRoom() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       {/* Top bar */}
-      <div className="sticky top-0 z-10 bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3 shadow-sm">
+      <div className="sticky top-0 z-10 bg-white border-b border-gray-200 px-3 sm:px-4 py-3 flex items-center gap-2 sm:gap-3 shadow-sm">
         <div className="flex-1 min-w-0">
           <h1 className="font-bold text-gray-900 text-sm truncate">{room.groupName}</h1>
-          <p className="text-gray-400 text-xs">Room {code} • {displayName}</p>
+          <p className="text-gray-400 text-xs hidden sm:block">Room {code} • {displayName}</p>
+          <p className="text-gray-400 text-xs sm:hidden">Room {code}</p>
         </div>
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
           <button
             onClick={() => setShowShare(s => !s)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${showShare ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+            className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${showShare ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
           >
-            <Users className="w-3.5 h-3.5"/> Invite
+            <Users className="w-3.5 h-3.5"/>
+            <span className="hidden sm:inline">Invite</span>
           </button>
           <a
             href={videoLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded-lg text-xs font-bold transition-colors"
+            className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-xs font-bold transition-colors"
           >
-            <Video className="w-3.5 h-3.5"/> Join Video Call
+            <Video className="w-3.5 h-3.5"/>
+            <span className="hidden xs:inline sm:inline">Video</span>
+            <span className="hidden sm:inline"> Call</span>
           </a>
           <Link href="/bible">
-            <button className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 text-gray-600 hover:bg-red-100 hover:text-red-600 rounded-lg text-xs font-semibold transition-colors">
-              <X className="w-3.5 h-3.5"/> Leave
+            <button className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-2 bg-gray-100 text-gray-600 hover:bg-red-100 hover:text-red-600 rounded-lg text-xs font-semibold transition-colors">
+              <X className="w-3.5 h-3.5"/>
+              <span className="hidden sm:inline">Leave</span>
             </button>
           </Link>
         </div>
@@ -289,25 +294,26 @@ export default function DGroupRoom() {
             <p className="text-xs text-blue-600 mb-3 font-semibold uppercase tracking-wide">Guest Link — Share This</p>
             <div className="flex gap-2 mb-3">
               <input readOnly value={roomLink}
-                className="flex-1 border border-blue-200 rounded-xl px-3 py-2 text-sm bg-white text-gray-700 min-w-0"/>
+                className="flex-1 border border-blue-200 rounded-xl px-3 py-2 text-sm bg-white text-gray-700 min-w-0 truncate"/>
               <button onClick={copyLink}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold flex-shrink-0 transition-colors ${copied ? 'bg-green-500 text-white' : 'bg-blue-600 text-white hover:bg-blue-700'}`}>
+                className={`flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl text-sm font-semibold flex-shrink-0 transition-colors ${copied ? 'bg-green-500 text-white' : 'bg-blue-600 text-white hover:bg-blue-700'}`}>
                 {copied ? <Check className="w-4 h-4"/> : <Copy className="w-4 h-4"/>}
-                {copied ? 'Copied!' : 'Copy'}
+                <span className="hidden sm:inline">{copied ? 'Copied!' : 'Copy'}</span>
               </button>
             </div>
-            <div className="flex gap-2 mb-3 flex-wrap">
+            <div className="flex flex-col sm:flex-row gap-2 mb-3">
               <button onClick={shareWhatsApp}
-                className="flex items-center gap-1.5 px-3 py-2 bg-green-500 hover:bg-green-600 text-white rounded-xl text-sm font-semibold">
+                className="flex items-center justify-center gap-1.5 px-3 py-2 bg-green-500 hover:bg-green-600 text-white rounded-xl text-sm font-semibold">
                 <MessageSquare className="w-4 h-4"/> WhatsApp
               </button>
               <div className="flex gap-2 flex-1">
                 <input type="text" value={inviteEmails} onChange={e => setInviteEmails(e.target.value)}
-                  placeholder="email@example.com, another@..." 
+                  placeholder="email@example.com..." 
                   className="flex-1 border border-blue-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white min-w-0"/>
                 <button onClick={shareEmail}
                   className="flex items-center gap-1.5 px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-sm font-semibold flex-shrink-0">
-                  <Mail className="w-4 h-4"/> Email
+                  <Mail className="w-4 h-4"/>
+                  <span className="hidden sm:inline">Email</span>
                 </button>
               </div>
             </div>
