@@ -34,7 +34,7 @@ export default function Hero() {
             </h1>
 
             <p className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 leading-relaxed px-4 sm:px-0">
-              Upload your CCF 4&nbsp;W's guide, generate a themed study for your group, and meet live in a free video room — all in one place. Built for small, intentional communities studying God's Word together.
+              Upload your CCF 4&nbsp;W's guide, generate a themed study for your group, and meet live in a free video room — all in one place. Built to equip communities to study the Word and go reach the lost and unreached.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start px-4 sm:px-0">

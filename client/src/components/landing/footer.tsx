@@ -99,7 +99,7 @@ export default function Footer() {
         <div className="border-t border-gray-800 pt-8 flex flex-col items-center gap-3 text-center md:text-left md:flex-row md:justify-between">
           <div>
             <p className="text-gray-400 text-sm">
-              &copy; 2024 F-AI-TH-Connect. All rights reserved. Built with love for the Christian community.
+              &copy; 2024 F-AI-TH-Connect. All rights reserved. Built to equip the Church and reach the lost and unreached.
             </p>
             <p className="text-gray-500 text-xs mt-1">
               F-AI-TH Connect is a corporate ministry of <span className="text-gray-400 font-medium">ReMynd Student Services</span>.

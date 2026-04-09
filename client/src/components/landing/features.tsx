@@ -56,9 +56,9 @@ export default function Features() {
     <section id="features" className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Everything Your D-Group Needs</h2>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">Every Tool for Discipleship and Outreach</h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            From uploading your CCF guide to running a live video study — F-AI-TH-Connect brings your group together with the right tools for every step.
+            From uploading your CCF guide to running a live video study — F-AI-TH-Connect equips your group to grow in the Word and go reach the lost and unreached.
           </p>
         </div>
 

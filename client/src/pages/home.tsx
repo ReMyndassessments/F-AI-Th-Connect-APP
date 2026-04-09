@@ -32,7 +32,7 @@ export default function Home() {
         <section className="py-14 bg-indigo-50 border-y border-indigo-100">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <p className="text-xl sm:text-2xl text-gray-700 mb-10 max-w-2xl mx-auto leading-relaxed font-medium">
-              F-AI-TH-Connect is designed specifically for DGroups — small, intentional communities studying God's Word together. Whether you are leading a CCF cell group, an independent Bible study, or equipping your group for missions and outreach, every tool you need is here.
+              F-AI-TH-Connect is built for D-Groups on mission — small, intentional communities not just studying the Word together, but going out to share it. Whether you lead a CCF cell group, a Bible study, or a team reaching the lost and unreached, every tool you need is here.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4 text-left max-w-2xl mx-auto">
               {dGroupHighlights.map((item, i) => (

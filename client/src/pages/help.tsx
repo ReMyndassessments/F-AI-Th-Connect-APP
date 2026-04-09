@@ -189,7 +189,7 @@ export default function Help() {
               </div>
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold faith-gradient-text mb-3 sm:mb-4">Help Center</h1>
               <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto px-2">
-                Find answers to your questions and learn how to make the most of your spiritual journey with F-AI-TH-Connect.
+                Find answers to your questions and learn how to use F-AI-TH-Connect to equip your group, disciple believers, and reach the lost and unreached.
               </p>
             </div>
 

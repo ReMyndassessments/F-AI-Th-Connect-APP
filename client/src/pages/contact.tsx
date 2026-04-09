@@ -150,7 +150,7 @@ export default function Contact() {
               </div>
               <h1 className="text-4xl font-bold faith-gradient-text mb-4">Contact Us</h1>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                We're here to support you in your faith journey. Reach out with questions, feedback, or prayer requests.
+                We're here to support you and your ministry. Reach out with questions, feedback, or prayer requests.
               </p>
             </div>
 

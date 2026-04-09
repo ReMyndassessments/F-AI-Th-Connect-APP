@@ -23,7 +23,7 @@ export default function HowItWorks() {
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">How It Works</h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            From guide upload to live group meeting — three simple steps to run your D-Group.
+            Three simple steps to equip your group to study the Word, disciple one another, and reach the lost.
           </p>
         </div>
 

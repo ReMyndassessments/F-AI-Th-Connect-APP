@@ -12,9 +12,9 @@ export default function CTA() {
   return (
     <section className="py-20 bg-gradient-to-br from-blue-500 via-blue-600 to-amber-500">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">Begin Your Spiritual Journey Today</h2>
+        <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">Equip Your Group. Reach the Unreached.</h2>
         <p className="text-xl text-blue-100 mb-8 leading-relaxed">
-          Join thousands of believers who are growing in faith through AI-powered biblical guidance. Start your free conversation now.
+          Join a growing community of D-Groups and ministries using AI to study the Word, disciple believers, and bring the Gospel to the lost and unreached. Completely free.
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
