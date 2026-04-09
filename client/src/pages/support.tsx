@@ -507,6 +507,81 @@ export default function SupportPage() {
         </div>
       </section>
 
+      {/* ── 6b. MISSIONS PARTNER PROGRAM ─────────────────── */}
+      <section className="py-20 px-4 bg-gradient-to-br from-blue-950 to-indigo-900 text-white">
+        <div className="max-w-4xl mx-auto">
+          <FadeIn>
+            <div className="text-center mb-10">
+              <span className="text-xs font-bold uppercase tracking-widest text-amber-400">Missions Partner Program</span>
+              <h2 className="text-3xl sm:text-4xl font-bold mt-2 mb-4">Going on Mission? Get Your Own Page.</h2>
+              <p className="text-blue-200 max-w-2xl mx-auto leading-relaxed">
+                Register your short-term or long-term missions group and we will give you a dedicated public profile page with a shareable link — so supporters can find you and give specifically to your trip.
+              </p>
+            </div>
+          </FadeIn>
+
+          <div className="grid sm:grid-cols-3 gap-6 mb-10">
+            {[
+              { emoji: "🌏", title: "Your Own Profile Page", desc: "A public listing at /missions/[your-group] you can share anywhere — social media, email, church bulletins." },
+              { emoji: "💝", title: "Targeted Giving", desc: "Supporters give directly to your mission, not just a general fund. Every peso goes where you need it." },
+              { emoji: "🤝", title: "Ambassador Community", desc: "You spread F-AI-TH-Connect to churches and groups you meet — helping us reach more while we help fund your trip." },
+            ].map(({ emoji, title, desc }) => (
+              <FadeIn key={title} delay={100}>
+                <div className="bg-white/10 rounded-2xl p-5 border border-white/20 text-center">
+                  <div className="text-3xl mb-3">{emoji}</div>
+                  <h3 className="font-bold text-white mb-2">{title}</h3>
+                  <p className="text-blue-200 text-sm leading-relaxed">{desc}</p>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+
+          {/* Transparency Model */}
+          <FadeIn delay={200}>
+            <div className="bg-white/10 rounded-2xl border border-white/20 p-6 mb-8">
+              <h3 className="font-bold text-white text-lg mb-1 flex items-center gap-2">
+                <span>📊</span> How the Giving Model Works — Full Transparency
+              </h3>
+              <p className="text-blue-200 text-sm mb-5 leading-relaxed">
+                We believe stewardship means being completely open about where every peso goes.
+              </p>
+              <div className="grid sm:grid-cols-2 gap-4 mb-4">
+                <div className="bg-green-500/20 border border-green-400/30 rounded-xl p-4 text-center">
+                  <div className="text-4xl font-extrabold text-green-300 mb-1">90%</div>
+                  <p className="font-semibold text-green-200 text-sm">Goes directly to the mission</p>
+                  <p className="text-green-300 text-xs mt-1">Straight to the group's trip costs, outreach, and ministry work.</p>
+                </div>
+                <div className="bg-blue-500/20 border border-blue-400/30 rounded-xl p-4 text-center">
+                  <div className="text-4xl font-extrabold text-blue-300 mb-1">10%</div>
+                  <p className="font-semibold text-blue-200 text-sm">Sustains this ministry</p>
+                  <p className="text-blue-300 text-xs mt-1">Covers servers, AI costs, and video infrastructure — keeping the platform free for everyone.</p>
+                </div>
+              </div>
+              <div className="bg-amber-500/20 border border-amber-400/30 rounded-xl p-4 text-center text-sm text-amber-200 italic">
+                "F-AI-TH-Connect is always free. A small portion of each gift helps sustain this platform so others around the world can access it freely."
+              </div>
+              <p className="text-blue-300 text-xs mt-3 text-center">
+                Donors also have the option to cover the 10% themselves — sending 100% directly to the mission.
+              </p>
+            </div>
+          </FadeIn>
+
+          <FadeIn delay={300}>
+            <div className="text-center">
+              <button
+                onClick={() => setLocation("/missions/register")}
+                className="inline-flex items-center gap-2 px-8 py-4 bg-amber-500 hover:bg-amber-400 text-white rounded-xl font-bold text-base shadow-lg transition-all active:scale-95"
+              >
+                🌏 Register Your Mission Group
+              </button>
+              <p className="mt-3 text-blue-300 text-sm">
+                Or <button onClick={() => setLocation("/missions")} className="underline underline-offset-2 hover:text-white transition-colors">browse existing missions partners</button>
+              </p>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
       {/* ── 7. IMPACT STATS ─────────────────────────────────── */}
       <section className="py-20 px-4 bg-gradient-to-br from-blue-950 to-indigo-900 text-white">
         <div className="max-w-4xl mx-auto text-center">

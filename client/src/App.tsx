@@ -19,6 +19,9 @@ import BibleStudy from "@/pages/bible-study";
 import BibleGames from "@/pages/bible-games";
 import DGroupRoom from "@/pages/dgroup-room";
 import SupportPage from "@/pages/support";
+import MissionsDirectory from "@/pages/missions";
+import MissionsRegister from "@/pages/missions-register";
+import MissionsProfile from "@/pages/missions-profile";
 import VoiceTest from "@/pages/voice-test";
 import APIDiagnostics from "@/pages/api-diagnostics";
 
@@ -40,6 +43,9 @@ function Router() {
       <Route path="/dgroup/:code" component={DGroupRoom} />
       <Route path="/bible-games" component={BibleGames} />
       <Route path="/support" component={SupportPage} />
+      <Route path="/missions/register" component={MissionsRegister} />
+      <Route path="/missions/:slug" component={MissionsProfile} />
+      <Route path="/missions" component={MissionsDirectory} />
       <Route path="/voice-test" component={VoiceTest} />
       <Route path="/api-diagnostics" component={APIDiagnostics} />
       <Route component={NotFound} />

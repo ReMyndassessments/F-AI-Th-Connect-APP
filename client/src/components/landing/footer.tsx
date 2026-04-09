@@ -73,6 +73,16 @@ export default function Footer() {
             <h3 className="text-lg font-semibold mb-4">Support</h3>
             <ul className="space-y-2 text-gray-400">
               <li>
+                <button onClick={() => setLocation("/missions")} className="hover:text-white transition-colors font-medium text-amber-400 hover:text-amber-300">
+                  🌏 Missions Partners
+                </button>
+              </li>
+              <li>
+                <button onClick={() => setLocation("/support")} className="hover:text-white transition-colors">
+                  Fuel the Mission
+                </button>
+              </li>
+              <li>
                 <button onClick={() => setLocation("/help")} className="hover:text-white transition-colors">
                   Help Center
                 </button>
