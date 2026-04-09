@@ -18,6 +18,7 @@ import Share from "@/pages/share";
 import BibleStudy from "@/pages/bible-study";
 import BibleGames from "@/pages/bible-games";
 import DGroupRoom from "@/pages/dgroup-room";
+import SupportPage from "@/pages/support";
 import VoiceTest from "@/pages/voice-test";
 import APIDiagnostics from "@/pages/api-diagnostics";
 
@@ -38,6 +39,7 @@ function Router() {
       <Route path="/bible" component={BibleStudy} />
       <Route path="/dgroup/:code" component={DGroupRoom} />
       <Route path="/bible-games" component={BibleGames} />
+      <Route path="/support" component={SupportPage} />
       <Route path="/voice-test" component={VoiceTest} />
       <Route path="/api-diagnostics" component={APIDiagnostics} />
       <Route component={NotFound} />

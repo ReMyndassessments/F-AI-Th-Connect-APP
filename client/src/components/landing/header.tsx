@@ -79,13 +79,11 @@ export default function Header() {
               </Button>
             )}
             <Button
-              asChild
+              onClick={() => setLocation("/support")}
               variant="outline"
               className="px-3 lg:px-4 py-2 rounded-lg font-medium border-amber-300 text-amber-700 hover:bg-amber-50 hover:border-amber-400 text-sm lg:text-base touch-target mobile-tap"
             >
-              <a href="https://pay.airwallex.com/hkhhexfr4367" target="_blank" rel="noopener noreferrer">
-                💝 Support
-              </a>
+              💝 Support
             </Button>
             <Button
               onClick={startChat}
@@ -163,13 +161,11 @@ export default function Header() {
                 </Button>
               )}
               <Button
-                asChild
+                onClick={() => { setLocation("/support"); setIsMobileMenuOpen(false); }}
                 variant="outline"
                 className="w-full border-amber-300 text-amber-700 hover:bg-amber-50 hover:border-amber-400 py-3 touch-target mobile-tap"
               >
-                <a href="https://pay.airwallex.com/hkhhexfr4367" target="_blank" rel="noopener noreferrer">
-                  💝 Support This Ministry
-                </a>
+                💝 Support This Ministry
               </Button>
               <Button
                 onClick={startChat}

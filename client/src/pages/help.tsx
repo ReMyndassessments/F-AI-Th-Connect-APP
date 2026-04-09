@@ -687,7 +687,7 @@ export default function Help() {
                   Contact Us
                 </Button>
                 <Button
-                  onClick={() => window.open("https://pay.airwallex.com/hkhhexfr4367", "_blank")}
+                  onClick={() => setLocation("/support")}
                   variant="outline"
                   className="w-full justify-center sm:justify-start text-sm sm:text-base py-2 sm:py-3"
                 >

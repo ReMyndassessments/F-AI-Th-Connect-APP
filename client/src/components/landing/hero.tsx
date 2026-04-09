@@ -49,13 +49,11 @@ export default function Hero() {
             {/* Support Ministry Button */}
             <div className="mt-4 sm:mt-6 flex justify-center lg:justify-start px-4 sm:px-0">
               <Button
-                asChild
+                onClick={() => setLocation("/support")}
                 variant="outline"
                 className="px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium border-amber-300 text-amber-700 hover:bg-amber-50 hover:border-amber-400 touch-target mobile-tap text-sm sm:text-base"
               >
-                <a href="https://pay.airwallex.com/hkhhexfr4367" target="_blank" rel="noopener noreferrer">
-                  💝 We Support Missions
-                </a>
+                💝 We Support Missions
               </Button>
             </div>
 

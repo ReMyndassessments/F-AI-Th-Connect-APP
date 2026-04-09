@@ -296,7 +296,7 @@ export default function Contact() {
                       F-AI-TH Connect is a corporate ministry of <span className="font-medium text-gray-700">ReMynd Student Services</span>.
                     </p>
                     <Button
-                      onClick={() => window.open("https://pay.airwallex.com/hkhhexfr4367", "_blank")}
+                      onClick={() => setLocation("/support")}
                       className="w-full faith-button-primary"
                     >
                       <Heart className="w-4 h-4 mr-2" />
