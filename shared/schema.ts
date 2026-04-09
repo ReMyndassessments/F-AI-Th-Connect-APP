@@ -152,8 +152,8 @@ export const insertMissionGroupSchema = createInsertSchema(missionGroups).omit({
   description: z.string().min(20, "Please provide at least 20 characters describing your mission").max(2000),
   prayerNeeds: z.string().max(1000).optional(),
   goalAmount: z.number().int().positive().optional().nullable(),
-  donationLink: z.string().url("Must be a valid URL").optional().nullable().or(z.literal("")),
-  websiteUrl: z.string().url("Must be a valid URL").optional().nullable().or(z.literal("")),
+  donationLink: z.string().url("Must be a valid URL").refine(u => /^https?:\/\//i.test(u), "URL must use http or https").optional().nullable().or(z.literal("")),
+  websiteUrl: z.string().url("Must be a valid URL").refine(u => /^https?:\/\//i.test(u), "URL must use http or https").optional().nullable().or(z.literal("")),
 });
 
 export const updateMissionGroupSchema = z.object({
@@ -166,7 +166,7 @@ export const updateMissionGroupSchema = z.object({
   description: z.string().min(20).max(2000).optional(),
   prayerNeeds: z.string().max(1000).optional().nullable(),
   goalAmount: z.number().int().positive().optional().nullable(),
-  donationLink: z.string().url().optional().nullable().or(z.literal("")),
+  donationLink: z.string().url().refine(u => /^https?:\/\//i.test(u), "URL must use http or https").optional().nullable().or(z.literal("")),
   websiteUrl: z.string().url().optional().nullable().or(z.literal("")),
   startDate: z.string().optional().nullable(),
   endDate: z.string().optional().nullable(),

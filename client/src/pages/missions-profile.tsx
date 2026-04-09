@@ -132,7 +132,9 @@ export default function MissionsProfile() {
 
   function handleGive() {
     if (!group?.donationLink) return;
-    window.open(group.donationLink, "_blank");
+    const url = group.donationLink;
+    if (!/^https?:\/\//i.test(url)) return;
+    window.open(url, "_blank", "noopener,noreferrer");
   }
 
   if (isLoading) {
@@ -333,7 +335,7 @@ export default function MissionsProfile() {
             </Button>
 
             {/* Website link */}
-            {group.websiteUrl && (
+            {group.websiteUrl && /^https?:\/\//i.test(group.websiteUrl) && (
               <a
                 href={group.websiteUrl}
                 target="_blank"

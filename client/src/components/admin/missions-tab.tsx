@@ -94,7 +94,7 @@ function MissionRow({ group, onApprove, onReject, onDelete, isPending }: {
                   <p className="text-sm text-indigo-800 whitespace-pre-line leading-relaxed">{group.prayerNeeds}</p>
                 </div>
               )}
-              {group.donationLink && (
+              {group.donationLink && /^https?:\/\//i.test(group.donationLink) && (
                 <div className="flex items-center gap-2 text-sm">
                   <span className="text-gray-500">Donation link:</span>
                   <a href={group.donationLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center gap-1 truncate max-w-xs">
@@ -103,7 +103,7 @@ function MissionRow({ group, onApprove, onReject, onDelete, isPending }: {
                   </a>
                 </div>
               )}
-              {group.websiteUrl && (
+              {group.websiteUrl && /^https?:\/\//i.test(group.websiteUrl) && (
                 <div className="flex items-center gap-2 text-sm">
                   <span className="text-gray-500">Website:</span>
                   <a href={group.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center gap-1">
