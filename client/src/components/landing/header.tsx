@@ -52,18 +52,6 @@ export default function Header() {
               <Globe className="w-4 h-4" />
               Missions
             </button>
-            <button
-              onClick={() => scrollToSection("features")}
-              className="text-gray-600 hover:text-blue-500 transition-colors"
-            >
-              Features
-            </button>
-            <button
-              onClick={() => scrollToSection("how-it-works")}
-              className="text-gray-600 hover:text-blue-500 transition-colors"
-            >
-              How It Works
-            </button>
 
             <Button
               onClick={() => setLocation("/share")}
@@ -145,18 +133,6 @@ export default function Header() {
               >
                 <Globe className="w-4 h-4" />
                 🌏 Missions Partners
-              </button>
-              <button
-                onClick={() => scrollToSection("features")}
-                className="text-gray-600 hover:text-blue-500 transition-colors text-left py-3 px-2 rounded-lg hover:bg-gray-50 touch-target mobile-tap"
-              >
-                Features
-              </button>
-              <button
-                onClick={() => scrollToSection("how-it-works")}
-                className="text-gray-600 hover:text-blue-500 transition-colors text-left py-3 px-2 rounded-lg hover:bg-gray-50 touch-target mobile-tap"
-              >
-                How It Works
               </button>
 
               <Button
