@@ -3,7 +3,7 @@ import {
   type User, type InsertUser, type ChatSession, type InsertChatSession, 
   type Message, type InsertMessage, type FeatureFlag, type InsertFeatureFlag,
   type Advertisement, type InsertAdvertisement, type AdminUser, type InsertAdminUser,
-  type AdminSession
+  type AdminSession, type MissionGroup, type InsertMissionGroup
 } from "@shared/schema";
 import fs from "fs";
 import path from "path";
@@ -46,6 +46,14 @@ export interface IStorage {
   deleteAdminSession(sessionId: string): Promise<void>;
   updateAdminUserLastLogin(userId: number): Promise<void>;
   
+  // Mission Groups
+  getMissionGroups(status?: string): Promise<MissionGroup[]>;
+  getMissionGroupBySlug(slug: string): Promise<MissionGroup | undefined>;
+  getMissionGroupById(id: number): Promise<MissionGroup | undefined>;
+  createMissionGroup(group: InsertMissionGroup, slug: string): Promise<MissionGroup>;
+  updateMissionGroup(id: number, updates: Partial<MissionGroup>): Promise<MissionGroup>;
+  deleteMissionGroup(id: number): Promise<void>;
+
   // Analytics for Advertisers
   getAnalytics(): Promise<{
     totalSessions: number;
@@ -70,8 +78,10 @@ export class MemStorage implements IStorage {
   private advertisements: Map<number, Advertisement>;
   private adminUsers: Map<number, AdminUser>;
   private adminSessions: Map<string, AdminSession>;
+  private missionGroupsMap: Map<number, MissionGroup>;
   private adminDataFile: string;
   private flagsDataFile: string;
+  private missionsDataFile: string;
   private currentUserId: number;
   private currentSessionId: number;
   private currentMessageId: number;
@@ -79,6 +89,7 @@ export class MemStorage implements IStorage {
   private currentAdvertisementId: number;
   private currentAdminUserId: number;
   private currentAdminSessionId: number;
+  private currentMissionGroupId: number;
 
   constructor() {
     this.users = new Map();
@@ -88,8 +99,10 @@ export class MemStorage implements IStorage {
     this.advertisements = new Map();
     this.adminUsers = new Map();
     this.adminSessions = new Map();
+    this.missionGroupsMap = new Map();
     this.adminDataFile = path.join(process.cwd(), '.admin-data.json');
     this.flagsDataFile = path.join(process.cwd(), '.feature-flags.json');
+    this.missionsDataFile = path.join(process.cwd(), '.missions-data.json');
     this.currentUserId = 1;
     this.currentSessionId = 1;
     this.currentMessageId = 1;
@@ -97,10 +110,12 @@ export class MemStorage implements IStorage {
     this.currentAdvertisementId = 1;
     this.currentAdminUserId = 1;
     this.currentAdminSessionId = 1;
+    this.currentMissionGroupId = 1;
     
     // Load persisted admin data and feature flags, then initialize defaults
     this.loadAdminData();
     this.loadFeatureFlags();
+    this.loadMissionsData();
     this.initializeDefaults();
     this.initializeAdvertisements();
   }
@@ -166,6 +181,35 @@ export class MemStorage implements IStorage {
       console.log('✓ Feature flags saved to persistent storage');
     } catch (error) {
       console.error('Failed to save feature flags:', error);
+    }
+  }
+
+  private loadMissionsData(): void {
+    try {
+      if (fs.existsSync(this.missionsDataFile)) {
+        const data = JSON.parse(fs.readFileSync(this.missionsDataFile, 'utf8'));
+        if (data.missionGroups && Array.isArray(data.missionGroups)) {
+          data.missionGroups.forEach((g: any) => {
+            g.createdAt = new Date(g.createdAt);
+            g.updatedAt = new Date(g.updatedAt);
+            this.missionGroupsMap.set(g.id, g);
+          });
+          const ids = data.missionGroups.map((g: any) => g.id);
+          if (ids.length > 0) this.currentMissionGroupId = Math.max(...ids) + 1;
+          console.log('✓ Mission groups loaded from persistent storage');
+        }
+      }
+    } catch (error) {
+      console.log('No persistent missions data found, starting fresh');
+    }
+  }
+
+  private saveMissionsData(): void {
+    try {
+      const missionGroups = Array.from(this.missionGroupsMap.values());
+      fs.writeFileSync(this.missionsDataFile, JSON.stringify({ missionGroups }, null, 2));
+    } catch (error) {
+      console.error('Failed to save missions data:', error);
     }
   }
 
@@ -627,6 +671,62 @@ export class MemStorage implements IStorage {
       user.lastLogin = new Date();
       user.updatedAt = new Date();
     }
+  }
+
+  // Mission Groups CRUD
+  async getMissionGroups(status?: string): Promise<MissionGroup[]> {
+    const all = Array.from(this.missionGroupsMap.values());
+    if (status) return all.filter(g => g.status === status);
+    return all.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  }
+
+  async getMissionGroupBySlug(slug: string): Promise<MissionGroup | undefined> {
+    return Array.from(this.missionGroupsMap.values()).find(g => g.slug === slug);
+  }
+
+  async getMissionGroupById(id: number): Promise<MissionGroup | undefined> {
+    return this.missionGroupsMap.get(id);
+  }
+
+  async createMissionGroup(insertGroup: InsertMissionGroup, slug: string): Promise<MissionGroup> {
+    const id = this.currentMissionGroupId++;
+    const group: MissionGroup = {
+      id,
+      slug,
+      groupName: insertGroup.groupName,
+      leaderName: insertGroup.leaderName,
+      email: insertGroup.email,
+      church: insertGroup.church,
+      destination: insertGroup.destination,
+      startDate: insertGroup.startDate || null,
+      endDate: insertGroup.endDate || null,
+      missionType: insertGroup.missionType,
+      description: insertGroup.description,
+      prayerNeeds: insertGroup.prayerNeeds || null,
+      goalAmount: insertGroup.goalAmount || null,
+      donationLink: insertGroup.donationLink || null,
+      websiteUrl: insertGroup.websiteUrl || null,
+      status: "pending",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.missionGroupsMap.set(id, group);
+    this.saveMissionsData();
+    return group;
+  }
+
+  async updateMissionGroup(id: number, updates: Partial<MissionGroup>): Promise<MissionGroup> {
+    const group = this.missionGroupsMap.get(id);
+    if (!group) throw new Error(`Mission group ${id} not found`);
+    const updated: MissionGroup = { ...group, ...updates, updatedAt: new Date() };
+    this.missionGroupsMap.set(id, updated);
+    this.saveMissionsData();
+    return updated;
+  }
+
+  async deleteMissionGroup(id: number): Promise<void> {
+    this.missionGroupsMap.delete(id);
+    this.saveMissionsData();
   }
 
   async getAnalytics(): Promise<{

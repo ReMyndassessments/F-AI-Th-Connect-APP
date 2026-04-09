@@ -11,7 +11,7 @@ import { elevenLabsTTS } from "./services/elevenlabs-tts";
 import { FileProcessor } from "./services/file-processor";
 import { spellCheckService } from "./services/spell-check-service";
 import { z } from "zod";
-import { insertMessageSchema, insertChatSessionSchema, adminLoginSchema, insertFeatureFlagSchema, insertAdvertisementSchema } from "@shared/schema";
+import { insertMessageSchema, insertChatSessionSchema, adminLoginSchema, insertFeatureFlagSchema, insertAdvertisementSchema, insertMissionGroupSchema } from "@shared/schema";
 
 const deepseekAI = new DeepseekAI();
 
@@ -772,6 +772,111 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const room = dgroupRooms.get(req.params.code.toUpperCase());
     if (!room) return res.status(404).json({ error: 'Room not found or expired' });
     res.json(room);
+  });
+
+  // ============================================================
+  // MISSIONS PARTNER PROGRAM
+  // ============================================================
+
+  // Slug generator utility
+  const generateSlug = (groupName: string, attempt = 0): string => {
+    const base = groupName
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .slice(0, 50);
+    return attempt === 0 ? base : `${base}-${attempt}`;
+  };
+
+  // Public: register a new missions group
+  app.post('/api/missions/register', async (req: Request, res: Response) => {
+    try {
+      const parsed = insertMissionGroupSchema.safeParse(req.body);
+      if (!parsed.success) {
+        return res.status(400).json({ error: 'Invalid data', details: parsed.error.flatten() });
+      }
+      // Generate a unique slug
+      let slug = generateSlug(parsed.data.groupName);
+      let attempt = 0;
+      while (await storage.getMissionGroupBySlug(slug)) {
+        attempt++;
+        slug = generateSlug(parsed.data.groupName, attempt);
+      }
+      const group = await storage.createMissionGroup(parsed.data, slug);
+      res.status(201).json(group);
+    } catch (error) {
+      console.error('Error registering mission group:', error);
+      res.status(500).json({ error: 'Failed to register mission group' });
+    }
+  });
+
+  // Public: list approved missions groups (optionally filtered by missionType)
+  app.get('/api/missions', async (req: Request, res: Response) => {
+    try {
+      const groups = await storage.getMissionGroups('approved');
+      const missionType = req.query.missionType as string | undefined;
+      const filtered = missionType ? groups.filter(g => g.missionType === missionType) : groups;
+      res.json(filtered);
+    } catch (error) {
+      console.error('Error fetching missions:', error);
+      res.status(500).json({ error: 'Failed to fetch missions' });
+    }
+  });
+
+  // Public: get a single approved mission group by slug
+  app.get('/api/missions/:slug', async (req: Request, res: Response) => {
+    try {
+      const group = await storage.getMissionGroupBySlug(req.params.slug);
+      if (!group) return res.status(404).json({ error: 'Mission group not found' });
+      if (group.status !== 'approved') return res.status(404).json({ error: 'Mission group not found' });
+      res.json(group);
+    } catch (error) {
+      console.error('Error fetching mission group:', error);
+      res.status(500).json({ error: 'Failed to fetch mission group' });
+    }
+  });
+
+  // Admin: list ALL missions groups (all statuses)
+  app.get('/api/admin/missions', requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const groups = await storage.getMissionGroups();
+      res.json(groups);
+    } catch (error) {
+      console.error('Error fetching all missions:', error);
+      res.status(500).json({ error: 'Failed to fetch missions' });
+    }
+  });
+
+  // Admin: update a mission group (approve/reject/edit)
+  app.patch('/api/admin/missions/:id', requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) return res.status(400).json({ error: 'Invalid ID' });
+      const existing = await storage.getMissionGroupById(id);
+      if (!existing) return res.status(404).json({ error: 'Mission group not found' });
+      const updated = await storage.updateMissionGroup(id, req.body);
+      res.json(updated);
+    } catch (error) {
+      console.error('Error updating mission group:', error);
+      res.status(500).json({ error: 'Failed to update mission group' });
+    }
+  });
+
+  // Admin: delete a mission group
+  app.delete('/api/admin/missions/:id', requireAdmin, async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) return res.status(400).json({ error: 'Invalid ID' });
+      const existing = await storage.getMissionGroupById(id);
+      if (!existing) return res.status(404).json({ error: 'Mission group not found' });
+      await storage.deleteMissionGroup(id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error('Error deleting mission group:', error);
+      res.status(500).json({ error: 'Failed to delete mission group' });
+    }
   });
 
   const httpServer = createServer(app);

@@ -1,0 +1,24 @@
+{
+  "missionGroups": [
+    {
+      "id": 1,
+      "slug": "test-mission",
+      "groupName": "Test Mission",
+      "leaderName": "John Doe",
+      "email": "test@example.com",
+      "church": "CCF",
+      "destination": "Mindanao",
+      "startDate": null,
+      "endDate": null,
+      "missionType": "short-term",
+      "description": "Reaching remote communities",
+      "prayerNeeds": null,
+      "goalAmount": null,
+      "donationLink": null,
+      "websiteUrl": null,
+      "status": "pending",
+      "createdAt": "2026-04-09T04:14:53.358Z",
+      "updatedAt": "2026-04-09T04:14:53.358Z"
+    }
+  ]
+}

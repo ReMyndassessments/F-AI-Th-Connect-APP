@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -114,6 +114,39 @@ export const insertAdvertisementSchema = createInsertSchema(advertisements).pick
   startDate: true,
   endDate: true,
 });
+
+// Mission Groups Schema
+export const missionGroups = pgTable("mission_groups", {
+  id: serial("id").primaryKey(),
+  slug: text("slug").notNull().unique(),
+  groupName: text("group_name").notNull(),
+  leaderName: text("leader_name").notNull(),
+  email: text("email").notNull(),
+  church: text("church").notNull(),
+  destination: text("destination").notNull(),
+  startDate: text("start_date"),
+  endDate: text("end_date"),
+  missionType: text("mission_type", { enum: ["short-term", "long-term", "local", "ongoing"] }).notNull(),
+  description: text("description").notNull(),
+  prayerNeeds: text("prayer_needs"),
+  goalAmount: integer("goal_amount"),
+  donationLink: text("donation_link"),
+  websiteUrl: text("website_url"),
+  status: text("status", { enum: ["pending", "approved", "rejected"] }).notNull().default("pending"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const insertMissionGroupSchema = createInsertSchema(missionGroups).omit({
+  id: true,
+  slug: true,
+  status: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertMissionGroup = z.infer<typeof insertMissionGroupSchema>;
+export type MissionGroup = typeof missionGroups.$inferSelect;
 
 export const insertAdminUserSchema = createInsertSchema(adminUsers).pick({
   username: true,
