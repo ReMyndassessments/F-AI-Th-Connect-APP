@@ -11,7 +11,7 @@ import { elevenLabsTTS } from "./services/elevenlabs-tts";
 import { FileProcessor } from "./services/file-processor";
 import { spellCheckService } from "./services/spell-check-service";
 import { z } from "zod";
-import { insertMessageSchema, insertChatSessionSchema, adminLoginSchema, insertFeatureFlagSchema, insertAdvertisementSchema, insertMissionGroupSchema } from "@shared/schema";
+import { insertMessageSchema, insertChatSessionSchema, adminLoginSchema, insertFeatureFlagSchema, insertAdvertisementSchema, insertMissionGroupSchema, updateMissionGroupSchema } from "@shared/schema";
 
 const deepseekAI = new DeepseekAI();
 
@@ -856,7 +856,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (isNaN(id)) return res.status(400).json({ error: 'Invalid ID' });
       const existing = await storage.getMissionGroupById(id);
       if (!existing) return res.status(404).json({ error: 'Mission group not found' });
-      const updated = await storage.updateMissionGroup(id, req.body);
+      const parsed = updateMissionGroupSchema.safeParse(req.body);
+      if (!parsed.success) {
+        return res.status(400).json({ error: 'Invalid data', details: parsed.error.flatten() });
+      }
+      const updated = await storage.updateMissionGroup(id, parsed.data);
       res.json(updated);
     } catch (error) {
       console.error('Error updating mission group:', error);

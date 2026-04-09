@@ -143,6 +143,33 @@ export const insertMissionGroupSchema = createInsertSchema(missionGroups).omit({
   status: true,
   createdAt: true,
   updatedAt: true,
+}).extend({
+  groupName: z.string().min(2, "Group name must be at least 2 characters").max(100),
+  leaderName: z.string().min(2, "Leader name is required").max(100),
+  email: z.string().email("Valid email is required"),
+  church: z.string().min(2, "Church/organization name is required").max(100),
+  destination: z.string().min(2, "Destination is required").max(100),
+  description: z.string().min(20, "Please provide at least 20 characters describing your mission").max(2000),
+  prayerNeeds: z.string().max(1000).optional(),
+  goalAmount: z.number().int().positive().optional().nullable(),
+  donationLink: z.string().url("Must be a valid URL").optional().nullable().or(z.literal("")),
+  websiteUrl: z.string().url("Must be a valid URL").optional().nullable().or(z.literal("")),
+});
+
+export const updateMissionGroupSchema = z.object({
+  status: z.enum(["pending", "approved", "rejected"]).optional(),
+  groupName: z.string().min(2).max(100).optional(),
+  leaderName: z.string().min(2).max(100).optional(),
+  email: z.string().email().optional(),
+  church: z.string().min(2).max(100).optional(),
+  destination: z.string().min(2).max(100).optional(),
+  description: z.string().min(20).max(2000).optional(),
+  prayerNeeds: z.string().max(1000).optional().nullable(),
+  goalAmount: z.number().int().positive().optional().nullable(),
+  donationLink: z.string().url().optional().nullable().or(z.literal("")),
+  websiteUrl: z.string().url().optional().nullable().or(z.literal("")),
+  startDate: z.string().optional().nullable(),
+  endDate: z.string().optional().nullable(),
 });
 
 export type InsertMissionGroup = z.infer<typeof insertMissionGroupSchema>;
