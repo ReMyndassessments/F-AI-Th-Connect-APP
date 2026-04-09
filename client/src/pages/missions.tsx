@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
-import { Globe, MapPin, User, Church, ArrowRight, PlusCircle, Search } from "lucide-react";
+import { Globe, MapPin, User, Church, ArrowRight, PlusCircle, Search, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -110,6 +110,14 @@ export default function MissionsDirectory() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-amber-50">
       {/* Hero */}
       <div className="bg-gradient-to-br from-blue-700 via-blue-600 to-indigo-700 text-white py-16 px-4">
+        <div className="max-w-4xl mx-auto">
+          <button
+            onClick={() => setLocation("/")}
+            className="flex items-center gap-1 text-blue-200 hover:text-white text-sm mb-8 transition-colors"
+          >
+            <Home className="w-4 h-4" /> Home
+          </button>
+        </div>
         <div className="max-w-4xl mx-auto text-center">
           <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <Globe className="w-8 h-8 text-white" />

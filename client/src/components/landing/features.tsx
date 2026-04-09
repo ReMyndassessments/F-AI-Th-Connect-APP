@@ -1,4 +1,4 @@
-import { Upload, Video, Users, Gamepad2, FileText, MessageCircle } from "lucide-react";
+import { Upload, Video, Users, Gamepad2, FileText, MessageCircle, Globe } from "lucide-react";
 
 const features = [
   {
@@ -49,6 +49,14 @@ const features = [
     iconColor: "text-rose-500",
     badge: "4 Game Types",
   },
+  {
+    icon: Globe,
+    title: "Missions Partner Program",
+    description: "Register your short-term or long-term mission group, get a public profile page, and connect with supporters who can give directly to your trip and pray for your work.",
+    bgColor: "bg-teal-50",
+    iconColor: "text-teal-500",
+    badge: "Free to Join",
+  },
 ];
 
 export default function Features() {
@@ -58,7 +66,7 @@ export default function Features() {
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">Every Tool for Discipleship and Outreach</h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            From uploading your CCF guide to running a live video study — F-AI-TH-Connect equips your group to grow in the Word and go reach the lost and unreached.
+            From uploading your CCF guide to running a live video study and supporting missions in the field — F-AI-TH-Connect equips your group to grow in the Word and go reach the lost and unreached.
           </p>
         </div>
 

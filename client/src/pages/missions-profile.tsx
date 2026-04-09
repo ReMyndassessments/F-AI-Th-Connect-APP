@@ -3,7 +3,7 @@ import { useLocation, useParams } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import {
   Globe, MapPin, User, Church, Calendar, Heart, Share2, ArrowLeft,
-  BookOpen, CheckCircle, Info, ExternalLink, Loader2
+  BookOpen, CheckCircle, Info, ExternalLink, Loader2, Home
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -165,12 +165,20 @@ export default function MissionsProfile() {
       {/* Hero */}
       <div className="bg-gradient-to-br from-blue-700 via-blue-600 to-indigo-700 text-white py-14 px-4">
         <div className="max-w-3xl mx-auto">
-          <button
-            onClick={() => setLocation("/missions")}
-            className="flex items-center gap-1 text-blue-200 hover:text-white text-sm mb-6 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" /> All Missions
-          </button>
+          <div className="flex items-center justify-between mb-6">
+            <button
+              onClick={() => setLocation("/missions")}
+              className="flex items-center gap-1 text-blue-200 hover:text-white text-sm transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" /> All Missions
+            </button>
+            <button
+              onClick={() => setLocation("/")}
+              className="flex items-center gap-1 text-blue-200 hover:text-white text-sm transition-colors"
+            >
+              <Home className="w-4 h-4" /> Home
+            </button>
+          </div>
 
           <div className="flex flex-wrap items-center gap-2 mb-4">
             <Badge className={`${TYPE_COLORS[group.missionType]} font-semibold`}>

@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Globe, Heart, Users, ArrowLeft, CheckCircle, Send } from "lucide-react";
+import { Globe, Heart, Users, ArrowLeft, CheckCircle, Send, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -115,13 +115,23 @@ export default function MissionsRegister() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-amber-50">
       {/* Header */}
       <div className="bg-gradient-to-br from-blue-700 via-blue-600 to-indigo-700 text-white py-14 px-4">
+        <div className="max-w-2xl mx-auto">
+          <div className="flex items-center justify-between mb-6">
+            <button
+              onClick={() => setLocation("/missions")}
+              className="flex items-center gap-1 text-blue-200 hover:text-white text-sm transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" /> Missions Directory
+            </button>
+            <button
+              onClick={() => setLocation("/")}
+              className="flex items-center gap-1 text-blue-200 hover:text-white text-sm transition-colors"
+            >
+              <Home className="w-4 h-4" /> Home
+            </button>
+          </div>
+        </div>
         <div className="max-w-2xl mx-auto text-center">
-          <button
-            onClick={() => setLocation("/missions")}
-            className="flex items-center gap-1 text-blue-200 hover:text-white text-sm mb-6 mx-auto transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" /> Back to Missions Directory
-          </button>
           <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <Globe className="w-8 h-8 text-white" />
           </div>

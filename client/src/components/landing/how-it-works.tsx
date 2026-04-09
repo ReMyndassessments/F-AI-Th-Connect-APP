@@ -13,6 +13,11 @@ const steps = [
     number: 3,
     title: "Meet and Study Together",
     description: "Create a private room, share the link with your group, and join a free video call. Everyone reads the same guide on their screen — no downloads needed."
+  },
+  {
+    number: 4,
+    title: "Support Missions in the Field",
+    description: "Register your mission group to get a public profile page. Supporters can find your team, pray for your trip, and give directly to your mission — completely free to join."
   }
 ];
 
@@ -23,11 +28,11 @@ export default function HowItWorks() {
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">How It Works</h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Three simple steps to equip your group to study the Word, disciple one another, and reach the lost.
+            Simple steps to equip your group to study the Word, disciple one another, reach the lost — and support those already in the field.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {steps.map((step, index) => (
             <div key={index} className="text-center">
               <div className="w-20 h-20 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">

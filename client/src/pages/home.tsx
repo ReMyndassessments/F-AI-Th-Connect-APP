@@ -16,6 +16,7 @@ const dGroupHighlights = [
   "Free video meeting rooms — no sign-in required",
   "Bible games to engage your group",
   "Sermon notes and PDF upload for AI study generation",
+  "Missions Partner Program — get a public profile for your mission trip",
   "Mission and outreach study resources",
   "Equip your group to share their faith",
   "Works on any phone, tablet, or computer",

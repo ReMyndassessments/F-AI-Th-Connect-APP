@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageCircle, Menu, X, Share, Smartphone } from "lucide-react";
+import { MessageCircle, Menu, X, Share, Smartphone, Globe } from "lucide-react";
 import { useLocation } from "wouter";
 import { usePWA } from "@/hooks/usePWA";
 
@@ -44,6 +44,13 @@ export default function Header() {
               className="text-gray-600 hover:text-blue-500 transition-colors font-medium"
             >
               Bible Games
+            </button>
+            <button
+              onClick={() => setLocation("/missions")}
+              className="text-teal-600 hover:text-teal-800 transition-colors font-medium flex items-center gap-1"
+            >
+              <Globe className="w-4 h-4" />
+              Missions
             </button>
             <button
               onClick={() => scrollToSection("features")}
@@ -128,6 +135,16 @@ export default function Header() {
                 className="text-gray-600 hover:text-blue-500 transition-colors text-left font-medium py-3 px-2 rounded-lg hover:bg-gray-50 touch-target mobile-tap"
               >
                 Bible Games
+              </button>
+              <button
+                onClick={() => {
+                  setLocation("/missions");
+                  setIsMobileMenuOpen(false);
+                }}
+                className="text-teal-600 hover:text-teal-800 transition-colors text-left font-medium py-3 px-2 rounded-lg hover:bg-teal-50 touch-target mobile-tap flex items-center gap-2"
+              >
+                <Globe className="w-4 h-4" />
+                🌏 Missions Partners
               </button>
               <button
                 onClick={() => scrollToSection("features")}

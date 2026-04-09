@@ -24,7 +24,8 @@ import {
   Headphones,
   Coffee,
   Zap,
-  UserCheck
+  UserCheck,
+  Globe
 } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "wouter";
@@ -126,6 +127,18 @@ const faqs: FAQItem[] = [
     question: "What are the premium voices and how do I use them?",
     answer: "F-AI-TH-Connect features three premium ElevenLabs AI voices (Adam, Bella, Grace) specifically chosen for spiritual content. You'll find voice playback buttons on Bible verses and AI responses. Just click the play button to hear Scripture or spiritual guidance read aloud - perfect for meditation or accessibility.",
     requiresTTS: true
+  },
+  {
+    question: "What is the Missions Partner Program?",
+    answer: "The Missions Partner Program lets short-term and long-term mission groups register on F-AI-TH-Connect to receive a free public profile page at /missions/[your-group]. Your profile shows your mission story, prayer needs, fundraising goal, and a Give button linked to your own donation page (Airwallex, GCash, PayPal, etc.). Supporters can find your team, pray for you, and give directly to your trip. Visit the Missions Partners directory at /missions or go to /missions/register to apply."
+  },
+  {
+    question: "How does the 90/10 giving model work for missions?",
+    answer: "Registered mission groups voluntarily commit to allocating 90% of received gifts to their mission work and 10% to sustaining F-AI-TH-Connect — keeping the platform free for all believers worldwide. This is not a system-enforced deduction; your gift goes directly to the group's donation page. The split is the group's voluntary commitment when they join the program. Donors are always informed of this model transparently on each profile page."
+  },
+  {
+    question: "How does my mission group get approved?",
+    answer: "Fill in the registration form at /missions/register with your group name, leader, church, destination, mission type, dates, your story, prayer needs, fundraising goal, and your donation link. Your submission is reviewed by F-AI-TH-Connect admins. Once approved, your group appears in the public directory at /missions and your profile page goes live at /missions/[your-slug]. You'll receive an email from the admin team to confirm approval."
   }
 ];
 
@@ -593,6 +606,66 @@ export default function Help() {
               </CardContent>
             </Card>
 
+            {/* Missions Partner Program */}
+            <Card className="mb-4 sm:mb-6 lg:mb-8">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Globe className="w-5 h-5 text-teal-500" />
+                  <span>Missions Partner Program</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-gray-600 leading-relaxed">
+                  Is your group planning a short-term or long-term mission trip? Register as a Missions Partner to receive a free public profile page where supporters can find you, pray for you, and give directly to your trip.
+                </p>
+
+                <div className="grid sm:grid-cols-3 gap-4">
+                  <div className="bg-teal-50 rounded-xl p-4 text-center">
+                    <Globe className="w-6 h-6 text-teal-600 mx-auto mb-2" />
+                    <p className="font-semibold text-sm text-teal-900 mb-1">Your Own Page</p>
+                    <p className="text-xs text-teal-700">A public profile at /missions/[your-group] you can share anywhere</p>
+                  </div>
+                  <div className="bg-rose-50 rounded-xl p-4 text-center">
+                    <Heart className="w-6 h-6 text-rose-600 mx-auto mb-2" />
+                    <p className="font-semibold text-sm text-rose-900 mb-1">Targeted Giving</p>
+                    <p className="text-xs text-rose-700">Supporters give directly to your mission via your own donation link</p>
+                  </div>
+                  <div className="bg-blue-50 rounded-xl p-4 text-center">
+                    <Users className="w-6 h-6 text-blue-600 mx-auto mb-2" />
+                    <p className="font-semibold text-sm text-blue-900 mb-1">Grow Together</p>
+                    <p className="text-xs text-blue-700">Connect with a community of groups reaching the lost and unreached</p>
+                  </div>
+                </div>
+
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                  <h5 className="font-semibold text-amber-900 mb-2">How the 90/10 Model Works:</h5>
+                  <ul className="text-sm text-amber-800 space-y-1">
+                    <li>• Registered groups voluntarily commit to using 90% of gifts for their mission</li>
+                    <li>• 10% is set aside to sustain F-AI-TH-Connect — keeping it free for everyone</li>
+                    <li>• Your gift goes directly to the group's donation page — no money passes through us</li>
+                    <li>• This is a trust-based commitment, not a system-enforced deduction</li>
+                  </ul>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Button
+                    onClick={() => setLocation("/missions/register")}
+                    className="bg-teal-600 hover:bg-teal-700 text-white flex items-center justify-center gap-2"
+                  >
+                    <Globe className="w-4 h-4" />
+                    Register Your Mission Group
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setLocation("/missions")}
+                    className="border-teal-300 text-teal-700 hover:bg-teal-50 flex items-center justify-center gap-2"
+                  >
+                    View Missions Directory
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* FAQ Section - Mobile Optimized */}
             <Card>
               <CardHeader className="pb-3 sm:pb-4">
@@ -677,6 +750,14 @@ export default function Help() {
                 >
                   <Gamepad2 className="w-4 h-4 mr-2" />
                   Play Bible Games
+                </Button>
+                <Button
+                  onClick={() => setLocation("/missions")}
+                  variant="outline"
+                  className="w-full justify-center sm:justify-start text-sm sm:text-base py-2 sm:py-3 border-teal-200 text-teal-700 hover:bg-teal-50"
+                >
+                  <Globe className="w-4 h-4 mr-2" />
+                  Missions Partners
                 </Button>
                 <Button
                   onClick={() => setLocation("/contact")}

@@ -431,23 +431,26 @@ export default function AdminDashboard() {
         </div>
 
         <Tabs defaultValue="overview" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-7">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="sessions">Sessions</TabsTrigger>
-            <TabsTrigger value="topics">Topics</TabsTrigger>
-            <TabsTrigger value="missions" className="flex items-center gap-1">
-              🌏 Missions
-            </TabsTrigger>
-            <TabsTrigger value="feature-flags" className="flex items-center">
-              <Flag className="w-4 h-4 mr-1" />
-              Features
-            </TabsTrigger>
-            <TabsTrigger value="advertisements" className="flex items-center">
-              <Eye className="w-4 h-4 mr-1" />
-              Ads
-            </TabsTrigger>
-            <TabsTrigger value="settings">Settings</TabsTrigger>
-          </TabsList>
+          <div className="overflow-x-auto pb-1 -mx-1 px-1">
+            <TabsList className="flex w-max min-w-full gap-0">
+              <TabsTrigger value="overview" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-4">Overview</TabsTrigger>
+              <TabsTrigger value="sessions" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-4">Sessions</TabsTrigger>
+              <TabsTrigger value="topics" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-4">Topics</TabsTrigger>
+              <TabsTrigger value="missions" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-4 flex items-center gap-1">
+                🌏 <span>Missions</span>
+              </TabsTrigger>
+              <TabsTrigger value="feature-flags" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-4 flex items-center gap-1">
+                <Flag className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Features</span>
+                <span className="sm:hidden">Flags</span>
+              </TabsTrigger>
+              <TabsTrigger value="advertisements" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-4 flex items-center gap-1">
+                <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span>Ads</span>
+              </TabsTrigger>
+              <TabsTrigger value="settings" className="flex-shrink-0 text-xs sm:text-sm px-2 sm:px-4">Settings</TabsTrigger>
+            </TabsList>
+          </div>
           
           <TabsContent value="overview" className="space-y-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
