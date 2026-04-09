@@ -44,6 +44,10 @@ const faqs: FAQItem[] = [
     answer: "Simply type your question or concern in the chat box and press Send. You can ask about biblical guidance, prayer requests, spiritual questions, or seek encouragement in your faith journey."
   },
   {
+    question: "Why do you use DeepSeek AI — isn't that a Chinese company?",
+    answer: "Yes, and that is intentional. Our mission is 'Bringing the Word to the Lost and the Unreached.' The unreached include hundreds of millions of young people in nations where the gospel has yet to take root — and many of those nations are in East Asia. By building on technology developed within those communities, we are quietly bringing Scripture into spaces where it has rarely gone. Every conversation on F-AI-TH-Connect is a potential open door. We are not afraid to use the world's tools to reach the world for Christ."
+  },
+  {
     question: "Can I upload documents for Bible study creation?",
     answer: "Yes! Click the 'Attach File' button to upload text files, PDFs, or Word documents. The AI will create comprehensive Bible studies with discussion questions and practical applications based on your content."
   },

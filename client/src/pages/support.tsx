@@ -304,6 +304,9 @@ export default function SupportPage() {
                 <p>
                   It is and will always remain <strong className="text-gray-800">completely free</strong> to use. No subscriptions. No paywalls. No accounts required for most features. Just ministry.
                 </p>
+                <p>
+                  We intentionally chose <strong className="text-gray-800">DeepSeek AI</strong> — developed in China — as our AI engine. Not by accident. The unreached include hundreds of millions of young people in nations where the gospel has yet to take root. By building on technology that originates from within those communities, we are quietly meeting the next generation on their turf, with the Word of God. Every conversation is an open door.
+                </p>
               </div>
             </FadeIn>
             <FadeIn delay={200}>
@@ -312,6 +315,7 @@ export default function SupportPage() {
                   { icon: BookOpen, label: "Scripture-First AI", desc: "Every AI response is grounded in biblical truth, not generic advice." },
                   { icon: Users, label: "Built for Community", desc: "D-Groups, Bible studies, and ministry teams are the primary audience." },
                   { icon: Globe, label: "Missions-Oriented", desc: "Designed to support the Great Commission — locally and globally." },
+                  { icon: Sparkles, label: "Reaching the Unreached Through Their Tech", desc: "DeepSeek AI is a deliberate choice — bringing the gospel through technology born in unreached regions of the world." },
                 ].map(({ icon: Icon, label, desc }) => (
                   <div key={label} className="flex items-start gap-4 p-4 bg-blue-50 rounded-2xl">
                     <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
