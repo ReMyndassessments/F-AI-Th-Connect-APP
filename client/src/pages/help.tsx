@@ -45,7 +45,7 @@ const faqs: FAQItem[] = [
   },
   {
     question: "Why do you use DeepSeek AI — isn't that a Chinese company?",
-    answer: "Yes, and that is intentional. Our mission is 'Bringing the Word to the Lost and the Unreached.' The unreached include hundreds of millions of young people in nations where the gospel has yet to take root — and many of those nations are in East Asia. By building on technology developed within those communities, we are quietly bringing Scripture into spaces where it has rarely gone. Every conversation on F-AI-TH-Connect is a potential open door. We are not afraid to use the world's tools to reach the world for Christ."
+    answer: "Yes, and that is intentional. Our mission is 'Bringing the Word to the Lost and Unreached.' The unreached include hundreds of millions of young people in nations where the gospel has yet to take root — and many of those nations are in East Asia. By building on technology developed within those communities, we are quietly bringing Scripture into spaces where it has rarely gone. Every conversation on F-AI-TH-Connect is a potential open door. We are not afraid to use the world's tools to reach the world for Christ."
   },
   {
     question: "Can I upload documents for Bible study creation?",
