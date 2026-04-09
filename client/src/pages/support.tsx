@@ -250,7 +250,7 @@ export default function SupportPage() {
           <FadeIn delay={100}>
             <h1 className="text-4xl sm:text-6xl font-extrabold leading-tight tracking-tight">
               Bringing the Word<br />
-              <span className="text-amber-400">to Every D-Group</span>
+              <span className="text-amber-400">to the Lost and the Unreached</span>
             </h1>
           </FadeIn>
           <FadeIn delay={200}>
