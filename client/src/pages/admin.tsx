@@ -9,6 +9,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import FeatureFlagsTab from "@/components/admin/feature-flags-tab";
 import AdvertisementsTab from "@/components/admin/advertisements-tab";
 import { PasswordChangeTab } from "@/components/admin/password-change-tab";
+import MissionsTab from "@/components/admin/missions-tab";
 
 import DailyVerseCard from "@/components/daily-verse/daily-verse-card";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
@@ -430,10 +431,13 @@ export default function AdminDashboard() {
         </div>
 
         <Tabs defaultValue="overview" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-6">
+          <TabsList className="grid w-full grid-cols-7">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="sessions">Sessions</TabsTrigger>
             <TabsTrigger value="topics">Topics</TabsTrigger>
+            <TabsTrigger value="missions" className="flex items-center gap-1">
+              🌏 Missions
+            </TabsTrigger>
             <TabsTrigger value="feature-flags" className="flex items-center">
               <Flag className="w-4 h-4 mr-1" />
               Features
@@ -510,6 +514,10 @@ export default function AdminDashboard() {
           
 
           
+          <TabsContent value="missions" className="space-y-4">
+            <MissionsTab />
+          </TabsContent>
+
           <TabsContent value="feature-flags" className="space-y-4">
             <FeatureFlagsTab />
           </TabsContent>

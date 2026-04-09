@@ -55,10 +55,10 @@ function DonationSplitSelector({
             </div>
             <div>
               <p className="font-semibold text-gray-900 text-sm">
-                Recommended — 90% to missions, 10% sustains this ministry
+                Recommended — Support both this mission and F-AI-TH-Connect
               </p>
               <p className="text-xs text-gray-500 mt-0.5">
-                A small portion keeps F-AI-TH-Connect free for every group worldwide.
+                This group has committed to allocating 10% of received gifts toward sustaining this ministry.
               </p>
             </div>
           </div>
@@ -81,10 +81,10 @@ function DonationSplitSelector({
             </div>
             <div>
               <p className="font-semibold text-gray-900 text-sm">
-                100% to this mission (I'll cover the platform separately)
+                100% to this mission (I'll give to the platform separately)
               </p>
               <p className="text-xs text-gray-500 mt-0.5">
-                100% of your gift goes directly to the missions group.
+                You can support F-AI-TH-Connect directly at any time from the Support page.
               </p>
             </div>
           </div>
@@ -95,7 +95,7 @@ function DonationSplitSelector({
         <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 flex gap-2">
           <Info className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
           <p className="text-xs text-amber-800">
-            F-AI-TH-Connect is always free. A small portion of each gift helps sustain this platform so others around the world can access it freely — servers, AI costs, and video infrastructure.
+            Your gift goes directly to this group's donation link. F-AI-TH-Connect is always free. Registered missions groups voluntarily set aside a portion of their gifts to keep this platform free for believers worldwide — a commitment they make when they join the program.
           </p>
         </div>
       )}
@@ -239,24 +239,24 @@ export default function MissionsProfile() {
                     <Info className="w-5 h-5 text-blue-600" /> How Giving Works
                   </h2>
                   <p className="text-gray-500 text-sm mb-5 leading-relaxed">
-                    We believe in full transparency. When you give to a missions group through F-AI-TH-Connect, here is exactly how your gift is used.
+                    We believe in full transparency. Registered missions groups commit to voluntarily setting aside a portion of received gifts to help sustain this platform — this is their commitment, not a fee we deduct.
                   </p>
 
                   <div className="grid sm:grid-cols-2 gap-4 mb-5">
                     <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
                       <div className="text-4xl font-extrabold text-green-700 mb-1">90%</div>
-                      <p className="font-semibold text-green-800 text-sm">Directly to the Mission</p>
-                      <p className="text-green-700 text-xs mt-1">Goes straight to {group.groupName}'s trip costs, outreach, and ministry work.</p>
+                      <p className="font-semibold text-green-800 text-sm">For the Mission</p>
+                      <p className="text-green-700 text-xs mt-1">{group.groupName} commits to using 90% of received gifts for trip costs, outreach, and ministry work.</p>
                     </div>
                     <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-center">
                       <div className="text-4xl font-extrabold text-blue-700 mb-1">10%</div>
                       <p className="font-semibold text-blue-800 text-sm">Sustains This Ministry</p>
-                      <p className="text-blue-700 text-xs mt-1">Covers servers, AI costs, and video infrastructure — keeping the platform free for everyone.</p>
+                      <p className="text-blue-700 text-xs mt-1">The group voluntarily sets this aside to keep F-AI-TH-Connect free for believers worldwide.</p>
                     </div>
                   </div>
 
                   <p className="text-xs text-gray-400 text-center italic">
-                    "F-AI-TH-Connect is always free. A small portion of each gift helps keep it that way for believers around the world."
+                    "Your gift goes directly to the group's donation page. This split reflects their voluntary commitment — not a platform deduction."
                   </p>
                 </CardContent>
               </Card>
@@ -350,8 +350,8 @@ export default function MissionsProfile() {
               <CardContent className="pt-5 pb-5 px-5 space-y-2">
                 {[
                   "Reviewed and approved by F-AI-TH-Connect",
-                  "90% of gifts go directly to this mission",
-                  "10% sustains the platform for everyone",
+                  "This group has committed to the 90/10 giving model",
+                  "Gifts go directly to the group's donation page",
                   "Your support is an act of worship",
                 ].map(fact => (
                   <div key={fact} className="flex items-start gap-2">
