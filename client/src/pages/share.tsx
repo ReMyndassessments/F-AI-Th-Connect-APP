@@ -47,8 +47,8 @@ export default function SharePage() {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'F-AI-TH-Connect - Christian AI Guidance',
-          text: 'Get biblical wisdom and spiritual support through AI-powered conversations',
+          title: 'F-AI-TH-Connect - Built for D-Groups & Bible Study Communities',
+          text: 'Free ministry platform for D-Groups, Bible study communities, and missions outreach. Bringing the Word to the Lost and Unreached.',
           url: appUrl
         });
       } catch (error) {
