@@ -728,43 +728,75 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Proxy: fetch the CCF weekly study guide and forward it to the client
+  // Dynamically discovers the current week's guide from the 4WS listing page
   // MUST be before /api/dgroups/:code so the wildcard doesn't swallow it
   app.get('/api/dgroups/ccf-weekly', async (req: Request, res: Response) => {
+    const HEADERS = {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+      'Accept-Language': 'en-US,en;q=0.9',
+      'Referer': 'https://www.ccf.org.ph/',
+    };
+    const FALLBACK_URL = 'https://www.ccf.org.ph/4ws/';
+
     try {
-      const upstream = await fetch('https://www.ccf.org.ph/download/40059/', {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-          'Accept': 'application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,*/*',
-          'Accept-Language': 'en-US,en;q=0.9',
-          'Referer': 'https://www.ccf.org.ph/',
-        },
+      // Step 1: Fetch the 4WS listing page to find the current week's guide URL
+      const listingRes = await fetch('https://www.ccf.org.ph/4ws/', { headers: HEADERS, redirect: 'follow' });
+      if (!listingRes.ok) {
+        return res.status(502).json({ error: 'Could not reach the CCF 4WS page.', url: FALLBACK_URL, blocked: true });
+      }
+      const listingHtml = await listingRes.text();
+
+      // Extract first fourwslink that is NOT a goviral edition (standard weekly guide)
+      const linkMatches = [...listingHtml.matchAll(/class="fourwslink"[^>]*href="([^"]+)"/g)];
+      // Also try reversed attribute order
+      const linkMatches2 = [...listingHtml.matchAll(/href="([^"]+)"[^>]*class="fourwslink"/g)];
+      const allLinks = [...linkMatches.map(m => m[1]), ...linkMatches2.map(m => m[1])];
+      const guidePageUrl = allLinks.find(url => !url.toLowerCase().includes('goviral'));
+
+      if (!guidePageUrl) {
+        return res.status(502).json({ error: 'Could not find the current week\'s guide on the CCF website.', url: FALLBACK_URL, blocked: true });
+      }
+
+      // Step 2: Fetch the individual guide page to get the actual download link
+      const guidePageRes = await fetch(guidePageUrl, { headers: HEADERS, redirect: 'follow' });
+      if (!guidePageRes.ok) {
+        return res.status(502).json({ error: 'Could not load the guide page.', url: guidePageUrl, blocked: true });
+      }
+      const guideHtml = await guidePageRes.text();
+
+      // Extract the download URL (pattern: https://www.ccf.org.ph/download/XXXXX/)
+      const downloadMatch = guideHtml.match(/href\s*=\s*["']?(https:\/\/www\.ccf\.org\.ph\/download\/\d+\/)[^"'\s>]*/);
+      const downloadUrl = downloadMatch?.[1];
+
+      if (!downloadUrl) {
+        return res.status(502).json({ error: 'Could not find the download link on the guide page.', url: guidePageUrl, blocked: true });
+      }
+
+      // Step 3: Fetch and stream the actual file
+      const fileRes = await fetch(downloadUrl, {
+        headers: { ...HEADERS, Accept: 'application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,*/*' },
         redirect: 'follow',
       });
 
-      if (!upstream.ok) {
-        return res.status(502).json({ error: 'CCF website returned an error. Try opening the page directly.', url: 'https://www.ccf.org.ph/download/40059/' });
+      if (!fileRes.ok) {
+        return res.status(502).json({ error: 'CCF website returned an error fetching the file.', url: downloadUrl });
       }
 
-      const contentType = upstream.headers.get('content-type') || 'application/octet-stream';
-
-      // Detect if CCF returned an HTML page instead of a file (access denied / redirect)
+      const contentType = fileRes.headers.get('content-type') || 'application/octet-stream';
       if (contentType.includes('text/html')) {
-        return res.status(400).json({
-          error: 'The CCF website requires you to download the guide manually.',
-          url: 'https://www.ccf.org.ph/download/40059/',
-          blocked: true,
-        });
+        return res.status(400).json({ error: 'The CCF website requires you to download the guide manually.', url: downloadUrl, blocked: true });
       }
 
-      const contentDisposition = upstream.headers.get('content-disposition');
+      const contentDisposition = fileRes.headers.get('content-disposition');
       res.set('Content-Type', contentType);
       if (contentDisposition) res.set('Content-Disposition', contentDisposition);
+      // Short cache — 1 hour max so a new week's guide appears promptly
       res.set('Cache-Control', 'public, max-age=3600');
 
-      const buffer = await upstream.arrayBuffer();
+      const buffer = await fileRes.arrayBuffer();
       res.send(Buffer.from(buffer));
     } catch (err) {
-      res.status(502).json({ error: 'Network error fetching CCF weekly guide.', url: 'https://www.ccf.org.ph/download/40059/' });
+      res.status(502).json({ error: 'Network error fetching CCF weekly guide.', url: FALLBACK_URL });
     }
   });
 
