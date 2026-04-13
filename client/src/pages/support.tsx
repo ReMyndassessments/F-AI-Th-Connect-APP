@@ -670,10 +670,10 @@ export default function SupportPage() {
           <FadeIn>
             <div className="text-5xl mb-4">🙏</div>
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">
-              Join the Mission
+              Join the F-AI-TH-Connect Mission
             </h2>
             <p className="text-gray-500 leading-relaxed">
-              Whether you give ₱100 or pray for us daily — you are part of what God is doing through this platform. Thank you for being here.
+              Whether you give ₱100 or pray for us daily — your support keeps F-AI-TH-Connect free for every D-Group, Bible study community, and mission partner worldwide. Thank you for being part of what God is doing through this platform.
             </p>
             <p className="text-indigo-600 font-semibold italic text-sm">
               "Each of you should give what you have decided in your heart to give." — 2 Corinthians 9:7
