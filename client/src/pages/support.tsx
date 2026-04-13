@@ -63,7 +63,7 @@ function DonationModal({ open, givingType, onClose }: DonationModalProps) {
             <Heart className="w-5 h-5 text-amber-300" />
             <span className="text-sm font-semibold text-amber-300 uppercase tracking-wide">{typeLabel[givingType]}</span>
           </div>
-          <h2 className="text-2xl font-bold">Fuel the Mission</h2>
+          <h2 className="text-2xl font-bold">Fuel the F-AI-TH-Connect Mission</h2>
           <p className="text-blue-100 text-sm mt-1">{typeDesc[givingType]}</p>
         </div>
 
@@ -422,7 +422,7 @@ export default function SupportPage() {
         <div className="max-w-4xl mx-auto text-center">
           <FadeIn>
             <span className="text-xs font-bold uppercase tracking-widest text-amber-600">Support the Mission</span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mt-2">Fuel the Mission</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mt-2">Fuel the F-AI-TH-Connect Mission</h2>
             <p className="text-gray-500 mt-3 max-w-2xl mx-auto leading-relaxed">
               Every Bible study generated, every D-Group session hosted, every Scripture-grounded response delivered — each one has a real cost. Server hosting, biblical guidance services, ElevenLabs voice technology, and global infrastructure all require ongoing funding. Your love gift keeps F-AI-TH-Connect free for D-Group leaders, missionaries, and believers in unreached regions who could never afford a subscription.
             </p>

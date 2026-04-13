@@ -79,7 +79,7 @@ export default function Footer() {
               </li>
               <li>
                 <button onClick={() => setLocation("/support")} className="hover:text-white transition-colors">
-                  Fuel the Mission
+                  Fuel the F-AI-TH-Connect Mission
                 </button>
               </li>
               <li>
