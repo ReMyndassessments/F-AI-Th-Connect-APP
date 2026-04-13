@@ -129,7 +129,7 @@ const faqs: FAQItem[] = [
   },
   {
     question: "What are the premium voices and how do I use them?",
-    answer: "F-AI-TH-Connect features three premium ElevenLabs AI voices (Adam, Bella, Grace) specifically chosen for spiritual content. You'll find voice playback buttons on Bible verses and AI responses. Just click the play button to hear Scripture or spiritual guidance read aloud - perfect for meditation or accessibility.",
+    answer: "F-AI-TH-Connect features three premium ElevenLabs voices (Adam, Bella, Grace) specifically chosen for spiritual content. You'll find voice playback buttons on Bible verses and responses. Just click the play button to hear Scripture or spiritual guidance read aloud - perfect for meditation or accessibility.",
     requiresTTS: true
   },
   {

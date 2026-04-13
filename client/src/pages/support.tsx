@@ -73,7 +73,7 @@ function DonationModal({ open, givingType, onClose }: DonationModalProps) {
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
               <Check className="w-8 h-8 text-green-600" />
             </div>
-            <h3 className="text-xl font-bold text-gray-900">Thank you for supporting the mission 💝</h3>
+            <h3 className="text-xl font-bold text-gray-900">Thank you for supporting F-AI-TH-Connect 💝</h3>
             <p className="text-sm text-gray-500 italic leading-relaxed">"{SCRIPTURE_SUCCESS}"</p>
             <p className="text-sm text-gray-600">Your generosity helps bring biblical guidance to D-Groups around the world.</p>
             <div className="bg-amber-50 border border-amber-200 rounded-xl p-3">
@@ -592,7 +592,7 @@ export default function SupportPage() {
               {
                 icon: Globe,
                 title: "Open Access Always",
-                desc: "We will never charge for core features. Giving supports the mission — nothing more.",
+                desc: "We will never charge for core features. Giving keeps this platform running — nothing more.",
                 color: "text-amber-600 bg-amber-100",
               },
             ].map(({ icon: Icon, title, desc, color }) => (

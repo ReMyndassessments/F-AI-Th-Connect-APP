@@ -63,7 +63,7 @@ export default function Privacy() {
                 <CardContent className="prose prose-gray max-w-none">
                   <h4 className="font-semibold mb-2">Conversation Data</h4>
                   <p className="mb-4">
-                    We collect the messages you send through our AI chat interface, including your questions, prayer requests, 
+                    We collect the messages you send through our ministry chat interface, including your questions, prayer requests, 
                     and spiritual discussions. This data is used solely to provide biblical guidance and improve our service.
                   </p>
                   
@@ -97,7 +97,7 @@ export default function Privacy() {
                 </CardHeader>
                 <CardContent className="prose prose-gray max-w-none">
                   <ul className="list-disc pl-6 space-y-2">
-                    <li><strong>Provide Biblical Guidance:</strong> Your conversations enable our AI to offer personalized Christian wisdom and scripture-based responses.</li>
+                    <li><strong>Provide Biblical Guidance:</strong> Your conversations enable our platform to provide personalized Christian wisdom and scripture-based responses.</li>
                     <li><strong>Create Bible Studies:</strong> Uploaded documents are processed to generate comprehensive spiritual content and discussion materials.</li>
                     <li><strong>Improve Our Service:</strong> We analyze usage patterns to enhance the quality of biblical guidance and add helpful features.</li>
                     <li><strong>Maintain Security:</strong> Technical information helps us protect against abuse and ensure service reliability.</li>

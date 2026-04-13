@@ -46,7 +46,7 @@ export default function Terms() {
               </div>
               <h1 className="text-4xl font-bold faith-gradient-text mb-4">Terms of Service</h1>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                These terms govern your use of F-AI-TH-Connect and our Christian AI guidance service.
+                These terms govern your use of F-AI-TH-Connect and our Christian ministry platform.
               </p>
               <p className="text-sm text-gray-500 mt-4">Last updated: January 22, 2025</p>
             </div>
@@ -66,7 +66,7 @@ export default function Terms() {
                     ("Terms"). If you do not agree to these Terms, please do not use our Service.
                   </p>
                   <p className="mt-4">
-                    F-AI-TH-Connect is a Christian AI guidance platform designed to provide biblical wisdom, spiritual 
+                    F-AI-TH-Connect is a Christian ministry platform designed to provide biblical wisdom, spiritual 
                     support, and faith-based conversations. We are committed to serving the Christian community with 
                     integrity and biblical truth.
                   </p>
@@ -84,7 +84,7 @@ export default function Terms() {
                 <CardContent className="prose prose-gray max-w-none">
                   <h4 className="font-semibold mb-2">What We Provide</h4>
                   <ul className="list-disc pl-6 space-y-2">
-                    <li>AI-powered biblical guidance and spiritual conversations</li>
+                    <li>Scripture-grounded biblical guidance and spiritual conversations</li>
                     <li>Scripture-based responses to life questions and challenges</li>
                     <li>Bible study creation from uploaded documents</li>
                     <li>Prayer support and Christian encouragement</li>
@@ -120,7 +120,7 @@ export default function Terms() {
                   <p className="mb-4">You agree not to:</p>
                   <ul className="list-disc pl-6 space-y-2">
                     <li>Use the Service for harmful, illegal, or unethical purposes</li>
-                    <li>Attempt to manipulate or abuse the AI system</li>
+                    <li>Attempt to manipulate or abuse the platform</li>
                     <li>Share content that contradicts core Christian beliefs or values</li>
                     <li>Upload malicious files or attempt to compromise system security</li>
                     <li>Use the Service to harass, threaten, or harm others</li>
@@ -153,7 +153,7 @@ export default function Terms() {
                     <li>Verify biblical interpretations with multiple Christian sources and established theology</li>
                     <li>Continue personal Bible study, prayer, and fellowship with other believers</li>
                     <li>For crisis situations, contact appropriate emergency services or crisis hotlines</li>
-                    <li>AI responses reflect general Christian principles and may not address your specific denominational beliefs</li>
+                    <li>Responses reflect general Christian principles and may not address your specific denominational beliefs</li>
                   </ul>
                 </CardContent>
               </Card>
@@ -341,7 +341,7 @@ export default function Terms() {
                 <CardContent>
                   <p className="mb-4">
                     If you have questions about these Terms of Service or need clarification about our Christian 
-                    AI guidance service, please contact us:
+                    ministry platform, please contact us:
                   </p>
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <p><strong>Email:</strong> info@f-ai-th-connect.online</p>

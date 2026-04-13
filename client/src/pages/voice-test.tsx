@@ -127,7 +127,7 @@ export default function VoiceTest() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">ElevenLabs Voice Test</h1>
-            <p className="text-gray-600">Test premium AI voices for spiritual content</p>
+            <p className="text-gray-600">Test premium voices for spiritual content</p>
           </div>
           <div className="flex items-center space-x-2">
             <Link href="/api-diagnostics">

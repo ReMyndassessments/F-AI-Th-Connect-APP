@@ -16,8 +16,8 @@ const steps = [
   },
   {
     number: 4,
-    title: "Support Missions in the Field",
-    description: "Register your mission group to get a free public profile page. Supporters can find your story, pray for your trip, and reach out to you directly — no platform fees, no middleman."
+    title: "Register as a Missions Partner",
+    description: "Get a free public profile page for your mission group. Supporters can find your story, pray for your trip, and reach out to you directly — no platform fees, no middleman."
   }
 ];
 
@@ -28,7 +28,7 @@ export default function HowItWorks() {
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">How It Works</h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Simple steps to equip your group to study the Word, disciple one another, reach the lost — and support those already in the field.
+            Simple steps to equip your group to study the Word, disciple one another, reach the lost — and connect with those already in the field.
           </p>
         </div>
 
