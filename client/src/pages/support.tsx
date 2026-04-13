@@ -276,7 +276,7 @@ export default function SupportPage() {
                 onClick={() => setLocation("/bible")}
                 className="flex items-center justify-center gap-2 px-7 py-3.5 bg-white/10 hover:bg-white/20 border border-white/30 text-white rounded-xl font-semibold text-base transition-all active:scale-95"
               >
-                <Sparkles className="w-5 h-5" /> Open Ministry AI
+                <Sparkles className="w-5 h-5" /> Open Ministry Desk
               </button>
             </div>
           </FadeIn>
@@ -302,7 +302,7 @@ export default function SupportPage() {
             <FadeIn delay={100}>
               <div className="space-y-4 text-gray-600 leading-relaxed">
                 <p>
-                  F-AI-TH-Connect was built by a team that loves the local church. We saw D-Group leaders working hard every week — preparing studies, coordinating schedules, finding resources — and we asked: <em>what if AI could carry some of that weight?</em>
+                  F-AI-TH-Connect was built by a team that loves the local church. We saw D-Group leaders working hard every week — preparing studies, coordinating schedules, finding resources — and we asked: <em>what if technology could carry some of that weight?</em>
                 </p>
                 <p>
                   As a <strong className="text-gray-800">corporate ministry of ReMynd Student Services</strong>, this platform exists to equip believers — not replace the Holy Spirit. Every feature points back to Scripture and community.
@@ -318,10 +318,10 @@ export default function SupportPage() {
             <FadeIn delay={200}>
               <div className="space-y-4">
                 {[
-                  { icon: BookOpen, label: "Scripture-First AI", desc: "Every AI response is grounded in biblical truth, not generic advice." },
+                  { icon: BookOpen, label: "Scripture-First Guidance", desc: "Every response is grounded in biblical truth, not generic advice." },
                   { icon: Users, label: "Built for Community", desc: "D-Groups, Bible studies, and ministry teams are the primary audience." },
                   { icon: Globe, label: "Missions-Oriented", desc: "Designed to support the Great Commission — locally and globally." },
-                  { icon: Sparkles, label: "Reaching the Unreached Through Their Tech", desc: "DeepSeek AI is a deliberate choice — bringing the gospel through technology born in unreached regions of the world." },
+                  { icon: Sparkles, label: "Reaching the Unreached Through Their Tech", desc: "DeepSeek is a deliberate choice — bringing the gospel through technology born in unreached regions of the world." },
                 ].map(({ icon: Icon, label, desc }) => (
                   <div key={label} className="flex items-start gap-4 p-4 bg-blue-50 rounded-2xl">
                     <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
@@ -379,8 +379,8 @@ export default function SupportPage() {
           <div className="grid sm:grid-cols-2 gap-5">
             {[
               { title: "No Subscription Required", desc: "Every feature is free, forever. We refuse to put God's Word behind a paywall.", icon: "🔓" },
-              { title: "Scripture-Grounded AI", desc: "The AI is specifically prompted with Christian theology and biblical principles.", icon: "✝️" },
-              { title: "CCF 4 W's Integration", desc: "Upload this week's guide and the AI builds a complete study around it.", icon: "📋" },
+              { title: "Scripture-Grounded Guidance", desc: "Every response is grounded in Christian theology and biblical principles.", icon: "✝️" },
+              { title: "CCF 4 W's Integration", desc: "Upload this week's guide and get a complete tailored study built around it.", icon: "📋" },
               { title: "Free Video Meeting Rooms", desc: "Host your D-Group call instantly — no Zoom account, no downloads.", icon: "📹" },
               { title: "8 Study Types", desc: "Men's, Women's, Youth, Couples, Senior, Business, Sunday School, Mixed Group.", icon: "👥" },
               { title: "Offline-Capable (PWA)", desc: "Install it on your phone like an app. Works even with limited connectivity.", icon: "📱" },
@@ -403,7 +403,7 @@ export default function SupportPage() {
       <section className="py-16 px-4 bg-gradient-to-r from-indigo-600 to-blue-700 text-white">
         <div className="max-w-3xl mx-auto text-center space-y-5">
           <FadeIn>
-            <h2 className="text-2xl sm:text-3xl font-bold">Try the Ministry AI — It's Free</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold">Try the Ministry Desk — It's Free</h2>
             <p className="text-blue-100 leading-relaxed">
               Ask a biblical question, generate a D-Group study, prepare a sermon, or explore Scripture. No sign-up. No payment. Just open and go.
             </p>
@@ -411,7 +411,7 @@ export default function SupportPage() {
               onClick={() => setLocation("/bible")}
               className="inline-flex items-center gap-2 px-8 py-3.5 bg-white text-indigo-700 rounded-xl font-bold shadow-lg hover:bg-blue-50 transition-all active:scale-95 mt-2"
             >
-              <Sparkles className="w-5 h-5" /> Open Ministry AI <ArrowRight className="w-4 h-4" />
+              <Sparkles className="w-5 h-5" /> Open Ministry Desk <ArrowRight className="w-4 h-4" />
             </button>
           </FadeIn>
         </div>
@@ -580,7 +580,7 @@ export default function SupportPage() {
               {
                 icon: Shield,
                 title: "Scripture-Committed",
-                desc: "Every AI response is shaped by Christian theology. We never drift from the Word.",
+                desc: "Every response is shaped by Christian theology. We never drift from the Word.",
                 color: "text-blue-600 bg-blue-100",
               },
               {
@@ -635,7 +635,7 @@ export default function SupportPage() {
                 onClick={() => setLocation("/bible")}
                 className="flex items-center justify-center gap-2 px-8 py-3.5 border-2 border-gray-200 text-gray-700 rounded-xl font-semibold hover:border-indigo-300 hover:text-indigo-700 transition-all"
               >
-                <Sparkles className="w-5 h-5" /> Open Ministry AI
+                <Sparkles className="w-5 h-5" /> Open Ministry Desk
               </button>
             </div>
           </FadeIn>

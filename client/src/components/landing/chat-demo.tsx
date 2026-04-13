@@ -46,7 +46,7 @@ export default function ChatDemo() {
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">More Than a Chat — Your Ministry AI Companion</h2>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">More Than a Chat — Your Ministry Companion</h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-6">
             Ask biblical questions, prepare sermons, get ministry guidance, and access 35 ready-made prompts across Missions, Men's, Women's, Youth, Church, and more.
           </p>
@@ -67,7 +67,7 @@ export default function ChatDemo() {
                 </div>
                 <div>
                   <h3 className="text-white font-semibold">F-AI-TH-Connect</h3>
-                  <p className="text-white text-opacity-80 text-sm">Your Christian AI Companion</p>
+                  <p className="text-white text-opacity-80 text-sm">Your Biblical Ministry Companion</p>
                 </div>
               </div>
             </div>

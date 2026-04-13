@@ -49,7 +49,7 @@ const faqs: FAQItem[] = [
   },
   {
     question: "Can I upload documents for Bible study creation?",
-    answer: "Yes! Click the 'Attach File' button to upload text files, PDFs, or Word documents. The AI will create comprehensive Bible studies with discussion questions and practical applications based on your content."
+    answer: "Yes! Click the 'Attach File' button to upload text files, PDFs, or Word documents. A comprehensive Bible study with discussion questions and practical applications will be generated based on your content."
   },
   {
     question: "What types of questions can I ask?",
@@ -57,7 +57,7 @@ const faqs: FAQItem[] = [
   },
   {
     question: "How accurate are the biblical references?",
-    answer: "Our AI is trained on biblical content and provides scripture references with citations. However, we always recommend verifying important spiritual matters with your pastor, Bible study group, or trusted Christian resources."
+    answer: "Our platform is grounded in biblical content and provides scripture references with citations. However, we always recommend verifying important spiritual matters with your pastor, Bible study group, or trusted Christian resources."
   },
   {
     question: "Is my conversation private?",
@@ -69,15 +69,15 @@ const faqs: FAQItem[] = [
   },
   {
     question: "How do I highlight text for Bible study preparation?",
-    answer: "F-AI-TH-Connect includes a powerful highlighting system perfect for Bible study preparation. Simply select any text in an AI response with your mouse, and a toolbar will appear with 5 color-coded categories: Key Verse (yellow), Prayer Point (blue), Study Note (green), Action Item (orange), and Discussion (purple). Your highlights are saved automatically and you can export them as study notes."
+    answer: "F-AI-TH-Connect includes a powerful highlighting system perfect for Bible study preparation. Simply select any text in a response with your mouse, and a toolbar will appear with 5 color-coded categories: Key Verse (yellow), Prayer Point (blue), Study Note (green), Action Item (orange), and Discussion (purple). Your highlights are saved automatically and you can export them as study notes."
   },
   {
     question: "Can I remove highlights or export my study notes?",
     answer: "Yes! Click any highlighted text to remove the highlight. When you have multiple highlights in a message, you'll see a summary showing counts by category. Use the 'Export Notes' button to download your highlighted study materials as a JSON file for use in other Bible study tools or sharing with your study group."
   },
   {
-    question: "What if the AI provides guidance I'm unsure about?",
-    answer: "While our AI provides biblically-grounded responses, always seek confirmation from your pastor, trusted Christian mentors, or established Christian resources for important spiritual decisions."
+    question: "What if I receive guidance I'm unsure about?",
+    answer: "While every response is biblically grounded, always seek confirmation from your pastor, trusted Christian mentors, or established Christian resources for important spiritual decisions."
   },
   {
     question: "How can I support this ministry?",
@@ -88,7 +88,7 @@ const faqs: FAQItem[] = [
     answer: "Click the book icon (📖) next to the send button in any chat session to open the prompt library with 30+ pre-written questions organized by ministry categories. Browse categories like 'Ministry Leadership' or 'Personal Growth', then click any prompt to automatically fill your message box."
   },
   {
-    question: "I'm new to AI - what should I ask?",
+    question: "I'm new here — what should I ask?",
     answer: "Perfect! The prompt library is designed exactly for this. Browse categories like 'Ministry Leadership' or 'Personal Growth' to see professionally written examples. Simply click any prompt to use it, then customize it for your specific needs."
   },
   {
@@ -257,7 +257,7 @@ export default function Help() {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <BookOpen className="w-5 h-5 text-blue-500" />
-                  <span>Prompt Library - Your AI Guide</span>
+                  <span>Prompt Library - Your Ministry Guide</span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -332,7 +332,7 @@ export default function Help() {
                   <h5 className="font-semibold text-green-900 mb-2">Perfect for Beginners:</h5>
                   <ul className="text-sm text-green-800 space-y-1">
                     <li>• No need to think of questions - we've prepared them for you</li>
-                    <li>• See examples of what the AI can help with in your ministry area</li>
+                    <li>• See examples of what F-AI-TH-Connect can help with in your ministry area</li>
                     <li>• All prompts are written by ministry professionals</li>
                     <li>• Search by topic to find exactly what you need</li>
                     <li>• Save favorites for quick access to your most-used prompts</li>
@@ -467,7 +467,7 @@ export default function Help() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <p className="text-gray-600 leading-relaxed">
-                    Experience Scripture and spiritual guidance through high-quality AI voices specifically chosen for Christian content. 
+                    Experience Scripture and spiritual guidance through high-quality premium voices specifically chosen for Christian content. 
                     Perfect for meditation, accessibility, or hands-free listening during prayer time.
                   </p>
                   
@@ -492,7 +492,7 @@ export default function Help() {
                         </div>
                       </div>
                       <p className="text-xs text-gray-500">
-                        Powered by ElevenLabs AI for natural, spiritual-focused audio experience.
+                        Powered by ElevenLabs for natural, spiritual-focused audio experience.
                       </p>
                     </div>
                     
@@ -549,11 +549,11 @@ export default function Help() {
                     <ol className="text-sm text-gray-600 space-y-2">
                       <li className="flex items-start space-x-2">
                         <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">1</span>
-                        <span>Ask the AI a biblical question or request spiritual guidance</span>
+                        <span>Ask a biblical question or request spiritual guidance</span>
                       </li>
                       <li className="flex items-start space-x-2">
                         <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">2</span>
-                        <span>Select any text in the AI response with your mouse</span>
+                        <span>Select any text in the response with your mouse</span>
                       </li>
                       <li className="flex items-start space-x-2">
                         <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mt-0.5">3</span>

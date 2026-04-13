@@ -84,7 +84,7 @@ export default function Header() {
               onClick={startChat}
               className="faith-button-primary px-4 lg:px-6 py-2 rounded-lg font-medium text-sm lg:text-base touch-target mobile-tap"
             >
-              Open Ministry AI
+              Open Ministry Desk
             </Button>
           </nav>
 
@@ -164,7 +164,7 @@ export default function Header() {
                 onClick={startChat}
                 className="faith-button-primary w-full py-3 touch-target mobile-tap"
               >
-                Open Ministry AI
+                Open Ministry Desk
               </Button>
             </div>
           </div>

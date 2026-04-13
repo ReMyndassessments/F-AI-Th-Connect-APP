@@ -10,7 +10,7 @@ export default function CTA() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">Equip Your Group. Reach the Unreached.</h2>
         <p className="text-lg sm:text-xl text-blue-100 mb-8 leading-relaxed">
-          Join a growing community of D-Groups and mission teams using AI to study the Word, disciple believers, and bring the Gospel to the lost. Register your mission group to get a public profile and connect with supporters — completely free.
+          Join a growing community of D-Groups and mission teams studying the Word, discipling believers, and bringing the Gospel to the lost. Register your mission group to get a public profile and connect with supporters — completely free.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">

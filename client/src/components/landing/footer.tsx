@@ -24,7 +24,7 @@ export default function Footer() {
               <span className="text-2xl font-bold faith-gradient-text">F-AI-TH-Connect</span>
             </div>
             <p className="text-gray-400 mb-4 max-w-md">
-              Bringing you closer to God through AI-powered biblical wisdom and spiritual guidance. Always free, always faithful to Scripture.
+              Bringing you closer to God through biblical wisdom, spiritual guidance, and prayer support. Always free, always faithful to Scripture.
             </p>
             
             <div className="flex space-x-4">
@@ -116,7 +116,7 @@ export default function Footer() {
             </p>
           </div>
           <p className="text-gray-500 text-sm">
-            Powered by Deepseek AI • Grounded in Scripture
+            Powered by Deepseek • Grounded in Scripture
           </p>
         </div>
       </div>

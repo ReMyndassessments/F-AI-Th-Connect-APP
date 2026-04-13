@@ -28,7 +28,7 @@ const features = [
   {
     icon: Upload,
     title: "Sermon & Notes Upload",
-    description: "Upload your pastor's sermon notes, a PDF study resource, or any document — the AI reads it and uses it to generate a fully grounded Bible study for your group.",
+    description: "Upload your pastor's sermon notes, a PDF study resource, or any document — it gets read and used to generate a fully grounded Bible study tailored for your group.",
     bgColor: "bg-amber-50",
     iconColor: "text-amber-500",
     badge: "PDF & DOCX",
@@ -36,7 +36,7 @@ const features = [
   {
     icon: Users,
     title: "CCF 4 W's Integration",
-    description: "Upload this week's CCF Weekly Guide PDF and share it instantly in your meeting room — or have AI generate a fully themed study guide built on the 4 W's content.",
+    description: "Upload this week's CCF Weekly Guide PDF and share it instantly in your meeting room — or generate a fully themed study guide built on the 4 W's content.",
     bgColor: "bg-purple-50",
     iconColor: "text-purple-500",
     badge: "CCF Ready",

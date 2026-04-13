@@ -93,7 +93,7 @@ export function PromptLibrary({ onSelectPrompt, children }: PromptLibraryProps) 
             </Badge>
           </DialogTitle>
           <DialogDescription className="text-sm text-gray-600">
-            Browse pre-written prompts organized by ministry categories to discover what you can ask the AI.
+            Browse pre-written prompts organized by ministry categories to discover what biblical guidance and support you can access.
           </DialogDescription>
         </DialogHeader>
         

@@ -2,12 +2,12 @@ const steps = [
   {
     number: 1,
     title: "Load Your Study Guide",
-    description: "Upload this week's CCF 4 W's PDF, paste the content directly, or pick a group type and let AI generate a complete, tailored study guide in seconds."
+    description: "Upload this week's CCF 4 W's PDF, paste the content directly, or pick a group type and get a complete, tailored study guide generated in seconds."
   },
   {
     number: 2,
     title: "Choose How to Use It",
-    description: "Share the guide as-is in your meeting room, or have AI rebuild it into a themed study for your specific group — Men's, Women's, Youth, Couples, and more."
+    description: "Share the guide as-is in your meeting room, or rebuild it into a themed study for your specific group — Men's, Women's, Youth, Couples, and more."
   },
   {
     number: 3,

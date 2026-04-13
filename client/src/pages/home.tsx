@@ -12,10 +12,10 @@ import { Check } from "lucide-react";
 
 const dGroupHighlights = [
   "CCF 4 W's PDF upload and sharing",
-  "AI study guides for 8 group types",
+  "Study guides for 8 D-Group types",
   "Free video meeting rooms — no sign-in required",
   "Bible games to engage your group",
-  "Sermon notes and PDF upload for AI study generation",
+  "Sermon notes and PDF upload for study guide generation",
   "Missions Partner Program — get a public profile for your mission trip",
   "Mission and outreach study resources",
   "Equip your group to share their faith",

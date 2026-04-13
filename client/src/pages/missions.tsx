@@ -243,7 +243,7 @@ export default function MissionsDirectory() {
         <div className="mt-16 bg-gradient-to-br from-blue-700 to-indigo-700 rounded-2xl p-8 text-white text-center">
           <h2 className="text-2xl font-bold mb-3">Use F-AI-TH-Connect for Your Mission</h2>
           <p className="text-blue-100 mb-6 max-w-xl mx-auto">
-            Generate Bible studies, run D-Group sessions, prepare sermon materials, and disciple your team — all with AI grounded in Scripture. Free for every missions group.
+            Generate Bible studies, run D-Group sessions, prepare sermon materials, and disciple your team — all grounded in Scripture. Free for every missions group.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button

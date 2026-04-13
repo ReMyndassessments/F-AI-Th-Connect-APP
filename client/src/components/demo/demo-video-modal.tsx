@@ -26,13 +26,13 @@ interface DemoVideoModalProps {
 const demoSteps = [
   {
     title: "Welcome to F-AI-TH-Connect",
-    description: "Your comprehensive Christian AI companion for spiritual growth, Bible study, and interactive faith-based learning",
+    description: "Your comprehensive biblical ministry companion for spiritual growth, Bible study, and interactive faith-based learning",
     icon: MessageCircle,
     bgColor: "bg-blue-500",
     duration: 3000
   },
   {
-    title: "AI Chat with Biblical Wisdom",
+    title: "Ministry Desk with Biblical Wisdom",
     description: "Ask spiritual questions and receive Scripture-grounded responses with biblical references and practical guidance",
     icon: Heart,
     bgColor: "bg-amber-500",
@@ -103,7 +103,7 @@ const demoSteps = [
   },
   {
     title: "Start Your Spiritual Journey",
-    description: "Experience the full power of AI-powered biblical guidance, Bible study tools, and interactive learning",
+    description: "Experience the full power of biblical guidance, Bible study tools, and interactive faith-based learning",
     icon: ArrowRight,
     bgColor: "bg-gradient-to-r from-blue-500 to-amber-500",
     duration: 4000

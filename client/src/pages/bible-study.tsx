@@ -500,7 +500,7 @@ export default function BibleStudy() {
     setActiveType(null);
     setMeetingRoom(null);
     if (ccfFileInputRef.current) ccfFileInputRef.current.value = '';
-    toast({ title: 'CCF 4 W\'s Guide loaded!', description: 'Ready to share in a meeting room. You can also generate an AI study from it below.' });
+    toast({ title: 'CCF 4 W\'s Guide loaded!', description: 'Ready to share in a meeting room. You can also generate a study guide from it below.' });
   };
 
   const use4WsTemplate = () => {
@@ -603,7 +603,7 @@ Closing Prayer`;
       setActiveType(null);
       setMeetingRoom(null);
       setCcfBlocked(false);
-      toast({ title: 'CCF Weekly Guide loaded!', description: 'The 4 W\'s guide is ready — create your meeting room to share it, or generate an AI study below.' });
+      toast({ title: 'CCF Weekly Guide loaded!', description: 'The 4 W\'s guide is ready — create your meeting room to share it, or generate a study guide below.' });
     } catch {
       // Any failure at all → show manual download UI, never a raw error
       setCcfBlocked(true);
@@ -750,7 +750,7 @@ Closing Prayer`;
             <span className="text-2xl flex-shrink-0">💡</span>
             <div className="flex-1">
               <p className="text-sm text-blue-800 font-medium">Pro tip for group leaders</p>
-              <p className="text-sm text-blue-700 mt-0.5">Upload your latest CCF 4W's, sermon notes or a Scripture passage, enter your group name, then tap your group type. The AI will generate a complete, tailored study guide in seconds.</p>
+              <p className="text-sm text-blue-700 mt-0.5">Upload your latest CCF 4W's, sermon notes or a Scripture passage, enter your group name, then tap your group type. A complete, tailored study guide will be generated in seconds.</p>
             </div>
             <button onClick={() => setShowTip(false)} className="text-blue-400 hover:text-blue-600 flex-shrink-0">
               <X className="w-4 h-4"/>
@@ -803,7 +803,7 @@ Closing Prayer`;
                 </button>
               )}
             </div>
-            <p className="text-xs text-indigo-500 text-center">Or scroll down to let AI generate a guide using the study type buttons below.</p>
+            <p className="text-xs text-indigo-500 text-center">Or scroll down to generate a guide using the study type buttons below.</p>
           </div>
 
           {/* File Upload — shown when a file is attached */}
@@ -941,7 +941,7 @@ Closing Prayer`;
               <Check className="w-5 h-5 text-white flex-shrink-0"/>
               <div>
                 <h2 className="text-white font-bold text-lg">4 W's Guide Ready — What's Next?</h2>
-                <p className="text-green-100 text-xs">Choose to share it directly, or let AI build a themed study from it</p>
+                <p className="text-green-100 text-xs">Choose to share it directly, or generate a themed study from it</p>
               </div>
             </div>
 
@@ -981,7 +981,7 @@ Closing Prayer`;
                   <h3 className="font-bold text-gray-900 text-sm">Generate a themed study</h3>
                 </div>
                 <p className="text-xs text-gray-500 leading-relaxed">
-                  AI will build a tailored guide for your group type, using the 4 W's content as its foundation. Pick your group:
+                  Get a tailored guide for your group type, built on the 4 W's content as its foundation. Pick your group:
                 </p>
                 <div className="grid grid-cols-2 gap-2">
                   {STUDY_TYPES.map(type => (
@@ -1118,7 +1118,7 @@ Closing Prayer`;
               <h2 className="text-white font-bold text-lg">D-Group Video Meeting Room</h2>
               <p className="text-white text-opacity-80 text-sm">
                 {studySource === 'ccf-4ws' ? 'CCF 4 W\'s guide will be shared with your group'
-                  : studySource === 'generated' ? 'AI study guide will be shared with your group'
+                  : studySource === 'generated' ? 'Study guide will be shared with your group'
                   : studySource === 'template' ? 'Your 4 W\'s template will be shared with your group'
                   : studySource === 'uploaded' ? 'Your uploaded guide will be shared with your group'
                   : 'Create a free video room and optionally attach a study guide'}
@@ -1127,7 +1127,7 @@ Closing Prayer`;
             {studySource && (
               <span className="ml-auto flex-shrink-0 bg-white bg-opacity-20 text-white text-xs font-semibold px-2 py-1 rounded-lg whitespace-nowrap">
                 {studySource === 'ccf-4ws' ? '📋 CCF 4W\'s ✓'
-                  : studySource === 'generated' ? '✨ AI Guide ✓'
+                  : studySource === 'generated' ? '✨ Study Guide ✓'
                   : studySource === 'uploaded' ? '📄 Uploaded ✓'
                   : '✏️ Template ✓'}
               </span>
@@ -1160,7 +1160,7 @@ Closing Prayer`;
                     {studySource === 'generated' && 'Your custom study guide will be accessible to all participants inside the meeting room'}
                     {studySource === 'template' && 'Your filled-in 4 W\'s template will be shared with all participants'}
                     {studySource === 'uploaded' && 'Your uploaded file will be accessible to all participants inside the meeting room'}
-                    {!studySource && 'Load the CCF guide, use a template, or generate an AI study above to attach one'}
+                    {!studySource && 'Load the CCF guide, use a template, or generate a study guide above to attach one'}
                   </p>
                 </div>
                 {studySource && (
@@ -1216,7 +1216,7 @@ Closing Prayer`;
                 <div className="bg-green-50 border border-green-200 rounded-xl px-3 py-2 text-xs text-green-700 font-semibold flex items-center gap-2">
                   <Check className="w-3.5 h-3.5 text-green-600 flex-shrink-0"/>
                   {studySource === 'ccf-4ws' ? '📋 CCF 4 W\'s guide included in this room'
-                    : studySource === 'generated' ? '✨ AI study guide included in this room'
+                    : studySource === 'generated' ? '✨ Study guide included in this room'
                     : studySource === 'uploaded' ? '📄 Your uploaded guide included in this room'
                     : '✏️ 4 W\'s template included in this room'}
                 </div>
