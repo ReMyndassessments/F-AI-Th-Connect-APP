@@ -134,15 +134,15 @@ const faqs: FAQItem[] = [
   },
   {
     question: "What is the Missions Partner Program?",
-    answer: "The Missions Partner Program lets short-term and long-term mission groups register on F-AI-TH-Connect to receive a free public profile page at /missions/[your-group]. Your profile shows your mission story, prayer needs, fundraising goal, and a Give button linked to your own donation page (Airwallex, GCash, PayPal, etc.). Supporters can find your team, pray for you, and give directly to your trip. Visit the Missions Partners directory at /missions or go to /missions/register to apply."
+    answer: "The Missions Partner Program lets short-term and long-term mission groups register on F-AI-TH-Connect to receive a free public profile page at /missions/[your-group]. Your profile shows your mission story, prayer needs, fundraising goal, and your contact details so supporters can reach out to you directly. F-AI-TH-Connect does not collect or process donations — all giving is arranged personally between supporters and the mission team. Visit the Missions Partners directory at /missions or go to /missions/register to apply."
   },
   {
-    question: "How does the 90/10 giving model work for missions?",
-    answer: "Registered mission groups voluntarily commit to allocating 90% of received gifts to their mission work and 10% to sustaining F-AI-TH-Connect — keeping the platform free for all believers worldwide. This is not a system-enforced deduction; your gift goes directly to the group's donation page. The split is the group's voluntary commitment when they join the program. Donors are always informed of this model transparently on each profile page."
+    question: "How do supporters give to a mission group on F-AI-TH-Connect?",
+    answer: "F-AI-TH-Connect does not collect or process donations for mission groups. Each mission profile includes the group leader's contact details. Supporters who want to give simply reach out directly to the group — all giving is arranged personally between the supporter and the mission team. This keeps the platform legally clean and ensures every peso goes exactly where the supporter intends."
   },
   {
     question: "How does my mission group get approved?",
-    answer: "Fill in the registration form at /missions/register with your group name, leader, church, destination, mission type, dates, your story, prayer needs, fundraising goal, and your donation link. Your submission is reviewed by F-AI-TH-Connect admins. Once approved, your group appears in the public directory at /missions and your profile page goes live at /missions/[your-slug]. You'll receive an email from the admin team to confirm approval."
+    answer: "Fill in the registration form at /missions/register with your group name, leader, church, destination, mission type, dates, your story, and prayer needs. Your submission is reviewed by F-AI-TH-Connect admins. Once approved, your group appears in the public directory at /missions and your profile page goes live at /missions/[your-slug]. You'll receive an email from the admin team to confirm approval."
   }
 ];
 
@@ -631,8 +631,8 @@ export default function Help() {
                   </div>
                   <div className="bg-rose-50 rounded-xl p-4 text-center">
                     <Heart className="w-6 h-6 text-rose-600 mx-auto mb-2" />
-                    <p className="font-semibold text-sm text-rose-900 mb-1">Targeted Giving</p>
-                    <p className="text-xs text-rose-700">Supporters give directly to your mission via your own donation link</p>
+                    <p className="font-semibold text-sm text-rose-900 mb-1">Prayer & Support</p>
+                    <p className="text-xs text-rose-700">Supporters can find your story and reach out to you directly to give and pray</p>
                   </div>
                   <div className="bg-blue-50 rounded-xl p-4 text-center">
                     <Users className="w-6 h-6 text-blue-600 mx-auto mb-2" />
@@ -641,13 +641,13 @@ export default function Help() {
                   </div>
                 </div>
 
-                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-                  <h5 className="font-semibold text-amber-900 mb-2">How the 90/10 Model Works:</h5>
-                  <ul className="text-sm text-amber-800 space-y-1">
-                    <li>• Registered groups voluntarily commit to using 90% of gifts for their mission</li>
-                    <li>• 10% is set aside to sustain F-AI-TH-Connect — keeping it free for everyone</li>
-                    <li>• Your gift goes directly to the group's donation page — no money passes through us</li>
-                    <li>• This is a trust-based commitment, not a system-enforced deduction</li>
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <h5 className="font-semibold text-blue-900 mb-2">How Giving Works — Full Transparency:</h5>
+                  <ul className="text-sm text-blue-800 space-y-1">
+                    <li>• F-AI-TH-Connect does not collect or process any donations</li>
+                    <li>• Each profile shows the group leader's contact details</li>
+                    <li>• Supporters reach out directly to the mission team to give</li>
+                    <li>• All giving is arranged personally between supporter and group</li>
                   </ul>
                 </div>
 

@@ -275,10 +275,10 @@ export default function MissionsTab() {
             ))}
           </div>
 
-          {/* Transparency reminder */}
+          {/* Policy reminder */}
           <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6 text-sm text-blue-800">
-            <p className="font-semibold mb-1">Giving Model Reminder</p>
-            <p>The platform uses a <strong>90/10 model</strong> — 90% goes directly to each missions group, 10% sustains this ministry. Donors are shown this transparently and can also choose to cover the 10% themselves. Approved groups are responsible for honoring this commitment.</p>
+            <p className="font-semibold mb-1">Platform Policy Reminder</p>
+            <p>F-AI-TH-Connect does <strong>not collect or process donations</strong> for mission groups. Approved profiles display the group leader's contact details so supporters can reach out directly. All giving is arranged personally between supporters and the mission team, outside this platform.</p>
           </div>
 
           {/* Groups list */}

@@ -70,7 +70,7 @@ function MissionCard({ group, onClick }: { group: MissionGroup; onClick: () => v
 
         <div className="flex items-center justify-between">
           <span className="text-xs text-gray-400">
-            {group.donationLink ? "Accepts donations" : "Prayer support"}
+            {"Contact leader to give"}
           </span>
           <Button size="sm" variant="ghost" className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 p-0 h-auto font-medium text-sm">
             View Mission <ArrowRight className="w-3.5 h-3.5 ml-1" />

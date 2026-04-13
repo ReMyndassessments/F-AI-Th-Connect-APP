@@ -9,7 +9,7 @@ const PRESET_AMOUNTS = [100, 200, 500, 1000, 2000];
 
 const SCRIPTURE_SUCCESS = "Each of you should give what you have decided in your heart to give, not reluctantly or under compulsion, for God loves a cheerful giver. — 2 Corinthians 9:7";
 
-type GivingType = "once" | "monthly" | "missions";
+type GivingType = "once" | "monthly";
 
 interface DonationModalProps {
   open: boolean;
@@ -27,13 +27,11 @@ function DonationModal({ open, givingType, onClose }: DonationModalProps) {
   const typeLabel: Record<GivingType, string> = {
     once: "Give Once",
     monthly: "Give Monthly",
-    missions: "Support Missions",
   };
 
   const typeDesc: Record<GivingType, string> = {
-    once: "A one-time act of worship and generosity.",
-    monthly: "Commit to ongoing partnership with the mission.",
-    missions: "Directly fuel global outreach and discipleship.",
+    once: "A one-time love gift to keep F-AI-TH-Connect free for everyone.",
+    monthly: "Become an ongoing ministry partner — sustaining the platform month by month.",
   };
 
   function handleGive() {
@@ -240,7 +238,7 @@ export default function SupportPage() {
             onClick={scrollToDonate}
             className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-xl text-sm font-bold shadow hover:shadow-md transition-all active:scale-95"
           >
-            <Heart className="w-4 h-4" /> Support Missions
+            <Heart className="w-4 h-4" /> Give a Love Gift
           </button>
         </div>
       </header>
@@ -263,7 +261,7 @@ export default function SupportPage() {
           </FadeIn>
           <FadeIn delay={200}>
             <p className="text-lg sm:text-xl text-blue-100 max-w-2xl mx-auto leading-relaxed">
-              F-AI-TH-Connect is a free AI-powered ministry platform built for Bible study communities, D-Groups, and missions outreach — grounded in Scripture, designed for real people.
+              F-AI-TH-Connect is a free ministry platform built for Bible study communities, D-Groups, and missions outreach — grounded in Scripture, designed for real people.
             </p>
           </FadeIn>
           <FadeIn delay={300}>
@@ -272,7 +270,7 @@ export default function SupportPage() {
                 onClick={scrollToDonate}
                 className="flex items-center justify-center gap-2 px-7 py-3.5 bg-amber-400 hover:bg-amber-300 text-blue-950 rounded-xl font-bold text-base shadow-lg transition-all active:scale-95"
               >
-                <Heart className="w-5 h-5" /> 💝 Support Missions
+                <Heart className="w-5 h-5" /> 💝 Give a Love Gift
               </button>
               <button
                 onClick={() => setLocation("/bible")}
@@ -435,7 +433,7 @@ export default function SupportPage() {
             </div>
           </FadeIn>
 
-          <div className="mt-12 grid sm:grid-cols-3 gap-6">
+          <div className="mt-12 grid sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
             {/* Give Once */}
             <FadeIn delay={100}>
               <div className="relative flex flex-col rounded-3xl border-2 border-gray-100 bg-white shadow-sm hover:shadow-md hover:border-indigo-200 transition-all overflow-hidden group">
@@ -483,28 +481,6 @@ export default function SupportPage() {
               </div>
             </FadeIn>
 
-            {/* Support Missions */}
-            <FadeIn delay={300}>
-              <div className="relative flex flex-col rounded-3xl border-2 border-gray-100 bg-white shadow-sm hover:shadow-md hover:border-amber-200 transition-all overflow-hidden group">
-                <div className="bg-gradient-to-br from-amber-50 to-yellow-50 p-6 pb-4">
-                  <div className="w-12 h-12 bg-amber-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                    <Globe className="w-6 h-6 text-amber-600" />
-                  </div>
-                  <h3 className="font-bold text-gray-900 text-lg">Support Missions</h3>
-                  <p className="text-gray-500 text-sm mt-1 leading-relaxed">
-                    Directly fund global outreach, discipleship, and unreached communities.
-                  </p>
-                </div>
-                <div className="p-6 pt-4 mt-auto">
-                  <button
-                    onClick={() => openModal("missions")}
-                    className="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold transition-all active:scale-95"
-                  >
-                    💝 Support Missions
-                  </button>
-                </div>
-              </div>
-            </FadeIn>
           </div>
 
           <FadeIn delay={400}>
@@ -527,16 +503,16 @@ export default function SupportPage() {
               <span className="text-xs font-bold uppercase tracking-widest text-amber-400">Missions Partner Program</span>
               <h2 className="text-3xl sm:text-4xl font-bold mt-2 mb-4">Going on Mission? Get Your Own Page.</h2>
               <p className="text-blue-200 max-w-2xl mx-auto leading-relaxed">
-                Register your short-term or long-term missions group and we will give you a dedicated public profile page with a shareable link — so supporters can find you and give specifically to your trip.
+                Register your short-term or long-term missions group and we will give you a free dedicated public profile page with a shareable link — so supporters can find your story, pray for you, and connect with you directly to give.
               </p>
             </div>
           </FadeIn>
 
           <div className="grid sm:grid-cols-3 gap-6 mb-10">
             {[
-              { emoji: "🌏", title: "Your Own Profile Page", desc: "A public listing at /missions/[your-group] you can share anywhere — social media, email, church bulletins." },
-              { emoji: "💝", title: "Targeted Giving", desc: "Supporters give directly to your mission, not just a general fund. Every peso goes where you need it." },
-              { emoji: "🤝", title: "Ambassador Community", desc: "You spread F-AI-TH-Connect to churches and groups you meet — helping us reach more while we help fund your trip." },
+              { emoji: "🌏", title: "Your Own Profile Page", desc: "A free public listing at /missions/[your-group] you can share anywhere — social media, email, church bulletins." },
+              { emoji: "🙏", title: "Prayer & Visibility", desc: "Supporters can find your story, read your prayer needs, and lift you up — reaching people who want to intercede for you." },
+              { emoji: "📬", title: "Direct Connection", desc: "Your contact details are on your profile so supporters can reach you personally to give, pray, or get involved." },
             ].map(({ emoji, title, desc }) => (
               <FadeIn key={title} delay={100}>
                 <div className="bg-white/10 rounded-2xl p-5 border border-white/20 text-center">
@@ -547,36 +523,6 @@ export default function SupportPage() {
               </FadeIn>
             ))}
           </div>
-
-          {/* Transparency Model */}
-          <FadeIn delay={200}>
-            <div className="bg-white/10 rounded-2xl border border-white/20 p-6 mb-8">
-              <h3 className="font-bold text-white text-lg mb-1 flex items-center gap-2">
-                <span>📊</span> How the Giving Model Works — Full Transparency
-              </h3>
-              <p className="text-blue-200 text-sm mb-5 leading-relaxed">
-                We believe stewardship means being completely open about where every peso goes.
-              </p>
-              <div className="grid sm:grid-cols-2 gap-4 mb-4">
-                <div className="bg-green-500/20 border border-green-400/30 rounded-xl p-4 text-center">
-                  <div className="text-4xl font-extrabold text-green-300 mb-1">90%</div>
-                  <p className="font-semibold text-green-200 text-sm">Goes directly to the mission</p>
-                  <p className="text-green-300 text-xs mt-1">Straight to the group's trip costs, outreach, and ministry work.</p>
-                </div>
-                <div className="bg-blue-500/20 border border-blue-400/30 rounded-xl p-4 text-center">
-                  <div className="text-4xl font-extrabold text-blue-300 mb-1">10%</div>
-                  <p className="font-semibold text-blue-200 text-sm">Sustains this ministry</p>
-                  <p className="text-blue-300 text-xs mt-1">Covers servers, AI costs, and video infrastructure — keeping the platform free for everyone.</p>
-                </div>
-              </div>
-              <div className="bg-amber-500/20 border border-amber-400/30 rounded-xl p-4 text-center text-sm text-amber-200 italic">
-                "F-AI-TH-Connect is always free. A small portion of each gift helps sustain this platform so others around the world can access it freely."
-              </div>
-              <p className="text-blue-300 text-xs mt-3 text-center">
-                Donors also have the option to cover the 10% themselves — sending 100% directly to the mission.
-              </p>
-            </div>
-          </FadeIn>
 
           <FadeIn delay={300}>
             <div className="text-center">
@@ -683,7 +629,7 @@ export default function SupportPage() {
                 onClick={scrollToDonate}
                 className="flex items-center justify-center gap-2 px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-xl font-bold shadow-lg hover:shadow-xl transition-all active:scale-95"
               >
-                <Heart className="w-5 h-5" /> 💝 Support Missions
+                <Heart className="w-5 h-5" /> 💝 Give a Love Gift
               </button>
               <button
                 onClick={() => setLocation("/bible")}

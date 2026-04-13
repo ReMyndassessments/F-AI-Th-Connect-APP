@@ -147,7 +147,7 @@ export default function MissionsRegister() {
         <div className="grid sm:grid-cols-3 gap-4 mb-10">
           {[
             { icon: Globe, title: "Your Own Page", desc: "A public profile at /missions/[your-group] you can share anywhere" },
-            { icon: Heart, title: "Targeted Giving", desc: "Supporters give directly to your mission, not just the platform" },
+            { icon: Heart, title: "Direct Connection", desc: "Supporters contact you personally — all giving is arranged directly between you and your donors" },
             { icon: Users, title: "Grow Together", desc: "Connect with a community of groups all bringing the Word to the lost" },
           ].map(({ icon: Icon, title, desc }) => (
             <div key={title} className="bg-white rounded-xl p-4 shadow-sm border border-blue-100 text-center">

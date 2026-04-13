@@ -17,7 +17,7 @@ const steps = [
   {
     number: 4,
     title: "Support Missions in the Field",
-    description: "Register your mission group to get a public profile page. Supporters can find your team, pray for your trip, and give directly to your mission — completely free to join."
+    description: "Register your mission group to get a free public profile page. Supporters can find your story, pray for your trip, and reach out to you directly — no platform fees, no middleman."
   }
 ];
 

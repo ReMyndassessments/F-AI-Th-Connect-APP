@@ -1,9 +1,8 @@
-import { useState } from "react";
 import { useLocation, useParams } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import {
   Globe, MapPin, User, Church, Calendar, Heart, Share2, ArrowLeft,
-  BookOpen, CheckCircle, Info, ExternalLink, Loader2, Home
+  BookOpen, CheckCircle, ExternalLink, Loader2, Home, Mail
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -25,90 +24,11 @@ const TYPE_COLORS: Record<string, string> = {
   ongoing: "bg-amber-100 text-amber-700",
 };
 
-type SplitChoice = "90-10" | "100";
-
-function DonationSplitSelector({
-  choice,
-  onChange,
-}: {
-  choice: SplitChoice;
-  onChange: (c: SplitChoice) => void;
-}) {
-  return (
-    <div className="space-y-3">
-      <p className="text-sm font-semibold text-gray-800">How would you like to give?</p>
-      <div className="grid gap-2">
-        <button
-          type="button"
-          onClick={() => onChange("90-10")}
-          className={`w-full text-left rounded-xl border-2 px-4 py-3 transition-all ${
-            choice === "90-10"
-              ? "border-blue-500 bg-blue-50"
-              : "border-gray-200 hover:border-blue-300"
-          }`}
-        >
-          <div className="flex items-start gap-3">
-            <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 mt-0.5 flex items-center justify-center ${
-              choice === "90-10" ? "border-blue-500 bg-blue-500" : "border-gray-300"
-            }`}>
-              {choice === "90-10" && <div className="w-2 h-2 rounded-full bg-white" />}
-            </div>
-            <div>
-              <p className="font-semibold text-gray-900 text-sm">
-                Recommended — Support both this mission and F-AI-TH-Connect
-              </p>
-              <p className="text-xs text-gray-500 mt-0.5">
-                This group has committed to allocating 10% of received gifts toward sustaining this ministry.
-              </p>
-            </div>
-          </div>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => onChange("100")}
-          className={`w-full text-left rounded-xl border-2 px-4 py-3 transition-all ${
-            choice === "100"
-              ? "border-blue-500 bg-blue-50"
-              : "border-gray-200 hover:border-blue-300"
-          }`}
-        >
-          <div className="flex items-start gap-3">
-            <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 mt-0.5 flex items-center justify-center ${
-              choice === "100" ? "border-blue-500 bg-blue-500" : "border-gray-300"
-            }`}>
-              {choice === "100" && <div className="w-2 h-2 rounded-full bg-white" />}
-            </div>
-            <div>
-              <p className="font-semibold text-gray-900 text-sm">
-                100% to this mission (I'll give to the platform separately)
-              </p>
-              <p className="text-xs text-gray-500 mt-0.5">
-                You can support F-AI-TH-Connect directly at any time from the Support page.
-              </p>
-            </div>
-          </div>
-        </button>
-      </div>
-
-      {choice === "90-10" && (
-        <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 flex gap-2">
-          <Info className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-          <p className="text-xs text-amber-800">
-            Your gift goes directly to this group's donation link. F-AI-TH-Connect is always free. Registered missions groups voluntarily set aside a portion of their gifts to keep this platform free for believers worldwide — a commitment they make when they join the program.
-          </p>
-        </div>
-      )}
-    </div>
-  );
-}
 
 export default function MissionsProfile() {
   const { slug } = useParams<{ slug: string }>();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  const [splitChoice, setSplitChoice] = useState<SplitChoice>("90-10");
-  const [showDonatePanel, setShowDonatePanel] = useState(false);
 
   const { data: group, isLoading, isError } = useQuery<MissionGroup>({
     queryKey: ["/api/missions", slug],
@@ -128,13 +48,6 @@ export default function MissionsProfile() {
     } else {
       toast({ title: "Copy this link", description: url });
     }
-  }
-
-  function handleGive() {
-    if (!group?.donationLink) return;
-    const url = group.donationLink;
-    if (!/^https?:\/\//i.test(url)) return;
-    window.open(url, "_blank", "noopener,noreferrer");
   }
 
   if (isLoading) {
@@ -241,36 +154,6 @@ export default function MissionsProfile() {
               </Card>
             )}
 
-            {/* Transparency Model — shown when group has a donation link */}
-            {group.donationLink && (
-              <Card className="border-0 shadow-sm">
-                <CardContent className="pt-6 pb-6 px-6">
-                  <h2 className="text-xl font-bold text-gray-900 mb-2 flex items-center gap-2">
-                    <Info className="w-5 h-5 text-blue-600" /> How Giving Works
-                  </h2>
-                  <p className="text-gray-500 text-sm mb-5 leading-relaxed">
-                    We believe in full transparency. Registered missions groups commit to voluntarily setting aside a portion of received gifts to help sustain this platform — this is their commitment, not a fee we deduct.
-                  </p>
-
-                  <div className="grid sm:grid-cols-2 gap-4 mb-5">
-                    <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
-                      <div className="text-4xl font-extrabold text-green-700 mb-1">90%</div>
-                      <p className="font-semibold text-green-800 text-sm">For the Mission</p>
-                      <p className="text-green-700 text-xs mt-1">{group.groupName} commits to using 90% of received gifts for trip costs, outreach, and ministry work.</p>
-                    </div>
-                    <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-center">
-                      <div className="text-4xl font-extrabold text-blue-700 mb-1">10%</div>
-                      <p className="font-semibold text-blue-800 text-sm">Sustains This Ministry</p>
-                      <p className="text-blue-700 text-xs mt-1">The group voluntarily sets this aside to keep F-AI-TH-Connect free for believers worldwide.</p>
-                    </div>
-                  </div>
-
-                  <p className="text-xs text-gray-400 text-center italic">
-                    "Your gift goes directly to the group's donation page. This split reflects their voluntary commitment — not a platform deduction."
-                  </p>
-                </CardContent>
-              </Card>
-            )}
           </div>
 
           {/* Sidebar */}
@@ -286,51 +169,28 @@ export default function MissionsProfile() {
               </Card>
             )}
 
-            {/* Give button */}
-            {group.donationLink ? (
-              <Card className="border-2 border-blue-500 shadow-md">
-                <CardContent className="pt-6 pb-6 px-5 space-y-4">
-                  <div className="text-center">
-                    <div className="text-3xl mb-2">💝</div>
-                    <h3 className="font-bold text-gray-900 text-lg">Support This Mission</h3>
-                    <p className="text-gray-500 text-sm mt-1">Give as an act of worship — not obligation.</p>
-                  </div>
-
-                  {showDonatePanel ? (
-                    <div className="space-y-4">
-                      <DonationSplitSelector choice={splitChoice} onChange={setSplitChoice} />
-                      <Button
-                        onClick={handleGive}
-                        className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-3"
-                      >
-                        <Heart className="w-4 h-4 mr-2" />
-                        Give to {group.groupName.split(" ").slice(0, 3).join(" ")}
-                        <ExternalLink className="w-3.5 h-3.5 ml-2 opacity-75" />
-                      </Button>
-                      <p className="text-xs text-gray-400 text-center">
-                        You will be taken to the group's secure payment page.
-                      </p>
-                    </div>
-                  ) : (
-                    <Button
-                      onClick={() => setShowDonatePanel(true)}
-                      className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-3"
-                    >
-                      <Heart className="w-4 h-4 mr-2" />
-                      Give to This Mission
-                    </Button>
-                  )}
-                </CardContent>
-              </Card>
-            ) : (
-              <Card className="border-0 shadow-sm">
-                <CardContent className="pt-5 pb-5 px-5 text-center">
-                  <div className="text-2xl mb-2">🙏</div>
-                  <p className="font-semibold text-gray-900 text-sm mb-1">Pray for This Group</p>
-                  <p className="text-gray-500 text-xs">This group hasn't set up a donation link yet, but your prayers are powerful and needed.</p>
-                </CardContent>
-              </Card>
-            )}
+            {/* Contact to Give */}
+            <Card className="border-2 border-blue-200 shadow-md">
+              <CardContent className="pt-6 pb-6 px-5 space-y-4">
+                <div className="text-center">
+                  <div className="text-3xl mb-2">💝</div>
+                  <h3 className="font-bold text-gray-900 text-lg">Want to Support This Mission?</h3>
+                  <p className="text-gray-500 text-sm mt-1 leading-relaxed">
+                    Reach out directly to the group leader. All giving is arranged personally between you and the mission team — F-AI-TH-Connect does not collect or process donations.
+                  </p>
+                </div>
+                <a
+                  href={`mailto:${group.email}?subject=Support for ${encodeURIComponent(group.groupName)}`}
+                  className="flex items-center justify-center gap-2 w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-bold transition-all hover:opacity-90 active:scale-95"
+                >
+                  <Mail className="w-4 h-4" />
+                  Contact {group.leaderName}
+                </a>
+                <p className="text-xs text-gray-400 text-center italic">
+                  This opens your email app with the group leader's address pre-filled.
+                </p>
+              </CardContent>
+            </Card>
 
             {/* Share */}
             <Button
@@ -360,9 +220,9 @@ export default function MissionsProfile() {
               <CardContent className="pt-5 pb-5 px-5 space-y-2">
                 {[
                   "Reviewed and approved by F-AI-TH-Connect",
-                  "This group has committed to the 90/10 giving model",
-                  "Gifts go directly to the group's donation page",
-                  "Your support is an act of worship",
+                  "F-AI-TH-Connect does not collect or process donations",
+                  "All giving is arranged directly between you and the mission team",
+                  "Your prayers and support are an act of worship",
                 ].map(fact => (
                   <div key={fact} className="flex items-start gap-2">
                     <CheckCircle className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
@@ -379,7 +239,7 @@ export default function MissionsProfile() {
           <BookOpen className="w-10 h-10 mx-auto mb-4 text-blue-200" />
           <h2 className="text-2xl font-bold mb-3">Equip Your Own D-Group</h2>
           <p className="text-blue-100 mb-6 max-w-xl mx-auto">
-            F-AI-TH-Connect is a free AI-powered platform for Bible study, D-Group discipleship, and missions preparation. Every tool you need — completely free.
+            F-AI-TH-Connect is a free ministry platform for Bible study, D-Group discipleship, and missions preparation. Every tool you need — completely free.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button
