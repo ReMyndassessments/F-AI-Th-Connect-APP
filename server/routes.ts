@@ -790,8 +790,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const contentDisposition = fileRes.headers.get('content-disposition');
       res.set('Content-Type', contentType);
       if (contentDisposition) res.set('Content-Disposition', contentDisposition);
-      // Short cache — 1 hour max so a new week's guide appears promptly
-      res.set('Cache-Control', 'public, max-age=3600');
+      // No caching — always serve the freshest weekly guide
+      res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
 
       const buffer = await fileRes.arrayBuffer();
       res.send(Buffer.from(buffer));

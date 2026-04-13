@@ -565,7 +565,7 @@ Closing Prayer`;
   const loadCcfWeekly = async () => {
     setIsLoadingCcf(true);
     try {
-      const res = await fetch('/api/dgroups/ccf-weekly');
+      const res = await fetch(`/api/dgroups/ccf-weekly?t=${Date.now()}`);
       const contentType = res.headers.get('content-type') || '';
 
       // If anything other than a real file comes back (HTML error page, blocked, etc.) → manual mode
