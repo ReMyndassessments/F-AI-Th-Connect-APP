@@ -421,7 +421,7 @@ export default function SupportPage() {
       <section ref={donateRef} id="donate" className="py-24 px-4 bg-white scroll-mt-16">
         <div className="max-w-4xl mx-auto text-center">
           <FadeIn>
-            <span className="text-xs font-bold uppercase tracking-widest text-amber-600">Support the Mission</span>
+            <span className="text-xs font-bold uppercase tracking-widest text-amber-600">Consider Supporting Us</span>
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mt-2">Fuel the F-AI-TH-Connect Mission</h2>
             <p className="text-gray-500 mt-3 max-w-xl mx-auto leading-relaxed">
               This platform costs real money to run. If it has served you or your group, consider giving — not out of obligation, but as an act of worship.
