@@ -799,7 +799,7 @@ Closing Prayer`;
                 <button onClick={loadCcfWeekly} disabled={isLoadingCcf}
                   className="flex flex-col items-center gap-1.5 p-3 bg-white border-2 border-green-300 hover:border-green-500 rounded-xl text-green-700 hover:text-green-900 transition-all text-sm font-semibold text-center disabled:opacity-50">
                   {isLoadingCcf ? <Loader2 className="w-5 h-5 animate-spin"/> : <span className="text-xl">📥</span>}
-                  <span>{isLoadingCcf ? 'Loading...' : 'CCF Weekly Guide'}<br/><span className="text-xs font-normal text-gray-500">Auto-load this week's CCF guide</span></span>
+                  <span>{isLoadingCcf ? 'Loading...' : 'CCF Weekly 4W\'s Guide'}<br/><span className="text-xs font-normal text-gray-500">Auto-load this week's CCF 4W's guide</span></span>
                 </button>
               )}
             </div>
