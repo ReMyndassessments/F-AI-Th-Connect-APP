@@ -423,8 +423,8 @@ export default function SupportPage() {
           <FadeIn>
             <span className="text-xs font-bold uppercase tracking-widest text-amber-600">Support the Mission</span>
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mt-2">Fuel the F-AI-TH-Connect Mission</h2>
-            <p className="text-gray-500 mt-3 max-w-2xl mx-auto leading-relaxed">
-              Every Bible study generated, every D-Group session hosted, every Scripture-grounded response delivered — each one has a real cost. Server hosting, biblical guidance services, ElevenLabs voice technology, and global infrastructure all require ongoing funding. Your love gift keeps F-AI-TH-Connect free for D-Group leaders, missionaries, and believers in unreached regions who could never afford a subscription.
+            <p className="text-gray-500 mt-3 max-w-xl mx-auto leading-relaxed">
+              This platform costs real money to run. If it has served you or your group, consider giving — not out of obligation, but as an act of worship.
             </p>
             <div className="inline-block mt-4 px-5 py-2 bg-amber-50 border border-amber-200 rounded-xl">
               <p className="text-amber-800 text-sm font-medium italic">
