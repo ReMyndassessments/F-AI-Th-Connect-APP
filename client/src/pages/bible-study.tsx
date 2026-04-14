@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 interface StudyType {
   id: string;
   label: string;
+  subtitle?: string;
   emoji: string;
   color: string;
   defaultGroup: string;
@@ -702,6 +703,7 @@ STYLE: Intellectually serious, gracious, and non-defensive. Engage objections ch
   {
     id: 'leaders',
     label: 'Leadership & Disciplemakers',
+    subtitle: 'For D-Group Leaders',
     emoji: '🧭',
     color: 'from-purple-500 to-violet-700',
     defaultGroup: 'D-Group Leaders',
@@ -1632,7 +1634,10 @@ Closing Prayer`;
                         ? <Loader2 className="w-4 h-4 animate-spin flex-shrink-0"/>
                         : <span className="text-base leading-none">{type.emoji}</span>
                       }
-                      <span className="leading-tight text-left">{type.label}</span>
+                      <span className="leading-tight text-left">
+                        {type.label}
+                        {type.subtitle && <span className="block text-white/70 font-normal text-[10px] leading-tight mt-0.5">{type.subtitle}</span>}
+                      </span>
                     </button>
                   ))}
                 </div>
@@ -1663,7 +1668,10 @@ Closing Prayer`;
                     ? <Loader2 className="w-6 h-6 animate-spin"/>
                     : <span className="text-2xl">{type.emoji}</span>
                   }
-                  <span className="leading-tight">{type.label}</span>
+                  <span className="leading-tight">
+                    {type.label}
+                    {type.subtitle && <span className="block text-white/70 font-normal text-xs leading-tight mt-0.5">{type.subtitle}</span>}
+                  </span>
                 </button>
               ))}
             </div>
