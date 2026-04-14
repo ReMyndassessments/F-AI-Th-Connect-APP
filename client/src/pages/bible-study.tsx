@@ -21,6 +21,7 @@ const STUDY_TYPES: StudyType[] = [
   {
     id: 'mens',
     label: "Men's Bible Study",
+    subtitle: "Men's issues in today's world",
     emoji: '👨',
     color: 'from-blue-500 to-blue-700',
     defaultGroup: 'Fishers of Men',
@@ -62,6 +63,7 @@ STYLE: Man-to-man honesty. Address issues men actually face but don't talk about
   {
     id: 'womens',
     label: "Women's Bible Study",
+    subtitle: "Women's faith & everyday life",
     emoji: '👩',
     color: 'from-rose-400 to-pink-600',
     defaultGroup: 'Daughters of the King',
@@ -144,6 +146,7 @@ STYLE: Speak as one professional to another. Address real boardroom and business
   {
     id: 'sundayschool',
     label: 'Sunday School',
+    subtitle: 'For church-based classes',
     emoji: '🧒',
     color: 'from-yellow-400 to-orange-500',
     defaultGroup: 'Sunday School Class',
@@ -190,6 +193,7 @@ STYLE: Energetic, simple, story-driven. Use analogies children understand (schoo
   {
     id: 'youth',
     label: 'Youth Group',
+    subtitle: 'For teens & young adults',
     emoji: '🎯',
     color: 'from-violet-500 to-purple-700',
     defaultGroup: 'Youth Group',
@@ -236,6 +240,7 @@ STYLE: Talk to teens, not at them. Be honest about doubt and struggle. Use curre
   {
     id: 'couples',
     label: 'Couples Group',
+    subtitle: 'Growing together in faith',
     emoji: '💑',
     color: 'from-red-400 to-rose-600',
     defaultGroup: 'Couples Bible Study',
@@ -282,6 +287,7 @@ STYLE: Warm, safe, and honest. Create space for vulnerability. Address real marr
   {
     id: 'seniors',
     label: 'Senior Adults',
+    subtitle: 'Wisdom, faith & life experience',
     emoji: '🌿',
     color: 'from-green-500 to-emerald-700',
     defaultGroup: 'Senior Bible Fellowship',
@@ -326,6 +332,7 @@ STYLE: Respectful, dignified, reflective. Honor their lifetime of experience. Do
   {
     id: 'general',
     label: 'General / Mixed Group',
+    subtitle: 'For any small group',
     emoji: '✝️',
     color: 'from-amber-500 to-amber-700',
     defaultGroup: 'Bible Study Group',
