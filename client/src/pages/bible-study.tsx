@@ -103,6 +103,7 @@ STYLE: Woman-to-woman empathy. Address the emotional weight women carry. Make Sc
   {
     id: 'business',
     label: 'Business & Marketplace',
+    subtitle: 'Faith in the workplace',
     emoji: '💼',
     color: 'from-slate-500 to-gray-700',
     defaultGroup: 'Marketplace Ministers',
@@ -370,6 +371,7 @@ STYLE: Inclusive, accessible, and deep. Works for both new and mature believers.
   {
     id: 'missions',
     label: 'Missions & Evangelism',
+    subtitle: 'For mission-minded groups',
     emoji: '🌏',
     color: 'from-teal-500 to-cyan-700',
     defaultGroup: 'Sent Ones',
@@ -436,6 +438,7 @@ STYLE: Bold and compelling. Speak with Great Commission urgency. Address real fe
   {
     id: 'newbelievers',
     label: 'New Believers / First Steps',
+    subtitle: 'For new Christians',
     emoji: '🌱',
     color: 'from-lime-400 to-green-600',
     defaultGroup: 'First Steps Group',
@@ -502,6 +505,7 @@ STYLE: Gentle, warm, and clear. Never assume prior knowledge. Avoid Christian in
   {
     id: 'prayer',
     label: 'Prayer & Intercession',
+    subtitle: 'For prayer-focused groups',
     emoji: '🙏',
     color: 'from-indigo-400 to-blue-700',
     defaultGroup: 'Prayer Warriors',
@@ -570,6 +574,7 @@ STYLE: Reverent, expectant, and faith-filled. Teach and then practice. Move from
   {
     id: 'campus',
     label: 'Campus & College Ministry',
+    subtitle: 'For university students',
     emoji: '🎓',
     color: 'from-sky-400 to-blue-600',
     defaultGroup: 'Campus Fellowship',
@@ -636,6 +641,7 @@ STYLE: Intellectually honest and culturally aware. Don't dodge hard questions. R
   {
     id: 'apologetics',
     label: 'Apologetics Group',
+    subtitle: 'Answering hard questions',
     emoji: '💡',
     color: 'from-orange-400 to-amber-600',
     defaultGroup: 'Truth Seekers',
