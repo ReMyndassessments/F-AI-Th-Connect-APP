@@ -658,176 +658,210 @@ Closing Prayer`;
 
   const printAsPdf = () => {
     const studyType = STUDY_TYPES.find(s => s.id === activeType);
-    const guideTitle = `${studyType?.label || 'Bible Study Guide'}`;
+    const guideTitle = studyType?.label || 'Bible Study Guide';
     const groupLabel = groupName || 'D-Group';
     const dateStr = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-    // Section colour map for the 4 W's and common headings
+    // Section accent colours — keyed on first word of the heading
     const SECTION_COLORS: Record<string, string> = {
-      WORSHIP:  '#7c3aed',
-      WELCOME:  '#2563eb',
-      WORD:     '#059669',
-      WORKS:    '#d97706',
-      WORD2:    '#059669',
+      WORSHIP: '#6d28d9',
+      WELCOME: '#1d4ed8',
+      WORD:    '#065f46',
+      WORKS:   '#92400e',
+      DISCUSSION: '#1d4ed8',
+      WEEKLY:  '#1e3a8a',
+      PRAYER:  '#1e3a8a',
+      REFLECT: '#065f46',
     };
-    const DEFAULT_COLOR = '#1e3a8a';
-    const sectionColor = (label: string) =>
-      SECTION_COLORS[label.trim().split(/\s/)[0]] ?? DEFAULT_COLOR;
+    const headingColor = (text: string) => {
+      const first = text.trim().split(/[\s:]/)[0].toUpperCase();
+      return SECTION_COLORS[first] ?? '#1e3a8a';
+    };
 
-    // Parse lines into typed tokens
+    // ── Tokenise the raw text ──────────────────────────────────────────
     const lines = result.split('\n');
-    type Token =
-      | { t: 'section'; text: string }
-      | { t: 'subtitle'; text: string }
-      | { t: 'bullet'; text: string }
-      | { t: 'scripture'; text: string }
-      | { t: 'blank' }
-      | { t: 'para'; text: string };
 
-    // Collect the first lines as cover info (before the first real section heading)
-    let coverLines: string[] = [];
-    let contentStart = 0;
-    for (let i = 0; i < Math.min(lines.length, 8); i++) {
+    // Extract optional cover lines (4Ws tag, sermon title, date) that come
+    // before the first ALL-CAPS section heading.
+    const coverLines: string[] = [];
+    let bodyStart = 0;
+    for (let i = 0; i < Math.min(lines.length, 10); i++) {
       const t = lines[i].trim();
-      if (t && /^[A-Z][A-Z\s\-–:]{2,}$/.test(t) && i > 0) { contentStart = i; break; }
-      coverLines.push(t);
-      contentStart = i + 1;
-    }
-    // Strip empty cover lines
-    coverLines = coverLines.filter(Boolean);
-
-    const tokens: Token[] = [];
-    for (let i = contentStart; i < lines.length; i++) {
-      const raw = lines[i];
-      const trimmed = raw.trim();
-      if (!trimmed) { tokens.push({ t: 'blank' }); continue; }
-      // ALL-CAPS section header (WORSHIP, WELCOME, WORD, WORKS, REFLECTION, etc.)
-      if (/^[A-Z][A-Z\s\-–:]{2,}$/.test(trimmed)) {
-        tokens.push({ t: 'section', text: trimmed }); continue;
-      }
-      // Bold sub-label: lines ending with colon or all-bold style starters
-      if (/^(Facilitator|Leader|Note|Tips?|Instruction|Discussion|Objective|Purpose|Goal|Scripture|Verse|Key Verse)\b/i.test(trimmed) || /:\s*$/.test(trimmed)) {
-        tokens.push({ t: 'subtitle', text: trimmed }); continue;
-      }
-      // Numbered or bullet items
-      if (/^(\d+[\.\)]\s|[•·–\-]\s|\*\s)/.test(trimmed)) {
-        tokens.push({ t: 'bullet', text: trimmed }); continue;
-      }
-      // Scripture-looking lines (book + chapter reference)
-      if (/\b(Genesis|Exodus|Leviticus|Numbers|Deuteronomy|Joshua|Judges|Ruth|Samuel|Kings|Chronicles|Ezra|Nehemiah|Esther|Job|Psalm|Psalms|Proverbs|Ecclesiastes|Song|Isaiah|Jeremiah|Lamentations|Ezekiel|Daniel|Hosea|Joel|Amos|Obadiah|Jonah|Micah|Nahum|Habakkuk|Zephaniah|Haggai|Zechariah|Malachi|Matthew|Mark|Luke|John|Acts|Romans|Corinthians|Galatians|Ephesians|Philippians|Colossians|Thessalonians|Timothy|Titus|Philemon|Hebrews|James|Peter|John|Jude|Revelation)\b/i.test(trimmed) && trimmed.length > 30) {
-        tokens.push({ t: 'scripture', text: trimmed }); continue;
-      }
-      tokens.push({ t: 'para', text: trimmed });
+      if (t && i > 0 && /^[A-Z][A-Z\s\-–:]{2,}$/.test(t)) { bodyStart = i; break; }
+      if (t) coverLines.push(t);
+      bodyStart = i + 1;
     }
 
-    // Render tokens to HTML
+    // Build flat HTML — no wrapper divs, let the browser paginate naturally
+    const isAllCapsHeading = (s: string) => /^[A-Z][A-Z\s\-–:]{2,}$/.test(s);
+    const isNumbered      = (s: string) => /^[IVX]+\.\s|^\d+[\.\)]\s/.test(s);
+    const isBullet        = (s: string) => /^[•·\-]\s/.test(s);
+    const isRomanNumeral  = (s: string) => /^[IVX]+\.\s/.test(s);
+
     let bodyHtml = '';
-    let inSection = false;
-    let currentColor = DEFAULT_COLOR;
-    let consecBlanks = 0;
+    let skipBlanks = 0;
 
-    for (const tok of tokens) {
-      if (tok.t === 'blank') {
-        consecBlanks++;
-        if (consecBlanks <= 1) bodyHtml += '<div class="spacer"></div>';
+    for (let i = bodyStart; i < lines.length; i++) {
+      const raw   = lines[i];
+      const trimmed = raw.trim();
+
+      if (!trimmed) {
+        skipBlanks++;
+        // Allow at most one blank line worth of spacing between paragraphs
+        if (skipBlanks === 1) bodyHtml += '\n';
         continue;
       }
-      consecBlanks = 0;
+      skipBlanks = 0;
 
-      if (tok.t === 'section') {
-        if (inSection) bodyHtml += '</div>'; // close previous section block
-        currentColor = sectionColor(tok.text);
-        bodyHtml += `<div class="section-block" style="border-left-color:${currentColor}">`;
-        bodyHtml += `<div class="section-head" style="background:${currentColor}">${tok.text}</div>`;
-        inSection = true;
-      } else if (tok.t === 'subtitle') {
-        bodyHtml += `<p class="subtitle">${tok.text}</p>`;
-      } else if (tok.t === 'bullet') {
-        bodyHtml += `<p class="bullet">${tok.text}</p>`;
-      } else if (tok.t === 'scripture') {
-        bodyHtml += `<blockquote>${tok.text}</blockquote>`;
+      if (isAllCapsHeading(trimmed)) {
+        const color = headingColor(trimmed);
+        bodyHtml += `<h2 style="color:${color};border-bottom:2px solid ${color}">${trimmed}</h2>\n`;
+
+      } else if (isRomanNumeral(trimmed)) {
+        // Roman-numeral sub-section (e.g. "I. Thanksgiving")
+        bodyHtml += `<h3>${trimmed}</h3>\n`;
+
+      } else if (isNumbered(trimmed)) {
+        bodyHtml += `<p class="numbered">${trimmed}</p>\n`;
+
+      } else if (isBullet(trimmed)) {
+        bodyHtml += `<p class="bullet">${trimmed.replace(/^[•·\-]\s/, '• ')}</p>\n`;
+
       } else {
-        bodyHtml += `<p>${tok.text}</p>`;
+        // Regular paragraph — escape HTML special chars minimally
+        bodyHtml += `<p>${trimmed}</p>\n`;
       }
     }
-    if (inSection) bodyHtml += '</div>';
 
-    // Cover block HTML
-    const coverHtml = coverLines.map((line, i) => {
-      if (i === 0 && /^4w/i.test(line)) return `<span class="cover-tag">${line}</span>`;
-      if (i === 1) return `<div class="cover-sermon">${line}</div>`;
-      return `<div class="cover-date">${line}</div>`;
-    }).join('');
+    // ── Cover section ────────────────────────────────────────────────
+    let coverHtml = '';
+    if (coverLines.length) {
+      coverLines.forEach((line, i) => {
+        if (i === 0 && /^4w/i.test(line)) {
+          coverHtml += `<p class="cover-tag">${line}</p>`;
+        } else if (i <= 1) {
+          coverHtml += `<p class="cover-title">${line}</p>`;
+        } else {
+          coverHtml += `<p class="cover-date">${line}</p>`;
+        }
+      });
+    }
 
+    // ── Full HTML document ──────────────────────────────────────────
     const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
   <title>${guideTitle} — ${groupLabel}</title>
   <style>
-    @page { margin: 1.8cm 2cm; }
-    * { box-sizing: border-box; }
-    body { font-family: 'Georgia', serif; font-size: 12.5px; color: #1a1a1a; line-height: 1.75; margin: 0; }
+    @page { size: A4; margin: 2cm 2.2cm 2.2cm; }
 
-    /* ── Page header ── */
-    .page-header { display: flex; justify-content: space-between; align-items: flex-end;
-                   border-bottom: 3px solid #1e3a8a; padding-bottom: 10px; margin-bottom: 6px; }
-    .page-header .brand { font-size: 11px; color: #6b7280; letter-spacing: 0.05em; text-transform: uppercase; }
-    .page-header .guide-name { font-size: 19px; font-weight: 700; color: #1e3a8a; line-height: 1.2; }
-    .page-header .group-name { font-size: 13px; color: #374151; }
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 11pt;
+      line-height: 1.65;
+      color: #111;
+      margin: 0;
+    }
 
-    /* ── Cover block ── */
-    .cover-block { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-                   color: white; border-radius: 8px; padding: 18px 22px; margin: 14px 0 22px; }
-    .cover-tag  { display: inline-block; background: rgba(255,255,255,0.2); border-radius: 4px;
-                  font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
-                  padding: 2px 8px; margin-bottom: 8px; }
-    .cover-sermon { font-size: 17px; font-weight: 700; line-height: 1.3; margin: 4px 0 6px; }
-    .cover-date   { font-size: 11px; opacity: 0.8; letter-spacing: 0.04em; text-transform: uppercase; }
+    /* ── Document header (printed once at top) ── */
+    .doc-header {
+      border-bottom: 2.5pt solid #1e3a8a;
+      padding-bottom: 8pt;
+      margin-bottom: 4pt;
+    }
+    .doc-header h1 {
+      font-size: 18pt;
+      color: #1e3a8a;
+      margin: 0 0 2pt;
+      font-weight: 700;
+    }
+    .doc-header .sub {
+      font-size: 10pt;
+      color: #555;
+    }
 
-    /* ── Section blocks ── */
-    .section-block { border-left: 4px solid #1e3a8a; margin: 20px 0 8px; padding-left: 14px; page-break-inside: avoid; }
-    .section-head  { display: inline-block; color: white; font-size: 11px; font-weight: 700;
-                     letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 12px;
-                     border-radius: 4px; margin-bottom: 10px; }
+    /* ── Cover info block ── */
+    .cover-tag   { font-size: 8pt; font-weight: 700; letter-spacing: .1em;
+                   text-transform: uppercase; color: #6b7280; margin: 14pt 0 2pt; }
+    .cover-title { font-size: 13pt; font-weight: 700; color: #1e3a8a;
+                   margin: 0 0 2pt; line-height: 1.3; }
+    .cover-date  { font-size: 9pt; color: #6b7280; margin: 0 0 16pt;
+                   font-style: italic; }
 
-    /* ── Content ── */
-    p { margin: 5px 0; }
-    p.subtitle { font-weight: 700; color: #374151; margin-top: 10px; }
-    p.bullet   { margin: 4px 0 4px 18px; }
-    p.bullet::before { content: ""; }
-    blockquote { background: #f0f9ff; border-left: 3px solid #3b82f6; margin: 10px 0;
-                 padding: 8px 14px; border-radius: 0 6px 6px 0; font-style: italic;
-                 color: #1e40af; font-size: 12px; }
-    .spacer { height: 6px; }
+    /* ── Section headings (WORSHIP / WELCOME / WORD / WORKS etc.) ── */
+    h2 {
+      font-size: 11pt;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin: 18pt 0 6pt;
+      padding-bottom: 3pt;
+      break-after: avoid;
+    }
+
+    /* ── Roman-numeral sub-sections ── */
+    h3 {
+      font-size: 10.5pt;
+      font-weight: 700;
+      color: #374151;
+      margin: 10pt 0 3pt;
+      break-after: avoid;
+    }
+
+    /* ── Body paragraphs ── */
+    p {
+      margin: 0 0 5pt;
+      orphans: 3;
+      widows: 3;
+    }
+
+    /* ── Numbered questions / points ── */
+    p.numbered {
+      margin: 4pt 0 4pt 16pt;
+      text-indent: -16pt;
+    }
+
+    /* ── Bullet points ── */
+    p.bullet {
+      margin: 3pt 0 3pt 20pt;
+      text-indent: -14pt;
+    }
 
     /* ── Footer ── */
-    .page-footer { margin-top: 28px; padding-top: 8px; border-top: 1px solid #e5e7eb;
-                   font-size: 10px; color: #9ca3af; display: flex; justify-content: space-between; }
+    .doc-footer {
+      margin-top: 20pt;
+      padding-top: 6pt;
+      border-top: 1pt solid #d1d5db;
+      font-size: 8.5pt;
+      color: #9ca3af;
+      display: flex;
+      justify-content: space-between;
+    }
 
     @media print {
       body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .section-block { page-break-inside: avoid; }
+      h2, h3 { break-after: avoid; }
+      p { orphans: 3; widows: 3; }
     }
   </style>
 </head>
 <body>
-  <div class="page-header">
-    <div>
-      <div class="guide-name">${guideTitle}</div>
-      <div class="group-name">${groupLabel}</div>
-    </div>
-    <div class="brand">F-AI-TH-Connect · CCF D-Groups</div>
+
+  <div class="doc-header">
+    <h1>${guideTitle}</h1>
+    <span class="sub">${groupLabel} &nbsp;·&nbsp; F-AI-TH-Connect</span>
   </div>
 
-  ${coverLines.length ? `<div class="cover-block">${coverHtml}</div>` : ''}
+  ${coverHtml}
 
   ${bodyHtml}
 
-  <div class="page-footer">
-    <span>F-AI-TH-Connect — Bringing the Word to the Lost and Unreached</span>
+  <div class="doc-footer">
+    <span>F-AI-TH-Connect &mdash; Bringing the Word to the Lost and Unreached</span>
     <span>${dateStr}</span>
   </div>
+
 </body>
 </html>`;
 
