@@ -115,9 +115,17 @@ export default function Footer() {
               F-AI-TH Connect is a corporate ministry of <span className="text-gray-400 font-medium">ReMynd Student Services</span>.
             </p>
           </div>
-          <p className="text-gray-500 text-sm">
-            Powered by Deepseek • Grounded in Scripture
-          </p>
+          <div className="flex flex-col items-center md:items-end gap-1">
+            <p className="text-gray-500 text-sm">
+              Powered by Deepseek • Grounded in Scripture
+            </p>
+            <button
+              onClick={() => setLocation("/admin/login")}
+              className="text-gray-700 hover:text-gray-500 text-xs transition-colors"
+            >
+              Admin
+            </button>
+          </div>
         </div>
       </div>
     </footer>
