@@ -551,7 +551,7 @@ export default function SupportPage() {
             {[
               { value: "100+", label: "D-Groups Served" },
               { value: "15+", label: "Countries Reached" },
-              { value: "8", label: "Study Types Available" },
+              { value: "14", label: "Study Types Available" },
               { value: "Free", label: "Always & Forever" },
             ].map(({ value, label }) => (
               <FadeIn key={label} delay={100}>

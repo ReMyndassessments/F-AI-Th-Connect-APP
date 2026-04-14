@@ -366,6 +366,280 @@ For each section:
 
 STYLE: Inclusive, accessible, and deep. Works for both new and mature believers. Practical and applicable to everyday life. Quote ALL Bible verses in full.`
   },
+  {
+    id: 'missions',
+    label: 'Missions & Evangelism',
+    emoji: '🌏',
+    color: 'from-teal-500 to-cyan-700',
+    defaultGroup: 'Sent Ones',
+    prompt: (group, topic, hasFile) => `Create a comprehensive Missions & Evangelism Bible Study Guide for the group "${group}"${topic ? ` focused on: ${topic}` : ''} for a one-hour session that equips and inspires mission-minded Christians — whether they are going to the field, supporting missionaries, or learning to share their faith where they live.
+
+${hasFile ? 'IMPORTANT: The user has attached a sermon script or sermon notes above. Use that content as the PRIMARY foundation for this Bible study. Build the study around the themes, Scripture references, and topics from the attached content.' : 'Create a study built around the Great Commission, the heart of God for the nations, and practical evangelism in everyday life.'}
+
+REQUIRED STRUCTURE:
+
+1. GROUP NAME & TITLE
+- Start with "${group}" as a prominent heading
+- Create an inspiring title that captures the Great Commission urgency (e.g., "Sent: Living as Ambassadors in a World That Needs Jesus")
+- Key Verse in full — choose from Acts 1:8, Matthew 28:18-20, Romans 10:14-15, or Isaiah 6:8 (quoted completely with reference and translation)
+- Central message: How God's heart for the nations calls every believer to go, send, or pray
+
+2. ONE-HOUR STUDY PLAN
+- Welcome & Prayer for the Nations: 5 min
+- Teaching: 15 min
+- Discussion: 25 min
+- Application & Commission: 10 min
+- Closing Prayer for the Unreached: 5 min
+
+3. THREE CORE TEACHING SECTIONS
+For each section:
+- Section Title
+- Full Scripture Texts (quoted completely with reference and translation)
+- Teaching Point: 1-2 paragraphs connecting Scripture to the missions call — crossing cultures, sharing across difference, the urgency of the unreached, being a witness in your everyday world
+- Discussion Questions: 3-4 questions about real missions challenges: fear of rejection, cross-cultural awkwardness, how to share Jesus with a Muslim or Buddhist neighbor, supporting missionaries financially and in prayer, short-term vs. long-term calling
+- Practical Application: Specific action this week — adopt an unreached people group in prayer, write to a missionary, share your testimony with one person
+
+4. THE UNREACHED SPOTLIGHT
+- Briefly describe one unreached people group (a general example — e.g., a Central Asian Muslim community, a South Asian Hindu village, a secular urban population)
+- How to pray for them specifically
+- How this group can partner with global missions
+
+5. FINAL CHALLENGE & CLOSING
+- One summarizing Scripture (quoted fully)
+- Commitment: "This week I will take one step toward the Great Commission by ____________"
+- A closing commissioning prayer
+
+STYLE: Bold and compelling. Speak with Great Commission urgency. Address real fears about evangelism with grace. Connect global missions to everyday local obedience. Celebrate that God uses ordinary people. Quote ALL Bible verses in full.`
+  },
+  {
+    id: 'newbelievers',
+    label: 'New Believers / First Steps',
+    emoji: '🌱',
+    color: 'from-lime-400 to-green-600',
+    defaultGroup: 'First Steps Group',
+    prompt: (group, topic, hasFile) => `Create a warm, welcoming New Believers Bible Study Guide for "${group}"${topic ? ` focused on: ${topic}` : ''} designed for people who have recently come to faith in Jesus Christ — within the last few weeks to two years.
+
+${hasFile ? 'IMPORTANT: The user has attached a sermon script or sermon notes above. Use that content as the PRIMARY foundation for this Bible study. Build the study around the themes, Scripture references, and topics from the attached content.' : 'Create a foundational study covering the essentials of new life in Christ — salvation assurance, prayer, Scripture, community, and next steps.'}
+
+REQUIRED STRUCTURE:
+
+1. GROUP NAME & TITLE
+- Start with "${group}" as a warm, welcoming heading
+- Create an encouraging title (e.g., "Welcome Home: Your First Steps with Jesus")
+- Key Verse in full — choose from John 3:16, 2 Corinthians 5:17, Romans 8:1, or Ephesians 2:8-9 (quoted completely with reference and simple translation like NIV or NLT)
+- Central message: You are fully loved, fully forgiven, and you now belong to God's family
+
+2. SESSION PLAN (60 minutes)
+- Warm Welcome & Introductions: 10 min
+- Bible Teaching: 15 min
+- Discussion: 20 min
+- Questions & Answers: 10 min
+- Prayer Together: 5 min
+
+3. THREE FOUNDATIONAL TEACHING SECTIONS
+For each section:
+- Section Title (keep it simple and non-churchy)
+- Full Scripture Texts (quoted completely — use simple, accessible translations)
+- Teaching Point: 1-2 paragraphs explaining the truth clearly to someone brand new to the faith. Avoid jargon. Use everyday language.
+- Discussion Questions: 3-4 questions new believers actually wonder about (Am I really saved? What do I do when I sin? Why read the Bible? How do I pray? Do I have to go to church?)
+- First Step: One simple, doable action (pray for the first time, read one psalm, tell one person about your decision, join a D-Group)
+
+4. COMMON NEW BELIEVER QUESTIONS
+- Address 2-3 questions new Christians commonly ask: What happens if I sin again? Is God disappointed in me? What is the Holy Spirit? Do I have to be baptized?
+- Give clear, compassionate, Scripture-based answers
+- Normalize the journey — faith grows, everyone starts somewhere
+
+5. CLOSING
+- One summarizing Scripture (quoted fully)
+- A simple declaration of faith new believers can say together
+- A gentle, conversational closing prayer
+
+STYLE: Gentle, warm, and clear. Never assume prior knowledge. Avoid Christian insider language — explain everything. Celebrate every step of faith. Make new believers feel welcome, not overwhelmed. Quote ALL Bible verses in full.`
+  },
+  {
+    id: 'prayer',
+    label: 'Prayer & Intercession',
+    emoji: '🙏',
+    color: 'from-indigo-400 to-blue-700',
+    defaultGroup: 'Prayer Warriors',
+    prompt: (group, topic, hasFile) => `Create a deep, Spirit-led Prayer & Intercession Bible Study Guide for "${group}"${topic ? ` focused on: ${topic}` : ''} for a group that gathers primarily to seek God in prayer — whether for their city, the nations, the Church, or personal breakthrough.
+
+${hasFile ? 'IMPORTANT: The user has attached a sermon script or sermon notes above. Use that content as the PRIMARY foundation for this Bible study. Build the study around the themes, Scripture references, and topics from the attached content.' : 'Create a study that teaches biblical intercession, deepens the prayer life, and moves the group into actual corporate prayer.'}
+
+REQUIRED STRUCTURE:
+
+1. GROUP NAME & TITLE
+- Start with "${group}" as a heading
+- Create an inspiring title (e.g., "Standing in the Gap: The Power of Biblical Intercession")
+- Key Verse in full — choose from 1 Timothy 2:1-4, James 5:16, Matthew 6:9-13, or Ephesians 6:18 (quoted completely with reference and translation)
+- Central message: Prayer is not a preparation for the work — prayer IS the work
+
+2. SESSION PLAN (60-75 minutes)
+- Opening Worship & Stillness: 10 min
+- Teaching on Prayer: 15 min
+- Discussion: 15 min
+- Corporate Prayer Time (ACTS format): 20 min
+- Sharing & Closing: 5-10 min
+
+3. THREE TEACHING SECTIONS ON INTERCESSION
+For each section:
+- Section Title
+- Full Scripture Texts (quoted completely with reference and translation)
+- Teaching Point: 1-2 paragraphs on the theology and practice of prayer — persistence in prayer, praying according to God's will, standing in the gap for others, warfare prayer, praying for the lost, praying for nations and governments, praying for the persecuted church
+- Discussion Questions: 3-4 honest questions about prayer (Why do some prayers seem unanswered? How do I pray for someone who doesn't know Jesus? What is spiritual warfare? How do I intercede for my nation?)
+- Prayer Practice: A specific guided prayer exercise for the group to do together
+
+4. ACTS PRAYER GUIDE (for the corporate prayer time)
+Structure a full guided intercession session using:
+- ADORATION: Specific attributes of God to praise with relevant Scriptures
+- CONFESSION: Areas for personal and corporate repentance
+- THANKSGIVING: Specific things to thank God for — including answered prayers
+- SUPPLICATION: Guided prayer points covering: the local church, missionaries in the field, unreached peoples, persecuted believers, national leaders, personal needs in the group
+
+5. CLOSING
+- One summarizing Scripture (quoted fully)
+- A declaration of faith in God's faithfulness to hear and answer prayer
+- A commissioning prayer sending the group out as intercessors
+
+STYLE: Reverent, expectant, and faith-filled. Teach and then practice. Move from instruction to actual prayer. Create space for the Holy Spirit to lead. Encourage both quiet contemplative prayer and bold intercession. Quote ALL Bible verses in full.`
+  },
+  {
+    id: 'campus',
+    label: 'Campus & College Ministry',
+    emoji: '🎓',
+    color: 'from-sky-400 to-blue-600',
+    defaultGroup: 'Campus Fellowship',
+    prompt: (group, topic, hasFile) => `Create a compelling Campus & College Ministry Bible Study for "${group}"${topic ? ` focused on: ${topic}` : ''} for university students (ages 17-25) navigating faith, academics, identity, and calling in a secular academic environment.
+
+${hasFile ? 'IMPORTANT: The user has attached a sermon script or sermon notes above. Use that content as the PRIMARY foundation for this Bible study. Build the study around the themes, Scripture references, and topics from the attached content.' : 'Create a study that addresses the unique pressures and opportunities of university life while grounding students in biblical truth.'}
+
+REQUIRED STRUCTURE:
+
+1. GROUP NAME & TITLE
+- Start with "${group}" as a heading
+- Create a title that connects with university students (e.g., "Unshakeable: Keeping Your Faith When Everything Is Being Questioned")
+- Key Verse in full — choose from Romans 12:2, Daniel 1:8, Proverbs 3:5-6, or 1 Peter 3:15 (quoted completely with reference and translation)
+- The REAL question this study addresses — one every student is wrestling with
+
+2. SESSION PLAN (60-75 minutes)
+- Opener/Icebreaker: 10 min
+- Bible Teaching: 15-20 min
+- Small Group Discussion: 20 min
+- Application & Challenge: 10 min
+- Prayer: 5-10 min
+
+3. THREE TEACHING POINTS
+For each point:
+- A real campus scenario or question that opens the topic (professor challenges faith, roommate conflict, identity pressure, academic stress)
+- Full Scripture Texts (quoted completely with reference and modern translation like NIV or NLT)
+- Teaching Point: 1-2 paragraphs connecting Scripture to actual university life — maintaining faith under intellectual pressure, sexual purity in a hookup culture, finding identity beyond academic performance, navigating friendships across worldviews, using your degree for the Kingdom
+- Discussion Questions: 3-4 honest questions students wrestle with — "Does science disprove God?", "How do I share my faith without being weird?", "What if I fail my exams — does God care?", "How do I stay pure in this environment?"
+- A challenge they can actually do on campus this week
+
+4. FAITH ON CAMPUS SECTION
+- How to engage respectfully with professors and peers who challenge Christianity
+- One practical evangelism approach for university culture (starting spiritual conversations, being a safe person, lifestyle witness)
+- How to stay rooted: Bible reading habits, campus fellowship, accountability
+
+5. CLOSING
+- Summarizing Scripture (quoted fully)
+- One bold campus challenge for the week
+- A prayer for the university, the faculty, and every student not yet reached with the gospel
+
+STYLE: Intellectually honest and culturally aware. Don't dodge hard questions. Respect student intelligence. Engage with real doubts. Show that following Jesus is the most intellectually and personally satisfying life possible. Quote ALL Bible verses in full.`
+  },
+  {
+    id: 'apologetics',
+    label: 'Apologetics Group',
+    emoji: '💡',
+    color: 'from-orange-400 to-amber-600',
+    defaultGroup: 'Truth Seekers',
+    prompt: (group, topic, hasFile) => `Create a rigorous Apologetics Bible Study Guide for "${group}"${topic ? ` focused on: ${topic}` : ''} for a group that wants to engage hard questions about the Christian faith with intellectual honesty, biblical grounding, and gracious confidence.
+
+${hasFile ? 'IMPORTANT: The user has attached a sermon script or sermon notes above. Use that content as the PRIMARY foundation for this Bible study. Build the study around the themes, Scripture references, and topics from the attached content.' : 'Create a study that tackles a major apologetics question — addressing it with Scripture, reason, and grace so members are equipped to give an answer to everyone who asks.'}
+
+REQUIRED STRUCTURE:
+
+1. GROUP NAME & THE QUESTION
+- Start with "${group}" as a heading
+- Name the central apologetics question this study addresses (choose one major question such as: "If God is good, why is there suffering?", "Is Jesus really the only way?", "Can we trust the Bible?", "Doesn't science disprove God?", "What about those who never hear the gospel?")
+- Key Verse in full — 1 Peter 3:15-16 and one other directly relevant passage (both quoted completely with reference and translation)
+- Why this question matters — both for believers' confidence and for conversations with skeptics
+
+2. SESSION PLAN (75 minutes)
+- Opening: The Question on the Table: 10 min
+- Biblical & Logical Foundation: 20 min
+- Discussion & Objections: 25 min
+- How to Have This Conversation: 10 min
+- Prayer for Wisdom & Open Doors: 10 min
+
+3. THREE PILLARS OF A BIBLICAL ANSWER
+For each pillar:
+- The pillar title (e.g., "What the Bible Actually Says", "What Reason and Evidence Show", "What This Means for Real People")
+- Full Scripture Texts (quoted completely with reference and translation)
+- Teaching Point: 1-2 paragraphs building the case — engage the question seriously, present the biblical and logical response, acknowledge what is genuinely hard, and show why the Christian answer is more satisfying than the alternatives
+- Discussion Questions: 3-4 questions that sharpen thinking: "What's the strongest version of the objection?", "How would you respond to a friend who raises this?", "What does this question reveal about what people are really looking for?", "Where does this objection lead if followed to its conclusion?"
+- A counter-question to ask a skeptic that opens dialogue rather than closing it
+
+4. THE CONVERSATION GUIDE
+- How to raise this topic naturally in conversation without being combative
+- How to listen well before answering
+- When to say "I don't know, but let me find out" (intellectual humility as a witness)
+- 2-3 recommended books or resources for going deeper
+
+5. CLOSING
+- One summarizing Scripture (quoted fully)
+- A commissioning statement: "We hold the truth in love"
+- Prayer for wisdom, courage, and open doors to have these conversations
+
+STYLE: Intellectually serious, gracious, and non-defensive. Engage objections charitably. Give the strongest possible version of the Christian answer. Model the tone that wins people rather than arguments. Quote ALL Bible verses in full.`
+  },
+  {
+    id: 'leaders',
+    label: 'Leadership & Disciplemakers',
+    emoji: '🧭',
+    color: 'from-purple-500 to-violet-700',
+    defaultGroup: 'D-Group Leaders',
+    prompt: (group, topic, hasFile) => `Create a challenging Leadership & Disciplemaking Bible Study Guide for "${group}"${topic ? ` focused on: ${topic}` : ''} for D-Group leaders, cell group facilitators, and those being equipped to multiply disciples — people who are not just following Jesus but leading others to do the same.
+
+${hasFile ? 'IMPORTANT: The user has attached a sermon script or sermon notes above. Use that content as the PRIMARY foundation for this Bible study. Build the study around the themes, Scripture references, and topics from the attached content.' : 'Create a study that develops servant leaders who multiply disciples — covering leadership character, disciplemaking methodology, handling conflict, and the vision of multiplication.'}
+
+REQUIRED STRUCTURE:
+
+1. GROUP NAME & TITLE
+- Start with "${group}" as a heading
+- Create a title that captures the weight and privilege of leading others (e.g., "Multiply: The Leader God Uses to Change Generations")
+- Key Verse in full — choose from 2 Timothy 2:2, Mark 10:42-45, Matthew 28:19-20, or John 15:16 (quoted completely with reference and translation)
+- Central message: The most important thing a leader does is reproduce what God has done in them in someone else
+
+2. SESSION PLAN (75 minutes)
+- Check-in: How is your group? 10 min
+- Leadership Teaching: 20 min
+- Discussion: 25 min
+- Accountability & Application: 15 min
+- Prayer for Each Other's Groups: 5 min
+
+3. THREE LEADERSHIP TEACHING SECTIONS
+For each section:
+- Section Title
+- Full Scripture Texts (quoted completely with reference and translation)
+- Teaching Point: 1-2 paragraphs on the practical realities of leading a D-Group or small group — servant leadership vs. positional authority, facilitating discussion without dominating it, handling the member who dominates or the member who never shares, caring for people in crisis, maintaining your own spiritual health while leading others, the multiplication vision (discipling someone who will disciple someone)
+- Discussion Questions: 3-4 honest leadership questions: "What do you do when a group member challenges your authority?", "How do you love someone in your group who is difficult?", "What are the signs that a group is healthy vs. stagnant?", "How do you raise up the next leader in your group?"
+- Leadership Challenge: One specific leadership action to take with your group this week
+
+4. THE MULTIPLICATION VISION
+- The 2 Timothy 2:2 principle: faithful people who teach others also
+- What it practically looks like to identify and develop an emerging leader in your group
+- How to cast vision for your group members to eventually lead their own groups
+- Celebrating the fruit of multiplied disciples
+
+5. CLOSING
+- One summarizing Scripture (quoted fully)
+- Leader's Commitment: "As a leader, this week I will invest in ____________ by ____________"
+- A prayer specifically for each leader's group — that it would grow, go deep, and multiply
+
+STYLE: Leader-to-leader directness. Respect their experience while challenging their growth edges. Address the loneliness and pressure of leading. Remind them they are under-shepherds of the Great Shepherd. Inspire multiplication. Quote ALL Bible verses in full.`
+  },
 ];
 
 // =====================================================================
