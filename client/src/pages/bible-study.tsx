@@ -658,46 +658,176 @@ Closing Prayer`;
 
   const printAsPdf = () => {
     const studyType = STUDY_TYPES.find(s => s.id === activeType);
-    const title = `${studyType?.label || 'Bible Study Guide'} — ${groupName || 'D-Group'}`;
+    const guideTitle = `${studyType?.label || 'Bible Study Guide'}`;
+    const groupLabel = groupName || 'D-Group';
+    const dateStr = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-    // Convert plain text to formatted HTML
-    const bodyHtml = result
-      .split('\n')
-      .map(line => {
-        const trimmed = line.trim();
-        if (!trimmed) return '<br/>';
-        // All-caps section headers (e.g. WORSHIP, WELCOME, WORD, WORKS)
-        if (/^[A-Z][A-Z\s\-–:]{3,}$/.test(trimmed)) {
-          return `<h2>${trimmed}</h2>`;
-        }
-        // Bold lines that start with a number or bullet
-        if (/^(\d+[\.\)]\s|•\s|-\s|\*\s)/.test(trimmed)) {
-          return `<p class="bullet">${trimmed}</p>`;
-        }
-        return `<p>${trimmed}</p>`;
-      })
-      .join('');
+    // Section colour map for the 4 W's and common headings
+    const SECTION_COLORS: Record<string, string> = {
+      WORSHIP:  '#7c3aed',
+      WELCOME:  '#2563eb',
+      WORD:     '#059669',
+      WORKS:    '#d97706',
+      WORD2:    '#059669',
+    };
+    const DEFAULT_COLOR = '#1e3a8a';
+    const sectionColor = (label: string) =>
+      SECTION_COLORS[label.trim().split(/\s/)[0]] ?? DEFAULT_COLOR;
+
+    // Parse lines into typed tokens
+    const lines = result.split('\n');
+    type Token =
+      | { t: 'section'; text: string }
+      | { t: 'subtitle'; text: string }
+      | { t: 'bullet'; text: string }
+      | { t: 'scripture'; text: string }
+      | { t: 'blank' }
+      | { t: 'para'; text: string };
+
+    // Collect the first lines as cover info (before the first real section heading)
+    let coverLines: string[] = [];
+    let contentStart = 0;
+    for (let i = 0; i < Math.min(lines.length, 8); i++) {
+      const t = lines[i].trim();
+      if (t && /^[A-Z][A-Z\s\-–:]{2,}$/.test(t) && i > 0) { contentStart = i; break; }
+      coverLines.push(t);
+      contentStart = i + 1;
+    }
+    // Strip empty cover lines
+    coverLines = coverLines.filter(Boolean);
+
+    const tokens: Token[] = [];
+    for (let i = contentStart; i < lines.length; i++) {
+      const raw = lines[i];
+      const trimmed = raw.trim();
+      if (!trimmed) { tokens.push({ t: 'blank' }); continue; }
+      // ALL-CAPS section header (WORSHIP, WELCOME, WORD, WORKS, REFLECTION, etc.)
+      if (/^[A-Z][A-Z\s\-–:]{2,}$/.test(trimmed)) {
+        tokens.push({ t: 'section', text: trimmed }); continue;
+      }
+      // Bold sub-label: lines ending with colon or all-bold style starters
+      if (/^(Facilitator|Leader|Note|Tips?|Instruction|Discussion|Objective|Purpose|Goal|Scripture|Verse|Key Verse)\b/i.test(trimmed) || /:\s*$/.test(trimmed)) {
+        tokens.push({ t: 'subtitle', text: trimmed }); continue;
+      }
+      // Numbered or bullet items
+      if (/^(\d+[\.\)]\s|[•·–\-]\s|\*\s)/.test(trimmed)) {
+        tokens.push({ t: 'bullet', text: trimmed }); continue;
+      }
+      // Scripture-looking lines (book + chapter reference)
+      if (/\b(Genesis|Exodus|Leviticus|Numbers|Deuteronomy|Joshua|Judges|Ruth|Samuel|Kings|Chronicles|Ezra|Nehemiah|Esther|Job|Psalm|Psalms|Proverbs|Ecclesiastes|Song|Isaiah|Jeremiah|Lamentations|Ezekiel|Daniel|Hosea|Joel|Amos|Obadiah|Jonah|Micah|Nahum|Habakkuk|Zephaniah|Haggai|Zechariah|Malachi|Matthew|Mark|Luke|John|Acts|Romans|Corinthians|Galatians|Ephesians|Philippians|Colossians|Thessalonians|Timothy|Titus|Philemon|Hebrews|James|Peter|John|Jude|Revelation)\b/i.test(trimmed) && trimmed.length > 30) {
+        tokens.push({ t: 'scripture', text: trimmed }); continue;
+      }
+      tokens.push({ t: 'para', text: trimmed });
+    }
+
+    // Render tokens to HTML
+    let bodyHtml = '';
+    let inSection = false;
+    let currentColor = DEFAULT_COLOR;
+    let consecBlanks = 0;
+
+    for (const tok of tokens) {
+      if (tok.t === 'blank') {
+        consecBlanks++;
+        if (consecBlanks <= 1) bodyHtml += '<div class="spacer"></div>';
+        continue;
+      }
+      consecBlanks = 0;
+
+      if (tok.t === 'section') {
+        if (inSection) bodyHtml += '</div>'; // close previous section block
+        currentColor = sectionColor(tok.text);
+        bodyHtml += `<div class="section-block" style="border-left-color:${currentColor}">`;
+        bodyHtml += `<div class="section-head" style="background:${currentColor}">${tok.text}</div>`;
+        inSection = true;
+      } else if (tok.t === 'subtitle') {
+        bodyHtml += `<p class="subtitle">${tok.text}</p>`;
+      } else if (tok.t === 'bullet') {
+        bodyHtml += `<p class="bullet">${tok.text}</p>`;
+      } else if (tok.t === 'scripture') {
+        bodyHtml += `<blockquote>${tok.text}</blockquote>`;
+      } else {
+        bodyHtml += `<p>${tok.text}</p>`;
+      }
+    }
+    if (inSection) bodyHtml += '</div>';
+
+    // Cover block HTML
+    const coverHtml = coverLines.map((line, i) => {
+      if (i === 0 && /^4w/i.test(line)) return `<span class="cover-tag">${line}</span>`;
+      if (i === 1) return `<div class="cover-sermon">${line}</div>`;
+      return `<div class="cover-date">${line}</div>`;
+    }).join('');
 
     const html = `<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <title>${title}</title>
+  <title>${guideTitle} — ${groupLabel}</title>
   <style>
-    @page { margin: 2cm; }
-    body { font-family: Georgia, serif; font-size: 13px; color: #1a1a1a; line-height: 1.7; }
-    h1 { font-size: 20px; color: #1e3a8a; border-bottom: 2px solid #1e3a8a; padding-bottom: 8px; margin-bottom: 20px; }
-    h2 { font-size: 15px; font-weight: 700; color: #1e3a8a; margin-top: 22px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
-    p { margin: 4px 0; }
-    p.bullet { margin-left: 16px; }
-    .meta { font-size: 11px; color: #555; margin-bottom: 24px; }
-    br { display: block; margin: 4px 0; }
+    @page { margin: 1.8cm 2cm; }
+    * { box-sizing: border-box; }
+    body { font-family: 'Georgia', serif; font-size: 12.5px; color: #1a1a1a; line-height: 1.75; margin: 0; }
+
+    /* ── Page header ── */
+    .page-header { display: flex; justify-content: space-between; align-items: flex-end;
+                   border-bottom: 3px solid #1e3a8a; padding-bottom: 10px; margin-bottom: 6px; }
+    .page-header .brand { font-size: 11px; color: #6b7280; letter-spacing: 0.05em; text-transform: uppercase; }
+    .page-header .guide-name { font-size: 19px; font-weight: 700; color: #1e3a8a; line-height: 1.2; }
+    .page-header .group-name { font-size: 13px; color: #374151; }
+
+    /* ── Cover block ── */
+    .cover-block { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+                   color: white; border-radius: 8px; padding: 18px 22px; margin: 14px 0 22px; }
+    .cover-tag  { display: inline-block; background: rgba(255,255,255,0.2); border-radius: 4px;
+                  font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+                  padding: 2px 8px; margin-bottom: 8px; }
+    .cover-sermon { font-size: 17px; font-weight: 700; line-height: 1.3; margin: 4px 0 6px; }
+    .cover-date   { font-size: 11px; opacity: 0.8; letter-spacing: 0.04em; text-transform: uppercase; }
+
+    /* ── Section blocks ── */
+    .section-block { border-left: 4px solid #1e3a8a; margin: 20px 0 8px; padding-left: 14px; page-break-inside: avoid; }
+    .section-head  { display: inline-block; color: white; font-size: 11px; font-weight: 700;
+                     letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 12px;
+                     border-radius: 4px; margin-bottom: 10px; }
+
+    /* ── Content ── */
+    p { margin: 5px 0; }
+    p.subtitle { font-weight: 700; color: #374151; margin-top: 10px; }
+    p.bullet   { margin: 4px 0 4px 18px; }
+    p.bullet::before { content: ""; }
+    blockquote { background: #f0f9ff; border-left: 3px solid #3b82f6; margin: 10px 0;
+                 padding: 8px 14px; border-radius: 0 6px 6px 0; font-style: italic;
+                 color: #1e40af; font-size: 12px; }
+    .spacer { height: 6px; }
+
+    /* ── Footer ── */
+    .page-footer { margin-top: 28px; padding-top: 8px; border-top: 1px solid #e5e7eb;
+                   font-size: 10px; color: #9ca3af; display: flex; justify-content: space-between; }
+
+    @media print {
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .section-block { page-break-inside: avoid; }
+    }
   </style>
 </head>
 <body>
-  <h1>${title}</h1>
-  <p class="meta">Generated by F-AI-TH-Connect · ${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+  <div class="page-header">
+    <div>
+      <div class="guide-name">${guideTitle}</div>
+      <div class="group-name">${groupLabel}</div>
+    </div>
+    <div class="brand">F-AI-TH-Connect · CCF D-Groups</div>
+  </div>
+
+  ${coverLines.length ? `<div class="cover-block">${coverHtml}</div>` : ''}
+
   ${bodyHtml}
+
+  <div class="page-footer">
+    <span>F-AI-TH-Connect — Bringing the Word to the Lost and Unreached</span>
+    <span>${dateStr}</span>
+  </div>
 </body>
 </html>`;
 
@@ -709,7 +839,7 @@ Closing Prayer`;
     win.document.write(html);
     win.document.close();
     win.focus();
-    setTimeout(() => { win.print(); }, 400);
+    setTimeout(() => { win.print(); }, 500);
   };
 
   const createMeetingRoom = async () => {
