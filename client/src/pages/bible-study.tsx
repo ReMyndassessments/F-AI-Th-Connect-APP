@@ -865,15 +865,32 @@ Closing Prayer`;
 </body>
 </html>`;
 
-    const win = window.open('', '_blank');
-    if (!win) {
-      toast({ title: 'Pop-up blocked', description: 'Please allow pop-ups for this site to print/save as PDF.' });
+    // Use a hidden iframe so the print dialog opens without a visible HTML tab
+    const iframe = document.createElement('iframe');
+    iframe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:0;border:none;opacity:0;pointer-events:none;';
+    document.body.appendChild(iframe);
+
+    const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+    if (!iframeDoc) {
+      document.body.removeChild(iframe);
+      toast({ title: 'Print failed', description: 'Unable to open print dialog. Please try the Save button instead.' });
       return;
     }
-    win.document.write(html);
-    win.document.close();
-    win.focus();
-    setTimeout(() => { win.print(); }, 500);
+
+    iframeDoc.open();
+    iframeDoc.write(html);
+    iframeDoc.close();
+
+    // Wait for fonts / content to load before printing
+    setTimeout(() => {
+      try {
+        iframe.contentWindow?.focus();
+        iframe.contentWindow?.print();
+      } finally {
+        // Remove the iframe a moment after the dialog appears
+        setTimeout(() => { document.body.removeChild(iframe); }, 2000);
+      }
+    }, 600);
   };
 
   const createMeetingRoom = async () => {
