@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,6 +23,9 @@ import { promptLibrary, type PromptCategory, type Prompt, searchPrompts } from "
 interface PromptLibraryProps {
   onSelectPrompt: (promptText: string) => void;
   children: React.ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  defaultCategory?: string;
 }
 
 const categoryIcons: Record<string, React.ComponentType<any>> = {
@@ -36,11 +39,18 @@ const categoryIcons: Record<string, React.ComponentType<any>> = {
   "youth-ministry": Target
 };
 
-export function PromptLibrary({ onSelectPrompt, children }: PromptLibraryProps) {
+export function PromptLibrary({ onSelectPrompt, children, open, onOpenChange, defaultCategory }: PromptLibraryProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState(defaultCategory ?? "all");
   const [favorites, setFavorites] = useState<string[]>([]);
+
+  const isDialogOpen = open !== undefined ? open : isOpen;
+  const handleOpenChange = (v: boolean) => { setIsOpen(v); onOpenChange?.(v); };
+
+  useEffect(() => {
+    if (open) { setSelectedCategory(defaultCategory ?? "all"); setSearchQuery(""); }
+  }, [open, defaultCategory]);
 
   // Get prompts for the selected category
   const getCategoryPrompts = () => {
@@ -79,7 +89,7 @@ export function PromptLibrary({ onSelectPrompt, children }: PromptLibraryProps) 
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isDialogOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>

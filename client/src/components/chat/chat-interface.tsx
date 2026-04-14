@@ -5,9 +5,19 @@ import { Send, Loader2, BookOpen, AlertTriangle } from "lucide-react";
 import MessageBubble from "@/components/chat/message-bubble";
 import TypingIndicator from "@/components/chat/typing-indicator";
 import { PromptLibrary } from "@/components/chat/prompt-library";
-
 import FileUpload from "@/components/chat/file-upload";
 import type { Message } from "@/lib/chat-api";
+
+const PROMPT_CATEGORIES = [
+  { id: 'ministry-leadership', icon: '👥', name: 'Ministry Leadership', label: 'Pastors & church leaders', color: 'from-blue-500 to-indigo-600' },
+  { id: 'mens-ministry', icon: '💪', name: "Men's Ministry", label: "Faith & men's issues", color: 'from-slate-500 to-blue-700' },
+  { id: 'womens-ministry', icon: '🌸', name: "Women's Ministry", label: 'Encouragement & calling', color: 'from-rose-400 to-pink-600' },
+  { id: 'missions-outreach', icon: '🌍', name: 'Missions & Outreach', label: 'Evangelism & community', color: 'from-teal-500 to-cyan-700' },
+  { id: 'church-planting', icon: '🏛️', name: 'Church Planting', label: 'Starting & growing churches', color: 'from-amber-500 to-orange-600' },
+  { id: 'health-wellness', icon: '🙏', name: 'Health & Wellness', label: 'Body, mind & spirit', color: 'from-emerald-500 to-green-700' },
+  { id: 'personal-growth', icon: '📖', name: 'Personal Growth', label: 'Deeper faith & study', color: 'from-purple-500 to-violet-700' },
+  { id: 'youth-ministry', icon: '🎯', name: 'Youth Ministry', label: 'Teens & young adults', color: 'from-violet-400 to-purple-600' },
+];
 
 interface ChatInterfaceProps {
   messages: Message[];
@@ -29,7 +39,11 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
   const [fileContent, setFileContent] = useState("");
   const [spellCheckSuggestions, setSpellCheckSuggestions] = useState<SpellCheckSuggestion[]>([]);
   const [isSystemPrompt, setIsSystemPrompt] = useState(false);
+  const [libOpen, setLibOpen] = useState(false);
+  const [libCategory, setLibCategory] = useState("all");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const openLibrary = (categoryId: string) => { setLibCategory(categoryId); setLibOpen(true); };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -242,46 +256,61 @@ IMPORTANT: Start your response with a prominent heading that displays the group 
       </div>
       
       {/* Chat Messages */}
-      <div className="h-80 sm:h-96 overflow-y-auto mobile-scroll mobile-keyboard-safe p-3 sm:p-6 space-y-3 sm:space-y-4">
+      <div className="h-[480px] sm:h-[520px] overflow-y-auto mobile-scroll mobile-keyboard-safe p-3 sm:p-4 space-y-3 sm:space-y-4">
         {messages.length === 0 ? (
-          <div className="text-center py-4 sm:py-8">
-            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-              <span className="text-white font-bold text-lg sm:text-xl">✝</span>
+          <div className="py-4 sm:py-6 px-2">
+            {/* Header */}
+            <div className="text-center mb-4">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-blue-500 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                <span className="text-white font-bold text-lg sm:text-xl">✝</span>
+              </div>
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-1">Welcome to F-AI-TH-Connect</h3>
+              <p className="text-gray-500 text-xs sm:text-sm px-2">
+                Biblical guidance, prayer support, and spiritual encouragement — type a question below or choose a topic to get started.
+              </p>
             </div>
-            <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">Welcome to F-AI-TH-Connect</h3>
-            <p className="text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base px-2">
-              I'm here to provide biblical guidance, prayer support, and spiritual encouragement. 
-              How can I help you in your faith journey today?
-            </p>
-            <div className="space-y-2 px-2">
-              {/* First row: Original 4 buttons */}
-              <div className="flex flex-wrap gap-2 justify-center">
+
+            {/* Quick topic chips */}
+            <div className="flex flex-wrap gap-2 justify-center mb-4">
+              <button onClick={() => handleSystemPrompt("I'm feeling anxious about my future. What does the Bible say about worry?")} className="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-full text-xs font-medium hover:bg-blue-100 transition-colors">Anxiety & worry</button>
+              <button onClick={() => handleSystemPrompt("How can I deepen my relationship with God?")} className="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-full text-xs font-medium hover:bg-blue-100 transition-colors">Spiritual growth</button>
+              <button onClick={() => handleSystemPrompt("Can you help me with a prayer for my family?")} className="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-full text-xs font-medium hover:bg-blue-100 transition-colors">Prayer requests</button>
+              <button onClick={() => handleSystemPrompt("When someone has hurt my feelings or made an inappropriate comment in person or during Bible study, how can I respond in a Christ-like manner? Please provide biblical guidance for gracious, wise responses that honor God. Here is my situation:")} className="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-full text-xs font-medium hover:bg-blue-100 transition-colors">Godly responses</button>
+            </div>
+
+            {/* Prompt Library section */}
+            <div className="bg-gradient-to-br from-indigo-50 to-blue-50 border border-indigo-200 rounded-2xl p-4">
+              <div className="flex items-center justify-between mb-1">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <BookOpen className="w-4 h-4 text-white" />
+                  </div>
+                  <div className="text-left">
+                    <h4 className="font-semibold text-gray-900 text-sm leading-tight">Prompt Library</h4>
+                    <p className="text-xs text-gray-500 leading-tight">35 ready-made prompts</p>
+                  </div>
+                </div>
                 <button
-                  onClick={() => handleSystemPrompt("I'm feeling anxious about my future. What does the Bible say about worry?")}
-                  className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
+                  onClick={() => openLibrary('all')}
+                  className="text-xs bg-indigo-600 text-white px-3 py-1.5 rounded-lg hover:bg-indigo-700 transition-colors font-medium flex-shrink-0"
                 >
-                  Anxiety and worry
-                </button>
-                <button
-                  onClick={() => handleSystemPrompt("How can I deepen my relationship with God?")}
-                  className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
-                >
-                  Spiritual growth
-                </button>
-                <button
-                  onClick={() => handleSystemPrompt("Can you help me with a prayer for my family?")}
-                  className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
-                >
-                  Prayer requests
-                </button>
-                <button
-                  onClick={() => handleSystemPrompt("When someone has hurt my feelings or made an inappropriate comment in person or during Bible study, how can I respond in a Christ-like manner? Please provide biblical guidance for gracious, wise responses that honor God. Here is my situation:")}
-                  className="bg-blue-50 text-blue-600 px-2 sm:px-3 py-2 rounded-lg text-xs sm:text-sm hover:bg-blue-100 transition-colors touch-target mobile-tap"
-                >
-                  Godly responses
+                  Browse all →
                 </button>
               </div>
-              
+              <p className="text-xs text-gray-500 mb-3 mt-2">Not sure what to ask? Pick a ministry category below to see ready-made prompts:</p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {PROMPT_CATEGORIES.map(cat => (
+                  <button
+                    key={cat.id}
+                    onClick={() => openLibrary(cat.id)}
+                    className={`flex flex-col items-center gap-1 p-2.5 rounded-xl text-white text-center shadow-sm hover:shadow-md transition-all active:scale-95 bg-gradient-to-br ${cat.color}`}
+                  >
+                    <span className="text-lg leading-none">{cat.icon}</span>
+                    <span className="font-semibold text-xs leading-tight">{cat.name}</span>
+                    <span className="text-white/70 text-[10px] leading-tight">{cat.label}</span>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         ) : (
@@ -356,7 +385,12 @@ IMPORTANT: Start your response with a prominent heading that displays the group 
           </div>
           
           <div className="flex items-center space-x-1 sm:space-x-2">
-            <PromptLibrary onSelectPrompt={handlePromptSelect}>
+            <PromptLibrary
+              onSelectPrompt={handlePromptSelect}
+              open={libOpen}
+              onOpenChange={setLibOpen}
+              defaultCategory={libCategory}
+            >
               <Button
                 type="button"
                 variant="outline"
