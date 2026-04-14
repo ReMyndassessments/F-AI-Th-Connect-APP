@@ -374,7 +374,28 @@ STYLE: Inclusive, accessible, and deep. Works for both new and mature believers.
     defaultGroup: 'Sent Ones',
     prompt: (group, topic, hasFile) => `Create a comprehensive Missions & Evangelism Bible Study Guide for the group "${group}"${topic ? ` focused on: ${topic}` : ''} for a one-hour session that equips and inspires mission-minded Christians — whether they are going to the field, supporting missionaries, or learning to share their faith where they live.
 
-${hasFile ? 'IMPORTANT: The user has attached a sermon script or sermon notes above. Use that content as the PRIMARY foundation for this Bible study. Build the study around the themes, Scripture references, and topics from the attached content.' : 'Create a study built around the Great Commission, the heart of God for the nations, and practical evangelism in everyday life.'}
+${hasFile ? `IMPORTANT: The user has attached a CCF sermon or guide above. Use that content as the PRIMARY foundation — extract its theme, key Scriptures, and main points.
+
+REQUIRED STRUCTURE (4 W's — you MUST use these exact headings in this order):
+
+WORSHIP
+- 2-3 suggested worship songs that connect to the sermon's missions/evangelism theme
+- Brief note on how the worship prepares hearts to go and share
+
+WELCOME
+- 1-2 icebreaker questions for mission-minded believers (e.g., "When did you last share your faith, and how did it go?")
+- Keep it accessible for both experienced missionaries and those just exploring the call
+
+WORD
+- Quote the lead Scripture passage from the attached content in full (with reference and translation)
+- 3-5 discussion questions directly from the sermon content, applying it to evangelism and missions
+- Additional cross-reference Scriptures quoted in full where helpful
+- Teaching notes expanding on the key missions/evangelism principles from the sermon
+
+WORKS
+- 3 specific, actionable steps for mission-minded Christians this week (e.g., pray for an unreached people group by name, share your testimony with one person, write to a missionary you support)
+- Personal commitment prompt: "This week I will take one step toward the Great Commission by ____________"
+- Closing commissioning prayer for the nations` : `Create a study built around the Great Commission, the heart of God for the nations, and practical evangelism in everyday life.
 
 REQUIRED STRUCTURE:
 
@@ -407,7 +428,7 @@ For each section:
 5. FINAL CHALLENGE & CLOSING
 - One summarizing Scripture (quoted fully)
 - Commitment: "This week I will take one step toward the Great Commission by ____________"
-- A closing commissioning prayer
+- A closing commissioning prayer`}
 
 STYLE: Bold and compelling. Speak with Great Commission urgency. Address real fears about evangelism with grace. Connect global missions to everyday local obedience. Celebrate that God uses ordinary people. Quote ALL Bible verses in full.`
   },
@@ -419,7 +440,28 @@ STYLE: Bold and compelling. Speak with Great Commission urgency. Address real fe
     defaultGroup: 'First Steps Group',
     prompt: (group, topic, hasFile) => `Create a warm, welcoming New Believers Bible Study Guide for "${group}"${topic ? ` focused on: ${topic}` : ''} designed for people who have recently come to faith in Jesus Christ — within the last few weeks to two years.
 
-${hasFile ? 'IMPORTANT: The user has attached a sermon script or sermon notes above. Use that content as the PRIMARY foundation for this Bible study. Build the study around the themes, Scripture references, and topics from the attached content.' : 'Create a foundational study covering the essentials of new life in Christ — salvation assurance, prayer, Scripture, community, and next steps.'}
+${hasFile ? `IMPORTANT: The user has attached a CCF sermon or guide above. Use that content as the PRIMARY foundation — extract its theme, key Scriptures, and main points.
+
+REQUIRED STRUCTURE (4 W's — you MUST use these exact headings in this order):
+
+WORSHIP
+- 2-3 suggested worship songs suitable for a new believer group — welcoming, celebratory, and easy to sing
+- A brief note affirming that worship is simply responding to God's love
+
+WELCOME
+- 1-2 gentle icebreaker questions that help new believers feel safe (e.g., "What's one question you've had about faith since becoming a Christian?")
+- Keep it low-pressure — many may not know each other or feel unsure about church culture
+
+WORD
+- Quote the lead Scripture passage from the attached content in full (with reference and a simple translation like NIV or NLT)
+- 3-5 discussion questions from the sermon, adapted for brand-new believers — use plain language, no jargon
+- Address 1-2 common new believer questions raised by the sermon content (e.g., What do I do when I sin? How do I know I'm really saved?)
+- Teaching notes explaining the core message clearly for someone weeks into their faith
+
+WORKS
+- 2-3 simple, accessible next steps appropriate for new believers (e.g., start a daily Bible reading habit, tell one person what God has done in your life, join a D-Group)
+- A personal commitment prompt: "This week I will take one step in my faith by ____________"
+- A gentle closing prayer — conversational, not intimidating` : `Create a foundational study covering the essentials of new life in Christ — salvation assurance, prayer, Scripture, community, and next steps.
 
 REQUIRED STRUCTURE:
 
@@ -452,7 +494,7 @@ For each section:
 5. CLOSING
 - One summarizing Scripture (quoted fully)
 - A simple declaration of faith new believers can say together
-- A gentle, conversational closing prayer
+- A gentle, conversational closing prayer`}
 
 STYLE: Gentle, warm, and clear. Never assume prior knowledge. Avoid Christian insider language — explain everything. Celebrate every step of faith. Make new believers feel welcome, not overwhelmed. Quote ALL Bible verses in full.`
   },
@@ -464,7 +506,28 @@ STYLE: Gentle, warm, and clear. Never assume prior knowledge. Avoid Christian in
     defaultGroup: 'Prayer Warriors',
     prompt: (group, topic, hasFile) => `Create a deep, Spirit-led Prayer & Intercession Bible Study Guide for "${group}"${topic ? ` focused on: ${topic}` : ''} for a group that gathers primarily to seek God in prayer — whether for their city, the nations, the Church, or personal breakthrough.
 
-${hasFile ? 'IMPORTANT: The user has attached a sermon script or sermon notes above. Use that content as the PRIMARY foundation for this Bible study. Build the study around the themes, Scripture references, and topics from the attached content.' : 'Create a study that teaches biblical intercession, deepens the prayer life, and moves the group into actual corporate prayer.'}
+${hasFile ? `IMPORTANT: The user has attached a CCF sermon or guide above. Use that content as the PRIMARY foundation — extract its theme, key Scriptures, and main points.
+
+REQUIRED STRUCTURE (4 W's — you MUST use these exact headings in this order):
+
+WORSHIP
+- 2-3 suggested worship songs that draw the group into a posture of prayer and surrender
+- A brief call to stillness and adoration before God
+
+WELCOME
+- 1-2 opening questions to help the group share where they are with God right now (e.g., "What is one thing you are bringing to God in prayer today?")
+- Creates a safe space for honest vulnerability before corporate intercession
+
+WORD
+- Quote the lead Scripture passage from the attached content in full (with reference and translation)
+- 3-5 discussion questions from the sermon, applied specifically to prayer and intercession
+- Additional cross-reference Scriptures on prayer quoted in full (e.g., James 5:16, Matthew 6:9-13, 1 Timothy 2:1-4)
+- Teaching notes on what the sermon reveals about how and why we pray
+
+WORKS
+- A guided ACTS prayer exercise for the group: Adoration, Confession, Thanksgiving, Supplication
+- Supplication prayer points from the sermon theme (the local church, the nations, the persecuted church, personal needs)
+- Closing commissioning prayer sending the group out as intercessors` : `Create a study that teaches biblical intercession, deepens the prayer life, and moves the group into actual corporate prayer.
 
 REQUIRED STRUCTURE:
 
@@ -499,7 +562,7 @@ Structure a full guided intercession session using:
 5. CLOSING
 - One summarizing Scripture (quoted fully)
 - A declaration of faith in God's faithfulness to hear and answer prayer
-- A commissioning prayer sending the group out as intercessors
+- A commissioning prayer sending the group out as intercessors`}
 
 STYLE: Reverent, expectant, and faith-filled. Teach and then practice. Move from instruction to actual prayer. Create space for the Holy Spirit to lead. Encourage both quiet contemplative prayer and bold intercession. Quote ALL Bible verses in full.`
   },
@@ -511,7 +574,28 @@ STYLE: Reverent, expectant, and faith-filled. Teach and then practice. Move from
     defaultGroup: 'Campus Fellowship',
     prompt: (group, topic, hasFile) => `Create a compelling Campus & College Ministry Bible Study for "${group}"${topic ? ` focused on: ${topic}` : ''} for university students (ages 17-25) navigating faith, academics, identity, and calling in a secular academic environment.
 
-${hasFile ? 'IMPORTANT: The user has attached a sermon script or sermon notes above. Use that content as the PRIMARY foundation for this Bible study. Build the study around the themes, Scripture references, and topics from the attached content.' : 'Create a study that addresses the unique pressures and opportunities of university life while grounding students in biblical truth.'}
+${hasFile ? `IMPORTANT: The user has attached a CCF sermon or guide above. Use that content as the PRIMARY foundation — extract its theme, key Scriptures, and main points.
+
+REQUIRED STRUCTURE (4 W's — you MUST use these exact headings in this order):
+
+WORSHIP
+- 2-3 suggested worship songs that resonate with university students (contemporary, honest, and accessible)
+- A brief note on why worship grounds us in truth before facing intellectual or cultural pressure
+
+WELCOME
+- 1-2 icebreaker questions relevant to campus life (e.g., "What's one question about God or faith that you've heard on campus recently?")
+- Creates space for honest doubt and curiosity — both are welcome here
+
+WORD
+- Quote the lead Scripture passage from the attached content in full (with reference and a modern translation like NIV or NLT)
+- 3-5 discussion questions from the sermon, applied to university life — faith and doubt, identity, calling, relationships, evangelism on campus
+- Additional cross-reference Scriptures quoted in full where helpful
+- Teaching notes connecting the sermon's core message to the specific challenges of a secular academic environment
+
+WORKS
+- 2-3 specific campus challenges for the week (e.g., start a spiritual conversation with a classmate, share a Scripture with a study group, pray for one professor by name)
+- Personal commitment prompt: "This week on campus I will ____________"
+- A prayer for the university, the faculty, and every student not yet reached with the gospel` : `Create a study that addresses the unique pressures and opportunities of university life while grounding students in biblical truth.
 
 REQUIRED STRUCTURE:
 
@@ -544,7 +628,7 @@ For each point:
 5. CLOSING
 - Summarizing Scripture (quoted fully)
 - One bold campus challenge for the week
-- A prayer for the university, the faculty, and every student not yet reached with the gospel
+- A prayer for the university, the faculty, and every student not yet reached with the gospel`}
 
 STYLE: Intellectually honest and culturally aware. Don't dodge hard questions. Respect student intelligence. Engage with real doubts. Show that following Jesus is the most intellectually and personally satisfying life possible. Quote ALL Bible verses in full.`
   },
@@ -556,7 +640,28 @@ STYLE: Intellectually honest and culturally aware. Don't dodge hard questions. R
     defaultGroup: 'Truth Seekers',
     prompt: (group, topic, hasFile) => `Create a rigorous Apologetics Bible Study Guide for "${group}"${topic ? ` focused on: ${topic}` : ''} for a group that wants to engage hard questions about the Christian faith with intellectual honesty, biblical grounding, and gracious confidence.
 
-${hasFile ? 'IMPORTANT: The user has attached a sermon script or sermon notes above. Use that content as the PRIMARY foundation for this Bible study. Build the study around the themes, Scripture references, and topics from the attached content.' : 'Create a study that tackles a major apologetics question — addressing it with Scripture, reason, and grace so members are equipped to give an answer to everyone who asks.'}
+${hasFile ? `IMPORTANT: The user has attached a CCF sermon or guide above. Use that content as the PRIMARY foundation — extract its theme, key Scriptures, and main points.
+
+REQUIRED STRUCTURE (4 W's — you MUST use these exact headings in this order):
+
+WORSHIP
+- 2-3 suggested worship songs that center the group on the truth and majesty of God before engaging hard questions
+- A brief note: we worship because truth is worth celebrating, not just defending
+
+WELCOME
+- 1-2 opening questions that surface the apologetics issue the sermon addresses (e.g., "What hard question about faith have you heard from a friend or colleague recently?")
+- Normalizes honest intellectual struggle within a community of faith
+
+WORD
+- Quote the lead Scripture passage from the attached content in full (with reference and translation)
+- 3-5 discussion questions from the sermon, applied to the apologetics challenge it addresses — helping members articulate a gracious, biblical response
+- 1 Peter 3:15-16 quoted in full, as the foundational call to always be ready to give a reason for the hope we have
+- Teaching notes identifying the key apologetics argument in the sermon and how to use it in real conversation
+
+WORKS
+- 2-3 specific actions for the week (e.g., look up one resource on this question, raise the topic in a natural conversation, pray for one skeptical friend by name)
+- Personal commitment prompt: "This week I will engage this question by ____________"
+- A commissioning prayer: "We hold the truth in love"` : `Create a study that tackles a major apologetics question — addressing it with Scripture, reason, and grace so members are equipped to give an answer to everyone who asks.
 
 REQUIRED STRUCTURE:
 
@@ -590,7 +695,7 @@ For each pillar:
 5. CLOSING
 - One summarizing Scripture (quoted fully)
 - A commissioning statement: "We hold the truth in love"
-- Prayer for wisdom, courage, and open doors to have these conversations
+- Prayer for wisdom, courage, and open doors to have these conversations`}
 
 STYLE: Intellectually serious, gracious, and non-defensive. Engage objections charitably. Give the strongest possible version of the Christian answer. Model the tone that wins people rather than arguments. Quote ALL Bible verses in full.`
   },
@@ -602,7 +707,28 @@ STYLE: Intellectually serious, gracious, and non-defensive. Engage objections ch
     defaultGroup: 'D-Group Leaders',
     prompt: (group, topic, hasFile) => `Create a challenging Leadership & Disciplemaking Bible Study Guide for "${group}"${topic ? ` focused on: ${topic}` : ''} for D-Group leaders, cell group facilitators, and those being equipped to multiply disciples — people who are not just following Jesus but leading others to do the same.
 
-${hasFile ? 'IMPORTANT: The user has attached a sermon script or sermon notes above. Use that content as the PRIMARY foundation for this Bible study. Build the study around the themes, Scripture references, and topics from the attached content.' : 'Create a study that develops servant leaders who multiply disciples — covering leadership character, disciplemaking methodology, handling conflict, and the vision of multiplication.'}
+${hasFile ? `IMPORTANT: The user has attached a CCF sermon or guide above. Use that content as the PRIMARY foundation — extract its theme, key Scriptures, and main points.
+
+REQUIRED STRUCTURE (4 W's — you MUST use these exact headings in this order):
+
+WORSHIP
+- 2-3 suggested worship songs appropriate for a leaders' gathering — focusing on surrender, servanthood, and God's faithfulness to his servants
+- A brief note: leaders worship first so they lead from a place of overflow, not depletion
+
+WELCOME
+- 1-2 check-in questions specifically for D-Group leaders (e.g., "How is your group doing this week?" or "Where are you finding the most joy — or struggle — in leading right now?")
+- Creates peer accountability and normalizes the challenges of leading
+
+WORD
+- Quote the lead Scripture passage from the attached content in full (with reference and translation)
+- 3-5 discussion questions from the sermon, applied specifically to the realities of leading a D-Group — servant leadership, handling conflict, facilitating well, multiplication vision
+- 2 Timothy 2:2 quoted in full, as the foundational call to disciple others who will disciple others
+- Teaching notes identifying the leadership principles in the sermon and how they apply to small group ministry
+
+WORKS
+- 2-3 specific leadership actions for the week (e.g., identify and encourage an emerging leader in your group, have a one-on-one with a struggling member, cast the multiplication vision with your group)
+- Leader's commitment prompt: "As a leader, this week I will invest in ____________ by ____________"
+- A prayer specifically for each leader's group — that it would grow, go deep, and multiply` : `Create a study that develops servant leaders who multiply disciples — covering leadership character, disciplemaking methodology, handling conflict, and the vision of multiplication.
 
 REQUIRED STRUCTURE:
 
@@ -636,7 +762,7 @@ For each section:
 5. CLOSING
 - One summarizing Scripture (quoted fully)
 - Leader's Commitment: "As a leader, this week I will invest in ____________ by ____________"
-- A prayer specifically for each leader's group — that it would grow, go deep, and multiply
+- A prayer specifically for each leader's group — that it would grow, go deep, and multiply`}
 
 STYLE: Leader-to-leader directness. Respect their experience while challenging their growth edges. Address the loneliness and pressure of leading. Remind them they are under-shepherds of the Great Shepherd. Inspire multiplication. Quote ALL Bible verses in full.`
   },
