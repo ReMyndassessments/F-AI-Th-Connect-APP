@@ -22,8 +22,7 @@ export default function CTA() {
           </Button>
           <Button
             onClick={() => setLocation("/missions/register")}
-            variant="outline"
-            className="border-white text-white hover:bg-white/10 px-8 py-4 rounded-xl font-semibold text-lg"
+            className="bg-transparent border-2 border-white text-white hover:bg-white/10 px-8 py-4 rounded-xl font-semibold text-lg shadow-lg"
           >
             🌏 Register Your Mission
           </Button>
