@@ -1,5 +1,6 @@
 import { useParams } from "wouter";
 import { useEffect, useState } from "react";
+import { trackPageView } from "@/hooks/useAnalytics";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { chatApi } from "@/lib/chat-api";
 import ChatInterface from "@/components/chat/chat-interface";
@@ -16,6 +17,7 @@ export default function Chat() {
   const [, setLocation] = useLocation();
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(sessionId || null);
   const queryClient = useQueryClient();
+  useEffect(() => { trackPageView('ministry_desk'); }, []);
 
   // Create new session if no sessionId provided
   const createSessionMutation = useMutation({

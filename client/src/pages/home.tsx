@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Header from "@/components/landing/header";
 import Hero from "@/components/landing/hero";
 import Features from "@/components/landing/features";
@@ -9,6 +10,7 @@ import Footer from "@/components/landing/footer";
 import AdvertisementDisplay from "@/components/ads/advertisement-display";
 import DailyVerseCard from "@/components/daily-verse/daily-verse-card";
 import { Check } from "lucide-react";
+import { trackPageView } from "@/hooks/useAnalytics";
 
 const dGroupHighlights = [
   "CCF 4 W's PDF upload and sharing",
@@ -23,6 +25,7 @@ const dGroupHighlights = [
 ];
 
 export default function Home() {
+  useEffect(() => { trackPageView('home'); }, []);
   return (
     <div className="min-h-screen bg-white">
       <Header />

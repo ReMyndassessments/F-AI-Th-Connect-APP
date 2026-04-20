@@ -285,6 +285,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Anonymous usage tracking
+  app.post("/api/track", async (req, res) => {
+    try {
+      const { type, name, detail } = req.body;
+      if (!type || !name) return res.status(400).json({ error: "Missing type or name" });
+      if (type !== 'page_view' && type !== 'feature') return res.status(400).json({ error: "Invalid type" });
+      await storage.trackEvent(type, String(name), detail ? String(detail) : undefined);
+      res.json({ ok: true });
+    } catch (error) {
+      res.status(500).json({ error: "Tracking failed" });
+    }
+  });
+
   // Admin Analytics Endpoint
   app.get("/api/analytics", async (req, res) => {
     try {

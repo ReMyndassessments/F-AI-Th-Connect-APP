@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Send, Loader2, BookOpen, AlertTriangle, GraduationCap } from "lucide-react";
+import { trackFeature } from "@/hooks/useAnalytics";
 import MessageBubble from "@/components/chat/message-bubble";
 import TypingIndicator from "@/components/chat/typing-indicator";
 import { PromptLibrary } from "@/components/chat/prompt-library";
@@ -345,7 +346,7 @@ IMPORTANT: Start your response with a prominent heading that displays the group 
                 {PROMPT_CATEGORIES.map(cat => (
                   <button
                     key={cat.id}
-                    onClick={() => openLibrary(cat.id)}
+                    onClick={() => { trackFeature('prompt_library', cat.id); openLibrary(cat.id); }}
                     className={`flex flex-col items-center gap-1 p-2.5 rounded-xl text-white text-center shadow-sm hover:shadow-md transition-all active:scale-95 bg-gradient-to-br ${cat.color}`}
                   >
                     <span className="text-lg leading-none">{cat.icon}</span>
@@ -372,7 +373,7 @@ IMPORTANT: Start your response with a prominent heading that displays the group 
                 {LEARNING_TOPICS.map(topic => (
                   <button
                     key={topic.title}
-                    onClick={() => handleSystemPrompt(topic.prompt)}
+                    onClick={() => { trackFeature('explore_learn', topic.title); handleSystemPrompt(topic.prompt); }}
                     className={`flex items-start gap-2 p-2.5 rounded-xl border text-left hover:shadow-sm transition-all active:scale-95 ${topic.color}`}
                   >
                     <span className={`w-7 h-7 flex-shrink-0 rounded-lg flex items-center justify-center text-sm ${topic.iconBg}`}>{topic.icon}</span>

@@ -45,6 +45,13 @@ interface Analytics {
   dailyStats: Array<{date: string; sessions: number; messages: number; impressions: number; clicks: number}>;
   sessionDurations: Array<number>;
   messageVolumeTrends: Array<{hour: number; count: number}>;
+  pageViewsTotal: number;
+  pageViewsToday: number;
+  topPages: Array<{page: string; count: number}>;
+  featureUsageTotal: number;
+  featureUsageToday: number;
+  topFeatures: Array<{feature: string; count: number}>;
+  dailyVisits: Array<{date: string; pageViews: number; featureEvents: number}>;
 }
 
 // Analytics data fetching
@@ -250,6 +257,158 @@ export default function AdminDashboard() {
               </p>
             </CardContent>
           </Card>
+          </div>
+
+          {/* Visitor & Usage Analytics */}
+          <div className="mt-8 mb-6">
+            <h2 className="text-lg font-semibold mb-4 flex items-center">
+              <Users className="w-5 h-5 mr-2" />
+              Visitor & Feature Usage
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Page Visits</CardTitle>
+                  <Eye className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-blue-600">
+                    {analyticsLoading ? "..." : (analytics?.pageViewsTotal || 0)}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {analytics?.pageViewsToday || 0} visits today
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Feature Interactions</CardTitle>
+                  <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-green-600">
+                    {analyticsLoading ? "..." : (analytics?.featureUsageTotal || 0)}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {analytics?.featureUsageToday || 0} interactions today
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Most Visited Page</CardTitle>
+                  <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-amber-600 capitalize">
+                    {analyticsLoading ? "..." : (analytics?.topPages?.[0]?.page?.replace('_', ' ') || "—")}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {analytics?.topPages?.[0]?.count || 0} visits
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Top Feature Used</CardTitle>
+                  <BookOpen className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold text-purple-600 capitalize" style={{fontSize: '1rem', paddingTop: '0.35rem'}}>
+                    {analyticsLoading ? "..." : (analytics?.topFeatures?.[0]?.feature?.replace(/_/g, ' ') || "—")}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {analytics?.topFeatures?.[0]?.count || 0} uses
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Page & Feature Breakdown */}
+            {analytics && (analytics.pageViewsTotal > 0 || analytics.featureUsageTotal > 0) && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm">Pages Visited</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {analytics.topPages.length === 0 ? (
+                      <p className="text-sm text-gray-400">No visits recorded yet</p>
+                    ) : (
+                      <div className="space-y-2">
+                        {analytics.topPages.map(p => (
+                          <div key={p.page} className="flex items-center justify-between">
+                            <span className="text-sm capitalize">{p.page.replace(/_/g, ' ')}</span>
+                            <div className="flex items-center gap-2">
+                              <div className="h-2 bg-blue-400 rounded" style={{width: `${Math.max(8, (p.count / (analytics.topPages[0]?.count || 1)) * 80)}px`}} />
+                              <span className="text-xs text-gray-500 w-8 text-right">{p.count}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-sm">Features Used</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {analytics.topFeatures.length === 0 ? (
+                      <p className="text-sm text-gray-400">No feature interactions yet</p>
+                    ) : (
+                      <div className="space-y-2">
+                        {analytics.topFeatures.map(f => (
+                          <div key={f.feature} className="flex items-center justify-between">
+                            <span className="text-sm capitalize">{f.feature.replace(/_/g, ' ')}</span>
+                            <div className="flex items-center gap-2">
+                              <div className="h-2 bg-green-400 rounded" style={{width: `${Math.max(8, (f.count / (analytics.topFeatures[0]?.count || 1)) * 80)}px`}} />
+                              <span className="text-xs text-gray-500 w-8 text-right">{f.count}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
+            {/* 7-day visits chart */}
+            {analytics?.dailyVisits && analytics.dailyVisits.some(d => d.pageViews > 0 || d.featureEvents > 0) && (
+              <Card className="mb-6">
+                <CardHeader>
+                  <CardTitle className="text-sm">7-Day Visitor Activity</CardTitle>
+                  <CardDescription>Page visits and feature interactions per day</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-end justify-between h-32 border-b mb-3">
+                    {analytics.dailyVisits.map(day => {
+                      const maxVal = Math.max(...analytics.dailyVisits.map(d => d.pageViews + d.featureEvents), 1);
+                      const total = day.pageViews + day.featureEvents;
+                      const h = Math.round((total / maxVal) * 100);
+                      return (
+                        <div key={day.date} className="flex flex-col items-center flex-1 mx-0.5">
+                          <div className="w-full flex flex-col items-center">
+                            <div className="w-6 bg-blue-400 rounded-t" style={{height: `${h}px`}} title={`${day.pageViews} views, ${day.featureEvents} interactions`} />
+                          </div>
+                          <div className="text-[10px] text-gray-400 mt-1">
+                            {new Date(day.date).toLocaleDateString(undefined, { weekday: 'short' })}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="flex gap-4 text-xs text-gray-500">
+                    <span className="flex items-center gap-1"><span className="w-2 h-2 bg-blue-400 rounded inline-block" /> Page visits + interactions</span>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </div>
 
           {/* Advertisement Analytics for Potential Advertisers */}

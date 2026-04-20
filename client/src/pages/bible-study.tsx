@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "wouter";
+import { trackPageView, trackFeature } from "@/hooks/useAnalytics";
 import { Home, Upload, X, Copy, Download, Loader2, FileText, BookOpen, Video, Share2, Mail, Check, MessageSquare, Users, Pencil, ExternalLink, Sparkles, Printer } from "lucide-react";
 import { chatApi } from "@/lib/chat-api";
 import { useToast } from "@/hooks/use-toast";
@@ -1032,6 +1033,7 @@ Closing Prayer`;
   };
 
   const generate = async (studyType: StudyType) => {
+    trackFeature('dgroup_study', studyType.id);
     setIsGenerating(true);
     setActiveType(studyType.id);
     setResult('');

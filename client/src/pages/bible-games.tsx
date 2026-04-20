@@ -1,6 +1,7 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link } from "wouter";
 import { ArrowLeft, RotateCcw, Lightbulb, Home, RefreshCw } from "lucide-react";
+import { trackPageView } from "@/hooks/useAnalytics";
 
 type GameType = 'hub' | 'path' | 'wordle' | 'memory' | 'wordsearch' | 'unscramble' | 'booksorder';
 type Difficulty = 'easy' | 'medium' | 'hard';
@@ -862,6 +863,7 @@ const GAMES=[
 
 export default function BibleGames() {
   const [currentGame,setCurrentGame]=useState<GameType>('hub');
+  useEffect(() => { trackPageView('bible_games'); }, []);
 
   if(currentGame==='path')       return <BiblePath onBack={()=>setCurrentGame('hub')}/>;
   if(currentGame==='wordle')     return <BibleWordle onBack={()=>setCurrentGame('hub')}/>;

@@ -54,6 +54,8 @@ export interface IStorage {
   updateMissionGroup(id: number, updates: Partial<MissionGroup>): Promise<MissionGroup>;
   deleteMissionGroup(id: number): Promise<void>;
 
+  trackEvent(type: 'page_view' | 'feature', name: string, detail?: string): Promise<void>;
+
   // Analytics for Advertisers
   getAnalytics(): Promise<{
     totalSessions: number;
@@ -67,6 +69,13 @@ export interface IStorage {
     dailyStats: Array<{date: string; sessions: number; messages: number; impressions: number; clicks: number}>;
     sessionDurations: Array<number>;
     messageVolumeTrends: Array<{hour: number; count: number}>;
+    pageViewsTotal: number;
+    pageViewsToday: number;
+    topPages: Array<{page: string; count: number}>;
+    featureUsageTotal: number;
+    featureUsageToday: number;
+    topFeatures: Array<{feature: string; count: number}>;
+    dailyVisits: Array<{date: string; pageViews: number; featureEvents: number}>;
   }>;
 }
 
@@ -79,9 +88,11 @@ export class MemStorage implements IStorage {
   private adminUsers: Map<number, AdminUser>;
   private adminSessions: Map<string, AdminSession>;
   private missionGroupsMap: Map<number, MissionGroup>;
+  private trackingEvents: Array<{type: string; name: string; detail?: string; ts: number}>;
   private adminDataFile: string;
   private flagsDataFile: string;
   private missionsDataFile: string;
+  private analyticsDataFile: string;
   private currentUserId: number;
   private currentSessionId: number;
   private currentMessageId: number;
@@ -100,9 +111,11 @@ export class MemStorage implements IStorage {
     this.adminUsers = new Map();
     this.adminSessions = new Map();
     this.missionGroupsMap = new Map();
+    this.trackingEvents = [];
     this.adminDataFile = path.join(process.cwd(), '.admin-data.json');
     this.flagsDataFile = path.join(process.cwd(), '.feature-flags.json');
     this.missionsDataFile = path.join(process.cwd(), '.missions-data.json');
+    this.analyticsDataFile = path.join(process.cwd(), '.analytics-data.json');
     this.currentUserId = 1;
     this.currentSessionId = 1;
     this.currentMessageId = 1;
@@ -116,6 +129,7 @@ export class MemStorage implements IStorage {
     this.loadAdminData();
     this.loadFeatureFlags();
     this.loadMissionsData();
+    this.loadAnalyticsData();
     this.initializeDefaults();
     this.initializeAdvertisements();
   }
@@ -729,6 +743,40 @@ export class MemStorage implements IStorage {
     this.saveMissionsData();
   }
 
+  private loadAnalyticsData(): void {
+    try {
+      if (fs.existsSync(this.analyticsDataFile)) {
+        const data = JSON.parse(fs.readFileSync(this.analyticsDataFile, 'utf8'));
+        if (Array.isArray(data.events)) {
+          // Keep only last 30 days
+          const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000;
+          this.trackingEvents = data.events.filter((e: any) => e.ts > cutoff);
+        }
+      }
+    } catch {
+      this.trackingEvents = [];
+    }
+  }
+
+  private saveAnalyticsData(): void {
+    try {
+      // Keep only last 30 days to prevent unbounded growth
+      const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000;
+      this.trackingEvents = this.trackingEvents.filter(e => e.ts > cutoff);
+      fs.writeFileSync(this.analyticsDataFile, JSON.stringify({ events: this.trackingEvents }, null, 2));
+    } catch (error) {
+      console.error('Failed to save analytics data:', error);
+    }
+  }
+
+  async trackEvent(type: 'page_view' | 'feature', name: string, detail?: string): Promise<void> {
+    this.trackingEvents.push({ type, name, detail, ts: Date.now() });
+    // Persist every 10 events to avoid I/O on every single request
+    if (this.trackingEvents.length % 10 === 0) {
+      this.saveAnalyticsData();
+    }
+  }
+
   async getAnalytics(): Promise<{
     totalSessions: number;
     totalMessages: number;
@@ -741,6 +789,13 @@ export class MemStorage implements IStorage {
     dailyStats: Array<{date: string; sessions: number; messages: number; impressions: number; clicks: number}>;
     sessionDurations: Array<number>;
     messageVolumeTrends: Array<{hour: number; count: number}>;
+    pageViewsTotal: number;
+    pageViewsToday: number;
+    topPages: Array<{page: string; count: number}>;
+    featureUsageTotal: number;
+    featureUsageToday: number;
+    topFeatures: Array<{feature: string; count: number}>;
+    dailyVisits: Array<{date: string; pageViews: number; featureEvents: number}>;
   }> {
     const sessions = Array.from(this.chatSessions.values());
     const allMessages = Array.from(this.messages.values()).flat();
@@ -828,6 +883,47 @@ export class MemStorage implements IStorage {
       messageVolumeTrends.push({ hour, count });
     }
     
+    // ── Tracking events analytics ─────────────────────────────────────
+    const todayStart = new Date(now);
+    todayStart.setHours(0, 0, 0, 0);
+    const todayTs = todayStart.getTime();
+
+    const pageViewEvents = this.trackingEvents.filter(e => e.type === 'page_view');
+    const featureEvents  = this.trackingEvents.filter(e => e.type === 'feature');
+
+    const pageViewsTotal = pageViewEvents.length;
+    const pageViewsToday = pageViewEvents.filter(e => e.ts >= todayTs).length;
+    const featureUsageTotal = featureEvents.length;
+    const featureUsageToday = featureEvents.filter(e => e.ts >= todayTs).length;
+
+    // Top pages
+    const pageCounts: Record<string, number> = {};
+    pageViewEvents.forEach(e => { pageCounts[e.name] = (pageCounts[e.name] || 0) + 1; });
+    const topPages = Object.entries(pageCounts)
+      .map(([page, count]) => ({ page, count }))
+      .sort((a, b) => b.count - a.count);
+
+    // Top features
+    const featureCounts: Record<string, number> = {};
+    featureEvents.forEach(e => { featureCounts[e.name] = (featureCounts[e.name] || 0) + 1; });
+    const topFeatures = Object.entries(featureCounts)
+      .map(([feature, count]) => ({ feature, count }))
+      .sort((a, b) => b.count - a.count);
+
+    // Daily visits for last 7 days
+    const dailyVisits = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+      const ds = d.toISOString().split('T')[0];
+      const dStart = new Date(d); dStart.setHours(0, 0, 0, 0);
+      const dEnd   = new Date(d); dEnd.setHours(23, 59, 59, 999);
+      dailyVisits.push({
+        date: ds,
+        pageViews:     pageViewEvents.filter(e => e.ts >= dStart.getTime() && e.ts <= dEnd.getTime()).length,
+        featureEvents: featureEvents.filter(e => e.ts >= dStart.getTime() && e.ts <= dEnd.getTime()).length,
+      });
+    }
+
     return {
       totalSessions,
       totalMessages,
@@ -839,7 +935,14 @@ export class MemStorage implements IStorage {
       topPlacements,
       dailyStats,
       sessionDurations,
-      messageVolumeTrends
+      messageVolumeTrends,
+      pageViewsTotal,
+      pageViewsToday,
+      topPages,
+      featureUsageTotal,
+      featureUsageToday,
+      topFeatures,
+      dailyVisits,
     };
   }
 }

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { trackPageView } from "@/hooks/useAnalytics";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { Globe, MapPin, User, Church, ArrowRight, PlusCircle, Search, Home } from "lucide-react";
@@ -85,6 +86,7 @@ export default function MissionsDirectory() {
   const [, setLocation] = useLocation();
   const [activeFilter, setActiveFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  useEffect(() => { trackPageView('missions'); }, []);
 
   const { data: groups = [], isLoading, isError } = useQuery<MissionGroup[]>({
     queryKey: ["/api/missions"],
