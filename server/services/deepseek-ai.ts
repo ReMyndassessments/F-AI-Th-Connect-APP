@@ -19,9 +19,9 @@ export class DeepseekAI {
   private baseUrl = 'https://api.deepseek.com/v1';
 
   constructor() {
-    this.apiKey = process.env.OPENAI_API_KEY || process.env.API_KEY || '';
+    this.apiKey = process.env.DEEPSEEK_API_KEY || process.env.OPENAI_API_KEY || process.env.API_KEY || '';
     if (!this.apiKey) {
-      console.warn('OPENAI_API_KEY not found in environment variables');
+      console.warn('DEEPSEEK_API_KEY not found in environment variables');
     }
   }
 
