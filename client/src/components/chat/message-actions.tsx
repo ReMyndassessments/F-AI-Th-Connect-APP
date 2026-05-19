@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Copy, Download, Share, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface MessageActionsProps {
   content: string;
@@ -12,21 +13,22 @@ interface MessageActionsProps {
 export default function MessageActions({ content, messageId, isAiMessage = false }: MessageActionsProps) {
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(content);
       setCopied(true);
       toast({
-        title: "Copied to clipboard",
-        description: "Message content has been copied successfully.",
+        title: t.messageActions.copied,
+        description: t.messageActions.copiedDesc,
       });
       
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
       toast({
-        title: "Copy failed",
-        description: "Unable to copy to clipboard. Please try again.",
+        title: t.messageActions.copyFailed,
+        description: t.messageActions.copyFailedDesc,
         variant: "destructive",
       });
     }
@@ -42,8 +44,8 @@ export default function MessageActions({ content, messageId, isAiMessage = false
     document.body.removeChild(element);
     
     toast({
-      title: "Downloaded",
-      description: "Message saved as text file.",
+      title: t.messageActions.downloaded,
+      description: t.messageActions.downloadedDesc,
     });
   };
 
@@ -71,7 +73,7 @@ export default function MessageActions({ content, messageId, isAiMessage = false
         size="sm"
         onClick={handleCopy}
         className="h-6 px-1.5 text-xs hover:bg-white/20 text-gray-400 hover:text-gray-600 transition-all"
-        title={copied ? "Copied!" : "Copy message"}
+        title={copied ? t.messageActions.copiedTitle : t.messageActions.copyTitle}
       >
         {copied ? <Check className="w-3 h-3 text-green-500" /> : <Copy className="w-3 h-3" />}
       </Button>
@@ -81,7 +83,7 @@ export default function MessageActions({ content, messageId, isAiMessage = false
         size="sm"
         onClick={handleDownload}
         className="h-6 px-1.5 text-xs hover:bg-white/20 text-gray-400 hover:text-gray-600 transition-all"
-        title="Download as text file"
+        title={t.messageActions.downloadTitle}
       >
         <Download className="w-3 h-3" />
       </Button>
@@ -91,7 +93,7 @@ export default function MessageActions({ content, messageId, isAiMessage = false
         size="sm"
         onClick={handleShare}
         className="h-6 px-1.5 text-xs hover:bg-white/20 text-gray-400 hover:text-gray-600 transition-all"
-        title="Share message"
+        title={t.messageActions.shareTitle}
       >
         <Share className="w-3 h-3" />
       </Button>

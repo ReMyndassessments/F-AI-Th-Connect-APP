@@ -19,6 +19,7 @@ import {
   Target
 } from "lucide-react";
 import { promptLibrary, type PromptCategory, type Prompt, searchPrompts } from "@/data/promptLibrary";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface PromptLibraryProps {
   onSelectPrompt: (promptText: string) => void;
@@ -44,6 +45,7 @@ export function PromptLibrary({ onSelectPrompt, children, open, onOpenChange, de
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(defaultCategory ?? "all");
   const [favorites, setFavorites] = useState<string[]>([]);
+  const { t } = useLanguage();
 
   const isDialogOpen = open !== undefined ? open : isOpen;
   const handleOpenChange = (v: boolean) => { setIsOpen(v); onOpenChange?.(v); };
@@ -97,13 +99,13 @@ export function PromptLibrary({ onSelectPrompt, children, open, onOpenChange, de
         <DialogHeader className="px-6 py-4 border-b">
           <DialogTitle className="flex items-center space-x-2">
             <BookOpen className="w-5 h-5 text-blue-600" />
-            <span>Prompt Library</span>
+            <span>{t.promptLibrary.title}</span>
             <Badge variant="secondary" className="text-xs">
-              {filteredPrompts.length} prompts
+              {filteredPrompts.length} {t.promptLibrary.prompts}
             </Badge>
           </DialogTitle>
           <DialogDescription className="text-sm text-gray-600">
-            Browse pre-written prompts organized by ministry categories to discover what biblical guidance and support you can access.
+            {t.promptLibrary.description}
           </DialogDescription>
         </DialogHeader>
         
@@ -112,7 +114,7 @@ export function PromptLibrary({ onSelectPrompt, children, open, onOpenChange, de
           <div className="relative mb-4">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <Input
-              placeholder="Search prompts by topic, category, or keywords..."
+              placeholder={t.promptLibrary.searchPlaceholder}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"
@@ -122,7 +124,7 @@ export function PromptLibrary({ onSelectPrompt, children, open, onOpenChange, de
           {/* Category Tabs */}
           <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="flex-1 flex flex-col min-h-0">
             <TabsList className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 lg:grid-cols-9 w-full h-auto p-1 gap-1 mb-4 mobile-scroll">
-              <TabsTrigger value="all" className="text-xs">All</TabsTrigger>
+              <TabsTrigger value="all" className="text-xs">{t.promptLibrary.all}</TabsTrigger>
               {promptLibrary.map((category) => {
                 const IconComponent = categoryIcons[category.id] || BookOpen;
                 return (
@@ -189,12 +191,14 @@ function PromptGrid({
   favorites, 
   showCategory 
 }: PromptGridProps) {
+  const { t } = useLanguage();
+
   if (prompts.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-gray-500">
         <Search className="w-12 h-12 mb-4" />
-        <p className="text-lg font-medium">No prompts found</p>
-        <p className="text-sm">Try adjusting your search or browse different categories</p>
+        <p className="text-lg font-medium">{t.promptLibrary.noFound}</p>
+        <p className="text-sm">{t.promptLibrary.noFoundHint}</p>
       </div>
     );
   }

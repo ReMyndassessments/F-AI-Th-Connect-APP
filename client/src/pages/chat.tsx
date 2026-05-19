@@ -19,7 +19,7 @@ export default function Chat() {
   const [, setLocation] = useLocation();
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(sessionId || null);
   const queryClient = useQueryClient();
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   useEffect(() => { trackPageView('ministry_desk'); }, []);
 
   // Create new session if no sessionId provided
@@ -132,7 +132,7 @@ export default function Chat() {
                 <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
                   <MessageCircle className="w-8 h-8 text-white" />
                 </div>
-                <p className="text-gray-600">Starting your spiritual conversation...</p>
+                <p className="text-gray-600">{t.chat.starting}</p>
               </div>
             </div>
           </div>
@@ -155,7 +155,7 @@ export default function Chat() {
                 className="flex items-center space-x-1 sm:space-x-2 p-2 sm:px-3 touch-target mobile-tap"
               >
                 <ArrowLeft className="w-4 h-4" />
-                <span className="hidden sm:inline">Back to Home</span>
+                <span className="hidden sm:inline">{t.chat.backHome}</span>
               </Button>
               
               <div className="flex items-center space-x-2">
@@ -179,7 +179,7 @@ export default function Chat() {
                 size="sm"
               >
                 <RotateCcw className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
-                <span className="hidden sm:inline">New Chat</span>
+                <span className="hidden sm:inline">{t.chat.newChat}</span>
               </Button>
             </div>
           </div>

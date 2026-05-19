@@ -297,7 +297,7 @@ IMPORTANT: Start your response with a prominent heading that displays the group 
           </div>
           <div>
             <h3 className="text-white font-semibold text-sm sm:text-base">F-AI-TH-Connect</h3>
-            <p className="text-white text-opacity-80 text-xs sm:text-sm">Your Biblical Ministry Companion</p>
+            <p className="text-white text-opacity-80 text-xs sm:text-sm">{t.chat.companionLabel}</p>
           </div>
         </div>
       </div>
