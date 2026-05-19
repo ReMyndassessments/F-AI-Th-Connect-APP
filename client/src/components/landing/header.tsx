@@ -7,7 +7,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Language, LANGUAGE_NAMES } from "@/data/translations";
 
 export default function Header() {
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
+  const isHome = location === "/";
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const { canInstall, install } = usePWA();
@@ -52,14 +53,16 @@ export default function Header() {
             </button>
 
             <nav className="hidden md:flex items-center space-x-8">
-              <button
-                onClick={() => setLocation("/")}
-                className="flex items-center gap-1.5 text-gray-600 hover:text-blue-500 transition-colors font-medium"
-                title="Home"
-              >
-                <Home className="w-4 h-4" />
-                <span className="sr-only">Home</span>
-              </button>
+              {!isHome && (
+                <button
+                  onClick={() => setLocation("/")}
+                  className="flex items-center gap-1.5 text-gray-600 hover:text-blue-500 transition-colors font-medium"
+                  title="Home"
+                >
+                  <Home className="w-4 h-4" />
+                  <span className="sr-only">Home</span>
+                </button>
+              )}
               <button
                 onClick={() => setLocation("/bible")}
                 className="text-gray-600 hover:text-blue-500 transition-colors font-medium"
@@ -177,13 +180,15 @@ export default function Header() {
                   ))}
                 </div>
 
-                <button
-                  onClick={() => { setLocation("/"); setIsMobileMenuOpen(false); }}
-                  className="flex items-center gap-2 text-gray-600 hover:text-blue-500 transition-colors text-left font-medium py-3 px-2 rounded-lg hover:bg-gray-50 touch-target mobile-tap"
-                >
-                  <Home className="w-4 h-4" />
-                  Home
-                </button>
+                {!isHome && (
+                  <button
+                    onClick={() => { setLocation("/"); setIsMobileMenuOpen(false); }}
+                    className="flex items-center gap-2 text-gray-600 hover:text-blue-500 transition-colors text-left font-medium py-3 px-2 rounded-lg hover:bg-gray-50 touch-target mobile-tap"
+                  >
+                    <Home className="w-4 h-4" />
+                    Home
+                  </button>
+                )}
                 <button
                   onClick={() => {
                     setLocation("/bible");
