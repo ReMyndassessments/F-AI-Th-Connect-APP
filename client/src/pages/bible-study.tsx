@@ -1383,20 +1383,12 @@ Closing Prayer`;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-amber-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-3 sm:px-4 py-3 sm:py-4 flex items-center gap-2 sm:gap-3">
-          <Link href="/">
-            <button className="p-2 rounded-xl hover:bg-gray-100 transition-colors flex-shrink-0">
-              <Home className="w-5 h-5 text-gray-600"/>
-            </button>
-          </Link>
-          <div className="flex-1 min-w-0">
-            <h1 className="text-base sm:text-xl font-bold text-gray-900 truncate">{t.bibleStudy.title}</h1>
-            <p className="text-xs sm:text-sm text-gray-500 hidden sm:block">{t.bibleStudy.subtitle}</p>
-          </div>
-          <LanguageSwitcher />
-          <BookOpen className="w-5 sm:w-6 h-5 sm:h-6 text-blue-500 flex-shrink-0"/>
+      {/* Page title bar */}
+      <div className="max-w-4xl mx-auto px-3 sm:px-4 pt-4 pb-2 flex items-center gap-2 sm:gap-3">
+        <BookOpen className="w-5 sm:w-6 h-5 sm:h-6 text-blue-500 flex-shrink-0"/>
+        <div className="flex-1 min-w-0">
+          <h1 className="text-base sm:text-xl font-bold text-gray-900 truncate">{t.bibleStudy.title}</h1>
+          <p className="text-xs sm:text-sm text-gray-500 hidden sm:block">{t.bibleStudy.subtitle}</p>
         </div>
       </div>
 

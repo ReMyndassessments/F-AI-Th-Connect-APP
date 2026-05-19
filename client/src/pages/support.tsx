@@ -217,31 +217,6 @@ export default function SupportPage() {
     <div className="min-h-screen bg-white font-sans">
       <DonationModal open={modalOpen} givingType={givingType} onClose={() => setModalOpen(false)} />
 
-      {/* ── Sticky Header ───────────────────────────────────── */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-gray-100 shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <button onClick={() => setLocation("/")} className="flex items-center gap-2 group">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-amber-500 rounded-lg flex items-center justify-center">
-                <MessageCircle className="w-4 h-4 text-white" />
-              </div>
-              <span className="font-bold text-lg faith-gradient-text">F-AI-TH-Connect</span>
-            </button>
-            <button
-              onClick={() => setLocation("/")}
-              className="flex items-center gap-1.5 px-3 py-1.5 border border-gray-200 text-gray-600 hover:bg-gray-50 rounded-lg text-sm font-medium transition-colors"
-            >
-              ← Home
-            </button>
-          </div>
-          <button
-            onClick={scrollToDonate}
-            className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-xl text-sm font-bold shadow hover:shadow-md transition-all active:scale-95"
-          >
-            <Heart className="w-4 h-4" /> Give a Love Gift
-          </button>
-        </div>
-      </header>
 
       {/* ── 1. HERO ─────────────────────────────────────────── */}
       <section className="relative overflow-hidden bg-gradient-to-br from-blue-950 via-indigo-900 to-blue-800 text-white py-24 sm:py-32 px-4">

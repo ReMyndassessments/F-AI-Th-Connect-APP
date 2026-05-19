@@ -154,48 +154,22 @@ export default function Chat() {
 
   return (
     <div className="min-h-screen bg-gray-50 mobile-safe-area">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
-          <div className="flex justify-between items-center h-14 sm:h-16">
-            <div className="flex items-center space-x-2 sm:space-x-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setLocation("/")}
-                className="flex items-center space-x-1 sm:space-x-2 p-2 sm:px-3 touch-target mobile-tap"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                <span className="hidden sm:inline">{t.chat.backHome}</span>
-              </Button>
-              
-              <div className="flex items-center space-x-2">
-                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-500 to-amber-500 rounded-lg flex items-center justify-center">
-                  <MessageCircle className="w-3 h-3 sm:w-5 sm:h-5 text-white" />
-                </div>
-                <span className="text-lg sm:text-xl font-bold faith-gradient-text">F-AI-TH-Connect</span>
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-2 sm:space-x-3">
-              <LanguageSwitcher />
-              <ClearChatButton 
-                onClearChat={handleClearChat}
-                disabled={deleteSessionMutation.isPending || !currentSessionId}
-              />
-              <Button
-                onClick={handleStartNewChat}
-                className="faith-button-primary text-xs sm:text-sm px-2 sm:px-4 touch-target mobile-tap"
-                disabled={createSessionMutation.isPending}
-                size="sm"
-              >
-                <RotateCcw className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
-                <span className="hidden sm:inline">{t.chat.newChat}</span>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* Chat action bar */}
+      <div className="bg-white border-b border-gray-100 px-2 sm:px-4 lg:px-8 py-2 flex justify-end items-center gap-2">
+        <ClearChatButton 
+          onClearChat={handleClearChat}
+          disabled={deleteSessionMutation.isPending || !currentSessionId}
+        />
+        <Button
+          onClick={handleStartNewChat}
+          className="faith-button-primary text-xs sm:text-sm px-2 sm:px-4 touch-target mobile-tap"
+          disabled={createSessionMutation.isPending}
+          size="sm"
+        >
+          <RotateCcw className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
+          <span className="hidden sm:inline">{t.chat.newChat}</span>
+        </Button>
+      </div>
 
       {/* Chat Interface */}
       <main className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8">
