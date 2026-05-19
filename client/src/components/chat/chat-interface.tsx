@@ -10,59 +10,6 @@ import { PromptLibrary } from "@/components/chat/prompt-library";
 import FileUpload from "@/components/chat/file-upload";
 import type { Message } from "@/lib/chat-api";
 
-const PROMPT_CATEGORIES = [
-  { id: 'ministry-leadership', icon: '👥', name: 'Ministry Leadership', label: 'Pastors & church leaders', color: 'from-blue-500 to-indigo-600' },
-  { id: 'mens-ministry', icon: '💪', name: "Men's Ministry", label: "Faith & men's issues", color: 'from-slate-500 to-blue-700' },
-  { id: 'womens-ministry', icon: '🌸', name: "Women's Ministry", label: 'Encouragement & calling', color: 'from-rose-400 to-pink-600' },
-  { id: 'missions-outreach', icon: '🌍', name: 'Missions & Outreach', label: 'Evangelism & community', color: 'from-teal-500 to-cyan-700' },
-  { id: 'church-planting', icon: '🏛️', name: 'Church Planting', label: 'Starting & growing churches', color: 'from-amber-500 to-orange-600' },
-  { id: 'health-wellness', icon: '🙏', name: 'Health & Wellness', label: 'Body, mind & spirit', color: 'from-emerald-500 to-green-700' },
-  { id: 'personal-growth', icon: '📖', name: 'Personal Growth', label: 'Deeper faith & study', color: 'from-purple-500 to-violet-700' },
-  { id: 'youth-ministry', icon: '🎯', name: 'Youth Ministry', label: 'Teens & young adults', color: 'from-violet-400 to-purple-600' },
-];
-
-const LEARNING_TOPICS = [
-  {
-    icon: '⛰️', title: 'Sermon on the Mount', subtitle: 'Matthew 5–7',
-    color: 'bg-blue-50 border-blue-200 text-blue-800', iconBg: 'bg-blue-100',
-    prompt: 'Please teach me about the Sermon on the Mount (Matthew 5–7) in a clear, educational way. Cover the Beatitudes and what each one means, key teachings like "You are the light of the world" and "Turn the other cheek", the Lord\'s Prayer in its original context, and how this sermon applies to life today. Quote key verses in full.',
-  },
-  {
-    icon: '🔥', title: 'The Holy Spirit', subtitle: 'Who He is & what He does',
-    color: 'bg-orange-50 border-orange-200 text-orange-800', iconBg: 'bg-orange-100',
-    prompt: 'Please teach me about the Holy Spirit in a clear, educational way. Who is the Holy Spirit? What is His role in the Trinity? What does He do in the life of a believer — conviction, comfort, guidance, empowerment? What does it mean to be filled with the Spirit? Quote key Scripture passages in full.',
-  },
-  {
-    icon: '🌿', title: 'Fruits of the Spirit', subtitle: 'Galatians 5:22–23',
-    color: 'bg-green-50 border-green-200 text-green-800', iconBg: 'bg-green-100',
-    prompt: 'Please teach me about the Fruits of the Spirit from Galatians 5:22-23 in a clear, educational way. What is each fruit — love, joy, peace, patience, kindness, goodness, faithfulness, gentleness, self-control? What does each mean practically and how do we grow in them? Quote the passage in full with supporting Scriptures.',
-  },
-  {
-    icon: '✝️', title: 'The Gospel', subtitle: 'The Good News of Jesus Christ',
-    color: 'bg-amber-50 border-amber-200 text-amber-800', iconBg: 'bg-amber-100',
-    prompt: 'Please teach me the Gospel — the Good News of Jesus Christ — in a clear, educational way. Cover: creation, the fall, God\'s redemptive plan, the life, death and resurrection of Jesus, what it means to be saved by grace through faith, and what a life of following Jesus looks like. Quote John 3:16, Romans 3:23, Romans 6:23, Ephesians 2:8-9 and Romans 10:9-10 in full.',
-  },
-  {
-    icon: '📜', title: 'How to Study the Bible', subtitle: 'Methods & practical tools',
-    color: 'bg-purple-50 border-purple-200 text-purple-800', iconBg: 'bg-purple-100',
-    prompt: 'Please teach me how to study the Bible effectively. Cover: why Bible study matters, different approaches (devotional, inductive, topical, book study), the S.O.A.P. method, how to understand context and literary genre, useful tools and resources, and how to build a daily habit. Quote 2 Timothy 3:16-17 and Joshua 1:8 in full.',
-  },
-  {
-    icon: '🙏', title: 'Prayer & Fasting', subtitle: 'How Jesus taught us to pray',
-    color: 'bg-indigo-50 border-indigo-200 text-indigo-800', iconBg: 'bg-indigo-100',
-    prompt: 'Please teach me about prayer and fasting from a biblical perspective. Cover the Lord\'s Prayer and what each part means, types of prayer (adoration, confession, thanksgiving, supplication), what fasting is and how Jesus practised it, and practical guidance for developing a consistent prayer life. Quote Matthew 6:9-13 and other key passages in full.',
-  },
-  {
-    icon: '⚖️', title: 'Grace & Salvation', subtitle: "Understanding God's gift",
-    color: 'bg-rose-50 border-rose-200 text-rose-800', iconBg: 'bg-rose-100',
-    prompt: "Please teach me about grace and salvation from a biblical perspective. What is grace? How are we saved — faith or works or both? What is justification, sanctification, and glorification? What is the difference between grace and law? Quote Ephesians 2:8-9, Romans 5:1-2, Titus 3:5-7 and other key passages in full.",
-  },
-  {
-    icon: '🌍', title: 'The Great Commission', subtitle: 'Our calling as believers',
-    color: 'bg-teal-50 border-teal-200 text-teal-800', iconBg: 'bg-teal-100',
-    prompt: "Please teach me about the Great Commission in a clear, educational way. What did Jesus command in Matthew 28:18-20? What does 'making disciples' look like in practice? What is the difference between evangelism and discipleship? How can I personally be part of the Great Commission in everyday life? Quote Matthew 28:18-20 and Acts 1:8 in full.",
-  },
-];
 
 interface ChatInterfaceProps {
   messages: Message[];
@@ -88,6 +35,60 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
   const [libCategory, setLibCategory] = useState("all");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { t } = useLanguage();
+
+  const PROMPT_CATEGORIES = [
+    { id: 'ministry-leadership', icon: '👥', name: t.chat.catMinistryLeadership, label: t.chat.catMinistryLeadershipLabel, color: 'from-blue-500 to-indigo-600' },
+    { id: 'mens-ministry', icon: '💪', name: t.chat.catMensMinistry, label: t.chat.catMensMinistryLabel, color: 'from-slate-500 to-blue-700' },
+    { id: 'womens-ministry', icon: '🌸', name: t.chat.catWomensMinistry, label: t.chat.catWomensMinistryLabel, color: 'from-rose-400 to-pink-600' },
+    { id: 'missions-outreach', icon: '🌍', name: t.chat.catMissionsOutreach, label: t.chat.catMissionsOutreachLabel, color: 'from-teal-500 to-cyan-700' },
+    { id: 'church-planting', icon: '🏛️', name: t.chat.catChurchPlanting, label: t.chat.catChurchPlantingLabel, color: 'from-amber-500 to-orange-600' },
+    { id: 'health-wellness', icon: '🙏', name: t.chat.catHealthWellness, label: t.chat.catHealthWellnessLabel, color: 'from-emerald-500 to-green-700' },
+    { id: 'personal-growth', icon: '📖', name: t.chat.catPersonalGrowth, label: t.chat.catPersonalGrowthLabel, color: 'from-purple-500 to-violet-700' },
+    { id: 'youth-ministry', icon: '🎯', name: t.chat.catYouthMinistry, label: t.chat.catYouthMinistryLabel, color: 'from-violet-400 to-purple-600' },
+  ];
+
+  const LEARNING_TOPICS = [
+    {
+      icon: '⛰️', title: t.chat.learnSermon, subtitle: t.chat.learnSermonSub,
+      color: 'bg-blue-50 border-blue-200 text-blue-800', iconBg: 'bg-blue-100',
+      prompt: 'Please teach me about the Sermon on the Mount (Matthew 5–7) in a clear, educational way. Cover the Beatitudes and what each one means, key teachings like "You are the light of the world" and "Turn the other cheek", the Lord\'s Prayer in its original context, and how this sermon applies to life today. Quote key verses in full.',
+    },
+    {
+      icon: '🔥', title: t.chat.learnHolySpirit, subtitle: t.chat.learnHolySpiritSub,
+      color: 'bg-orange-50 border-orange-200 text-orange-800', iconBg: 'bg-orange-100',
+      prompt: 'Please teach me about the Holy Spirit in a clear, educational way. Who is the Holy Spirit? What is His role in the Trinity? What does He do in the life of a believer — conviction, comfort, guidance, empowerment? What does it mean to be filled with the Spirit? Quote key Scripture passages in full.',
+    },
+    {
+      icon: '🌿', title: t.chat.learnFruits, subtitle: t.chat.learnFruitsSub,
+      color: 'bg-green-50 border-green-200 text-green-800', iconBg: 'bg-green-100',
+      prompt: 'Please teach me about the Fruits of the Spirit from Galatians 5:22-23 in a clear, educational way. What is each fruit — love, joy, peace, patience, kindness, goodness, faithfulness, gentleness, self-control? What does each mean practically and how do we grow in them? Quote the passage in full with supporting Scriptures.',
+    },
+    {
+      icon: '✝️', title: t.chat.learnGospel, subtitle: t.chat.learnGospelSub,
+      color: 'bg-amber-50 border-amber-200 text-amber-800', iconBg: 'bg-amber-100',
+      prompt: 'Please teach me the Gospel — the Good News of Jesus Christ — in a clear, educational way. Cover: creation, the fall, God\'s redemptive plan, the life, death and resurrection of Jesus, what it means to be saved by grace through faith, and what a life of following Jesus looks like. Quote John 3:16, Romans 3:23, Romans 6:23, Ephesians 2:8-9 and Romans 10:9-10 in full.',
+    },
+    {
+      icon: '📜', title: t.chat.learnBibleStudy, subtitle: t.chat.learnBibleStudySub,
+      color: 'bg-purple-50 border-purple-200 text-purple-800', iconBg: 'bg-purple-100',
+      prompt: 'Please teach me how to study the Bible effectively. Cover: why Bible study matters, different approaches (devotional, inductive, topical, book study), the S.O.A.P. method, how to understand context and literary genre, useful tools and resources, and how to build a daily habit. Quote 2 Timothy 3:16-17 and Joshua 1:8 in full.',
+    },
+    {
+      icon: '🙏', title: t.chat.learnPrayer, subtitle: t.chat.learnPrayerSub,
+      color: 'bg-indigo-50 border-indigo-200 text-indigo-800', iconBg: 'bg-indigo-100',
+      prompt: 'Please teach me about prayer and fasting from a biblical perspective. Cover the Lord\'s Prayer and what each part means, types of prayer (adoration, confession, thanksgiving, supplication), what fasting is and how Jesus practised it, and practical guidance for developing a consistent prayer life. Quote Matthew 6:9-13 and other key passages in full.',
+    },
+    {
+      icon: '⚖️', title: t.chat.learnGrace, subtitle: t.chat.learnGraceSub,
+      color: 'bg-rose-50 border-rose-200 text-rose-800', iconBg: 'bg-rose-100',
+      prompt: "Please teach me about grace and salvation from a biblical perspective. What is grace? How are we saved — faith or works or both? What is justification, sanctification, and glorification? What is the difference between grace and law? Quote Ephesians 2:8-9, Romans 5:1-2, Titus 3:5-7 and other key passages in full.",
+    },
+    {
+      icon: '🌍', title: t.chat.learnCommission, subtitle: t.chat.learnCommissionSub,
+      color: 'bg-teal-50 border-teal-200 text-teal-800', iconBg: 'bg-teal-100',
+      prompt: "Please teach me about the Great Commission in a clear, educational way. What did Jesus command in Matthew 28:18-20? What does 'making disciples' look like in practice? What is the difference between evangelism and discipleship? How can I personally be part of the Great Commission in everyday life? Quote Matthew 28:18-20 and Acts 1:8 in full.",
+    },
+  ];
 
   const openLibrary = (categoryId: string) => { setLibCategory(categoryId); setLibOpen(true); };
 
@@ -318,10 +319,10 @@ IMPORTANT: Start your response with a prominent heading that displays the group 
 
             {/* Quick topic chips */}
             <div className="flex flex-wrap gap-2 justify-center mb-4">
-              <button onClick={() => handleSystemPrompt("I'm feeling anxious about my future. What does the Bible say about worry?")} className="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-full text-xs font-medium hover:bg-blue-100 transition-colors">Anxiety & worry</button>
-              <button onClick={() => handleSystemPrompt("How can I deepen my relationship with God?")} className="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-full text-xs font-medium hover:bg-blue-100 transition-colors">Spiritual growth</button>
-              <button onClick={() => handleSystemPrompt("Can you help me with a prayer for my family?")} className="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-full text-xs font-medium hover:bg-blue-100 transition-colors">Prayer requests</button>
-              <button onClick={() => handleSystemPrompt("When someone has hurt my feelings or made an inappropriate comment in person or during Bible study, how can I respond in a Christ-like manner? Please provide biblical guidance for gracious, wise responses that honor God. Here is my situation:")} className="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-full text-xs font-medium hover:bg-blue-100 transition-colors">Godly responses</button>
+              <button onClick={() => handleSystemPrompt("I'm feeling anxious about my future. What does the Bible say about worry?")} className="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-full text-xs font-medium hover:bg-blue-100 transition-colors">{t.chat.quickChip1}</button>
+              <button onClick={() => handleSystemPrompt("How can I deepen my relationship with God?")} className="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-full text-xs font-medium hover:bg-blue-100 transition-colors">{t.chat.quickChip2}</button>
+              <button onClick={() => handleSystemPrompt("Can you help me with a prayer for my family?")} className="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-full text-xs font-medium hover:bg-blue-100 transition-colors">{t.chat.quickChip3}</button>
+              <button onClick={() => handleSystemPrompt("When someone has hurt my feelings or made an inappropriate comment in person or during Bible study, how can I respond in a Christ-like manner? Please provide biblical guidance for gracious, wise responses that honor God. Here is my situation:")} className="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-full text-xs font-medium hover:bg-blue-100 transition-colors">{t.chat.quickChip4}</button>
             </div>
 
             {/* Prompt Library section */}
@@ -370,7 +371,7 @@ IMPORTANT: Start your response with a prominent heading that displays the group 
                   <p className="text-xs text-gray-500 leading-tight">{t.chat.exploreSubtitle}</p>
                 </div>
               </div>
-              <p className="text-xs text-gray-500 mb-3">Choose a topic and receive a rich, educational biblical teaching:</p>
+              <p className="text-xs text-gray-500 mb-3">{t.chat.exploreHint}</p>
               <div className="grid grid-cols-2 gap-2">
                 {LEARNING_TOPICS.map(topic => (
                   <button
