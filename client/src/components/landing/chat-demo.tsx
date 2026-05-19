@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MessageCircle, Send } from "lucide-react";
 import { useLocation } from "wouter";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const demoMessages = [
   {
@@ -37,6 +38,7 @@ const demoMessages = [
 export default function ChatDemo() {
   const [, setLocation] = useLocation();
   const [inputValue, setInputValue] = useState("");
+  const { t } = useLanguage();
 
   const startChat = () => {
     setLocation("/chat");
@@ -46,17 +48,17 @@ export default function ChatDemo() {
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">More Than a Chat — Your Ministry Companion</h2>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.chatDemo.heading}</h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-6">
-            Ask biblical questions, prepare sermons, get ministry guidance, and access 35 ready-made prompts across Missions, Men's, Women's, Youth, Church, and more.
+            {t.chatDemo.subtext}
           </p>
           <div className="flex flex-wrap justify-center gap-2 text-sm">
-            {["Sermon Preparation", "Missions & Outreach", "Men's Ministry", "Women's Ministry", "Youth Group", "Church Leadership", "Prayer Guidance", "Bible Study"].map((tag) => (
+            {t.chatDemo.tags.map((tag) => (
               <span key={tag} className="bg-indigo-50 text-indigo-700 border border-indigo-200 px-3 py-1 rounded-full font-medium">{tag}</span>
             ))}
           </div>
         </div>
-        
+
         <div className="max-w-4xl mx-auto">
           <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
             {/* Chat Header */}
@@ -67,11 +69,11 @@ export default function ChatDemo() {
                 </div>
                 <div>
                   <h3 className="text-white font-semibold">F-AI-TH-Connect</h3>
-                  <p className="text-white text-opacity-80 text-sm">Your Biblical Ministry Companion</p>
+                  <p className="text-white text-opacity-80 text-sm">{t.chatDemo.companionLabel}</p>
                 </div>
               </div>
             </div>
-            
+
             {/* Chat Messages */}
             <div className="h-96 overflow-y-auto p-6 space-y-4">
               {demoMessages.map((message, index) => (
@@ -89,14 +91,14 @@ export default function ChatDemo() {
                       </div>
                       <div className="bg-gray-100 rounded-2xl rounded-bl-md px-4 py-3 max-w-md">
                         <p className="text-sm text-gray-900 mb-2">{message.content}</p>
-                        
+
                         {message.scripture && (
                           <div className="bg-blue-50 rounded-lg p-3 mb-2">
                             <p className="text-sm italic text-blue-600 mb-1">"{message.scripture.text}"</p>
                             <p className="text-xs text-blue-600">- {message.scripture.reference}</p>
                           </div>
                         )}
-                        
+
                         {message.practices && (
                           <ul className="text-sm text-gray-900 space-y-1 list-disc list-inside mb-2">
                             {message.practices.map((practice, i) => (
@@ -104,11 +106,11 @@ export default function ChatDemo() {
                             ))}
                           </ul>
                         )}
-                        
+
                         {message.guidance && (
                           <p className="text-sm text-gray-900">{message.guidance}</p>
                         )}
-                        
+
                         {message.encouragement && (
                           <p className="text-sm text-gray-900">{message.encouragement}</p>
                         )}
@@ -118,13 +120,13 @@ export default function ChatDemo() {
                 </div>
               ))}
             </div>
-            
+
             {/* Chat Input */}
             <div className="border-t border-gray-200 p-4">
               <div className="flex items-center space-x-3">
                 <Input
                   type="text"
-                  placeholder="Ask about faith, prayer, or biblical guidance..."
+                  placeholder={t.chatDemo.inputPlaceholder}
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   className="flex-1 border border-gray-300 rounded-xl px-4 py-3"

@@ -1,8 +1,10 @@
 import { MessageCircle } from "lucide-react";
 import { useLocation } from "wouter";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Footer() {
   const [, setLocation] = useLocation();
+  const { t } = useLanguage();
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -24,9 +26,9 @@ export default function Footer() {
               <span className="text-2xl font-bold faith-gradient-text">F-AI-TH-Connect</span>
             </div>
             <p className="text-gray-400 mb-4 max-w-md">
-              Bringing you closer to God through biblical wisdom, spiritual guidance, and prayer support. Always free, always faithful to Scripture.
+              {t.footer.tagline}
             </p>
-            
+
             <div className="flex space-x-4">
               <a href="#" className="text-gray-400 hover:text-white transition-colors">
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -45,85 +47,85 @@ export default function Footer() {
               </a>
             </div>
           </div>
-          
+
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+            <h3 className="text-lg font-semibold mb-4">{t.footer.quickLinks}</h3>
             <ul className="space-y-2 text-gray-400">
               <li>
                 <button onClick={() => scrollToSection("features")} className="hover:text-white transition-colors">
-                  Features
+                  {t.footer.linkFeatures}
                 </button>
               </li>
               <li>
                 <button onClick={() => scrollToSection("how-it-works")} className="hover:text-white transition-colors">
-                  How It Works
+                  {t.footer.linkHowItWorks}
                 </button>
               </li>
               <li>
                 <button onClick={() => scrollToSection("testimonials")} className="hover:text-white transition-colors">
-                  Testimonials
+                  {t.footer.linkTestimonials}
                 </button>
               </li>
             </ul>
           </div>
-          
+
           {/* Support */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Support</h3>
+            <h3 className="text-lg font-semibold mb-4">{t.footer.supportHeading}</h3>
             <ul className="space-y-2 text-gray-400">
               <li>
                 <button onClick={() => setLocation("/missions")} className="hover:text-white transition-colors font-medium text-amber-400 hover:text-amber-300">
-                  🌏 Missions Partners
+                  {t.footer.linkMissionsPartners}
                 </button>
               </li>
               <li>
                 <button onClick={() => setLocation("/support")} className="hover:text-white transition-colors">
-                  Fuel the F-AI-TH-Connect Mission
+                  {t.footer.linkFuelMission}
                 </button>
               </li>
               <li>
                 <button onClick={() => setLocation("/help")} className="hover:text-white transition-colors">
-                  Help Center
+                  {t.footer.linkHelpCenter}
                 </button>
               </li>
               <li>
                 <button onClick={() => setLocation("/contact")} className="hover:text-white transition-colors">
-                  Contact Us
+                  {t.footer.linkContact}
                 </button>
               </li>
               <li>
                 <button onClick={() => setLocation("/privacy")} className="hover:text-white transition-colors">
-                  Privacy Policy
+                  {t.footer.linkPrivacy}
                 </button>
               </li>
               <li>
                 <button onClick={() => setLocation("/terms")} className="hover:text-white transition-colors">
-                  Terms of Service
+                  {t.footer.linkTerms}
                 </button>
               </li>
             </ul>
           </div>
         </div>
-        
+
         <div className="border-t border-gray-800 pt-8 flex flex-col items-center gap-3 text-center md:text-left md:flex-row md:justify-between">
           <div>
             <p className="text-gray-400 text-sm">
-              &copy; 2024 F-AI-TH-Connect. All rights reserved. Built to equip the Church and reach the lost and unreached.
+              {t.footer.copyright}
             </p>
             <p className="text-gray-500 text-xs mt-1">
-              F-AI-TH Connect is a corporate ministry of <span className="text-gray-400 font-medium">ReMynd Student Services</span>.
+              {t.footer.corporate} <span className="text-gray-400 font-medium">{t.footer.companyName}</span>.
             </p>
           </div>
           <div className="flex flex-col items-center md:items-end gap-1">
             <p className="text-gray-500 text-sm">
-              Powered by Deepseek • Grounded in Scripture
+              {t.footer.poweredBy}
             </p>
             <button
               onClick={() => setLocation("/admin/login")}
               className="text-gray-700 hover:text-gray-500 text-xs transition-colors"
             >
-              Admin
+              {t.footer.admin}
             </button>
           </div>
         </div>

@@ -1,42 +1,23 @@
 import { Star } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
-const testimonials = [
-  {
-    name: "Sarah M.",
-    role: "College Student",
-    initials: "SM",
-    text: "F-AI-TH-Connect helped me through a difficult season of doubt. The Scripture-based responses and gentle guidance reminded me of God's faithfulness. It's like having a wise Christian friend available 24/7.",
-    bgColor: "bg-blue-500"
-  },
-  {
-    name: "Michael J.",
-    role: "Father & Engineer",
-    initials: "MJ",
-    text: "As a busy father, I don't always have time for long Bible studies. F-AI-TH-Connect gives me quick, meaningful insights that help me apply God's word to my daily challenges with work and family.",
-    bgColor: "bg-amber-500"
-  },
-  {
-    name: "Emily R.",
-    role: "Seminary Student",
-    initials: "ER",
-    text: "The theological accuracy and depth of responses amazes me. As a seminary student, I appreciate how F-AI-TH-Connect provides both accessible guidance and deeper theological insights when I need them.",
-    bgColor: "bg-blue-500"
-  }
-];
+const bgColors = ["bg-blue-500", "bg-amber-500", "bg-blue-500"];
 
 export default function Testimonials() {
+  const { t } = useLanguage();
+
   return (
     <section id="testimonials" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Stories of Faith and Growth</h2>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.testimonials.heading}</h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            See how F-AI-TH-Connect is helping believers deepen their faith and find biblical guidance.
+            {t.testimonials.subtext}
           </p>
         </div>
-        
+
         <div className="grid md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
+          {t.testimonials.items.map((testimonial, index) => (
             <div key={index} className="bg-gray-50 rounded-xl p-8 border border-gray-100">
               <div className="flex items-center mb-4">
                 <div className="flex text-amber-500">
@@ -47,7 +28,7 @@ export default function Testimonials() {
               </div>
               <p className="text-gray-700 italic mb-6">"{testimonial.text}"</p>
               <div className="flex items-center">
-                <div className={`w-10 h-10 ${testimonial.bgColor} rounded-full flex items-center justify-center`}>
+                <div className={`w-10 h-10 ${bgColors[index]} rounded-full flex items-center justify-center`}>
                   <span className="text-white font-semibold text-sm">{testimonial.initials}</span>
                 </div>
                 <div className="ml-3">
