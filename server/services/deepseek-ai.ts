@@ -25,17 +25,23 @@ export class DeepseekAI {
     }
   }
 
-  async generateChristianResponse(userMessage: string, conversationHistory: Array<{role: string, content: string}> = []): Promise<{
+  async generateChristianResponse(userMessage: string, conversationHistory: Array<{role: string, content: string}> = [], language = 'en'): Promise<{
     response: string;
     scriptureReferences: ScriptureReference[];
   }> {
     try {
       // Optimize system prompt for faster responses
       const isLongContent = userMessage.length > 1000;
+
+      const languageInstruction = language === 'tl'
+        ? '\n\nCRITICAL INSTRUCTION: You must respond ENTIRELY in Tagalog (Filipino). Write all your responses in natural, clear Filipino/Tagalog language. Do not respond in English under any circumstance.'
+        : language === 'zh'
+        ? '\n\nCRITICAL INSTRUCTION: You must respond ENTIRELY in Simplified Chinese (简体中文). Write all your responses in natural, clear Mandarin Chinese. Do not respond in English under any circumstance.'
+        : '';
       
       const systemPrompt = `You are F-AI-TH-Connect, a Christian AI assistant providing comprehensive biblical guidance and theological wisdom. ${isLongContent ? 
         'Provide thorough analysis of key spiritual themes with detailed, actionable guidance and practical applications.' : 
-        'Offer detailed biblical guidance, practical applications, and comprehensive Christian wisdom.'}
+        'Offer detailed biblical guidance, practical applications, and comprehensive Christian wisdom.'}${languageInstruction}
 
 Structure your responses with depth and detail:
 

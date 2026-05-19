@@ -3,11 +3,15 @@ import { Button } from "@/components/ui/button";
 import { MessageCircle, Menu, X, Share, Smartphone, Globe } from "lucide-react";
 import { useLocation } from "wouter";
 import { usePWA } from "@/hooks/usePWA";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { Language, LANGUAGE_NAMES } from "@/data/translations";
 
 export default function Header() {
   const [, setLocation] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
   const { canInstall, install } = usePWA();
+  const { language, setLanguage, t } = useLanguage();
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -20,6 +24,13 @@ export default function Header() {
   const startChat = () => {
     setLocation("/chat");
   };
+
+  const handleLangSelect = (lang: Language) => {
+    setLanguage(lang);
+    setLangOpen(false);
+  };
+
+  const languages: Language[] = ['en', 'tl', 'zh'];
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
@@ -37,21 +48,49 @@ export default function Header() {
               onClick={() => setLocation("/bible")}
               className="text-gray-600 hover:text-blue-500 transition-colors font-medium"
             >
-              D-Groups
+              {t.nav.dgroups}
             </button>
             <button
               onClick={() => setLocation("/bible-games")}
               className="text-gray-600 hover:text-blue-500 transition-colors font-medium"
             >
-              Bible Games
+              {t.nav.bibleGames}
             </button>
             <button
               onClick={() => setLocation("/missions")}
               className="text-teal-600 hover:text-teal-800 transition-colors font-medium flex items-center gap-1"
             >
               <Globe className="w-4 h-4" />
-              Missions
+              {t.nav.missions}
             </button>
+
+            {/* Language Selector */}
+            <div className="relative">
+              <button
+                onClick={() => setLangOpen(!langOpen)}
+                className="flex items-center gap-1.5 text-gray-500 hover:text-blue-500 transition-colors text-sm font-medium border border-gray-200 rounded-lg px-2.5 py-1.5 hover:border-blue-300"
+                title={t.nav.language}
+              >
+                <span className="text-base leading-none">
+                  {language === 'en' ? '🇺🇸' : language === 'tl' ? '🇵🇭' : '🇨🇳'}
+                </span>
+                <span>{LANGUAGE_NAMES[language]}</span>
+              </button>
+              {langOpen && (
+                <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg z-50 min-w-[130px] overflow-hidden">
+                  {languages.map(lang => (
+                    <button
+                      key={lang}
+                      onClick={() => handleLangSelect(lang)}
+                      className={`w-full flex items-center gap-2 px-4 py-2.5 text-sm hover:bg-blue-50 transition-colors text-left ${language === lang ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-700'}`}
+                    >
+                      <span>{lang === 'en' ? '🇺🇸' : lang === 'tl' ? '🇵🇭' : '🇨🇳'}</span>
+                      {LANGUAGE_NAMES[lang]}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
 
             <Button
               onClick={() => setLocation("/share")}
@@ -68,7 +107,7 @@ export default function Header() {
                 variant="ghost"
                 size="sm"
                 className="p-2 hover:bg-gray-100 touch-target mobile-tap"
-                title="Install App"
+                title={t.nav.installApp}
               >
                 <Smartphone className="w-5 h-5 text-green-600" />
               </Button>
@@ -78,13 +117,13 @@ export default function Header() {
               variant="outline"
               className="px-3 lg:px-4 py-2 rounded-lg font-medium border-amber-300 text-amber-700 hover:bg-amber-50 hover:border-amber-400 text-sm lg:text-base touch-target mobile-tap"
             >
-              💝 Support
+              {t.nav.support}
             </Button>
             <Button
               onClick={startChat}
               className="faith-button-primary px-4 lg:px-6 py-2 rounded-lg font-medium text-sm lg:text-base touch-target mobile-tap"
             >
-              Open Ministry Desk
+              {t.nav.openMinistryDesk}
             </Button>
           </nav>
 
@@ -102,10 +141,26 @@ export default function Header() {
           </button>
         </div>
 
-        {/* Mobile menu - Enhanced for touch */}
+        {/* Mobile menu */}
         {isMobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-gray-100 bg-white">
             <div className="flex flex-col space-y-3">
+
+              {/* Mobile language selector */}
+              <div className="flex items-center gap-2 px-2 pb-1 border-b border-gray-100">
+                <span className="text-xs text-gray-400 font-medium uppercase tracking-wide">{t.nav.language}:</span>
+                {languages.map(lang => (
+                  <button
+                    key={lang}
+                    onClick={() => handleLangSelect(lang)}
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${language === lang ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                  >
+                    <span>{lang === 'en' ? '🇺🇸' : lang === 'tl' ? '🇵🇭' : '🇨🇳'}</span>
+                    {LANGUAGE_NAMES[lang]}
+                  </button>
+                ))}
+              </div>
+
               <button
                 onClick={() => {
                   setLocation("/bible");
@@ -113,7 +168,7 @@ export default function Header() {
                 }}
                 className="text-gray-600 hover:text-blue-500 transition-colors text-left font-medium py-3 px-2 rounded-lg hover:bg-gray-50 touch-target mobile-tap"
               >
-                D-Groups
+                {t.nav.dgroups}
               </button>
               <button
                 onClick={() => {
@@ -122,7 +177,7 @@ export default function Header() {
                 }}
                 className="text-gray-600 hover:text-blue-500 transition-colors text-left font-medium py-3 px-2 rounded-lg hover:bg-gray-50 touch-target mobile-tap"
               >
-                Bible Games
+                {t.nav.bibleGames}
               </button>
               <button
                 onClick={() => {
@@ -132,7 +187,7 @@ export default function Header() {
                 className="text-teal-600 hover:text-teal-800 transition-colors text-left font-medium py-3 px-2 rounded-lg hover:bg-teal-50 touch-target mobile-tap flex items-center gap-2"
               >
                 <Globe className="w-4 h-4" />
-                🌏 Missions Partners
+                {t.nav.missionsPartners}
               </button>
 
               <Button
@@ -141,7 +196,7 @@ export default function Header() {
                 className="w-full justify-start text-gray-600 hover:text-blue-500 py-3 touch-target mobile-tap"
               >
                 <Share className="w-4 h-4 mr-2" />
-                Share App
+                {t.nav.shareApp}
               </Button>
               {canInstall && (
                 <Button
@@ -150,7 +205,7 @@ export default function Header() {
                   className="w-full justify-start text-green-600 hover:text-green-700 py-3 touch-target mobile-tap"
                 >
                   <Smartphone className="w-4 h-4 mr-2" />
-                  Install App
+                  {t.nav.installApp}
                 </Button>
               )}
               <Button
@@ -158,18 +213,23 @@ export default function Header() {
                 variant="outline"
                 className="w-full border-amber-300 text-amber-700 hover:bg-amber-50 hover:border-amber-400 py-3 touch-target mobile-tap"
               >
-                💝 Support This Ministry
+                {t.nav.supportMinistry}
               </Button>
               <Button
                 onClick={startChat}
                 className="faith-button-primary w-full py-3 touch-target mobile-tap"
               >
-                Open Ministry Desk
+                {t.nav.openMinistryDesk}
               </Button>
             </div>
           </div>
         )}
       </div>
+
+      {/* Close lang dropdown on outside click */}
+      {langOpen && (
+        <div className="fixed inset-0 z-40" onClick={() => setLangOpen(false)} />
+      )}
     </header>
   );
 }

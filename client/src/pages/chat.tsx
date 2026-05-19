@@ -2,6 +2,7 @@ import { useParams } from "wouter";
 import { useEffect, useState } from "react";
 import { trackPageView } from "@/hooks/useAnalytics";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { chatApi } from "@/lib/chat-api";
 import ChatInterface from "@/components/chat/chat-interface";
 import ClearChatButton from "@/components/chat/clear-chat-button";
@@ -17,6 +18,7 @@ export default function Chat() {
   const [, setLocation] = useLocation();
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(sessionId || null);
   const queryClient = useQueryClient();
+  const { language } = useLanguage();
   useEffect(() => { trackPageView('ministry_desk'); }, []);
 
   // Create new session if no sessionId provided
@@ -48,7 +50,7 @@ export default function Chat() {
   // Send message mutation
   const sendMessageMutation = useMutation({
     mutationFn: ({ sessionId, content }: { sessionId: string; content: string }) =>
-      chatApi.sendMessage(sessionId, content),
+      chatApi.sendMessage(sessionId, content, language),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["/api/chat/sessions", currentSessionId, "messages"],

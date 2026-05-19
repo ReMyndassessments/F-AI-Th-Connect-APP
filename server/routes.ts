@@ -98,13 +98,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const validation = z.object({
         content: z.string().min(1),
+        language: z.enum(['en', 'tl', 'zh']).optional().default('en'),
       }).safeParse(req.body);
 
       if (!validation.success) {
         return res.status(400).json({ message: "Invalid message content" });
       }
 
-      const { content } = validation.data;
+      const { content, language } = validation.data;
       
       const session = await storage.getChatSession(sessionId);
       if (!session) {
@@ -129,7 +130,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }));
 
       // Generate AI response
-      const aiResult = await deepseekAI.generateChristianResponse(content, conversationHistory);
+      const aiResult = await deepseekAI.generateChristianResponse(content, conversationHistory, language);
       
       // Check feature flags for ministry support reminders
       const flags = await storage.getFeatureFlags();

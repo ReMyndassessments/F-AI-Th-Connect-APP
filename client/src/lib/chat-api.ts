@@ -30,12 +30,13 @@ export const chatApi = {
     return response.json();
   },
 
-  async sendMessage(sessionId: string, content: string): Promise<{
+  async sendMessage(sessionId: string, content: string, language = 'en'): Promise<{
     userMessage: Message;
     aiMessage: Message;
   }> {
     const response = await apiRequest("POST", `/api/chat/sessions/${sessionId}/messages`, {
       content,
+      language,
     });
     return response.json();
   },

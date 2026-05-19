@@ -11,21 +11,11 @@ import AdvertisementDisplay from "@/components/ads/advertisement-display";
 import DailyVerseCard from "@/components/daily-verse/daily-verse-card";
 import { Check } from "lucide-react";
 import { trackPageView } from "@/hooks/useAnalytics";
-
-const dGroupHighlights = [
-  "CCF 4 W's PDF upload and sharing",
-  "Study guides for 8 D-Group types",
-  "Free video meeting rooms — no sign-in required",
-  "Bible games to engage your group",
-  "Sermon notes and PDF upload for study guide generation",
-  "Missions Partner Program — get a public profile for your mission trip",
-  "Mission and outreach study resources",
-  "Equip your group to share their faith",
-  "Works on any phone, tablet, or computer",
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Home() {
   useEffect(() => { trackPageView('home'); }, []);
+  const { t } = useLanguage();
   return (
     <div className="min-h-screen bg-white">
       <Header />
@@ -36,10 +26,10 @@ export default function Home() {
         <section className="py-14 bg-indigo-50 border-y border-indigo-100">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <p className="text-xl sm:text-2xl text-gray-700 mb-10 max-w-2xl mx-auto leading-relaxed font-medium">
-              F-AI-TH-Connect is built for D-Groups on mission — small, intentional communities not just studying the Word together, but going out to share it. Whether you lead a CCF cell group, a Bible study, or a team reaching the lost and unreached, every tool you need is here.
+              {t.dgroup.bannerText}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4 text-left max-w-2xl mx-auto">
-              {dGroupHighlights.map((item, i) => (
+              {t.dgroup.highlights.map((item, i) => (
                 <div key={i} className="flex items-start gap-3">
                   <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
                     <Check className="w-3 h-3 text-green-600" />

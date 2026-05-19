@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Send, Loader2, BookOpen, AlertTriangle, GraduationCap } from "lucide-react";
 import { trackFeature } from "@/hooks/useAnalytics";
+import { useLanguage } from "@/contexts/LanguageContext";
 import MessageBubble from "@/components/chat/message-bubble";
 import TypingIndicator from "@/components/chat/typing-indicator";
 import { PromptLibrary } from "@/components/chat/prompt-library";
@@ -86,6 +87,7 @@ export default function ChatInterface({ messages, onSendMessage, isLoading, isSe
   const [libOpen, setLibOpen] = useState(false);
   const [libCategory, setLibCategory] = useState("all");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { t } = useLanguage();
 
   const openLibrary = (categoryId: string) => { setLibCategory(categoryId); setLibOpen(true); };
 
@@ -308,9 +310,9 @@ IMPORTANT: Start your response with a prominent heading that displays the group 
               <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-blue-500 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-3">
                 <span className="text-white font-bold text-lg sm:text-xl">✝</span>
               </div>
-              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-1">Welcome to F-AI-TH-Connect</h3>
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-1">{t.chat.welcome}</h3>
               <p className="text-gray-500 text-xs sm:text-sm px-2">
-                Biblical guidance, learning, and spiritual encouragement — explore the Word or ask anything below.
+                {t.chat.subtitle}
               </p>
             </div>
 
@@ -330,18 +332,18 @@ IMPORTANT: Start your response with a prominent heading that displays the group 
                     <BookOpen className="w-4 h-4 text-white" />
                   </div>
                   <div className="text-left">
-                    <h4 className="font-semibold text-gray-900 text-sm leading-tight">Prompt Library</h4>
-                    <p className="text-xs text-gray-500 leading-tight">35 ready-made prompts</p>
+                    <h4 className="font-semibold text-gray-900 text-sm leading-tight">{t.chat.promptLibraryLabel}</h4>
+                    <p className="text-xs text-gray-500 leading-tight">{t.chat.promptLibraryDesc}</p>
                   </div>
                 </div>
                 <button
                   onClick={() => openLibrary('all')}
                   className="text-xs bg-indigo-600 text-white px-3 py-1.5 rounded-lg hover:bg-indigo-700 transition-colors font-medium flex-shrink-0"
                 >
-                  Browse all →
+                  {t.chat.promptLibraryBrowse}
                 </button>
               </div>
-              <p className="text-xs text-gray-500 mb-3 mt-2">Not sure what to ask? Pick a ministry category below to see ready-made prompts:</p>
+              <p className="text-xs text-gray-500 mb-3 mt-2">{t.chat.promptHint}</p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {PROMPT_CATEGORIES.map(cat => (
                   <button
@@ -364,8 +366,8 @@ IMPORTANT: Start your response with a prominent heading that displays the group 
                   <GraduationCap className="w-4 h-4 text-white" />
                 </div>
                 <div className="text-left">
-                  <h4 className="font-semibold text-gray-900 text-sm leading-tight">Explore & Learn</h4>
-                  <p className="text-xs text-gray-500 leading-tight">Deepen your knowledge of the Word</p>
+                  <h4 className="font-semibold text-gray-900 text-sm leading-tight">{t.chat.exploreLearn}</h4>
+                  <p className="text-xs text-gray-500 leading-tight">{t.chat.exploreSubtitle}</p>
                 </div>
               </div>
               <p className="text-xs text-gray-500 mb-3">Choose a topic and receive a rich, educational biblical teaching:</p>
@@ -412,7 +414,7 @@ IMPORTANT: Start your response with a prominent heading that displays the group 
           <div className="flex-1 space-y-2">
             <div className="relative">
               <Textarea
-                placeholder="Ask about faith, prayer, or guidance..."
+                placeholder={t.chat.inputPlaceholder}
                 value={inputValue}
                 onChange={(e) => handleInputChange(e.target.value)}
                 onKeyDown={handleKeyDown}
