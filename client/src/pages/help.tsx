@@ -31,6 +31,7 @@ import { useState } from "react";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import DailyVerseCard from "@/components/daily-verse/daily-verse-card";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface FAQItem {
   question: string;
@@ -149,6 +150,7 @@ const faqs: FAQItem[] = [
 export default function Help() {
   const [, setLocation] = useLocation();
   const [expandedFAQ, setExpandedFAQ] = useState<number | null>(null);
+  const { t } = useLanguage();
 
   // Fetch feature flags to conditionally show TTS section
   const { data: featureFlags } = useQuery({
@@ -167,34 +169,6 @@ export default function Help() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header - Mobile Optimized */}
-      <header className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
-          <div className="flex justify-between items-center h-14 sm:h-16">
-            <div className="flex items-center space-x-2 sm:space-x-4">
-              <Button
-                variant="ghost"
-                onClick={() => setLocation("/")}
-                className="flex items-center space-x-1 sm:space-x-2 p-1 sm:p-2"
-              >
-                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-500 to-amber-500 rounded-lg flex items-center justify-center">
-                  <MessageCircle className="w-3 h-3 sm:w-5 sm:h-5 text-white" />
-                </div>
-                <span className="text-lg sm:text-xl font-bold faith-gradient-text hidden xs:inline">F-AI-TH-Connect</span>
-                <span className="text-sm font-bold faith-gradient-text xs:hidden">F-AI-TH</span>
-              </Button>
-            </div>
-            <Button
-              onClick={() => setLocation("/")}
-              className="faith-button-primary text-xs sm:text-sm px-2 sm:px-4 py-1 sm:py-2"
-            >
-              <span className="hidden sm:inline">Back to Home</span>
-              <span className="sm:hidden">Home</span>
-            </Button>
-          </div>
-        </div>
-      </header>
-
       <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6 lg:py-8">
         <div className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8">
           {/* Main Content */}
@@ -204,9 +178,9 @@ export default function Help() {
               <div className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-blue-500 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
                 <HelpCircle className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-white" />
               </div>
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold faith-gradient-text mb-3 sm:mb-4">Help Center</h1>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold faith-gradient-text mb-3 sm:mb-4">{t.help.title}</h1>
               <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto px-2">
-                Find answers to your questions and learn how to use F-AI-TH-Connect to equip your group, disciple believers, and reach the lost and unreached.
+                {t.help.subtitle}
               </p>
             </div>
 
@@ -215,7 +189,7 @@ export default function Help() {
               <CardHeader className="pb-3 sm:pb-4">
                 <CardTitle className="flex items-center space-x-2 text-lg sm:text-xl">
                   <Book className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
-                  <span>Getting Started</span>
+                  <span>{t.help.gettingStarted}</span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3 sm:space-y-4">
@@ -223,29 +197,29 @@ export default function Help() {
                   <div className="flex items-start space-x-3">
                     <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500 mt-1 flex-shrink-0" />
                     <div>
-                      <h4 className="font-semibold mb-1 text-sm sm:text-base">Start a Conversation</h4>
-                      <p className="text-xs sm:text-sm text-gray-600">Type your spiritual questions or concerns in the chat interface for biblical guidance.</p>
+                      <h4 className="font-semibold mb-1 text-sm sm:text-base">{t.help.startConversation}</h4>
+                      <p className="text-xs sm:text-sm text-gray-600">{t.help.startConversationDesc}</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
                     <Upload className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mt-1 flex-shrink-0" />
                     <div>
-                      <h4 className="font-semibold mb-1 text-sm sm:text-base">Upload Documents</h4>
-                      <p className="text-xs sm:text-sm text-gray-600">Upload files to create comprehensive Bible studies and spiritual content.</p>
+                      <h4 className="font-semibold mb-1 text-sm sm:text-base">{t.help.uploadDocs}</h4>
+                      <p className="text-xs sm:text-sm text-gray-600">{t.help.uploadDocsDesc}</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
                     <Heart className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 mt-1 flex-shrink-0" />
                     <div>
-                      <h4 className="font-semibold mb-1 text-sm sm:text-base">Share & Save</h4>
-                      <p className="text-xs sm:text-sm text-gray-600">Copy, download, or share meaningful conversations with fellow believers.</p>
+                      <h4 className="font-semibold mb-1 text-sm sm:text-base">{t.help.shareAndSave}</h4>
+                      <p className="text-xs sm:text-sm text-gray-600">{t.help.shareAndSaveDesc}</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
                     <Settings className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500 mt-1 flex-shrink-0" />
                     <div>
-                      <h4 className="font-semibold mb-1 text-sm sm:text-base">Personalized Experience</h4>
-                      <p className="text-xs sm:text-sm text-gray-600">Each conversation is tailored to provide relevant biblical wisdom for your situation.</p>
+                      <h4 className="font-semibold mb-1 text-sm sm:text-base">{t.help.personalizedExp}</h4>
+                      <p className="text-xs sm:text-sm text-gray-600">{t.help.personalizedExpDesc}</p>
                     </div>
                   </div>
                 </div>
@@ -257,7 +231,7 @@ export default function Help() {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <BookOpen className="w-5 h-5 text-blue-500" />
-                  <span>Prompt Library - Your Ministry Guide</span>
+                  <span>{t.help.promptLibrary}</span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -346,7 +320,7 @@ export default function Help() {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <Gamepad2 className="w-5 h-5 text-purple-500" />
-                  <span>Bible Games - Four Modes for Every Setting!</span>
+                  <span>{t.help.bibleGamesSection}</span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -534,7 +508,7 @@ export default function Help() {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <Highlighter className="w-5 h-5 text-amber-500" />
-                  <span>Bible Study Highlighting</span>
+                  <span>{t.help.highlighting}</span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -615,7 +589,7 @@ export default function Help() {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <Globe className="w-5 h-5 text-teal-500" />
-                  <span>Missions Partner Program</span>
+                  <span>{t.help.missionsSection}</span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -657,14 +631,14 @@ export default function Help() {
                     className="bg-teal-600 hover:bg-teal-700 text-white flex items-center justify-center gap-2"
                   >
                     <Globe className="w-4 h-4" />
-                    Register Your Mission Group
+                    {t.help.registerMission}
                   </Button>
                   <Button
                     variant="outline"
                     onClick={() => setLocation("/missions")}
                     className="border-teal-300 text-teal-700 hover:bg-teal-50 flex items-center justify-center gap-2"
                   >
-                    View Missions Directory
+                    {t.help.viewDirectory}
                   </Button>
                 </div>
               </CardContent>
@@ -673,7 +647,7 @@ export default function Help() {
             {/* FAQ Section - Mobile Optimized */}
             <Card>
               <CardHeader className="pb-3 sm:pb-4">
-                <CardTitle className="text-lg sm:text-xl">Frequently Asked Questions</CardTitle>
+                <CardTitle className="text-lg sm:text-xl">{t.help.faq}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3 sm:space-y-4">
@@ -704,11 +678,11 @@ export default function Help() {
             {/* Contact Support - Mobile Optimized */}
             <Card className="mt-4 sm:mt-6 lg:mt-8">
               <CardHeader className="pb-3 sm:pb-4">
-                <CardTitle className="text-lg sm:text-xl">Need More Help?</CardTitle>
+                <CardTitle className="text-lg sm:text-xl">{t.help.needHelp}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base">
-                  If you can't find the answer you're looking for, we're here to help! Reach out to our support team.
+                  {t.help.needHelpDesc}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                   <Button
@@ -716,7 +690,7 @@ export default function Help() {
                     className="faith-button-primary flex items-center justify-center space-x-2 w-full sm:w-auto"
                   >
                     <Mail className="w-4 h-4" />
-                    <span>Contact Support</span>
+                    <span>{t.help.contactSupport}</span>
                   </Button>
                   <Button
                     variant="outline"
@@ -724,7 +698,7 @@ export default function Help() {
                     className="flex items-center justify-center space-x-2 w-full sm:w-auto"
                   >
                     <Mail className="w-4 h-4" />
-                    <span>Email Us Directly</span>
+                    <span>{t.help.emailUs}</span>
                   </Button>
                 </div>
               </CardContent>
@@ -737,7 +711,7 @@ export default function Help() {
             
             <Card>
               <CardHeader className="pb-3 sm:pb-4">
-                <CardTitle className="text-base sm:text-lg">Quick Actions</CardTitle>
+                <CardTitle className="text-base sm:text-lg">{t.help.quickActions}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2 sm:space-y-3">
                 <Button
@@ -745,7 +719,7 @@ export default function Help() {
                   className="w-full faith-button-primary justify-center sm:justify-start text-sm sm:text-base py-2 sm:py-3"
                 >
                   <MessageCircle className="w-4 h-4 mr-2" />
-                  Start New Chat
+                  {t.help.startChat}
                 </Button>
                 <Button
                   onClick={() => setLocation("/bible-games")}
@@ -753,7 +727,7 @@ export default function Help() {
                   className="w-full justify-center sm:justify-start text-sm sm:text-base py-2 sm:py-3"
                 >
                   <Gamepad2 className="w-4 h-4 mr-2" />
-                  Play Bible Games
+                  {t.help.playGames}
                 </Button>
                 <Button
                   onClick={() => setLocation("/missions")}
@@ -761,7 +735,7 @@ export default function Help() {
                   className="w-full justify-center sm:justify-start text-sm sm:text-base py-2 sm:py-3 border-teal-200 text-teal-700 hover:bg-teal-50"
                 >
                   <Globe className="w-4 h-4 mr-2" />
-                  Missions Partners
+                  {t.help.missionsPartners}
                 </Button>
                 <Button
                   onClick={() => setLocation("/contact")}
@@ -769,7 +743,7 @@ export default function Help() {
                   className="w-full justify-center sm:justify-start text-sm sm:text-base py-2 sm:py-3"
                 >
                   <Phone className="w-4 h-4 mr-2" />
-                  Contact Us
+                  {t.help.contactUs}
                 </Button>
                 <Button
                   onClick={() => setLocation("/support")}
@@ -777,7 +751,7 @@ export default function Help() {
                   className="w-full justify-center sm:justify-start text-sm sm:text-base py-2 sm:py-3"
                 >
                   <Heart className="w-4 h-4 mr-2" />
-                  Support Ministry
+                  {t.help.supportMinistry}
                 </Button>
               </CardContent>
             </Card>
