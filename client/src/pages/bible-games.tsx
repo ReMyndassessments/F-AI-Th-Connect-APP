@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Link } from "wouter";
 import { ArrowLeft, RotateCcw, Lightbulb, Home, RefreshCw } from "lucide-react";
 import { trackPageView } from "@/hooks/useAnalytics";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type GameType = 'hub' | 'path' | 'wordle' | 'memory' | 'wordsearch' | 'unscramble' | 'booksorder';
 type Difficulty = 'easy' | 'medium' | 'hard';
@@ -10,10 +11,11 @@ type Difficulty = 'easy' | 'medium' | 'hard';
 // SHARED UI: Difficulty Picker & Header
 // =====================================================================
 function DifficultyPicker({ value, onChange }: { value: Difficulty; onChange: (d: Difficulty) => void }) {
+  const { t } = useLanguage();
   const opts: { d: Difficulty; label: string; color: string }[] = [
-    { d:'easy',   label:'Easy',   color:'bg-green-500 text-white' },
-    { d:'medium', label:'Medium', color:'bg-amber-500 text-white' },
-    { d:'hard',   label:'Hard',   color:'bg-red-500 text-white'   },
+    { d:'easy',   label: t.bibleGames.easy,   color:'bg-green-500 text-white' },
+    { d:'medium', label: t.bibleGames.medium, color:'bg-amber-500 text-white' },
+    { d:'hard',   label: t.bibleGames.hard,   color:'bg-red-500 text-white'   },
   ];
   return (
     <div className="flex gap-1.5 bg-gray-100 rounded-xl p-1">
@@ -28,6 +30,7 @@ function DifficultyPicker({ value, onChange }: { value: Difficulty; onChange: (d
 }
 
 function GameHeader({ title, subtitle, onBack, onRefresh }: { title: string; subtitle: string; onBack: () => void; onRefresh: () => void }) {
+  const { t } = useLanguage();
   return (
     <div className="flex items-center gap-3 mb-4">
       <button onClick={onBack} className="p-2 rounded-xl hover:bg-gray-100 flex-shrink-0"><ArrowLeft className="w-5 h-5"/></button>
@@ -36,7 +39,7 @@ function GameHeader({ title, subtitle, onBack, onRefresh }: { title: string; sub
         <p className="text-sm text-gray-500 truncate">{subtitle}</p>
       </div>
       <button onClick={onRefresh} className="flex items-center gap-1.5 px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl text-sm font-semibold flex-shrink-0">
-        <RefreshCw className="w-4 h-4"/> New
+        <RefreshCw className="w-4 h-4"/> {t.bibleGames.new}
       </button>
     </div>
   );
@@ -863,6 +866,7 @@ const GAMES=[
 
 export default function BibleGames() {
   const [currentGame,setCurrentGame]=useState<GameType>('hub');
+  const { t } = useLanguage();
   useEffect(() => { trackPageView('bible_games'); }, []);
 
   if(currentGame==='path')       return <BiblePath onBack={()=>setCurrentGame('hub')}/>;
@@ -878,8 +882,8 @@ export default function BibleGames() {
         <div className="flex items-center gap-3 mb-6">
           <Link href="/"><button className="p-2 rounded-xl hover:bg-white hover:shadow-sm transition-all"><Home className="w-5 h-5 text-gray-600"/></button></Link>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Bible Games</h1>
-            <p className="text-gray-500 text-sm">6 visual games — Easy, Medium & Hard difficulty</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{t.bibleGames.title}</h1>
+            <p className="text-gray-500 text-sm">{t.bibleGames.subtitle}</p>
           </div>
         </div>
 
@@ -896,17 +900,17 @@ export default function BibleGames() {
               </div>
               <p className="text-sm text-gray-500 leading-relaxed">{game.desc}</p>
               <div className="flex items-center gap-2 mt-3">
-                <span className="text-xs px-2 py-0.5 bg-green-100 text-green-700 rounded-full font-semibold">Easy</span>
-                <span className="text-xs px-2 py-0.5 bg-amber-100 text-amber-700 rounded-full font-semibold">Medium</span>
-                <span className="text-xs px-2 py-0.5 bg-red-100 text-red-700 rounded-full font-semibold">Hard</span>
-                <span className="ml-auto text-sm font-semibold text-blue-600">Play →</span>
+                <span className="text-xs px-2 py-0.5 bg-green-100 text-green-700 rounded-full font-semibold">{t.bibleGames.easy}</span>
+                <span className="text-xs px-2 py-0.5 bg-amber-100 text-amber-700 rounded-full font-semibold">{t.bibleGames.medium}</span>
+                <span className="text-xs px-2 py-0.5 bg-red-100 text-red-700 rounded-full font-semibold">{t.bibleGames.hard}</span>
+                <span className="ml-auto text-sm font-semibold text-blue-600">{t.bibleGames.play}</span>
               </div>
             </button>
           ))}
         </div>
 
         <div className="mt-8 bg-white rounded-2xl p-5 border border-gray-100 shadow-sm text-center">
-          <p className="text-gray-500 text-sm italic">"Your word is a lamp to my feet and a light to my path." — Psalm 119:105</p>
+          <p className="text-gray-500 text-sm italic">{t.bibleGames.quote}</p>
         </div>
       </div>
     </div>

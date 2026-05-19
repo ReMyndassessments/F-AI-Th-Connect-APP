@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { elevenLabsClient, type ElevenLabsVoice } from "@/services/elevenlabs-client";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface DailyVerseCardProps {
   variant?: "default" | "compact" | "banner";
@@ -16,6 +17,7 @@ interface DailyVerseCardProps {
 
 export default function DailyVerseCard({ variant = "default", className = "" }: DailyVerseCardProps) {
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   // Check feature flags for TTS availability
   const { data: featureFlags } = useQuery({
@@ -71,13 +73,13 @@ export default function DailyVerseCard({ variant = "default", className = "" }: 
     try {
       await navigator.clipboard.writeText(verseText);
       toast({
-        title: "Verse copied!",
-        description: "Today's memory verse has been copied to your clipboard.",
+        title: t.dailyVerse.verseCopied,
+        description: t.dailyVerse.verseCopiedDesc,
       });
     } catch (error) {
       toast({
-        title: "Copy failed",
-        description: "Unable to copy verse to clipboard.",
+        title: t.dailyVerse.copyFailed,
+        description: t.dailyVerse.copyFailedDesc,
         variant: "destructive",
       });
     }
@@ -221,7 +223,7 @@ export default function DailyVerseCard({ variant = "default", className = "" }: 
             <div className="flex-1 min-w-0">
               <div className="flex items-center space-x-2 mb-2">
                 <Badge variant="outline" className="text-xs bg-white border-blue-200 text-blue-700">
-                  Today's Verse
+                  {t.dailyVerse.title}
                 </Badge>
               </div>
               <blockquote className="text-sm text-gray-700 italic mb-2 line-clamp-2">
@@ -245,7 +247,7 @@ export default function DailyVerseCard({ variant = "default", className = "" }: 
             <Calendar className="w-5 h-5" />
             <span className="text-sm font-medium opacity-90">{todayDate}</span>
           </div>
-          <h3 className="text-xl font-semibold mb-4">Today's Memory Verse</h3>
+          <h3 className="text-xl font-semibold mb-4">{t.dailyVerse.title}</h3>
           <blockquote className="text-lg md:text-xl italic mb-4 max-w-3xl mx-auto">
             "{todaysVerse.text}"
           </blockquote>
@@ -270,7 +272,7 @@ export default function DailyVerseCard({ variant = "default", className = "" }: 
               <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </div>
             <div>
-              <h3 className="text-base sm:text-lg font-semibold text-gray-900">Today's Memory Verse</h3>
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900">{t.dailyVerse.title}</h3>
               <p className="text-sm text-gray-600">{todayDate}</p>
             </div>
           </div>
@@ -307,7 +309,7 @@ export default function DailyVerseCard({ variant = "default", className = "" }: 
                 
                 {showVoiceSettings && (
                   <div className="absolute right-0 bottom-12 sm:bottom-10 z-10 bg-white border border-gray-200 rounded-lg shadow-lg p-3 min-w-[200px]">
-                    <p className="text-xs font-medium text-gray-700 mb-2">Premium Voice:</p>
+                    <p className="text-xs font-medium text-gray-700 mb-2">{t.dailyVerse.premiumVoice}</p>
                     <Select value={selectedVoice} onValueChange={setSelectedVoice}>
                       <SelectTrigger className="w-full h-9 sm:h-8 text-xs">
                         <SelectValue />
@@ -340,7 +342,7 @@ export default function DailyVerseCard({ variant = "default", className = "" }: 
               ) : (
                 <Sparkles className="w-4 h-4 mr-1" />
               )}
-              <span className="hidden sm:inline">{isLoadingTTS ? 'Loading...' : isPlaying ? 'Pause' : 'Listen'}</span>
+              <span className="hidden sm:inline">{isLoadingTTS ? t.dailyVerse.loading : isPlaying ? t.dailyVerse.pause : t.dailyVerse.listen}</span>
               <span className="sm:hidden">{isLoadingTTS ? '...' : isPlaying ? '⏸️' : '🔊'}</span>
             </Button>
               </>
@@ -354,7 +356,7 @@ export default function DailyVerseCard({ variant = "default", className = "" }: 
               className="border-blue-200 text-blue-600 hover:bg-blue-50 h-9 sm:h-8 px-3 sm:px-2 text-xs sm:text-sm touch-target mobile-tap"
             >
               <Copy className="w-4 h-4 mr-1" />
-              <span className="hidden sm:inline">Copy</span>
+              <span className="hidden sm:inline">{t.dailyVerse.copy}</span>
               <span className="sm:hidden">📋</span>
             </Button>
             
@@ -367,7 +369,7 @@ export default function DailyVerseCard({ variant = "default", className = "" }: 
               className="border-blue-200 text-blue-600 hover:bg-blue-50 h-9 sm:h-8 px-3 sm:px-2 text-xs sm:text-sm touch-target mobile-tap"
             >
               <Share2 className="w-4 h-4 mr-1" />
-              <span className="hidden sm:inline">Share</span>
+              <span className="hidden sm:inline">{t.dailyVerse.share}</span>
               <span className="sm:hidden">📤</span>
             </Button>
           </div>
@@ -376,7 +378,7 @@ export default function DailyVerseCard({ variant = "default", className = "" }: 
         {/* Footer - Mobile Optimized */}
         <div className="mt-4 pt-4 border-t border-blue-100">
           <p className="text-xs text-gray-500 text-center leading-relaxed">
-            Memory verses change daily • Meditate on God's Word
+            {t.dailyVerse.footer}
           </p>
         </div>
       </CardContent>

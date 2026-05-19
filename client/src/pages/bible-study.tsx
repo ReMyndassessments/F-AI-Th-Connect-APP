@@ -4,6 +4,7 @@ import { trackPageView, trackFeature } from "@/hooks/useAnalytics";
 import { Home, Upload, X, Copy, Download, Loader2, FileText, BookOpen, Video, Share2, Mail, Check, MessageSquare, Users, Pencil, ExternalLink, Sparkles, Printer } from "lucide-react";
 import { chatApi } from "@/lib/chat-api";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 // =====================================================================
 // STUDY TYPES
@@ -791,6 +792,7 @@ interface MeetingRoom { code: string; jitsiRoom: string; groupName: string; stud
 
 export default function BibleStudy() {
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [, setLocation] = useLocation();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const ccfFileInputRef = useRef<HTMLInputElement>(null);
@@ -1389,8 +1391,8 @@ Closing Prayer`;
             </button>
           </Link>
           <div className="flex-1 min-w-0">
-            <h1 className="text-base sm:text-xl font-bold text-gray-900 truncate">D-Group Bible Study Generator</h1>
-            <p className="text-xs sm:text-sm text-gray-500 hidden sm:block">Create tailored study guides for your D-Group or Bible study</p>
+            <h1 className="text-base sm:text-xl font-bold text-gray-900 truncate">{t.bibleStudy.title}</h1>
+            <p className="text-xs sm:text-sm text-gray-500 hidden sm:block">{t.bibleStudy.subtitle}</p>
           </div>
           <BookOpen className="w-5 sm:w-6 h-5 sm:h-6 text-blue-500 flex-shrink-0"/>
         </div>
@@ -1403,8 +1405,8 @@ Closing Prayer`;
           <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 flex items-start gap-3">
             <span className="text-2xl flex-shrink-0">💡</span>
             <div className="flex-1">
-              <p className="text-sm text-blue-800 font-medium">Pro tip for group leaders</p>
-              <p className="text-sm text-blue-700 mt-0.5">Upload your latest CCF 4W's, sermon notes or a Scripture passage, enter your group name, then tap your group type. A complete, tailored study guide will be generated in seconds.</p>
+              <p className="text-sm text-blue-800 font-medium">{t.bibleStudy.proTip}</p>
+              <p className="text-sm text-blue-700 mt-0.5">{t.bibleStudy.proTipText}</p>
             </div>
             <button onClick={() => setShowTip(false)} className="text-blue-400 hover:text-blue-600 flex-shrink-0">
               <X className="w-4 h-4"/>
@@ -1414,24 +1416,24 @@ Closing Prayer`;
 
         {/* Setup Card */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 space-y-4">
-          <h2 className="font-bold text-gray-900 text-lg">Study Setup</h2>
+          <h2 className="font-bold text-gray-900 text-lg">{t.bibleStudy.studySetup}</h2>
 
           {/* Quick Start Options */}
           <div className="bg-gradient-to-r from-indigo-50 to-blue-50 border border-indigo-200 rounded-2xl p-4 space-y-3">
-            <p className="text-sm font-bold text-indigo-900">Quick Start — choose how to begin:</p>
+            <p className="text-sm font-bold text-indigo-900">{t.bibleStudy.quickStart}</p>
             <div className="grid sm:grid-cols-3 gap-2">
               {/* Upload own */}
               <button onClick={() => fileInputRef.current?.click()}
                 className="flex flex-col items-center gap-1.5 p-3 bg-white border-2 border-dashed border-indigo-300 hover:border-indigo-500 rounded-xl text-indigo-700 hover:text-indigo-900 transition-all text-sm font-semibold text-center">
                 <Upload className="w-5 h-5"/>
-                <span>Upload My Own<br/><span className="text-xs font-normal text-gray-500">Past 4W's, personal study guides or sermon notes</span></span>
+                <span>{t.bibleStudy.uploadOwn}<br/><span className="text-xs font-normal text-gray-500">{t.bibleStudy.uploadOwnDesc}</span></span>
               </button>
 
               {/* 4 W's template */}
               <button onClick={use4WsTemplate}
                 className="flex flex-col items-center gap-1.5 p-3 bg-white border-2 border-amber-300 hover:border-amber-500 rounded-xl text-amber-700 hover:text-amber-900 transition-all text-sm font-semibold text-center">
                 <span className="text-xl">✏️</span>
-                <span>4 W's Template<br/><span className="text-xs font-normal text-gray-500">Blank guide to fill yourself</span></span>
+                <span>{t.bibleStudy.fwsTemplate}<br/><span className="text-xs font-normal text-gray-500">{t.bibleStudy.fwsTemplateDesc}</span></span>
               </button>
 
               {/* CCF Weekly */}
@@ -1453,11 +1455,11 @@ Closing Prayer`;
                 <button onClick={loadCcfWeekly} disabled={isLoadingCcf}
                   className="flex flex-col items-center gap-1.5 p-3 bg-white border-2 border-green-300 hover:border-green-500 rounded-xl text-green-700 hover:text-green-900 transition-all text-sm font-semibold text-center disabled:opacity-50">
                   {isLoadingCcf ? <Loader2 className="w-5 h-5 animate-spin"/> : <span className="text-xl">📥</span>}
-                  <span>{isLoadingCcf ? 'Loading...' : 'CCF Weekly 4W\'s Guide'}<br/><span className="text-xs font-normal text-gray-500">Auto-load this week's CCF 4W's guide</span></span>
+                  <span>{isLoadingCcf ? t.bibleStudy.ccfWeekly : t.bibleStudy.ccfWeekly}<br/><span className="text-xs font-normal text-gray-500">{t.bibleStudy.ccfWeeklyDesc}</span></span>
                 </button>
               )}
             </div>
-            <p className="text-xs text-indigo-500 text-center">Or scroll down to generate a guide using the study type buttons below.</p>
+            <p className="text-xs text-indigo-500 text-center">{t.bibleStudy.orScrollDown}</p>
           </div>
 
           {/* File Upload — shown when a file is attached */}
@@ -1562,12 +1564,12 @@ Closing Prayer`;
 
           {/* Group Name */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Group Name</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">{t.bibleStudy.groupName}</label>
             <input
               type="text"
               value={groupName}
               onChange={e => setGroupName(e.target.value)}
-              placeholder="e.g. Fishers of Men, Daughters of the King, Youth Group..."
+              placeholder={t.bibleStudy.groupNamePlaceholder}
               className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
@@ -1575,13 +1577,13 @@ Closing Prayer`;
           {/* Topic / Focus */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Specific Topic or Focus <span className="text-gray-400 font-normal">(optional)</span>
+              {t.bibleStudy.topic} <span className="text-gray-400 font-normal">{t.bibleStudy.topicOptional}</span>
             </label>
             <input
               type="text"
               value={topic}
               onChange={e => setTopic(e.target.value)}
-              placeholder="e.g. Forgiveness, Identity in Christ, Dealing with anxiety, Leadership..."
+              placeholder={t.bibleStudy.topicPlaceholder}
               className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
@@ -1662,15 +1664,15 @@ Closing Prayer`;
             {isGenerating && (
               <div className="mx-5 mb-4 bg-blue-50 border border-blue-200 rounded-xl p-3 flex items-center gap-3 text-sm text-blue-800">
                 <Loader2 className="w-4 h-4 animate-spin flex-shrink-0"/>
-                <span>Generating your complete study guide — this takes 30–60 seconds for a thorough result...</span>
+                <span>{t.bibleStudy.generating}</span>
               </div>
             )}
           </div>
         ) : (
           /* Standard Study Type Buttons — non-CCF mode */
           <div ref={studyTypesRef} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
-            <h2 className="font-bold text-gray-900 text-lg mb-1">Choose Your Study Type</h2>
-            <p className="text-sm text-gray-500 mb-4">Tap a group type to generate a complete, tailored Bible study guide</p>
+            <h2 className="font-bold text-gray-900 text-lg mb-1">{t.bibleStudy.chooseStudyType}</h2>
+            <p className="text-sm text-gray-500 mb-4">{t.bibleStudy.chooseStudyTypeDesc}</p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {STUDY_TYPES.map(type => (
                 <button
@@ -1693,7 +1695,7 @@ Closing Prayer`;
             {isGenerating && (
               <div className="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-3 flex items-center gap-3 text-sm text-blue-800">
                 <Loader2 className="w-4 h-4 animate-spin flex-shrink-0"/>
-                <span>Generating your complete study guide — this takes 30–60 seconds for a thorough result...</span>
+                <span>{t.bibleStudy.generating}</span>
               </div>
             )}
           </div>
@@ -1739,7 +1741,7 @@ Closing Prayer`;
                   className="flex items-center gap-1 sm:gap-1.5 bg-white bg-opacity-20 hover:bg-red-500 text-white px-2.5 sm:px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-colors"
                   title="Dismiss">
                   <X className="w-3.5 sm:w-4 h-3.5 sm:h-4"/>
-                  <span className="hidden sm:inline">Dismiss</span>
+                  <span className="hidden sm:inline">{t.bibleStudy.dismiss}</span>
                 </button>
               </div>
             </div>
@@ -1747,7 +1749,7 @@ Closing Prayer`;
             {/* Editable guide notice */}
             <div className="bg-amber-50 border-b border-amber-100 px-5 py-2 flex items-center gap-2 text-xs text-amber-700">
               <Pencil className="w-3.5 h-3.5 flex-shrink-0"/>
-              <span>You can tap anywhere in the text below to edit the guide before copying or sharing it.</span>
+              <span>{t.bibleStudy.editableNotice}</span>
             </div>
 
             {/* Editable textarea */}
@@ -1763,16 +1765,16 @@ Closing Prayer`;
             {/* Action row */}
             <div className="border-t border-gray-100 px-5 py-4 bg-gray-50 flex gap-3 flex-wrap">
               <button onClick={copyResult} className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700">
-                <Copy className="w-4 h-4"/> Copy Study Guide
+                <Copy className="w-4 h-4"/> {t.bibleStudy.copyStudyGuide}
               </button>
               <button onClick={downloadResult} className="flex items-center gap-1.5 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-200">
-                <Download className="w-4 h-4"/> Download as Text
+                <Download className="w-4 h-4"/> {t.bibleStudy.downloadAsText}
               </button>
               <button onClick={printAsPdf} className="flex items-center gap-1.5 px-4 py-2 bg-green-600 text-white rounded-xl text-sm font-semibold hover:bg-green-700">
-                <Printer className="w-4 h-4"/> Save / Print PDF
+                <Printer className="w-4 h-4"/> {t.bibleStudy.savePrintPdf}
               </button>
               <button onClick={() => { setResult(''); setStudySource(null); setMeetingRoom(null); }} className="flex items-center gap-1.5 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-200">
-                <X className="w-4 h-4"/> Clear
+                <X className="w-4 h-4"/> {t.bibleStudy.clear}
               </button>
             </div>
           </div>
@@ -1783,7 +1785,7 @@ Closing Prayer`;
           <div className="bg-gradient-to-r from-indigo-600 to-blue-700 px-5 py-4 flex items-center gap-3">
             <Video className="w-6 h-6 text-white flex-shrink-0"/>
             <div>
-              <h2 className="text-white font-bold text-lg">D-Group Video Meeting Room</h2>
+              <h2 className="text-white font-bold text-lg">{t.bibleStudy.meetingRoomTitle}</h2>
               <p className="text-white text-opacity-80 text-sm">
                 {studySource === 'ccf-4ws' ? 'CCF 4 W\'s guide will be shared with your group'
                   : studySource === 'generated' ? 'Study guide will be shared with your group'
@@ -1837,7 +1839,7 @@ Closing Prayer`;
               </div>
               <div className="grid sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Your Name <span className="text-gray-400 font-normal">(leader)</span></label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t.bibleStudy.yourName} <span className="text-gray-400 font-normal">{t.bibleStudy.leader}</span></label>
                   <input
                     type="text"
                     value={leaderName}
@@ -1847,7 +1849,7 @@ Closing Prayer`;
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Group Name <span className="text-gray-400 font-normal">(for the room)</span></label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t.bibleStudy.groupName} <span className="text-gray-400 font-normal">{t.bibleStudy.forTheRoom}</span></label>
                   <input
                     type="text"
                     value={groupName}
@@ -1863,9 +1865,9 @@ Closing Prayer`;
                 className="w-full flex items-center justify-center gap-2 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold text-lg disabled:opacity-50 transition-all shadow-md hover:shadow-lg"
               >
                 {isCreatingRoom ? <Loader2 className="w-5 h-5 animate-spin"/> : <Video className="w-5 h-5"/>}
-                {isCreatingRoom ? 'Creating Room...' : 'Create D-Group Meeting Room'}
+                {isCreatingRoom ? t.bibleStudy.creatingRoom : t.bibleStudy.createRoom}
               </button>
-              <p className="text-xs text-gray-400 text-center">Free video calls via Jitsi Meet — no account or download needed for anyone</p>
+              <p className="text-xs text-gray-400 text-center">{t.bibleStudy.freeVideo}</p>
             </div>
           ) : (
             <div className="p-5 space-y-4">
@@ -1892,7 +1894,7 @@ Closing Prayer`;
 
               {/* Room name */}
               <div>
-                <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Room Name</p>
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">{t.bibleStudy.roomName}</p>
                 <div className="flex gap-2 items-center">
                   <div className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 font-mono tracking-widest">
                     {meetingRoom.groupName} — {meetingRoom.code}
@@ -1902,14 +1904,14 @@ Closing Prayer`;
 
               {/* Guest link */}
               <div>
-                <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Guest Link — Share This</p>
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">{t.bibleStudy.guestLink}</p>
                 <div className="flex gap-2">
                   <input readOnly value={getRoomLink()}
                     className="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 text-sm bg-gray-50 text-gray-600 min-w-0"/>
                   <button onClick={copyRoomLink}
                     className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-semibold flex-shrink-0 transition-colors ${roomLinkCopied ? 'bg-green-500 text-white' : 'bg-gray-800 text-white hover:bg-gray-700'}`}>
                     {roomLinkCopied ? <Check className="w-4 h-4"/> : <Copy className="w-4 h-4"/>}
-                    {roomLinkCopied ? 'Copied!' : 'Copy'}
+                    {roomLinkCopied ? t.bibleStudy.copied : t.bibleStudy.copy}
                   </button>
                 </div>
               </div>
@@ -1922,22 +1924,22 @@ Closing Prayer`;
                   rel="noopener noreferrer"
                   className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold text-sm shadow-sm transition-all"
                 >
-                  <ExternalLink className="w-4 h-4"/> Join as Leader
+                  <ExternalLink className="w-4 h-4"/> {t.bibleStudy.joinAsLeader}
                 </a>
                 <button onClick={() => setMeetingRoom(null)}
                   className="flex items-center gap-1.5 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl text-sm font-semibold">
-                  <X className="w-4 h-4"/> Close
+                  <X className="w-4 h-4"/> {t.bibleStudy.close}
                 </button>
               </div>
 
-              <p className="text-xs text-gray-400 text-center">Room links are not stored — anyone with the link can join. Share only with your group.</p>
+              <p className="text-xs text-gray-400 text-center">{t.bibleStudy.roomLinkNote}</p>
             </div>
           )}
         </div>
 
         {/* Footer quote */}
         <div className="text-center pb-6">
-          <p className="text-gray-400 text-sm italic">"Where two or three gather in my name, there am I with them." — Matthew 18:20</p>
+          <p className="text-gray-400 text-sm italic">{t.bibleStudy.footerQuote}</p>
         </div>
       </div>
     </div>

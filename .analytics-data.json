@@ -1,0 +1,54 @@
+{
+  "events": [
+    {
+      "type": "page_view",
+      "name": "home",
+      "ts": 1779226629295
+    },
+    {
+      "type": "page_view",
+      "name": "home",
+      "ts": 1779226703478
+    },
+    {
+      "type": "page_view",
+      "name": "home",
+      "ts": 1779226783083
+    },
+    {
+      "type": "page_view",
+      "name": "home",
+      "ts": 1779226885109
+    },
+    {
+      "type": "page_view",
+      "name": "home",
+      "ts": 1779226892330
+    },
+    {
+      "type": "page_view",
+      "name": "home",
+      "ts": 1779226908722
+    },
+    {
+      "type": "page_view",
+      "name": "bible_games",
+      "ts": 1779226910129
+    },
+    {
+      "type": "page_view",
+      "name": "home",
+      "ts": 1779226923102
+    },
+    {
+      "type": "page_view",
+      "name": "missions",
+      "ts": 1779226924628
+    },
+    {
+      "type": "page_view",
+      "name": "home",
+      "ts": 1779226939859
+    }
+  ]
+}
