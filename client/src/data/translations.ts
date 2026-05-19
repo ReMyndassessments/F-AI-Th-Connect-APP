@@ -29,6 +29,8 @@ export const translations = {
       badge1: "CCF 4 W's Ready",
       badge2: 'Free Video Rooms',
       badge3: 'Always Free',
+      verseText: 'Therefore go and make disciples of all nations, baptizing them in the name of the Father and of the Son and of the Holy Spirit.',
+      verseRef: 'Matthew 28:19 — The Great Commission',
     },
     dgroup: {
       bannerText: 'F-AI-TH-Connect is built for D-Groups on mission — small, intentional communities not just studying the Word together, but going out to share it. Whether you lead a CCF cell group, a Bible study, or a team reaching the lost and unreached, every tool you need is here.',
@@ -210,6 +212,8 @@ export const translations = {
       verseCopiedDesc: "Today's memory verse has been copied to your clipboard.",
       copyFailed: 'Copy failed',
       copyFailedDesc: 'Unable to copy verse to clipboard.',
+      sectionHeading: 'Daily Spiritual Nourishment',
+      sectionSubtext: "Start each day with God's Word to guide your spiritual journey",
     },
     bibleGames: {
       title: 'Bible Games',
@@ -359,6 +363,8 @@ export const translations = {
       badge1: "Handa para sa CCF 4 W's",
       badge2: 'Libreng Video Rooms',
       badge3: 'Laging Libre',
+      verseText: 'Kaya nga, humayo kayo at gawin ninyong mga alagad ang lahat ng mga bansa, na binabautismuhan sila sa pangalan ng Ama at ng Anak at ng Espiritu Santo.',
+      verseRef: 'Mateo 28:19 — Ang Dakilang Utos',
     },
     dgroup: {
       bannerText: 'Ang F-AI-TH-Connect ay ginawa para sa mga D-Grupo sa misyon — maliliit, mapanukalaang komunidad na hindi lang nag-aaral ng Salita nang magkasama, kundi lumalabas din para ibahagi ito. Kung nangunguna ka sa isang CCF cell group, Bible study, o koponan na umaabot sa naliligaw at hindi naabot, nandito ang lahat ng kagamitang kailangan mo.',
@@ -540,6 +546,8 @@ export const translations = {
       verseCopiedDesc: 'Ang talata ngayon ay nakopya na sa iyong clipboard.',
       copyFailed: 'Nabigong kopyahin',
       copyFailedDesc: 'Hindi makopya ang talata sa clipboard.',
+      sectionHeading: 'Pang-araw-araw na Espirituwal na Sustansiya',
+      sectionSubtext: 'Simulan ang bawat araw sa Salita ng Diyos upang gabayan ang iyong espirituwal na paglalakbay',
     },
     bibleGames: {
       title: 'Mga Larong Biblikal',
@@ -689,6 +697,8 @@ export const translations = {
       badge1: '支持CCF四W指南',
       badge2: '免费视频房间',
       badge3: '永久免费',
+      verseText: '所以，你们要去，使万民作我的门徒，奉父、子、圣灵的名给他们施洗。',
+      verseRef: '马太福音 28:19 — 大使命',
     },
     dgroup: {
       bannerText: 'F-AI-TH-Connect 专为在使命中的门徒小组而建 — 这些小而专注的群体不仅一起研读圣言，更走出去分享它。无论您带领的是CCF细胞小组、圣经学习团契，还是触达迷失与未得之民的团队，这里备有您所需的一切工具。',
@@ -870,6 +880,8 @@ export const translations = {
       verseCopiedDesc: '今日记忆经文已复制到剪贴板。',
       copyFailed: '复制失败',
       copyFailedDesc: '无法将经文复制到剪贴板。',
+      sectionHeading: '每日属灵滋养',
+      sectionSubtext: '每天以上帝的话语开始，引导您的属灵旅程',
     },
     bibleGames: {
       title: '圣经游戏',

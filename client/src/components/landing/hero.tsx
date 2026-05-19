@@ -81,10 +81,10 @@ export default function Hero() {
             {/* Verse overlay */}
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-black/75 via-black/20 to-transparent flex flex-col justify-end p-5 sm:p-7">
               <p className="text-white text-base sm:text-lg font-semibold italic leading-snug drop-shadow-lg">
-                "Therefore go and make disciples of all nations, baptizing them in the name of the Father and of the Son and of the Holy Spirit."
+                "{t.hero.verseText}"
               </p>
               <p className="mt-2 text-amber-300 font-bold text-sm tracking-wider uppercase drop-shadow">
-                Matthew 28:19 — The Great Commission
+                {t.hero.verseRef}
               </p>
             </div>
           </div>
