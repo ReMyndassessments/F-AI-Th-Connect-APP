@@ -5,40 +5,40 @@ import { MessageCircle, Send } from "lucide-react";
 import { useLocation } from "wouter";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-const demoMessages = [
-  {
-    role: 'user',
-    content: "I'm struggling with anxiety about my future. What does the Bible say about worry?"
-  },
-  {
-    role: 'assistant',
-    content: "I understand that anxiety about the future can feel overwhelming. Jesus directly addresses this concern in Matthew 6:26-27:",
-    scripture: {
-      reference: "Matthew 6:26-27 (NIV)",
-      text: "Look at the birds of the air; they do not sow or reap or store away in barns, and yet your heavenly Father feeds them. Are you not much more valuable than they? Can any one of you by worrying add a single hour to your life?"
-    },
-    guidance: "God knows your needs and cares for you deeply. Consider also Philippians 4:19 and 1 Peter 5:7. Would you like to explore specific prayer practices for managing anxiety?"
-  },
-  {
-    role: 'user',
-    content: "Yes, please share some prayer practices that might help."
-  },
-  {
-    role: 'assistant',
-    content: "Here are some biblical prayer practices for anxiety:",
-    practices: [
-      "Surrender Prayer: Cast your anxieties on God (1 Peter 5:7)",
-      "Gratitude Prayer: Thank God for His provision (1 Thessalonians 5:18)",
-      "Scripture Meditation: Meditate on God's promises"
-    ],
-    encouragement: "Remember, God's peace surpasses understanding. Would you like me to guide you through a specific prayer?"
-  }
-];
-
 export default function ChatDemo() {
   const [, setLocation] = useLocation();
   const [inputValue, setInputValue] = useState("");
   const { t } = useLanguage();
+
+  const demoMessages = [
+    {
+      role: 'user',
+      content: t.chatDemo.demoMsg1User,
+    },
+    {
+      role: 'assistant',
+      content: t.chatDemo.demoMsg1Content,
+      scripture: {
+        reference: t.chatDemo.demoScriptureRef,
+        text: t.chatDemo.demoScriptureText,
+      },
+      guidance: t.chatDemo.demoGuidance,
+    },
+    {
+      role: 'user',
+      content: t.chatDemo.demoMsg2User,
+    },
+    {
+      role: 'assistant',
+      content: t.chatDemo.demoMsg2Content,
+      practices: [
+        t.chatDemo.demoPractice1,
+        t.chatDemo.demoPractice2,
+        t.chatDemo.demoPractice3,
+      ],
+      encouragement: t.chatDemo.demoEncouragement,
+    },
+  ];
 
   const startChat = () => {
     setLocation("/chat");
