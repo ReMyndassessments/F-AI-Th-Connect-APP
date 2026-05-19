@@ -1,5 +1,5 @@
 import { useParams } from "wouter";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { trackPageView } from "@/hooks/useAnalytics";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -24,7 +24,7 @@ export default function Chat() {
 
   // When language changes, drop the current session so the user gets a
   // fresh conversation — no old cached English messages will show.
-  const prevLanguageRef = React.useRef(language);
+  const prevLanguageRef = useRef(language);
   useEffect(() => {
     if (prevLanguageRef.current !== language) {
       prevLanguageRef.current = language;

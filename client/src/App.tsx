@@ -1,4 +1,4 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ErrorBoundary } from "@/components/error-boundary";
 import InstallPrompt from "@/components/pwa/install-prompt";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import Header from "@/components/landing/header";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Chat from "@/pages/chat";
@@ -54,6 +55,16 @@ function Router() {
   );
 }
 
+function GlobalHeader() {
+  const [location] = useLocation();
+  const noHeader = /^\/admin/.test(location) ||
+    /^\/dgroup\//.test(location) ||
+    location === '/voice-test' ||
+    location === '/api-diagnostics';
+  if (noHeader) return null;
+  return <Header />;
+}
+
 function App() {
   return (
     <ErrorBoundary>
@@ -61,6 +72,7 @@ function App() {
         <LanguageProvider>
           <TooltipProvider>
             <Toaster />
+            <GlobalHeader />
             <Router />
             <InstallPrompt />
           </TooltipProvider>

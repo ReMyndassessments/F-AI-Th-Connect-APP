@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import Header from "@/components/landing/header";
 import Hero from "@/components/landing/hero";
 import Features from "@/components/landing/features";
 import ChatDemo from "@/components/landing/chat-demo";
@@ -18,7 +17,6 @@ export default function Home() {
   const { t } = useLanguage();
   return (
     <div className="min-h-screen bg-white">
-      <Header />
       <main>
         <Hero />
 
