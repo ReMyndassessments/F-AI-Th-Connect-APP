@@ -50,8 +50,8 @@ export default function Chat() {
 
   // Send message mutation
   const sendMessageMutation = useMutation({
-    mutationFn: ({ sessionId, content }: { sessionId: string; content: string }) =>
-      chatApi.sendMessage(sessionId, content, language),
+    mutationFn: ({ sessionId, content, lang }: { sessionId: string; content: string; lang: string }) =>
+      chatApi.sendMessage(sessionId, content, lang),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["/api/chat/sessions", currentSessionId, "messages"],
@@ -76,7 +76,7 @@ export default function Chat() {
 
   const handleSendMessage = (content: string) => {
     if (currentSessionId) {
-      sendMessageMutation.mutate({ sessionId: currentSessionId, content });
+      sendMessageMutation.mutate({ sessionId: currentSessionId, content, lang: language });
     }
   };
 

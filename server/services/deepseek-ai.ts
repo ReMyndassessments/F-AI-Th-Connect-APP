@@ -60,10 +60,16 @@ Provide rich, substantive responses that truly help believers grow in their fait
       // Optimize conversation history for speed - limit to last 4 messages for context
       const recentHistory = conversationHistory.slice(-4);
       
+      const languageReminder = language === 'tl'
+        ? '\n\n[IMPORTANT: Your entire response must be written in Tagalog/Filipino. Do not use English.]'
+        : language === 'zh'
+        ? '\n\n[重要：你的全部回答必须用简体中文。不得使用英文。]'
+        : '';
+
       const messages = [
         { role: 'system', content: systemPrompt },
         ...recentHistory,
-        { role: 'user', content: userMessage }
+        { role: 'user', content: userMessage + languageReminder }
       ];
 
       const controller = new AbortController();
