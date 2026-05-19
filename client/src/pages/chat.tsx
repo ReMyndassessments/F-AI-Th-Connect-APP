@@ -22,6 +22,17 @@ export default function Chat() {
   const { language, t } = useLanguage();
   useEffect(() => { trackPageView('ministry_desk'); }, []);
 
+  // When language changes, drop the current session so the user gets a
+  // fresh conversation — no old cached English messages will show.
+  const prevLanguageRef = React.useRef(language);
+  useEffect(() => {
+    if (prevLanguageRef.current !== language) {
+      prevLanguageRef.current = language;
+      setCurrentSessionId(null);
+      setLocation('/chat');
+    }
+  }, [language]);
+
   // Create new session if no sessionId provided
   const createSessionMutation = useMutation({
     mutationFn: chatApi.createSession,

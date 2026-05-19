@@ -60,6 +60,8 @@ Provide rich, substantive responses that truly help believers grow in their fait
       // Optimize conversation history for speed - limit to last 4 messages for context
       const recentHistory = conversationHistory.slice(-4);
       
+      console.log(`[AI] language=${language}, message preview: ${userMessage.slice(0, 60)}`);
+
       const languageReminder = language === 'tl'
         ? '\n\n[IMPORTANT: Your entire response must be written in Tagalog/Filipino. Do not use English.]'
         : language === 'zh'
