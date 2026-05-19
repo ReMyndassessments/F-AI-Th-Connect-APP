@@ -339,6 +339,12 @@ export const translations = {
       expandingDesc: 'Every share and installation helps bring biblical wisdom and spiritual guidance to those who need it most. Thank you for being part of this ministry outreach.',
       offlineNote: 'When installed as an app, F-AI-TH-Connect works offline and provides instant access to spiritual guidance',
     },
+    advertisement: {
+      recommended: 'Recommended',
+      learnMore: 'Learn More',
+      perfectFor: 'Perfect for:',
+      footer: 'Christian Resource • Faith-Based',
+    },
   },
 
   tl: {
@@ -673,6 +679,12 @@ export const translations = {
       expandingDesc: 'Ang bawat pagbabahagi at pag-install ay tumutulong na magdala ng karunungang biblikal at espirituwal na gabay sa mga nangangailangan nito. Salamat sa pagiging bahagi ng ministeryal na outreach na ito.',
       offlineNote: 'Kapag na-install bilang app, ang F-AI-TH-Connect ay gumagana nang walang internet at nagbibigay ng agarang access sa espirituwal na gabay',
     },
+    advertisement: {
+      recommended: 'Inirerekomenda',
+      learnMore: 'Alamin ang Higit Pa',
+      perfectFor: 'Perpekto para sa:',
+      footer: 'Kristiyanong Mapagkukunan • Batay sa Pananampalataya',
+    },
   },
 
   zh: {
@@ -1006,6 +1018,12 @@ export const translations = {
       expandingKingdom: '共同扩展上帝的国度',
       expandingDesc: '每次分享和安装都有助于将圣经智慧和属灵指导带给最需要的人。感谢您成为这项事工外展的一部分。',
       offlineNote: '安装为应用后，F-AI-TH-Connect可离线使用，即时访问属灵指导',
+    },
+    advertisement: {
+      recommended: '推荐',
+      learnMore: '了解更多',
+      perfectFor: '适合：',
+      footer: '基督教资源 • 信仰导向',
     },
   },
 } as const;

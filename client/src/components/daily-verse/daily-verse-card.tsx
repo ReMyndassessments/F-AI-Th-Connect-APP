@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { BookOpen, Calendar, Copy, Share2, Sparkles, Loader2, Pause, Settings } from "lucide-react";
-import { getTodaysVerse, getFormattedDate } from "@/lib/daily-verses";
+import { getLocalizedVerse, getFormattedDate } from "@/lib/daily-verses";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
@@ -17,7 +17,7 @@ interface DailyVerseCardProps {
 
 export default function DailyVerseCard({ variant = "default", className = "" }: DailyVerseCardProps) {
   const { toast } = useToast();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   // Check feature flags for TTS availability
   const { data: featureFlags } = useQuery({
@@ -36,8 +36,8 @@ export default function DailyVerseCard({ variant = "default", className = "" }: 
   const [isLoadingTTS, setIsLoadingTTS] = useState(false);
   const [showVoiceSettings, setShowVoiceSettings] = useState(false);
   
-  const todaysVerse = getTodaysVerse();
-  const todayDate = getFormattedDate();
+  const todaysVerse = getLocalizedVerse(language);
+  const todayDate = getFormattedDate(new Date(), language);
 
   // Load available voices on component mount
   useEffect(() => {

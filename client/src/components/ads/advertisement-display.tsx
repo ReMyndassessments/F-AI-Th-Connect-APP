@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, BookOpen, Calendar, Users, Eye, X } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Advertisement {
   id: number;
@@ -25,6 +26,8 @@ interface AdvertisementDisplayProps {
 }
 
 export default function AdvertisementDisplay({ placement, onDismiss, className = "" }: AdvertisementDisplayProps) {
+  const { t } = useLanguage();
+
   // Check if advertisements are enabled (using public endpoint)
   const { data: flagData } = useQuery({
     queryKey: ["/api/feature-flags/public"],
@@ -103,7 +106,7 @@ export default function AdvertisementDisplay({ placement, onDismiss, className =
           <div className="flex items-center space-x-2">
             {getTypeIcon(ad.type)}
             <Badge variant="outline" className="text-xs bg-white border-blue-200 text-blue-700">
-              Recommended
+              {t.advertisement.recommended}
             </Badge>
           </div>
           {onDismiss && (
@@ -136,7 +139,7 @@ export default function AdvertisementDisplay({ placement, onDismiss, className =
         <p className="text-sm text-gray-600 mb-3 line-clamp-3">{ad.description}</p>
 
         {ad.targetAudience && (
-          <p className="text-xs text-blue-600 mb-3">Perfect for: {ad.targetAudience}</p>
+          <p className="text-xs text-blue-600 mb-3">{t.advertisement.perfectFor} {ad.targetAudience}</p>
         )}
 
         {ad.linkUrl && (
@@ -146,12 +149,12 @@ export default function AdvertisementDisplay({ placement, onDismiss, className =
             className="w-full bg-gradient-to-r from-blue-500 to-amber-500 hover:from-blue-600 hover:to-amber-600 text-white"
           >
             <ExternalLink className="w-4 h-4 mr-2" />
-            Learn More
+            {t.advertisement.learnMore}
           </Button>
         )}
 
         <div className="mt-2 text-xs text-gray-400 text-center">
-          Christian Resource • Faith-Based
+          {t.advertisement.footer}
         </div>
       </CardContent>
     </Card>
