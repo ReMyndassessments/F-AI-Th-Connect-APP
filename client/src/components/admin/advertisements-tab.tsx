@@ -33,6 +33,12 @@ interface Advertisement {
   active: boolean;
   priority: number;
   targetAudience: string | null;
+  titleTl: string | null;
+  titleZh: string | null;
+  descriptionTl: string | null;
+  descriptionZh: string | null;
+  targetAudienceTl: string | null;
+  targetAudienceZh: string | null;
   startDate: string | null;
   endDate: string | null;
   clickCount: number;
@@ -135,6 +141,12 @@ export default function AdvertisementsTab() {
       active: formData.get('active') === 'true',
       priority: parseInt(formData.get('priority') as string) || 0,
       targetAudience: formData.get('targetAudience') || null,
+      titleTl: formData.get('titleTl') || null,
+      titleZh: formData.get('titleZh') || null,
+      descriptionTl: formData.get('descriptionTl') || null,
+      descriptionZh: formData.get('descriptionZh') || null,
+      targetAudienceTl: formData.get('targetAudienceTl') || null,
+      targetAudienceZh: formData.get('targetAudienceZh') || null,
       startDate: formData.get('startDate') || null,
       endDate: formData.get('endDate') || null,
     };
@@ -155,6 +167,12 @@ export default function AdvertisementsTab() {
       placement: formData.get('placement') as string,
       priority: parseInt(formData.get('priority') as string) || 1,
       targetAudience: formData.get('targetAudience') as string || null,
+      titleTl: formData.get('titleTl') as string || null,
+      titleZh: formData.get('titleZh') as string || null,
+      descriptionTl: formData.get('descriptionTl') as string || null,
+      descriptionZh: formData.get('descriptionZh') as string || null,
+      targetAudienceTl: formData.get('targetAudienceTl') as string || null,
+      targetAudienceZh: formData.get('targetAudienceZh') as string || null,
     };
 
     updateAdMutation.mutate({ id, data });
@@ -296,6 +314,24 @@ export default function AdvertisementsTab() {
                       <Input name="endDate" type="datetime-local" />
                     </div>
                   </div>
+                  <div className="border-t pt-4">
+                    <p className="text-sm font-semibold text-gray-700 mb-3">🌏 Translations (Optional)</p>
+                    <p className="text-xs text-gray-500 mb-3">Leave blank to show the English text for all languages.</p>
+                    <div className="space-y-3">
+                      <p className="text-xs font-medium text-blue-700">🇵🇭 Tagalog</p>
+                      <div className="grid grid-cols-1 gap-2">
+                        <Input name="titleTl" placeholder="Title in Tagalog" />
+                        <Textarea name="descriptionTl" placeholder="Description in Tagalog" rows={2} />
+                        <Input name="targetAudienceTl" placeholder="Target audience in Tagalog" />
+                      </div>
+                      <p className="text-xs font-medium text-red-700">🇨🇳 Chinese (中文)</p>
+                      <div className="grid grid-cols-1 gap-2">
+                        <Input name="titleZh" placeholder="Title in Chinese (标题)" />
+                        <Textarea name="descriptionZh" placeholder="Description in Chinese (描述)" rows={2} />
+                        <Input name="targetAudienceZh" placeholder="Target audience in Chinese (目标受众)" />
+                      </div>
+                    </div>
+                  </div>
                   <div className="flex items-center space-x-2">
                     <input type="checkbox" name="active" value="true" id="active" />
                     <label htmlFor="active" className="text-sm font-medium">Make active immediately</label>
@@ -385,6 +421,24 @@ export default function AdvertisementsTab() {
                   <div>
                     <label className="text-sm font-medium">Target Audience (Optional)</label>
                     <Input name="targetAudience" defaultValue={editingAd?.targetAudience || ""} placeholder="Christians interested in..." />
+                  </div>
+                  <div className="border-t pt-4">
+                    <p className="text-sm font-semibold text-gray-700 mb-3">🌏 Translations (Optional)</p>
+                    <p className="text-xs text-gray-500 mb-3">Leave blank to show the English text for all languages.</p>
+                    <div className="space-y-3">
+                      <p className="text-xs font-medium text-blue-700">🇵🇭 Tagalog</p>
+                      <div className="grid grid-cols-1 gap-2">
+                        <Input name="titleTl" defaultValue={editingAd?.titleTl || ""} placeholder="Title in Tagalog" />
+                        <Textarea name="descriptionTl" defaultValue={editingAd?.descriptionTl || ""} placeholder="Description in Tagalog" rows={2} />
+                        <Input name="targetAudienceTl" defaultValue={editingAd?.targetAudienceTl || ""} placeholder="Target audience in Tagalog" />
+                      </div>
+                      <p className="text-xs font-medium text-red-700">🇨🇳 Chinese (中文)</p>
+                      <div className="grid grid-cols-1 gap-2">
+                        <Input name="titleZh" defaultValue={editingAd?.titleZh || ""} placeholder="Title in Chinese (标题)" />
+                        <Textarea name="descriptionZh" defaultValue={editingAd?.descriptionZh || ""} placeholder="Description in Chinese (描述)" rows={2} />
+                        <Input name="targetAudienceZh" defaultValue={editingAd?.targetAudienceZh || ""} placeholder="Target audience in Chinese (目标受众)" />
+                      </div>
+                    </div>
                   </div>
                   <div className="flex justify-end space-x-2">
                     <Button type="button" variant="outline" onClick={() => setEditingAd(null)}>

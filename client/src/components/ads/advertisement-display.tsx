@@ -17,6 +17,12 @@ interface Advertisement {
   active: boolean;
   priority: number;
   targetAudience: string | null;
+  titleTl: string | null;
+  titleZh: string | null;
+  descriptionTl: string | null;
+  descriptionZh: string | null;
+  targetAudienceTl: string | null;
+  targetAudienceZh: string | null;
 }
 
 interface AdvertisementDisplayProps {
@@ -26,7 +32,7 @@ interface AdvertisementDisplayProps {
 }
 
 export default function AdvertisementDisplay({ placement, onDismiss, className = "" }: AdvertisementDisplayProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   // Check if advertisements are enabled (using public endpoint)
   const { data: flagData } = useQuery({
@@ -99,6 +105,11 @@ export default function AdvertisementDisplay({ placement, onDismiss, className =
   // Show first advertisement (highest priority)
   const ad = advertisements[0];
 
+  // Pick the right language version, falling back to English
+  const adTitle = (language === 'zh' ? ad.titleZh : language === 'tl' ? ad.titleTl : null) || ad.title;
+  const adDescription = (language === 'zh' ? ad.descriptionZh : language === 'tl' ? ad.descriptionTl : null) || ad.description;
+  const adTargetAudience = (language === 'zh' ? ad.targetAudienceZh : language === 'tl' ? ad.targetAudienceTl : null) || ad.targetAudience;
+
   return (
     <Card className={`${getPlacementStyle()} ${className} border-blue-100 bg-gradient-to-r from-blue-50 to-amber-50`}>
       <CardContent className="p-4">
@@ -135,11 +146,11 @@ export default function AdvertisementDisplay({ placement, onDismiss, className =
           </div>
         )}
 
-        <h4 className="font-semibold text-gray-900 mb-2 line-clamp-2">{ad.title}</h4>
-        <p className="text-sm text-gray-600 mb-3 line-clamp-3">{ad.description}</p>
+        <h4 className="font-semibold text-gray-900 mb-2 line-clamp-2">{adTitle}</h4>
+        <p className="text-sm text-gray-600 mb-3 line-clamp-3">{adDescription}</p>
 
-        {ad.targetAudience && (
-          <p className="text-xs text-blue-600 mb-3">{t.advertisement.perfectFor} {ad.targetAudience}</p>
+        {adTargetAudience && (
+          <p className="text-xs text-blue-600 mb-3">{t.advertisement.perfectFor} {adTargetAudience}</p>
         )}
 
         {ad.linkUrl && (
