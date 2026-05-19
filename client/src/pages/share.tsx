@@ -6,6 +6,7 @@ import { useLocation } from "wouter";
 import QRCode from "qrcode";
 import { usePWA } from "@/hooks/use-pwa";
 import { useLanguage } from "@/contexts/LanguageContext";
+import LanguageSwitcher from "@/components/ui/language-switcher";
 
 export default function SharePage() {
   const [, setLocation] = useLocation();
@@ -85,6 +86,7 @@ export default function SharePage() {
                 <span className="text-xl font-bold faith-gradient-text">{t.share.pageTitle}</span>
               </div>
             </div>
+            <LanguageSwitcher />
           </div>
         </div>
       </header>

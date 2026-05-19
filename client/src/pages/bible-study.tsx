@@ -5,6 +5,7 @@ import { Home, Upload, X, Copy, Download, Loader2, FileText, BookOpen, Video, Sh
 import { chatApi } from "@/lib/chat-api";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
+import LanguageSwitcher from "@/components/ui/language-switcher";
 
 // =====================================================================
 // STUDY TYPES
@@ -1394,6 +1395,7 @@ Closing Prayer`;
             <h1 className="text-base sm:text-xl font-bold text-gray-900 truncate">{t.bibleStudy.title}</h1>
             <p className="text-xs sm:text-sm text-gray-500 hidden sm:block">{t.bibleStudy.subtitle}</p>
           </div>
+          <LanguageSwitcher />
           <BookOpen className="w-5 sm:w-6 h-5 sm:h-6 text-blue-500 flex-shrink-0"/>
         </div>
       </div>

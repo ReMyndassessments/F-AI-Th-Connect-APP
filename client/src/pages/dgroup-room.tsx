@@ -2,6 +2,7 @@ import { useState, useEffect, type ReactNode } from "react";
 import { useParams, Link } from "wouter";
 import { Copy, Share2, Mail, ArrowLeft, BookOpen, Users, Video, X, Check, MessageSquare, ExternalLink } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import LanguageSwitcher from "@/components/ui/language-switcher";
 
 interface DGroupRoom {
   code: string;
@@ -258,6 +259,7 @@ export default function DGroupRoom() {
           <p className="text-gray-400 text-xs sm:hidden">Room {code}</p>
         </div>
         <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+          <LanguageSwitcher />
           <button
             onClick={() => setShowShare(s => !s)}
             className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${showShare ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}

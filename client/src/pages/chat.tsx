@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
 import { ArrowLeft, MessageCircle, RotateCcw } from "lucide-react";
 import LoadingSpinner, { MessageSkeleton } from "@/components/loading-spinner";
+import LanguageSwitcher from "@/components/ui/language-switcher";
 
 export default function Chat() {
   const { sessionId } = useParams();
@@ -166,6 +167,7 @@ export default function Chat() {
             </div>
 
             <div className="flex items-center space-x-2 sm:space-x-3">
+              <LanguageSwitcher />
               <ClearChatButton 
                 onClearChat={handleClearChat}
                 disabled={deleteSessionMutation.isPending || !currentSessionId}

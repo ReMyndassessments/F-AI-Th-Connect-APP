@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import LanguageSwitcher from "@/components/ui/language-switcher";
 import type { MissionGroup } from "@shared/schema";
 
 const TYPE_LABELS: Record<string, string> = {
@@ -85,12 +86,15 @@ export default function MissionsProfile() {
             >
               <ArrowLeft className="w-4 h-4" /> All Missions
             </button>
-            <button
-              onClick={() => setLocation("/")}
-              className="flex items-center gap-1 text-blue-200 hover:text-white text-sm transition-colors"
-            >
-              <Home className="w-4 h-4" /> Home
-            </button>
+            <div className="flex items-center gap-3">
+              <LanguageSwitcher variant="dark" />
+              <button
+                onClick={() => setLocation("/")}
+                className="flex items-center gap-1 text-blue-200 hover:text-white text-sm transition-colors"
+              >
+                <Home className="w-4 h-4" /> Home
+              </button>
+            </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 mb-4">

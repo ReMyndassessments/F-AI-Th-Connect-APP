@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { ArrowLeft, RotateCcw, Lightbulb, Home, RefreshCw } from "lucide-react";
 import { trackPageView } from "@/hooks/useAnalytics";
 import { useLanguage } from "@/contexts/LanguageContext";
+import LanguageSwitcher from "@/components/ui/language-switcher";
 
 type GameType = 'hub' | 'path' | 'wordle' | 'memory' | 'wordsearch' | 'unscramble' | 'booksorder';
 type Difficulty = 'easy' | 'medium' | 'hard';
@@ -881,10 +882,11 @@ export default function BibleGames() {
       <div className="max-w-2xl mx-auto px-4 py-6">
         <div className="flex items-center gap-3 mb-6">
           <Link href="/"><button className="p-2 rounded-xl hover:bg-white hover:shadow-sm transition-all"><Home className="w-5 h-5 text-gray-600"/></button></Link>
-          <div>
+          <div className="flex-1">
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{t.bibleGames.title}</h1>
             <p className="text-gray-500 text-sm">{t.bibleGames.subtitle}</p>
           </div>
+          <LanguageSwitcher />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

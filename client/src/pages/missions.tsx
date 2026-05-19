@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import type { MissionGroup } from "@shared/schema";
 import { useLanguage } from "@/contexts/LanguageContext";
+import LanguageSwitcher from "@/components/ui/language-switcher";
 
 const TYPE_LABELS: Record<string, string> = {
   "short-term": "Short-Term",
@@ -116,12 +117,15 @@ export default function MissionsDirectory() {
       {/* Hero */}
       <div className="bg-gradient-to-br from-blue-700 via-blue-600 to-indigo-700 text-white py-16 px-4">
         <div className="max-w-4xl mx-auto">
-          <button
-            onClick={() => setLocation("/")}
-            className="flex items-center gap-1 text-blue-200 hover:text-white text-sm mb-8 transition-colors"
-          >
-            <Home className="w-4 h-4" /> {t.missions.home}
-          </button>
+          <div className="flex items-center justify-between mb-8">
+            <button
+              onClick={() => setLocation("/")}
+              className="flex items-center gap-1 text-blue-200 hover:text-white text-sm transition-colors"
+            >
+              <Home className="w-4 h-4" /> {t.missions.home}
+            </button>
+            <LanguageSwitcher variant="dark" />
+          </div>
         </div>
         <div className="max-w-4xl mx-auto text-center">
           <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
