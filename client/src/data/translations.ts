@@ -225,6 +225,48 @@ export const translations = {
       new: 'New',
       back: 'Back',
       quote: '"Your word is a lamp to my feet and a light to my path." — Psalm 119:105',
+      // Hub game cards
+      gamePath: 'Bible Path', gamePathDesc: 'Connect numbered dots in order, filling every cell', gamePathBadge: 'Puzzle',
+      gameWordle: 'Bible Wordle', gameWordleDesc: 'Guess the hidden 5-letter Bible word in 6 tries', gameWordleBadge: 'Word',
+      gameMemory: 'Memory Match', gameMemoryDesc: 'Flip cards to match Bible verses with their references', gameMemoryBadge: 'Memory',
+      gameWordSearch: 'Word Search', gameWordSearchDesc: 'Find hidden Bible words in the letter grid', gameWordSearchBadge: 'Search',
+      gameUnscramble: 'Verse Unscramble', gameUnscrambleDesc: 'Rearrange the words to rebuild a Bible verse correctly', gameUnscrambleBadge: 'Verse',
+      gameBooks: 'Books in Order', gameBooksDesc: 'Arrange Books of the Bible in their correct canonical order', gameBooksBadge: 'Scripture',
+      // Shared
+      reset: 'Reset', playAgain: 'Play Again', movesLabel: 'moves', diffComplete: 'difficulty complete',
+      hint: 'Hint', hideHint: 'Hide Hint', noHints: 'No Hints',
+      hintAutoMsg: 'Hint cells highlighted automatically', noHintsMsg: 'No hints available — good luck!',
+      // Bible Path
+      pathInstructions: 'Connect the numbers in order — fill every cell',
+      pathTip: 'Tap cells to draw your path. Tap the last cell to undo a step.',
+      pathCellsFilled: 'cells filled', pathNext: 'Next',
+      pathComplete: 'Path Complete!', pathCompleteDesc: 'You filled every cell and connected all the dots!', pathNextPuzzle: 'Next Puzzle',
+      pathPuzzle1: "Creation's Path", pathPuzzle1Theme: "Trace God's creation journey",
+      pathPuzzle2: 'Exodus Journey', pathPuzzle2Theme: 'Follow Moses through the wilderness',
+      pathPuzzle3: 'Jerusalem Spiral', pathPuzzle3Theme: 'Spiral your way to the Holy City',
+      // Bible Wordle
+      wordleDiffEasy: '8 guesses + auto clue', wordleDiffMedium: '6 guesses', wordleDiffHard: '5 guesses, no clues',
+      wordleClue: 'Clue', wordleShowClue: 'Show Clue', wordleHideClue: 'Hide Clue', wordleNoClues: 'No Clues', wordleNewWord: 'New Word',
+      wordleWon: 'Well done!', wordleLost: 'The word was...',
+      // Memory Match
+      memoryDiffEasy: '4 pairs', memoryDiffMedium: '6 pairs', memoryDiffHard: '8 pairs',
+      memorySubtitle: 'Match verse with its reference', memoryPairsFound: 'pairs found',
+      memoryAllMatched: 'All Matched!', memoryCompletedIn: 'Completed in',
+      memoryAmazing: 'Amazing!', memoryWellDone: 'Well done!', memoryGoodEffort: 'Good effort!',
+      // Word Search
+      wsSubtitle: 'Find the hidden words', wsDiffEasy: '6 words', wsDiffMedium: '8 words', wsDiffHard: '10 words',
+      wsWordsFound: 'words found', wsAllFound: 'All Words Found!', wsAllFoundDesc: 'You found all hidden Bible words!',
+      // Verse Unscramble
+      usInstructions: 'Tap words to build the verse in the correct order. Tap placed words to remove them.',
+      usDiffEasy: 'Short verses', usDiffMedium: 'Medium verses', usDiffHard: 'Longer verses',
+      usYourAnswer: 'Your Answer', usTapWords: 'Tap words below...', usWordBank: 'Word Bank',
+      usNewVerse: 'New Verse', usCheckAnswer: 'Check Answer', usCorrect: 'Correct!', usTryHarder: 'Try Harder',
+      // Books in Order
+      boInstructions: 'Tap books to place them in the correct biblical order. Tap placed books to remove them.',
+      boDiffEasy: '5 books', boDiffMedium: '8 books', boDiffHard: '11-12 books',
+      boYourOrder: 'Your Order', boTapBelow: 'Tap books below...', boBookBank: 'Book Bank',
+      boPerfectOrder: 'Perfect Order!', boPerfectOrderDesc: 'books in the correct order!', boNextSet: 'Next Set',
+      boOldTestament: 'Old Testament', boNewTestament: 'New Testament',
     },
     bibleStudy: {
       title: 'D-Group Bible Study Generator',
@@ -565,6 +607,48 @@ export const translations = {
       new: 'Bago',
       back: 'Bumalik',
       quote: '"Ang iyong salita ay isang ilawan sa aking mga paa at isang liwanag sa aking landas." — Awit 119:105',
+      // Hub game cards
+      gamePath: 'Bible Path', gamePathDesc: 'Ikonekta ang mga numeradong tuldok sa pagkakasunod, punan ang bawat cell', gamePathBadge: 'Palaisipan',
+      gameWordle: 'Bible Wordle', gameWordleDesc: 'Hulaan ang nakatagong 5-letrang salitang Biblikal sa 6 na pagsubok', gameWordleBadge: 'Salita',
+      gameMemory: 'Memory Match', gameMemoryDesc: 'Baligtad ang mga kard para itugma ang mga talata ng Bibliya sa kanilang mga reperensya', gameMemoryBadge: 'Memorya',
+      gameWordSearch: 'Paghahanap ng Salita', gameWordSearchDesc: 'Hanapin ang mga nakatagong salitang Biblikal sa grid ng mga titik', gameWordSearchBadge: 'Paghahanap',
+      gameUnscramble: 'Pagtaroktok ng Talata', gameUnscrambleDesc: 'Ayusin ang mga salita para maitayo muli ang isang talata ng Bibliya nang tama', gameUnscrambleBadge: 'Talata',
+      gameBooks: 'Mga Libro sa Pagkakasunod', gameBooksDesc: 'Ayusin ang mga Libro ng Bibliya sa tamang pagkakasunod ng kanon', gameBooksBadge: 'Kasulatan',
+      // Shared
+      reset: 'I-reset', playAgain: 'Maglaro Ulit', movesLabel: 'galaw', diffComplete: 'antas kumpleto',
+      hint: 'Pahiwatig', hideHint: 'Itago ang Pahiwatig', noHints: 'Walang Pahiwatig',
+      hintAutoMsg: 'Awtomatikong naka-highlight ang mga hint cell', noHintsMsg: 'Walang magagamit na pahiwatig — suwertehin ka!',
+      // Bible Path
+      pathInstructions: 'Ikonekta ang mga numero sa pagkakasunod — punan ang bawat cell',
+      pathTip: 'I-tap ang mga cell para gumawa ng landas. I-tap ang huling cell para mag-undo ng hakbang.',
+      pathCellsFilled: 'mga cell ang napuno', pathNext: 'Susunod',
+      pathComplete: 'Kumpleto na ang Landas!', pathCompleteDesc: 'Napuno mo ang bawat cell at naikonekta ang lahat ng tuldok!', pathNextPuzzle: 'Susunod na Palaisipan',
+      pathPuzzle1: 'Landas ng Paglikha', pathPuzzle1Theme: 'Sundan ang paglalakbay ng paglikha ng Diyos',
+      pathPuzzle2: 'Paglalakbay sa Exodo', pathPuzzle2Theme: 'Sundan si Moises sa ilang',
+      pathPuzzle3: 'Ispiral ng Jerusalem', pathPuzzle3Theme: 'Mag-ispiral patungo sa Banal na Lungsod',
+      // Bible Wordle
+      wordleDiffEasy: '8 hula + awtomatikong pahiwatig', wordleDiffMedium: '6 hula', wordleDiffHard: '5 hula, walang pahiwatig',
+      wordleClue: 'Pahiwatig', wordleShowClue: 'Ipakita ang Pahiwatig', wordleHideClue: 'Itago ang Pahiwatig', wordleNoClues: 'Walang Pahiwatig', wordleNewWord: 'Bagong Salita',
+      wordleWon: 'Magaling!', wordleLost: 'Ang salita ay...',
+      // Memory Match
+      memoryDiffEasy: '4 pares', memoryDiffMedium: '6 pares', memoryDiffHard: '8 pares',
+      memorySubtitle: 'Itugma ang talata sa reperensya nito', memoryPairsFound: 'mga pares ang nahanap',
+      memoryAllMatched: 'Lahat ay Nagtugma!', memoryCompletedIn: 'Natapos sa',
+      memoryAmazing: 'Kahanga-hanga!', memoryWellDone: 'Magaling!', memoryGoodEffort: 'Magandang pagsubok!',
+      // Word Search
+      wsSubtitle: 'Hanapin ang mga nakatagong salita', wsDiffEasy: '6 salita', wsDiffMedium: '8 salita', wsDiffHard: '10 salita',
+      wsWordsFound: 'mga salita ang nahanap', wsAllFound: 'Lahat ng Salita ay Nahanap!', wsAllFoundDesc: 'Nahanap mo ang lahat ng nakatagong salitang Biblikal!',
+      // Verse Unscramble
+      usInstructions: 'I-tap ang mga salita para buuin ang talata sa tamang pagkakasunod. I-tap ang mga inilagay na salita para alisin ang mga ito.',
+      usDiffEasy: 'Maikling talata', usDiffMedium: 'Katamtamang talata', usDiffHard: 'Mas mahabang talata',
+      usYourAnswer: 'Iyong Sagot', usTapWords: 'I-tap ang mga salita sa ibaba...', usWordBank: 'Bangko ng Salita',
+      usNewVerse: 'Bagong Talata', usCheckAnswer: 'Suriin ang Sagot', usCorrect: 'Tama!', usTryHarder: 'Subukan nang Mas Mahirap',
+      // Books in Order
+      boInstructions: 'I-tap ang mga libro para ilagay ang mga ito sa tamang pagkakasunod ng Bibliya. I-tap ang mga inilagay na libro para alisin ang mga ito.',
+      boDiffEasy: '5 libro', boDiffMedium: '8 libro', boDiffHard: '11-12 libro',
+      boYourOrder: 'Iyong Pagkakasunod', boTapBelow: 'I-tap ang mga libro sa ibaba...', boBookBank: 'Bangko ng Libro',
+      boPerfectOrder: 'Perpektong Pagkakasunod!', boPerfectOrderDesc: 'mga libro sa tamang pagkakasunod!', boNextSet: 'Susunod na Set',
+      boOldTestament: 'Lumang Tipan', boNewTestament: 'Bagong Tipan',
     },
     bibleStudy: {
       title: 'D-Group Bible Study Generator',
@@ -905,6 +989,48 @@ export const translations = {
       new: '新的',
       back: '返回',
       quote: '"你的话是我脚前的灯，是我路上的光。" — 诗篇119:105',
+      // Hub game cards
+      gamePath: '圣经路径', gamePathDesc: '按顺序连接编号的点，填满每个格子', gamePathBadge: '拼图',
+      gameWordle: '圣经猜词', gameWordleDesc: '在6次机会内猜出隐藏的5字母圣经词汇', gameWordleBadge: '文字',
+      gameMemory: '记忆配对', gameMemoryDesc: '翻转卡片，将圣经经文与其参考书目配对', gameMemoryBadge: '记忆',
+      gameWordSearch: '找词游戏', gameWordSearchDesc: '在字母网格中找出隐藏的圣经词汇', gameWordSearchBadge: '搜索',
+      gameUnscramble: '经文重组', gameUnscrambleDesc: '重新排列单词，正确重建圣经经文', gameUnscrambleBadge: '经文',
+      gameBooks: '圣经排序', gameBooksDesc: '按正典顺序排列圣经各书', gameBooksBadge: '圣经',
+      // Shared
+      reset: '重置', playAgain: '再玩一次', movesLabel: '步', diffComplete: '难度完成',
+      hint: '提示', hideHint: '隐藏提示', noHints: '无提示',
+      hintAutoMsg: '提示格子自动高亮', noHintsMsg: '无可用提示 — 祝你好运！',
+      // Bible Path
+      pathInstructions: '按顺序连接数字 — 填满每个格子',
+      pathTip: '点击格子绘制路径。点击最后一个格子可撤销步骤。',
+      pathCellsFilled: '个格子已填满', pathNext: '下一个',
+      pathComplete: '路径完成！', pathCompleteDesc: '你填满了每个格子并连接了所有点！', pathNextPuzzle: '下一个拼图',
+      pathPuzzle1: '创世之路', pathPuzzle1Theme: '追踪上帝的创造之旅',
+      pathPuzzle2: '出埃及之旅', pathPuzzle2Theme: '跟随摩西穿越旷野',
+      pathPuzzle3: '耶路撒冷螺旋', pathPuzzle3Theme: '螺旋前往圣城',
+      // Bible Wordle
+      wordleDiffEasy: '8次猜测 + 自动提示', wordleDiffMedium: '6次猜测', wordleDiffHard: '5次猜测，无提示',
+      wordleClue: '线索', wordleShowClue: '显示线索', wordleHideClue: '隐藏线索', wordleNoClues: '无线索', wordleNewWord: '新词汇',
+      wordleWon: '干得好！', wordleLost: '答案是...',
+      // Memory Match
+      memoryDiffEasy: '4对', memoryDiffMedium: '6对', memoryDiffHard: '8对',
+      memorySubtitle: '将经文与其参考配对', memoryPairsFound: '对已找到',
+      memoryAllMatched: '全部配对！', memoryCompletedIn: '完成于',
+      memoryAmazing: '太棒了！', memoryWellDone: '干得好！', memoryGoodEffort: '不错的努力！',
+      // Word Search
+      wsSubtitle: '找出隐藏的词汇', wsDiffEasy: '6个词', wsDiffMedium: '8个词', wsDiffHard: '10个词',
+      wsWordsFound: '个词已找到', wsAllFound: '所有词汇已找到！', wsAllFoundDesc: '你找到了所有隐藏的圣经词汇！',
+      // Verse Unscramble
+      usInstructions: '点击词汇按正确顺序组成经文。点击已放置的词汇可移除。',
+      usDiffEasy: '短经文', usDiffMedium: '中等经文', usDiffHard: '较长经文',
+      usYourAnswer: '您的答案', usTapWords: '点击下方词汇...', usWordBank: '词库',
+      usNewVerse: '新经文', usCheckAnswer: '检查答案', usCorrect: '正确！', usTryHarder: '挑战更难',
+      // Books in Order
+      boInstructions: '点击书卷按正确的圣经顺序排列。点击已放置的书卷可移除。',
+      boDiffEasy: '5本书', boDiffMedium: '8本书', boDiffHard: '11-12本书',
+      boYourOrder: '您的顺序', boTapBelow: '点击下方书卷...', boBookBank: '书库',
+      boPerfectOrder: '完美顺序！', boPerfectOrderDesc: '本书按正确顺序排列！', boNextSet: '下一组',
+      boOldTestament: '旧约', boNewTestament: '新约',
     },
     bibleStudy: {
       title: '门徒小组圣经学习生成器',

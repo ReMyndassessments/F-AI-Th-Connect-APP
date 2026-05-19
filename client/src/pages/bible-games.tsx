@@ -158,6 +158,9 @@ function BiblePath({ onBack }: { onBack: () => void }) {
   const [showHint, setShowHint] = useState(false);
   const [key, setKey] = useState(0);
 
+  const { t } = useLanguage();
+  const puzzleNames = [t.bibleGames.pathPuzzle1, t.bibleGames.pathPuzzle2, t.bibleGames.pathPuzzle3];
+  const puzzleThemes = [t.bibleGames.pathPuzzle1Theme, t.bibleGames.pathPuzzle2Theme, t.bibleGames.pathPuzzle3Theme];
   const puzzle = PATH_PUZZLES[puzzleIdx];
   const size = puzzle.size;
   const maxGuesses = difficulty === 'easy' ? Infinity : difficulty === 'medium' ? Infinity : Infinity;
@@ -201,16 +204,16 @@ function BiblePath({ onBack }: { onBack: () => void }) {
   return (
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-lg mx-auto">
-        <GameHeader title={puzzle.name} subtitle={puzzle.theme} onBack={onBack} onRefresh={reset}/>
+        <GameHeader title={puzzleNames[puzzleIdx]} subtitle={puzzleThemes[puzzleIdx]} onBack={onBack} onRefresh={reset}/>
 
         <div className="mb-4"><DifficultyPicker value={difficulty} onChange={handleDifficultyChange}/></div>
 
-        {difficulty==='easy' && <div className="bg-green-50 border border-green-200 rounded-xl p-2.5 mb-3 text-xs text-green-800 font-medium">Hint cells highlighted automatically</div>}
-        {difficulty==='hard' && <div className="bg-red-50 border border-red-200 rounded-xl p-2.5 mb-3 text-xs text-red-800 font-medium">No hints available — good luck!</div>}
+        {difficulty==='easy' && <div className="bg-green-50 border border-green-200 rounded-xl p-2.5 mb-3 text-xs text-green-800 font-medium">{t.bibleGames.hintAutoMsg}</div>}
+        {difficulty==='hard' && <div className="bg-red-50 border border-red-200 rounded-xl p-2.5 mb-3 text-xs text-red-800 font-medium">{t.bibleGames.noHintsMsg}</div>}
 
         <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 mb-4 text-sm text-blue-800">
-          <p className="font-semibold">Connect the numbers in order — fill every cell</p>
-          <p className="text-blue-600 mt-0.5">Tap cells to draw your path. Tap the last cell to undo a step.</p>
+          <p className="font-semibold">{t.bibleGames.pathInstructions}</p>
+          <p className="text-blue-600 mt-0.5">{t.bibleGames.pathTip}</p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-lg p-4 mb-4">
@@ -233,25 +236,25 @@ function BiblePath({ onBack }: { onBack: () => void }) {
         </div>
 
         <div className="flex justify-between text-sm text-gray-500 mb-3 px-1">
-          <span>{path.length}/{size*size} cells filled</span>
-          <span>Next: <strong>#{getNextRequired()}</strong></span>
+          <span>{path.length}/{size*size} {t.bibleGames.pathCellsFilled}</span>
+          <span>{t.bibleGames.pathNext}: <strong>#{getNextRequired()}</strong></span>
         </div>
 
         <div className="flex gap-2 mb-4">
           <button onClick={reset} className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-100 rounded-xl hover:bg-gray-200 text-sm font-semibold text-gray-700">
-            <RotateCcw className="w-4 h-4"/> Reset
+            <RotateCcw className="w-4 h-4"/> {t.bibleGames.reset}
           </button>
           {hintsAllowed && (
             <button onClick={()=>setShowHint(h=>!h)} className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold ${showHint||autoHint?'bg-amber-200 text-amber-800':'bg-amber-50 hover:bg-amber-100 text-amber-700'}`}>
-              <Lightbulb className="w-4 h-4"/> {showHint||autoHint?'Hide Hint':'Hint'}
+              <Lightbulb className="w-4 h-4"/> {showHint||autoHint?t.bibleGames.hideHint:t.bibleGames.hint}
             </button>
           )}
-          {!hintsAllowed && <div className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold bg-gray-50 text-gray-300 cursor-not-allowed"><Lightbulb className="w-4 h-4"/> No Hints</div>}
+          {!hintsAllowed && <div className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold bg-gray-50 text-gray-300 cursor-not-allowed"><Lightbulb className="w-4 h-4"/> {t.bibleGames.noHints}</div>}
         </div>
 
         <div className="flex gap-2">
-          {PATH_PUZZLES.map((p,i)=>(
-            <button key={i} onClick={()=>{setPuzzleIdx(i);reset();}} className={`flex-1 py-2.5 text-xs rounded-xl font-semibold ${puzzleIdx===i?'bg-blue-600 text-white':'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>{p.name}</button>
+          {PATH_PUZZLES.map((_p,i)=>(
+            <button key={i} onClick={()=>{setPuzzleIdx(i);reset();}} className={`flex-1 py-2.5 text-xs rounded-xl font-semibold ${puzzleIdx===i?'bg-blue-600 text-white':'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>{puzzleNames[i]}</button>
           ))}
         </div>
 
@@ -259,12 +262,12 @@ function BiblePath({ onBack }: { onBack: () => void }) {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-3xl p-8 text-center max-w-sm w-full shadow-2xl">
               <div className="text-6xl mb-4">🎉</div>
-              <h2 className="text-2xl font-bold mb-2">Path Complete!</h2>
-              <p className="text-gray-500 mb-1">You filled every cell and connected all the dots!</p>
-              <p className="text-blue-600 font-semibold mb-6 capitalize">{difficulty} difficulty complete</p>
+              <h2 className="text-2xl font-bold mb-2">{t.bibleGames.pathComplete}</h2>
+              <p className="text-gray-500 mb-1">{t.bibleGames.pathCompleteDesc}</p>
+              <p className="text-blue-600 font-semibold mb-6 capitalize">{t.bibleGames[difficulty]} {t.bibleGames.diffComplete}</p>
               <div className="flex gap-3">
-                <button onClick={reset} className="flex-1 py-3 bg-gray-100 rounded-2xl font-semibold">Play Again</button>
-                {puzzleIdx<PATH_PUZZLES.length-1&&<button onClick={()=>{setPuzzleIdx(i=>i+1);reset();}} className="flex-1 py-3 bg-blue-600 text-white rounded-2xl font-semibold">Next Puzzle</button>}
+                <button onClick={reset} className="flex-1 py-3 bg-gray-100 rounded-2xl font-semibold">{t.bibleGames.playAgain}</button>
+                {puzzleIdx<PATH_PUZZLES.length-1&&<button onClick={()=>{setPuzzleIdx(i=>i+1);reset();}} className="flex-1 py-3 bg-blue-600 text-white rounded-2xl font-semibold">{t.bibleGames.pathNextPuzzle}</button>}
               </div>
             </div>
           </div>
@@ -338,18 +341,19 @@ function BibleWordle({ onBack }: { onBack: () => void }) {
     return 'bg-gray-200 text-gray-800';
   };
 
-  const diffLabel: Record<Difficulty,string> = {easy:'8 guesses + auto clue',medium:'6 guesses',hard:'5 guesses, no clues'};
+  const { t } = useLanguage();
+  const diffLabel: Record<Difficulty,string> = {easy:t.bibleGames.wordleDiffEasy,medium:t.bibleGames.wordleDiffMedium,hard:t.bibleGames.wordleDiffHard};
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-md mx-auto">
-        <GameHeader title="Bible Wordle" subtitle={`Guess the 5-letter Bible word — ${diffLabel[difficulty]}`} onBack={onBack} onRefresh={()=>resetGame()}/>
+        <GameHeader title={t.bibleGames.gameWordle} subtitle={`${t.bibleGames.gameWordleDesc} — ${diffLabel[difficulty]}`} onBack={onBack} onRefresh={()=>resetGame()}/>
 
         <div className="mb-4"><DifficultyPicker value={difficulty} onChange={handleDifficultyChange}/></div>
 
         {showClue&&(
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-4 text-sm text-amber-800 text-center">
-            <span className="font-semibold">Clue:</span> {WORD_CLUES[targetWord]}
+            <span className="font-semibold">{t.bibleGames.wordleClue}:</span> {WORD_CLUES[targetWord]}
           </div>
         )}
 
@@ -391,12 +395,12 @@ function BibleWordle({ onBack }: { onBack: () => void }) {
         <div className="flex gap-2">
           {difficulty!=='hard'&&(
             <button onClick={()=>setShowClue(s=>!s)} className="flex-1 flex items-center justify-center gap-2 py-3 bg-amber-50 rounded-xl text-amber-700 text-sm font-semibold hover:bg-amber-100">
-              <Lightbulb className="w-4 h-4"/> {showClue?'Hide Clue':'Show Clue'}
+              <Lightbulb className="w-4 h-4"/> {showClue?t.bibleGames.wordleHideClue:t.bibleGames.wordleShowClue}
             </button>
           )}
-          {difficulty==='hard'&&<div className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-50 rounded-xl text-gray-300 text-sm font-semibold cursor-not-allowed"><Lightbulb className="w-4 h-4"/> No Clues</div>}
+          {difficulty==='hard'&&<div className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-50 rounded-xl text-gray-300 text-sm font-semibold cursor-not-allowed"><Lightbulb className="w-4 h-4"/> {t.bibleGames.wordleNoClues}</div>}
           <button onClick={()=>resetGame()} className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-100 rounded-xl text-gray-700 text-sm font-semibold hover:bg-gray-200">
-            <RotateCcw className="w-4 h-4"/> New Word
+            <RotateCcw className="w-4 h-4"/> {t.bibleGames.wordleNewWord}
           </button>
         </div>
 
@@ -404,10 +408,10 @@ function BibleWordle({ onBack }: { onBack: () => void }) {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-3xl p-8 text-center max-w-sm w-full shadow-2xl">
               <div className="text-5xl mb-4">{won?'🎉':'📖'}</div>
-              <h2 className="text-2xl font-bold mb-2">{won?'Well done!':'The word was...'}</h2>
+              <h2 className="text-2xl font-bold mb-2">{won?t.bibleGames.wordleWon:t.bibleGames.wordleLost}</h2>
               <div className="text-3xl font-bold text-blue-600 mb-2">{targetWord}</div>
               <p className="text-gray-500 mb-6 italic">{WORD_CLUES[targetWord]}</p>
-              <button onClick={()=>resetGame()} className="w-full py-3 bg-blue-600 text-white rounded-2xl font-semibold hover:bg-blue-700">Play Again</button>
+              <button onClick={()=>resetGame()} className="w-full py-3 bg-blue-600 text-white rounded-2xl font-semibold hover:bg-blue-700">{t.bibleGames.playAgain}</button>
             </div>
           </div>
         )}
@@ -458,8 +462,9 @@ function MemoryMatch({ onBack }: { onBack: () => void }) {
     }
   };
 
+  const { t } = useLanguage();
   const cols=difficulty==='easy'?4:difficulty==='medium'?4:4;
-  const diffLabel:Record<Difficulty,string>={easy:'4 pairs',medium:'6 pairs',hard:'8 pairs'};
+  const diffLabel:Record<Difficulty,string>={easy:t.bibleGames.memoryDiffEasy,medium:t.bibleGames.memoryDiffMedium,hard:t.bibleGames.memoryDiffHard};
 
   return(
     <div className="min-h-screen bg-gray-50 p-4">
@@ -468,14 +473,14 @@ function MemoryMatch({ onBack }: { onBack: () => void }) {
           <div className="flex items-center gap-3 flex-1 min-w-0">
             <button onClick={onBack} className="p-2 rounded-xl hover:bg-gray-100 flex-shrink-0"><ArrowLeft className="w-5 h-5"/></button>
             <div className="min-w-0">
-              <h1 className="text-xl font-bold text-gray-900">Memory Match</h1>
-              <p className="text-sm text-gray-500">Match verse with its reference — {diffLabel[difficulty]}</p>
+              <h1 className="text-xl font-bold text-gray-900">{t.bibleGames.gameMemory}</h1>
+              <p className="text-sm text-gray-500">{t.bibleGames.memorySubtitle} — {diffLabel[difficulty]}</p>
             </div>
           </div>
           <div className="flex items-center gap-3 flex-shrink-0">
-            <div className="text-right"><div className="text-2xl font-bold text-blue-600">{moves}</div><div className="text-xs text-gray-400">moves</div></div>
+            <div className="text-right"><div className="text-2xl font-bold text-blue-600">{moves}</div><div className="text-xs text-gray-400">{t.bibleGames.movesLabel}</div></div>
             <button onClick={()=>reset()} className="flex items-center gap-1.5 px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl text-sm font-semibold">
-              <RefreshCw className="w-4 h-4"/> New
+              <RefreshCw className="w-4 h-4"/> {t.bibleGames.new}
             </button>
           </div>
         </div>
@@ -483,7 +488,7 @@ function MemoryMatch({ onBack }: { onBack: () => void }) {
         <div className="mb-4"><DifficultyPicker value={difficulty} onChange={handleDifficultyChange}/></div>
 
         <div className="flex justify-between text-sm text-gray-500 mb-3 px-1">
-          <span>{matched.length}/{totalPairs} pairs found</span>
+          <span>{matched.length}/{totalPairs} {t.bibleGames.memoryPairsFound}</span>
         </div>
 
         <div className={`grid gap-2 sm:gap-3 ${difficulty==='easy'?'grid-cols-4':difficulty==='medium'?'grid-cols-4':'grid-cols-4'}`}>
@@ -504,10 +509,10 @@ function MemoryMatch({ onBack }: { onBack: () => void }) {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-3xl p-8 text-center max-w-sm w-full shadow-2xl">
               <div className="text-5xl mb-4">🌟</div>
-              <h2 className="text-2xl font-bold mb-2">All Matched!</h2>
-              <p className="text-gray-500 mb-1">Completed in <strong>{moves} moves</strong></p>
-              <p className="text-blue-600 font-semibold mb-6 capitalize">{difficulty} — {moves<=totalPairs*2?'Amazing!':moves<=totalPairs*3?'Well done!':'Good effort!'}</p>
-              <button onClick={()=>reset()} className="w-full py-3 bg-blue-600 text-white rounded-2xl font-semibold hover:bg-blue-700">Play Again</button>
+              <h2 className="text-2xl font-bold mb-2">{t.bibleGames.memoryAllMatched}</h2>
+              <p className="text-gray-500 mb-1">{t.bibleGames.memoryCompletedIn} <strong>{moves} {t.bibleGames.movesLabel}</strong></p>
+              <p className="text-blue-600 font-semibold mb-6 capitalize">{t.bibleGames[difficulty]} — {moves<=totalPairs*2?t.bibleGames.memoryAmazing:moves<=totalPairs*3?t.bibleGames.memoryWellDone:t.bibleGames.memoryGoodEffort}</p>
+              <button onClick={()=>reset()} className="w-full py-3 bg-blue-600 text-white rounded-2xl font-semibold hover:bg-blue-700">{t.bibleGames.playAgain}</button>
             </div>
           </div>
         )}
@@ -572,13 +577,14 @@ function WordSearch({ onBack }: { onBack: () => void }) {
     return null;
   };
 
+  const { t } = useLanguage();
   const won=foundWords.length===targetAnswers.length;
-  const diffLabel:Record<Difficulty,string>={easy:'6 words',medium:'8 words',hard:'10 words'};
+  const diffLabel:Record<Difficulty,string>={easy:t.bibleGames.wsDiffEasy,medium:t.bibleGames.wsDiffMedium,hard:t.bibleGames.wsDiffHard};
 
   return(
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-lg mx-auto">
-        <GameHeader title="Bible Word Search" subtitle={`Find the hidden words — ${diffLabel[difficulty]}`} onBack={onBack} onRefresh={()=>reset()}/>
+        <GameHeader title={t.bibleGames.gameWordSearch} subtitle={`${t.bibleGames.wsSubtitle} — ${diffLabel[difficulty]}`} onBack={onBack} onRefresh={()=>reset()}/>
         <div className="mb-4"><DifficultyPicker value={difficulty} onChange={handleDifficultyChange}/></div>
 
         <div className="bg-white rounded-2xl shadow-lg p-3 mb-4 select-none" ref={gridRef} onMouseUp={commitSelection}
@@ -609,16 +615,16 @@ function WordSearch({ onBack }: { onBack: () => void }) {
           ))}
         </div>
 
-        <div className="text-center text-sm text-gray-500">{foundWords.length}/{targetAnswers.length} words found</div>
+        <div className="text-center text-sm text-gray-500">{foundWords.length}/{targetAnswers.length} {t.bibleGames.wsWordsFound}</div>
 
         {won&&(
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-3xl p-8 text-center max-w-sm w-full shadow-2xl">
               <div className="text-5xl mb-4">🔍</div>
-              <h2 className="text-2xl font-bold mb-2">All Words Found!</h2>
-              <p className="text-gray-500 mb-1">You found all {targetAnswers.length} hidden Bible words!</p>
-              <p className="text-blue-600 font-semibold mb-6 capitalize">{difficulty} difficulty complete</p>
-              <button onClick={()=>reset()} className="w-full py-3 bg-blue-600 text-white rounded-2xl font-semibold hover:bg-blue-700">Play Again</button>
+              <h2 className="text-2xl font-bold mb-2">{t.bibleGames.wsAllFound}</h2>
+              <p className="text-gray-500 mb-1">{t.bibleGames.wsAllFoundDesc}</p>
+              <p className="text-blue-600 font-semibold mb-6 capitalize">{t.bibleGames[difficulty]} {t.bibleGames.diffComplete}</p>
+              <button onClick={()=>reset()} className="w-full py-3 bg-blue-600 text-white rounded-2xl font-semibold hover:bg-blue-700">{t.bibleGames.playAgain}</button>
             </div>
           </div>
         )}
@@ -673,22 +679,23 @@ function VerseUnscramble({ onBack }: { onBack: () => void }) {
     if(!isCorrect) setTimeout(()=>setShowResult(null),1200);
   };
 
-  const diffLabel:Record<Difficulty,string>={easy:'Short verses',medium:'Medium verses',hard:'Longer verses'};
+  const { t } = useLanguage();
+  const diffLabel:Record<Difficulty,string>={easy:t.bibleGames.usDiffEasy,medium:t.bibleGames.usDiffMedium,hard:t.bibleGames.usDiffHard};
 
   return(
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-lg mx-auto">
-        <GameHeader title="Verse Unscramble" subtitle={verse.ref} onBack={onBack} onRefresh={()=>reset()}/>
+        <GameHeader title={t.bibleGames.gameUnscramble} subtitle={verse.ref} onBack={onBack} onRefresh={()=>reset()}/>
         <div className="mb-4"><DifficultyPicker value={difficulty} onChange={handleDifficultyChange}/></div>
 
         <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 mb-4 text-sm text-blue-800">
-          Tap words to build the verse in the correct order. Tap placed words to remove them.
+          {t.bibleGames.usInstructions}
         </div>
 
         <div className={`bg-white rounded-2xl shadow-lg p-4 mb-3 min-h-24 border-2 transition-colors ${showResult==='correct'?'border-green-400 bg-green-50':showResult==='wrong'?'border-red-400 bg-red-50':'border-dashed border-gray-200'}`}>
-          <p className="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wide">Your Answer</p>
+          <p className="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wide">{t.bibleGames.usYourAnswer}</p>
           <div className="flex flex-wrap gap-2">
-            {state.answer.length===0?<span className="text-gray-300 text-sm italic">Tap words below...</span>
+            {state.answer.length===0?<span className="text-gray-300 text-sm italic">{t.bibleGames.usTapWords}</span>
               :state.answer.map(item=>(
                 <button key={item.id} onClick={()=>returnToBank(item.id)}
                   className="px-3 py-1.5 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 active:scale-95">{item.word}
@@ -699,7 +706,7 @@ function VerseUnscramble({ onBack }: { onBack: () => void }) {
         </div>
 
         <div className="bg-white rounded-2xl shadow-lg p-4 mb-4 min-h-20">
-          <p className="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wide">Word Bank</p>
+          <p className="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wide">{t.bibleGames.usWordBank}</p>
           <div className="flex flex-wrap gap-2">
             {state.bank.map(item=>(
               <button key={item.id} onClick={()=>pickFromBank(item.id)}
@@ -711,11 +718,11 @@ function VerseUnscramble({ onBack }: { onBack: () => void }) {
 
         <div className="flex gap-2">
           <button onClick={()=>reset()} className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-100 rounded-xl text-sm font-semibold hover:bg-gray-200">
-            <RotateCcw className="w-4 h-4"/> New Verse
+            <RotateCcw className="w-4 h-4"/> {t.bibleGames.usNewVerse}
           </button>
           <button onClick={checkAnswer} disabled={state.answer.length!==verse.words.length}
             className="flex-1 py-3 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 disabled:opacity-40">
-            Check Answer
+            {t.bibleGames.usCheckAnswer}
           </button>
         </div>
 
@@ -723,12 +730,12 @@ function VerseUnscramble({ onBack }: { onBack: () => void }) {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-3xl p-8 text-center max-w-sm w-full shadow-2xl">
               <div className="text-5xl mb-4">✨</div>
-              <h2 className="text-2xl font-bold mb-2">Correct!</h2>
+              <h2 className="text-2xl font-bold mb-2">{t.bibleGames.usCorrect}</h2>
               <p className="text-blue-600 font-semibold mb-1">{verse.ref}</p>
               <p className="text-gray-500 italic mb-6 text-sm">"{verse.words.join(' ')}"</p>
               <div className="flex gap-3">
-                <button onClick={()=>reset()} className="flex-1 py-3 bg-gray-100 rounded-2xl font-semibold">New Verse</button>
-                <button onClick={()=>reset(difficulty==='easy'?'medium':difficulty==='medium'?'hard':difficulty)} className="flex-1 py-3 bg-blue-600 text-white rounded-2xl font-semibold">Try Harder</button>
+                <button onClick={()=>reset()} className="flex-1 py-3 bg-gray-100 rounded-2xl font-semibold">{t.bibleGames.usNewVerse}</button>
+                <button onClick={()=>reset(difficulty==='easy'?'medium':difficulty==='medium'?'hard':difficulty)} className="flex-1 py-3 bg-blue-600 text-white rounded-2xl font-semibold">{t.bibleGames.usTryHarder}</button>
               </div>
             </div>
           </div>
@@ -778,22 +785,25 @@ function BooksOrder({ onBack }: { onBack: () => void }) {
     setShowResult(null);
   };
 
+  const { t } = useLanguage();
+  const localizeTestament = (tn: string) =>
+    tn === 'Old Testament' ? t.bibleGames.boOldTestament : t.bibleGames.boNewTestament;
   const sets=getCurrentSets(difficulty);
-  const diffLabel:Record<Difficulty,string>={easy:'5 books',medium:'8 books',hard:'11-12 books'};
+  const diffLabel:Record<Difficulty,string>={easy:t.bibleGames.boDiffEasy,medium:t.bibleGames.boDiffMedium,hard:t.bibleGames.boDiffHard};
 
   return(
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-lg mx-auto">
-        <GameHeader title="Books in Order" subtitle={`${state.testament} — ${diffLabel[difficulty]}`} onBack={onBack} onRefresh={()=>reset()}/>
+        <GameHeader title={t.bibleGames.gameBooks} subtitle={`${localizeTestament(state.testament)} — ${diffLabel[difficulty]}`} onBack={onBack} onRefresh={()=>reset()}/>
         <div className="mb-4"><DifficultyPicker value={difficulty} onChange={handleDifficultyChange}/></div>
 
         <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 mb-4 text-sm text-blue-800">
-          Tap books to place them in the correct biblical order. Tap placed books to remove them.
+          {t.bibleGames.boInstructions}
         </div>
 
         <div className={`bg-white rounded-2xl shadow-lg p-4 mb-3 min-h-24 border-2 transition-colors ${showResult==='correct'?'border-green-400 bg-green-50':showResult==='wrong'?'border-red-400 bg-red-50':'border-dashed border-gray-200'}`}>
-          <p className="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wide">Your Order ({state.placed.length}/{state.books.length})</p>
-          {state.placed.length===0?<p className="text-gray-300 text-sm italic text-center py-4">Tap books below...</p>
+          <p className="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wide">{t.bibleGames.boYourOrder} ({state.placed.length}/{state.books.length})</p>
+          {state.placed.length===0?<p className="text-gray-300 text-sm italic text-center py-4">{t.bibleGames.boTapBelow}</p>
             :<div className="flex flex-wrap gap-2">
               {state.placed.map((book,i)=>(
                 <button key={book} onClick={()=>removeBook(book)}
@@ -807,7 +817,7 @@ function BooksOrder({ onBack }: { onBack: () => void }) {
         </div>
 
         <div className="bg-white rounded-2xl shadow-lg p-4 mb-4">
-          <p className="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wide">Book Bank</p>
+          <p className="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wide">{t.bibleGames.boBookBank}</p>
           <div className="flex flex-wrap gap-2">
             {state.scrambled.map(book=>(
               <button key={book} onClick={()=>placeBook(book)}
@@ -819,7 +829,7 @@ function BooksOrder({ onBack }: { onBack: () => void }) {
 
         <div className="flex gap-2 mb-4">
           <button onClick={()=>reset()} className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-100 rounded-xl text-sm font-semibold hover:bg-gray-200">
-            <RotateCcw className="w-4 h-4"/> Reset
+            <RotateCcw className="w-4 h-4"/> {t.bibleGames.reset}
           </button>
         </div>
 
@@ -828,7 +838,7 @@ function BooksOrder({ onBack }: { onBack: () => void }) {
             {sets.map((bs,i)=>(
               <button key={i} onClick={()=>{setSetIdx(i);reset(difficulty,i);}}
                 className={`flex-1 py-2.5 rounded-xl text-xs font-bold ${setIdx===i?'bg-blue-600 text-white':'bg-gray-200 text-gray-600 hover:bg-gray-300'}`}>
-                {bs.testament}
+                {localizeTestament(bs.testament)}
               </button>
             ))}
           </div>
@@ -838,12 +848,12 @@ function BooksOrder({ onBack }: { onBack: () => void }) {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-3xl p-8 text-center max-w-sm w-full shadow-2xl">
               <div className="text-5xl mb-4">📚</div>
-              <h2 className="text-2xl font-bold mb-2">Perfect Order!</h2>
-              <p className="text-gray-500 mb-1">All {state.books.length} {state.testament} books in the correct order!</p>
-              <p className="text-blue-600 font-semibold mb-6 capitalize">{difficulty} difficulty complete</p>
+              <h2 className="text-2xl font-bold mb-2">{t.bibleGames.boPerfectOrder}</h2>
+              <p className="text-gray-500 mb-1">{state.books.length} {localizeTestament(state.testament)} {t.bibleGames.boPerfectOrderDesc}</p>
+              <p className="text-blue-600 font-semibold mb-6 capitalize">{t.bibleGames[difficulty]} {t.bibleGames.diffComplete}</p>
               <div className="flex gap-3">
-                <button onClick={()=>reset()} className="flex-1 py-3 bg-gray-100 rounded-2xl font-semibold">Play Again</button>
-                <button onClick={()=>{const ni=(setIdx+1)%sets.length;setSetIdx(ni);reset(difficulty,ni);}} className="flex-1 py-3 bg-blue-600 text-white rounded-2xl font-semibold">Next Set</button>
+                <button onClick={()=>reset()} className="flex-1 py-3 bg-gray-100 rounded-2xl font-semibold">{t.bibleGames.playAgain}</button>
+                <button onClick={()=>{const ni=(setIdx+1)%sets.length;setSetIdx(ni);reset(difficulty,ni);}} className="flex-1 py-3 bg-blue-600 text-white rounded-2xl font-semibold">{t.bibleGames.boNextSet}</button>
               </div>
             </div>
           </div>
@@ -856,18 +866,18 @@ function BooksOrder({ onBack }: { onBack: () => void }) {
 // =====================================================================
 // GAMES HUB
 // =====================================================================
-const GAMES=[
-  {id:'path'       as GameType,title:'Bible Path',      desc:'Connect numbered dots in order, filling every cell',      emoji:'🗺️',color:'from-green-400 to-emerald-600',badge:'Puzzle'},
-  {id:'wordle'     as GameType,title:'Bible Wordle',    desc:'Guess the hidden 5-letter Bible word in 6 tries',          emoji:'🔤',color:'from-blue-400 to-blue-600',    badge:'Word'},
-  {id:'memory'     as GameType,title:'Memory Match',    desc:'Flip cards to match Bible verses with their references',    emoji:'🃏',color:'from-purple-400 to-violet-600',badge:'Memory'},
-  {id:'wordsearch' as GameType,title:'Word Search',     desc:'Find hidden Bible words in the letter grid',                emoji:'🔍',color:'from-amber-400 to-orange-500', badge:'Search'},
-  {id:'unscramble' as GameType,title:'Verse Unscramble',desc:'Rearrange the words to rebuild a Bible verse correctly',    emoji:'📖',color:'from-rose-400 to-red-500',     badge:'Verse'},
-  {id:'booksorder' as GameType,title:'Books in Order',  desc:'Arrange Books of the Bible in their correct canonical order',emoji:'📚',color:'from-teal-400 to-cyan-600',  badge:'Scripture'},
-];
-
 export default function BibleGames() {
   const [currentGame,setCurrentGame]=useState<GameType>('hub');
   const { t } = useLanguage();
+
+  const GAMES=[
+    {id:'path'       as GameType,title:t.bibleGames.gamePath,      desc:t.bibleGames.gamePathDesc,      emoji:'🗺️',color:'from-green-400 to-emerald-600',badge:t.bibleGames.gamePathBadge},
+    {id:'wordle'     as GameType,title:t.bibleGames.gameWordle,    desc:t.bibleGames.gameWordleDesc,    emoji:'🔤',color:'from-blue-400 to-blue-600',    badge:t.bibleGames.gameWordleBadge},
+    {id:'memory'     as GameType,title:t.bibleGames.gameMemory,    desc:t.bibleGames.gameMemoryDesc,    emoji:'🃏',color:'from-purple-400 to-violet-600',badge:t.bibleGames.gameMemoryBadge},
+    {id:'wordsearch' as GameType,title:t.bibleGames.gameWordSearch,desc:t.bibleGames.gameWordSearchDesc,emoji:'🔍',color:'from-amber-400 to-orange-500', badge:t.bibleGames.gameWordSearchBadge},
+    {id:'unscramble' as GameType,title:t.bibleGames.gameUnscramble,desc:t.bibleGames.gameUnscrambleDesc,emoji:'📖',color:'from-rose-400 to-red-500',     badge:t.bibleGames.gameUnscrambleBadge},
+    {id:'booksorder' as GameType,title:t.bibleGames.gameBooks,     desc:t.bibleGames.gameBooksDesc,     emoji:'📚',color:'from-teal-400 to-cyan-600',   badge:t.bibleGames.gameBooksBadge},
+  ];
   useEffect(() => { trackPageView('bible_games'); }, []);
 
   if(currentGame==='path')       return <BiblePath onBack={()=>setCurrentGame('hub')}/>;
