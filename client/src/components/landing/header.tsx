@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MessageCircle, Menu, X, Share, Smartphone, Globe } from "lucide-react";
+import { MessageCircle, Menu, X, Share, Smartphone, Globe, Home } from "lucide-react";
 import { useLocation } from "wouter";
 import { usePWA } from "@/hooks/usePWA";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -40,14 +40,26 @@ export default function Header() {
       <header className="bg-white shadow-sm border-b border-gray-100 fixed top-0 left-0 right-0 w-full z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setLocation("/")}
+              className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
+              title="Home"
+            >
               <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-amber-500 rounded-lg flex items-center justify-center">
                 <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
-              <span className="text-lg sm:text-xl lg:text-2xl font-bold faith-gradient-text">F-AI-TH-Connect</span>
-            </div>
+              <span className="text-lg sm:text-xl lg:text-2xl font-bold faith-gradient-text whitespace-nowrap">F-AI-TH-Connect</span>
+            </button>
 
             <nav className="hidden md:flex items-center space-x-8">
+              <button
+                onClick={() => setLocation("/")}
+                className="flex items-center gap-1.5 text-gray-600 hover:text-blue-500 transition-colors font-medium"
+                title="Home"
+              >
+                <Home className="w-4 h-4" />
+                <span className="sr-only">Home</span>
+              </button>
               <button
                 onClick={() => setLocation("/bible")}
                 className="text-gray-600 hover:text-blue-500 transition-colors font-medium"
@@ -165,6 +177,13 @@ export default function Header() {
                   ))}
                 </div>
 
+                <button
+                  onClick={() => { setLocation("/"); setIsMobileMenuOpen(false); }}
+                  className="flex items-center gap-2 text-gray-600 hover:text-blue-500 transition-colors text-left font-medium py-3 px-2 rounded-lg hover:bg-gray-50 touch-target mobile-tap"
+                >
+                  <Home className="w-4 h-4" />
+                  Home
+                </button>
                 <button
                   onClick={() => {
                     setLocation("/bible");
