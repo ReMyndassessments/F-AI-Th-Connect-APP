@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Globe, Heart, Users, ArrowLeft, CheckCircle, Send, Home } from "lucide-react";
-import LanguageSwitcher from "@/components/ui/language-switcher";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -125,7 +125,6 @@ export default function MissionsRegister() {
               <ArrowLeft className="w-4 h-4" /> Missions Directory
             </button>
             <div className="flex items-center gap-3">
-              <LanguageSwitcher variant="dark" />
             </div>
           </div>
         </div>

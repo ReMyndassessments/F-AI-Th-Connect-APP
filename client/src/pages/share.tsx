@@ -6,7 +6,7 @@ import { Download, Share2, Smartphone, Tablet, Monitor, Plus } from "lucide-reac
 import QRCode from "qrcode";
 import { usePWA } from "@/hooks/use-pwa";
 import { useLanguage } from "@/contexts/LanguageContext";
-import LanguageSwitcher from "@/components/ui/language-switcher";
+
 
 export default function SharePage() {
 

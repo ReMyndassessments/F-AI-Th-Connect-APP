@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { ArrowLeft, RotateCcw, Lightbulb, RefreshCw } from "lucide-react";
 import { trackPageView } from "@/hooks/useAnalytics";
 import { useLanguage } from "@/contexts/LanguageContext";
-import LanguageSwitcher from "@/components/ui/language-switcher";
+
 
 type GameType = 'hub' | 'path' | 'wordle' | 'memory' | 'wordsearch' | 'unscramble' | 'booksorder';
 type Difficulty = 'easy' | 'medium' | 'hard';
@@ -894,7 +894,6 @@ export default function BibleGames() {
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{t.bibleGames.title}</h1>
             <p className="text-gray-500 text-sm">{t.bibleGames.subtitle}</p>
           </div>
-          <LanguageSwitcher />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
 import { ArrowLeft, MessageCircle, RotateCcw } from "lucide-react";
 import LoadingSpinner, { MessageSkeleton } from "@/components/loading-spinner";
-import LanguageSwitcher from "@/components/ui/language-switcher";
+
 
 export default function Chat() {
   const { sessionId } = useParams();

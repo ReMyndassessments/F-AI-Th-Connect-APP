@@ -5,7 +5,7 @@ import { Home, Upload, X, Copy, Download, Loader2, FileText, BookOpen, Video, Sh
 import { chatApi } from "@/lib/chat-api";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
-import LanguageSwitcher from "@/components/ui/language-switcher";
+
 
 // =====================================================================
 // STUDY TYPES
