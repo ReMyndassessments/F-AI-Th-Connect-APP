@@ -490,7 +490,7 @@ function MemoryMatch({ onBack }: { onBack: () => void }) {
           <span>{matched.length}/{totalPairs} {t.bibleGames.memoryPairsFound}</span>
         </div>
 
-        <div className={`grid gap-2 sm:gap-3 ${difficulty==='easy'?'grid-cols-4':difficulty==='medium'?'grid-cols-4':'grid-cols-4'}`}>
+        <div className={`grid gap-2 sm:gap-3 ${difficulty==='easy'?'grid-cols-2 sm:grid-cols-4':difficulty==='medium'?'grid-cols-2 sm:grid-cols-4':'grid-cols-2 sm:grid-cols-4'}`}>
           {cards.map(card=>{
             const isMatch=matched.includes(card.pairId);
             const isFaceUp=isFlipped(card.id);

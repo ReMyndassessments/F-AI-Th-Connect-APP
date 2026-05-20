@@ -47,9 +47,9 @@ export default function ChatDemo() {
   return (
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">{t.chatDemo.heading}</h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-6">
+        <div className="text-center mb-8 sm:mb-12">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">{t.chatDemo.heading}</h2>
+          <p className="text-base sm:text-xl text-gray-600 max-w-3xl mx-auto mb-4 sm:mb-6 px-2">
             {t.chatDemo.subtext}
           </p>
           <div className="flex flex-wrap justify-center gap-2 text-sm">
@@ -75,7 +75,7 @@ export default function ChatDemo() {
             </div>
 
             {/* Chat Messages */}
-            <div className="h-96 overflow-y-auto p-6 space-y-4">
+            <div className="h-80 sm:h-96 overflow-y-auto p-3 sm:p-6 space-y-4">
               {demoMessages.map((message, index) => (
                 <div key={index}>
                   {message.role === 'user' ? (
@@ -89,7 +89,7 @@ export default function ChatDemo() {
                       <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
                         <MessageCircle className="w-4 h-4 text-white" />
                       </div>
-                      <div className="bg-gray-100 rounded-2xl rounded-bl-md px-4 py-3 max-w-md">
+                      <div className="bg-gray-100 rounded-2xl rounded-bl-md px-3 sm:px-4 py-3 max-w-[75vw] sm:max-w-md">
                         <p className="text-sm text-gray-900 mb-2">{message.content}</p>
 
                         {message.scripture && (
