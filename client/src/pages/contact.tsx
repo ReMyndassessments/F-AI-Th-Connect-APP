@@ -6,11 +6,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { 
   MessageCircle, 
   Mail, 
   Phone, 
-  MapPin, 
   Clock, 
   Heart, 
   Send,
@@ -21,6 +21,7 @@ import DailyVerseCard from "@/components/daily-verse/daily-verse-card";
 export default function Contact() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -42,13 +43,12 @@ export default function Contact() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission (in real app, this would send to backend)
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
       toast({
-        title: "Message Sent Successfully",
-        description: "Thank you for contacting us. We'll respond within 24 hours.",
+        title: t.contact.toastTitle,
+        description: t.contact.toastDesc,
       });
     }, 1500);
   };
@@ -61,22 +61,14 @@ export default function Contact() {
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle className="w-8 h-8 text-green-600" />
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">Message Sent Successfully!</h1>
-            <p className="text-xl text-gray-600 mb-8">
-              Thank you for reaching out to us. We've received your message and will respond within 24 hours.
-            </p>
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">{t.contact.successTitle}</h1>
+            <p className="text-xl text-gray-600 mb-8">{t.contact.successText}</p>
             <div className="space-x-4">
-              <Button
-                onClick={() => setLocation("/chat")}
-                className="faith-button-primary"
-              >
-                Start a Chat
+              <Button onClick={() => setLocation("/chat")} className="faith-button-primary">
+                {t.contact.successChat}
               </Button>
-              <Button
-                onClick={() => setLocation("/")}
-                variant="outline"
-              >
-                Back to Home
+              <Button onClick={() => setLocation("/")} variant="outline">
+                {t.contact.successHome}
               </Button>
             </div>
           </div>
@@ -89,41 +81,36 @@ export default function Contact() {
     <div className="min-h-screen bg-gray-50">
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Main Content */}
           <div className="flex-1">
-            {/* Hero Section */}
             <div className="text-center mb-12">
               <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Mail className="w-8 h-8 text-white" />
               </div>
-              <h1 className="text-4xl font-bold faith-gradient-text mb-4">Contact Us</h1>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                We're here to support you and your ministry. Reach out with questions, feedback, or prayer requests.
-              </p>
+              <h1 className="text-4xl font-bold faith-gradient-text mb-4">{t.contact.pageTitle}</h1>
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto">{t.contact.pageSubtext}</p>
             </div>
 
             <div className="grid lg:grid-cols-2 gap-8">
-              {/* Contact Form */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Send us a Message</CardTitle>
+                  <CardTitle>{t.contact.sendTitle}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="name">Full Name *</Label>
+                        <Label htmlFor="name">{t.contact.fieldName}</Label>
                         <Input
                           id="name"
                           name="name"
                           value={formData.name}
                           onChange={handleInputChange}
                           required
-                          placeholder="Your name"
+                          placeholder={t.contact.namePlaceholder}
                         />
                       </div>
                       <div>
-                        <Label htmlFor="email">Email Address *</Label>
+                        <Label htmlFor="email">{t.contact.fieldEmail}</Label>
                         <Input
                           id="email"
                           name="email"
@@ -131,13 +118,13 @@ export default function Contact() {
                           value={formData.email}
                           onChange={handleInputChange}
                           required
-                          placeholder="your.email@example.com"
+                          placeholder={t.contact.emailPlaceholder}
                         />
                       </div>
                     </div>
 
                     <div>
-                      <Label htmlFor="type">Message Type</Label>
+                      <Label htmlFor="type">{t.contact.fieldType}</Label>
                       <select
                         id="type"
                         name="type"
@@ -145,35 +132,35 @@ export default function Contact() {
                         onChange={handleInputChange}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
-                        <option value="general">General Question</option>
-                        <option value="technical">Technical Support</option>
-                        <option value="feedback">Feedback</option>
-                        <option value="prayer">Prayer Request</option>
-                        <option value="partnership">Partnership Inquiry</option>
+                        <option value="general">{t.contact.typeGeneral}</option>
+                        <option value="technical">{t.contact.typeTechnical}</option>
+                        <option value="feedback">{t.contact.typeFeedback}</option>
+                        <option value="prayer">{t.contact.typePrayer}</option>
+                        <option value="partnership">{t.contact.typePartnership}</option>
                       </select>
                     </div>
 
                     <div>
-                      <Label htmlFor="subject">Subject *</Label>
+                      <Label htmlFor="subject">{t.contact.fieldSubject}</Label>
                       <Input
                         id="subject"
                         name="subject"
                         value={formData.subject}
                         onChange={handleInputChange}
                         required
-                        placeholder="Brief description of your message"
+                        placeholder={t.contact.subjectPlaceholder}
                       />
                     </div>
 
                     <div>
-                      <Label htmlFor="message">Message *</Label>
+                      <Label htmlFor="message">{t.contact.fieldMessage}</Label>
                       <Textarea
                         id="message"
                         name="message"
                         value={formData.message}
                         onChange={handleInputChange}
                         required
-                        placeholder="Please share your message, question, or prayer request..."
+                        placeholder={t.contact.messagePlaceholder}
                         rows={6}
                       />
                     </div>
@@ -184,11 +171,11 @@ export default function Contact() {
                       className="w-full faith-button-primary"
                     >
                       {isSubmitting ? (
-                        "Sending Message..."
+                        t.contact.sendingBtn
                       ) : (
                         <>
                           <Send className="w-4 h-4 mr-2" />
-                          Send Message
+                          {t.contact.sendBtn}
                         </>
                       )}
                     </Button>
@@ -196,37 +183,36 @@ export default function Contact() {
                 </CardContent>
               </Card>
 
-              {/* Contact Information */}
               <div className="space-y-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Get in Touch</CardTitle>
+                    <CardTitle>{t.contact.getInTouchTitle}</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="flex items-start space-x-3">
                       <Mail className="w-5 h-5 text-blue-500 mt-1" />
                       <div>
-                        <h4 className="font-semibold">Email Support</h4>
+                        <h4 className="font-semibold">{t.contact.emailLabel}</h4>
                         <p className="text-gray-600">info@f-ai-th-connect.online</p>
-                        <p className="text-sm text-gray-500">We typically respond within 24 hours</p>
+                        <p className="text-sm text-gray-500">{t.contact.emailNote}</p>
                       </div>
                     </div>
 
                     <div className="flex items-start space-x-3">
                       <Clock className="w-5 h-5 text-green-500 mt-1" />
                       <div>
-                        <h4 className="font-semibold">Response Time</h4>
-                        <p className="text-gray-600">Within 24 hours</p>
-                        <p className="text-sm text-gray-500">Monday - Friday, 9 AM - 5 PM EST</p>
+                        <h4 className="font-semibold">{t.contact.responseLabel}</h4>
+                        <p className="text-gray-600">{t.contact.responseTime}</p>
+                        <p className="text-sm text-gray-500">{t.contact.responseHours}</p>
                       </div>
                     </div>
 
                     <div className="flex items-start space-x-3">
                       <Heart className="w-5 h-5 text-red-500 mt-1" />
                       <div>
-                        <h4 className="font-semibold">Prayer Requests</h4>
-                        <p className="text-gray-600">We pray for all requests received</p>
-                        <p className="text-sm text-gray-500">Your privacy and confidentiality are important to us</p>
+                        <h4 className="font-semibold">{t.contact.prayerLabel}</h4>
+                        <p className="text-gray-600">{t.contact.prayerNote}</p>
+                        <p className="text-sm text-gray-500">{t.contact.prayerPrivacy}</p>
                       </div>
                     </div>
                   </CardContent>
@@ -234,21 +220,19 @@ export default function Contact() {
 
                 <Card>
                   <CardHeader>
-                    <CardTitle>Ministry Partnership</CardTitle>
+                    <CardTitle>{t.contact.partnerTitle}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-600 mb-1">
-                      F-AI-TH-Connect is supported by faithful partners who believe in our mission to provide biblical guidance through technology.
-                    </p>
+                    <p className="text-gray-600 mb-1">{t.contact.partnerText}</p>
                     <p className="text-gray-500 text-sm mb-4">
-                      F-AI-TH Connect is a corporate ministry of <span className="font-medium text-gray-700">ReMynd Student Services</span>.
+                      {t.contact.partnerSubtext}
                     </p>
                     <Button
                       onClick={() => setLocation("/support")}
                       className="w-full faith-button-primary"
                     >
                       <Heart className="w-4 h-4 mr-2" />
-                      Support Our Ministry
+                      {t.contact.partnerBtn}
                     </Button>
                   </CardContent>
                 </Card>
@@ -256,13 +240,12 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* Sidebar */}
           <div className="w-full lg:w-80 space-y-6">
             <DailyVerseCard />
             
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Quick Actions</CardTitle>
+                <CardTitle className="text-lg">{t.contact.quickActionsTitle}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <Button
@@ -270,7 +253,7 @@ export default function Contact() {
                   className="w-full faith-button-primary justify-start"
                 >
                   <MessageCircle className="w-4 h-4 mr-2" />
-                  Start New Chat
+                  {t.contact.quickChat}
                 </Button>
                 <Button
                   onClick={() => setLocation("/help")}
@@ -278,7 +261,7 @@ export default function Contact() {
                   className="w-full justify-start"
                 >
                   <Phone className="w-4 h-4 mr-2" />
-                  Help Center
+                  {t.contact.quickHelp}
                 </Button>
               </CardContent>
             </Card>
