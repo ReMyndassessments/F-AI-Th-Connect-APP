@@ -3,262 +3,188 @@ import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
 import { Shield, Lock, Eye, Database, Mail } from "lucide-react";
 import DailyVerseCard from "@/components/daily-verse/daily-verse-card";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Privacy() {
   const [, setLocation] = useLocation();
+  const { t } = useLanguage();
+  const p = t.privacy;
 
   return (
     <div className="min-h-screen bg-gray-50">
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Main Content */}
           <div className="flex-1">
-            {/* Hero Section */}
             <div className="text-center mb-12">
               <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Shield className="w-8 h-8 text-white" />
               </div>
-              <h1 className="text-4xl font-bold faith-gradient-text mb-4">Privacy Policy</h1>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Your privacy and spiritual conversations are sacred to us. Learn how we protect and handle your information.
-              </p>
-              <p className="text-sm text-gray-500 mt-4">Last updated: January 22, 2025</p>
+              <h1 className="text-4xl font-bold faith-gradient-text mb-4">{p.pageTitle}</h1>
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto">{p.pageSubtext}</p>
+              <p className="text-sm text-gray-500 mt-4">{p.lastUpdated}</p>
             </div>
 
             <div className="space-y-8">
-              {/* Information We Collect */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <Database className="w-5 h-5 text-blue-500" />
-                    <span>Information We Collect</span>
+                    <span>{p.s1Title}</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="prose prose-gray max-w-none">
-                  <h4 className="font-semibold mb-2">Conversation Data</h4>
-                  <p className="mb-4">
-                    We collect the messages you send through our ministry chat interface, including your questions, prayer requests, 
-                    and spiritual discussions. This data is used solely to provide biblical guidance and improve our service.
-                  </p>
-                  
-                  <h4 className="font-semibold mb-2">File Uploads</h4>
-                  <p className="mb-4">
-                    When you upload documents for Bible study creation, we temporarily process these files to generate 
-                    spiritual content. Files are not permanently stored after processing.
-                  </p>
-
-                  <h4 className="font-semibold mb-2">Usage Information</h4>
-                  <p className="mb-4">
-                    We collect basic usage statistics to understand how our service helps believers, including session 
-                    duration, feature usage, and general interaction patterns.
-                  </p>
-
-                  <h4 className="font-semibold mb-2">Technical Information</h4>
-                  <p>
-                    Standard web information such as IP addresses, browser type, and device information to ensure 
-                    proper functionality and security.
-                  </p>
+                  <h4 className="font-semibold mb-2">{p.s1ConvH}</h4>
+                  <p className="mb-4">{p.s1ConvP}</p>
+                  <h4 className="font-semibold mb-2">{p.s1FileH}</h4>
+                  <p className="mb-4">{p.s1FileP}</p>
+                  <h4 className="font-semibold mb-2">{p.s1UsageH}</h4>
+                  <p className="mb-4">{p.s1UsageP}</p>
+                  <h4 className="font-semibold mb-2">{p.s1TechH}</h4>
+                  <p>{p.s1TechP}</p>
                 </CardContent>
               </Card>
 
-              {/* How We Use Your Information */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <Eye className="w-5 h-5 text-green-500" />
-                    <span>How We Use Your Information</span>
+                    <span>{p.s2Title}</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="prose prose-gray max-w-none">
                   <ul className="list-disc pl-6 space-y-2">
-                    <li><strong>Provide Biblical Guidance:</strong> Your conversations enable our platform to provide personalized Christian wisdom and scripture-based responses.</li>
-                    <li><strong>Create Bible Studies:</strong> Uploaded documents are processed to generate comprehensive spiritual content and discussion materials.</li>
-                    <li><strong>Improve Our Service:</strong> We analyze usage patterns to enhance the quality of biblical guidance and add helpful features.</li>
-                    <li><strong>Maintain Security:</strong> Technical information helps us protect against abuse and ensure service reliability.</li>
-                    <li><strong>Respond to Support:</strong> Contact information is used only to address your questions and provide assistance.</li>
+                    <li><strong>{p.s2_1bold}</strong> {p.s2_1text}</li>
+                    <li><strong>{p.s2_2bold}</strong> {p.s2_2text}</li>
+                    <li><strong>{p.s2_3bold}</strong> {p.s2_3text}</li>
+                    <li><strong>{p.s2_4bold}</strong> {p.s2_4text}</li>
+                    <li><strong>{p.s2_5bold}</strong> {p.s2_5text}</li>
                   </ul>
                 </CardContent>
               </Card>
 
-              {/* Data Protection */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <Lock className="w-5 h-5 text-purple-500" />
-                    <span>How We Protect Your Information</span>
+                    <span>{p.s3Title}</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="prose prose-gray max-w-none">
-                  <h4 className="font-semibold mb-2">Secure Transmission</h4>
-                  <p className="mb-4">
-                    All conversations are encrypted in transit using industry-standard SSL/TLS encryption to protect 
-                    your spiritual discussions from unauthorized access.
-                  </p>
-
-                  <h4 className="font-semibold mb-2">Limited Access</h4>
-                  <p className="mb-4">
-                    Only authorized personnel involved in providing Christian guidance and technical support have 
-                    access to conversation data, and only when necessary for service improvement.
-                  </p>
-
-                  <h4 className="font-semibold mb-2">Data Minimization</h4>
-                  <p className="mb-4">
-                    We collect only the information necessary to provide biblical guidance and operate our service effectively.
-                  </p>
-
-                  <h4 className="font-semibold mb-2">Regular Security Reviews</h4>
-                  <p>
-                    We regularly review and update our security practices to ensure your spiritual conversations remain private and protected.
-                  </p>
+                  <h4 className="font-semibold mb-2">{p.s3TransH}</h4>
+                  <p className="mb-4">{p.s3TransP}</p>
+                  <h4 className="font-semibold mb-2">{p.s3AccessH}</h4>
+                  <p className="mb-4">{p.s3AccessP}</p>
+                  <h4 className="font-semibold mb-2">{p.s3MinH}</h4>
+                  <p className="mb-4">{p.s3MinP}</p>
+                  <h4 className="font-semibold mb-2">{p.s3ReviewH}</h4>
+                  <p>{p.s3ReviewP}</p>
                 </CardContent>
               </Card>
 
-              {/* Data Sharing */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Information Sharing</CardTitle>
+                  <CardTitle>{p.s4Title}</CardTitle>
                 </CardHeader>
                 <CardContent className="prose prose-gray max-w-none">
-                  <p className="mb-4">
-                    <strong>We do not sell, rent, or trade your personal information or spiritual conversations to third parties.</strong>
-                  </p>
-
-                  <h4 className="font-semibold mb-2">Limited Sharing May Occur:</h4>
+                  <p className="mb-4"><strong>{p.s4Intro}</strong></p>
+                  <h4 className="font-semibold mb-2">{p.s4LimitedH}</h4>
                   <ul className="list-disc pl-6 space-y-2">
-                    <li><strong>AI Service Provider:</strong> Conversation content is shared with our AI service provider (DeepSeek) to generate biblical responses. They are contractually obligated to protect your data.</li>
-                    <li><strong>Legal Requirements:</strong> We may disclose information if required by law, court order, or to protect the safety of users.</li>
-                    <li><strong>Service Providers:</strong> Trusted partners who help operate our service under strict confidentiality agreements.</li>
+                    <li><strong>{p.s4_1bold}</strong> {p.s4_1text}</li>
+                    <li><strong>{p.s4_2bold}</strong> {p.s4_2text}</li>
+                    <li><strong>{p.s4_3bold}</strong> {p.s4_3text}</li>
                   </ul>
                 </CardContent>
               </Card>
 
-              {/* Your Rights */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Your Privacy Rights</CardTitle>
+                  <CardTitle>{p.s5Title}</CardTitle>
                 </CardHeader>
                 <CardContent className="prose prose-gray max-w-none">
                   <ul className="list-disc pl-6 space-y-2">
-                    <li><strong>Access:</strong> Request information about what personal data we have about you.</li>
-                    <li><strong>Correction:</strong> Request correction of inaccurate personal information.</li>
-                    <li><strong>Deletion:</strong> Request deletion of your personal data, subject to legal and operational requirements.</li>
-                    <li><strong>Data Portability:</strong> Request a copy of your conversation history in a portable format.</li>
-                    <li><strong>Opt-out:</strong> Unsubscribe from promotional communications at any time.</li>
+                    <li><strong>{p.s5_1bold}</strong> {p.s5_1text}</li>
+                    <li><strong>{p.s5_2bold}</strong> {p.s5_2text}</li>
+                    <li><strong>{p.s5_3bold}</strong> {p.s5_3text}</li>
+                    <li><strong>{p.s5_4bold}</strong> {p.s5_4text}</li>
+                    <li><strong>{p.s5_5bold}</strong> {p.s5_5text}</li>
                   </ul>
-
                   <p className="mt-4">
-                    To exercise these rights, please contact us at <a href="mailto:info@f-ai-th-connect.online" className="text-blue-600 hover:underline">info@f-ai-th-connect.online</a>.
+                    {p.s5Contact} <a href="mailto:info@f-ai-th-connect.online" className="text-blue-600 hover:underline">info@f-ai-th-connect.online</a>.
                   </p>
                 </CardContent>
               </Card>
 
-              {/* Data Retention */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Data Retention</CardTitle>
+                  <CardTitle>{p.s6Title}</CardTitle>
                 </CardHeader>
                 <CardContent className="prose prose-gray max-w-none">
                   <ul className="list-disc pl-6 space-y-2">
-                    <li><strong>Conversation History:</strong> Stored during your session and for a reasonable period to improve service quality.</li>
-                    <li><strong>Uploaded Files:</strong> Temporarily processed and deleted after Bible study generation.</li>
-                    <li><strong>Contact Information:</strong> Retained as long as necessary to provide support and services.</li>
-                    <li><strong>Usage Analytics:</strong> Aggregated and anonymized data may be retained longer for service improvement.</li>
+                    <li><strong>{p.s6_1bold}</strong> {p.s6_1text}</li>
+                    <li><strong>{p.s6_2bold}</strong> {p.s6_2text}</li>
+                    <li><strong>{p.s6_3bold}</strong> {p.s6_3text}</li>
+                    <li><strong>{p.s6_4bold}</strong> {p.s6_4text}</li>
                   </ul>
                 </CardContent>
               </Card>
 
-              {/* Children's Privacy */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Children's Privacy</CardTitle>
+                  <CardTitle>{p.s7Title}</CardTitle>
                 </CardHeader>
                 <CardContent className="prose prose-gray max-w-none">
-                  <p>
-                    F-AI-TH-Connect is intended for users 13 years of age and older. We do not knowingly collect personal 
-                    information from children under 13. If we become aware that we have collected such information, 
-                    we will take steps to delete it promptly.
-                  </p>
-                  <p className="mt-4">
-                    We encourage parents and guardians to monitor their children's online activities and discuss 
-                    appropriate use of Christian resources.
-                  </p>
+                  <p>{p.s7P1}</p>
+                  <p className="mt-4">{p.s7P2}</p>
                 </CardContent>
               </Card>
 
-              {/* Policy Changes */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Changes to This Policy</CardTitle>
+                  <CardTitle>{p.s8Title}</CardTitle>
                 </CardHeader>
                 <CardContent className="prose prose-gray max-w-none">
-                  <p>
-                    We may update this Privacy Policy from time to time to reflect changes in our practices or for 
-                    legal, operational, or regulatory reasons. We will notify you of significant changes by posting 
-                    the updated policy on our website and updating the "Last updated" date.
-                  </p>
-                  <p className="mt-4">
-                    Your continued use of F-AI-TH-Connect after any changes indicates your acceptance of the updated Privacy Policy.
-                  </p>
+                  <p>{p.s8P1}</p>
+                  <p className="mt-4">{p.s8P2}</p>
                 </CardContent>
               </Card>
 
-              {/* Contact Information */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <Mail className="w-5 h-5 text-blue-500" />
-                    <span>Contact Us About Privacy</span>
+                    <span>{p.s9Title}</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="mb-4">
-                    If you have questions, concerns, or requests regarding this Privacy Policy or how we handle 
-                    your personal information, please contact us:
-                  </p>
+                  <p className="mb-4">{p.s9P1}</p>
                   <div className="bg-gray-50 p-4 rounded-lg">
-                    <p><strong>Email:</strong> info@f-ai-th-connect.online</p>
-                    <p><strong>Subject Line:</strong> Privacy Policy Inquiry</p>
+                    <p><strong>{p.s9EmailLabel}</strong> info@f-ai-th-connect.online</p>
+                    <p><strong>{p.s9SubjectLabel}</strong> {p.s9SubjectVal}</p>
                   </div>
-                  <p className="mt-4 text-sm text-gray-600">
-                    We are committed to addressing your privacy concerns promptly and transparently.
-                  </p>
+                  <p className="mt-4 text-sm text-gray-600">{p.s9Commitment}</p>
                 </CardContent>
               </Card>
             </div>
           </div>
 
-          {/* Sidebar */}
           <div className="w-full lg:w-80 space-y-6">
             <DailyVerseCard />
-            
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Related Pages</CardTitle>
+                <CardTitle className="text-lg">{p.sidebarTitle}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <Button
-                  onClick={() => setLocation("/terms")}
-                  variant="outline"
-                  className="w-full justify-start"
-                >
+                <Button onClick={() => setLocation("/terms")} variant="outline" className="w-full justify-start">
                   <Shield className="w-4 h-4 mr-2" />
-                  Terms of Service
+                  {p.sidebarTerms}
                 </Button>
-                <Button
-                  onClick={() => setLocation("/contact")}
-                  variant="outline"
-                  className="w-full justify-start"
-                >
+                <Button onClick={() => setLocation("/contact")} variant="outline" className="w-full justify-start">
                   <Mail className="w-4 h-4 mr-2" />
-                  Contact Us
+                  {p.sidebarContact}
                 </Button>
-                <Button
-                  onClick={() => setLocation("/help")}
-                  variant="outline"
-                  className="w-full justify-start"
-                >
+                <Button onClick={() => setLocation("/help")} variant="outline" className="w-full justify-start">
                   <Eye className="w-4 h-4 mr-2" />
-                  Help Center
+                  {p.sidebarHelp}
                 </Button>
               </CardContent>
             </Card>
