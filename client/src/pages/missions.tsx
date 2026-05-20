@@ -118,12 +118,6 @@ export default function MissionsDirectory() {
       <div className="bg-gradient-to-br from-blue-700 via-blue-600 to-indigo-700 text-white py-16 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-8">
-            <button
-              onClick={() => setLocation("/")}
-              className="flex items-center gap-1 text-blue-200 hover:text-white text-sm transition-colors"
-            >
-              <Home className="w-4 h-4" /> {t.missions.home}
-            </button>
             <LanguageSwitcher variant="dark" />
           </div>
         </div>

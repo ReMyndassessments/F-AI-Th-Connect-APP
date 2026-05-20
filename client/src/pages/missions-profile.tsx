@@ -88,12 +88,6 @@ export default function MissionsProfile() {
             </button>
             <div className="flex items-center gap-3">
               <LanguageSwitcher variant="dark" />
-              <button
-                onClick={() => setLocation("/")}
-                className="flex items-center gap-1 text-blue-200 hover:text-white text-sm transition-colors"
-              >
-                <Home className="w-4 h-4" /> Home
-              </button>
             </div>
           </div>
 

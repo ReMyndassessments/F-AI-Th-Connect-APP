@@ -427,18 +427,6 @@ export default function BibleLookup() {
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-8">
         <div className="w-full max-w-4xl mx-auto">
           
-          {/* Back to Home Button */}
-          <div className="mb-6">
-            <Button
-              variant="ghost"
-              onClick={() => setLocation("/")}
-              className="flex items-center gap-2 text-gray-600 hover:text-blue-500 transition-colors"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back to Home
-            </Button>
-          </div>
-
           {/* Header */}
           <div className="text-center mb-6 sm:mb-8">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4">

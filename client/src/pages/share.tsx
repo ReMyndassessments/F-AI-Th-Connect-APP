@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Download, Share2, Smartphone, Tablet, Monitor, Plus } from "lucide-react";
-import { useLocation } from "wouter";
+import { Download, Share2, Smartphone, Tablet, Monitor, Plus } from "lucide-react";
+
 import QRCode from "qrcode";
 import { usePWA } from "@/hooks/use-pwa";
 import { useLanguage } from "@/contexts/LanguageContext";
 import LanguageSwitcher from "@/components/ui/language-switcher";
 
 export default function SharePage() {
-  const [, setLocation] = useLocation();
+
   const [qrCodeUrl, setQrCodeUrl] = useState<string>("");
   const { t } = useLanguage();
   const appUrl = window.location.origin;
@@ -66,31 +66,6 @@ export default function SharePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-amber-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
-              <Button
-                onClick={() => setLocation("/")}
-                variant="ghost"
-                size="sm"
-                className="p-2"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </Button>
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-amber-500 rounded-lg flex items-center justify-center">
-                  <Share2 className="w-4 h-4 text-white" />
-                </div>
-                <span className="text-xl font-bold faith-gradient-text">{t.share.pageTitle}</span>
-              </div>
-            </div>
-            <LanguageSwitcher />
-          </div>
-        </div>
-      </header>
-
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
         <div className="text-center mb-8 sm:mb-12">

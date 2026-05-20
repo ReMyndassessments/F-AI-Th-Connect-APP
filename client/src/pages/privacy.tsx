@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
-import { MessageCircle, Shield, Lock, Eye, Database, Mail } from "lucide-react";
+import { Shield, Lock, Eye, Database, Mail } from "lucide-react";
 import DailyVerseCard from "@/components/daily-verse/daily-verse-card";
 
 export default function Privacy() {
@@ -9,32 +9,6 @@ export default function Privacy() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-4">
-              <Button
-                variant="ghost"
-                onClick={() => setLocation("/")}
-                className="flex items-center space-x-2"
-              >
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-amber-500 rounded-lg flex items-center justify-center">
-                  <MessageCircle className="w-5 h-5 text-white" />
-                </div>
-                <span className="text-xl font-bold faith-gradient-text">F-AI-TH-Connect</span>
-              </Button>
-            </div>
-            <Button
-              onClick={() => setLocation("/")}
-              className="faith-button-primary"
-            >
-              Back to Home
-            </Button>
-          </div>
-        </div>
-      </header>
-
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Main Content */}
