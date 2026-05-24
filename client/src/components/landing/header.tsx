@@ -146,6 +146,17 @@ export default function Header() {
               </Button>
             </nav>
 
+            {/* Mobile share shortcut — visible only on mobile */}
+            <Button
+              onClick={() => { setLocation("/share"); setIsMobileMenuOpen(false); }}
+              variant="ghost"
+              size="sm"
+              className="md:hidden p-2 touch-target mobile-tap"
+              title="Share App - Get QR Code"
+            >
+              <Share className="w-5 h-5 text-gray-600" />
+            </Button>
+
             {/* Mobile menu button */}
             <button
               className="md:hidden p-2 touch-target mobile-tap rounded-lg hover:bg-gray-100 transition-colors"
