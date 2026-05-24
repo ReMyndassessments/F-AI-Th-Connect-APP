@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Download, Share2, Smartphone, Tablet, Monitor, Plus } from "lucide-react";
-
+import { Download, Share2, Smartphone, Tablet, Monitor, Plus, Home } from "lucide-react";
+import { useLocation } from "wouter";
 import QRCode from "qrcode";
 import { usePWA } from "@/hooks/use-pwa";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 
 export default function SharePage() {
-
+  const [, setLocation] = useLocation();
   const [qrCodeUrl, setQrCodeUrl] = useState<string>("");
   const { t } = useLanguage();
   const appUrl = window.location.origin;
@@ -68,6 +68,13 @@ export default function SharePage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-amber-50">
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
+        <button
+          onClick={() => setLocation("/")}
+          className="flex items-center gap-1.5 text-gray-500 hover:text-blue-600 text-sm font-medium mb-6 transition-colors"
+        >
+          <Home className="w-4 h-4" />
+          Home
+        </button>
         <div className="text-center mb-8 sm:mb-12">
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
             {t.share.heading}
