@@ -822,6 +822,10 @@ export default function BibleStudy() {
   const [roomLinkCopied, setRoomLinkCopied] = useState(false);
   const [leaderName, setLeaderName] = useState('');
 
+  const stLabels = (t.bibleStudy as any).studyTypes as Record<string, { label: string; subtitle: string }>;
+  const stLabel = (id: string, fb: string) => stLabels?.[id]?.label ?? fb;
+  const stSubtitle = (id: string, fb: string) => stLabels?.[id]?.subtitle ?? fb;
+
   // Auto-scroll to result when it appears (offset 80px for sticky header)
   useEffect(() => {
     if (result && resultRef.current) {
@@ -1646,8 +1650,8 @@ Closing Prayer`;
                         : <span className="text-base leading-none">{type.emoji}</span>
                       }
                       <span className="leading-tight text-left">
-                        {type.label}
-                        {type.subtitle && <span className="block text-white/70 font-normal text-[10px] leading-tight mt-0.5">{type.subtitle}</span>}
+                        {stLabel(type.id, type.label)}
+                        {type.subtitle && <span className="block text-white/70 font-normal text-[10px] leading-tight mt-0.5">{stSubtitle(type.id, type.subtitle)}</span>}
                       </span>
                     </button>
                   ))}
@@ -1680,8 +1684,8 @@ Closing Prayer`;
                     : <span className="text-2xl">{type.emoji}</span>
                   }
                   <span className="leading-tight">
-                    {type.label}
-                    {type.subtitle && <span className="block text-white/70 font-normal text-xs leading-tight mt-0.5">{type.subtitle}</span>}
+                    {stLabel(type.id, type.label)}
+                    {type.subtitle && <span className="block text-white/70 font-normal text-xs leading-tight mt-0.5">{stSubtitle(type.id, type.subtitle)}</span>}
                   </span>
                 </button>
               ))}
@@ -1781,11 +1785,11 @@ Closing Prayer`;
             <div>
               <h2 className="text-white font-bold text-lg">{t.bibleStudy.meetingRoomTitle}</h2>
               <p className="text-white text-opacity-80 text-sm">
-                {studySource === 'ccf-4ws' ? 'CCF 4 W\'s guide will be shared with your group'
-                  : studySource === 'generated' ? 'Study guide will be shared with your group'
-                  : studySource === 'template' ? 'Your 4 W\'s template will be shared with your group'
-                  : studySource === 'uploaded' ? 'Your uploaded guide will be shared with your group'
-                  : 'Create a free video room and optionally attach a study guide'}
+                {studySource === 'ccf-4ws' ? t.bibleStudy.meetingRoomSubCcf
+                  : studySource === 'generated' ? t.bibleStudy.meetingRoomSubGenerated
+                  : studySource === 'template' ? t.bibleStudy.meetingRoomSubTemplate
+                  : studySource === 'uploaded' ? t.bibleStudy.meetingRoomSubUploaded
+                  : t.bibleStudy.meetingRoomSubNoGuide}
               </p>
             </div>
             {studySource && (
@@ -1813,22 +1817,22 @@ Closing Prayer`;
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className={`text-sm font-bold ${studySource ? 'text-green-800' : 'text-amber-800'}`}>
-                    {studySource === 'ccf-4ws' && 'CCF Weekly 4 W\'s Guide attached'}
-                    {studySource === 'generated' && 'AI-generated study guide attached'}
-                    {studySource === 'template' && '4 W\'s template attached'}
-                    {studySource === 'uploaded' && 'Your uploaded guide attached'}
-                    {!studySource && 'No study guide — plain meeting room'}
+                    {studySource === 'ccf-4ws' && t.bibleStudy.statusCcf}
+                    {studySource === 'generated' && t.bibleStudy.statusGenerated}
+                    {studySource === 'template' && t.bibleStudy.statusTemplate}
+                    {studySource === 'uploaded' && t.bibleStudy.statusUploaded}
+                    {!studySource && t.bibleStudy.noStudyGuide}
                   </p>
                   <p className={`text-xs mt-0.5 ${studySource ? 'text-green-600' : 'text-amber-600'}`}>
-                    {studySource === 'ccf-4ws' && 'This week\'s CCF 4 W\'s will be accessible to all participants inside the meeting room'}
-                    {studySource === 'generated' && 'Your custom study guide will be accessible to all participants inside the meeting room'}
-                    {studySource === 'template' && 'Your filled-in 4 W\'s template will be shared with all participants'}
-                    {studySource === 'uploaded' && 'Your uploaded file will be accessible to all participants inside the meeting room'}
-                    {!studySource && 'Load the CCF guide, use a template, or generate a study guide above to attach one'}
+                    {studySource === 'ccf-4ws' && t.bibleStudy.statusDescCcf}
+                    {studySource === 'generated' && t.bibleStudy.statusDescGenerated}
+                    {studySource === 'template' && t.bibleStudy.statusDescTemplate}
+                    {studySource === 'uploaded' && t.bibleStudy.statusDescUploaded}
+                    {!studySource && t.bibleStudy.loadGuideHint}
                   </p>
                 </div>
                 {studySource && (
-                  <span className="flex-shrink-0 bg-green-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg">Ready ✓</span>
+                  <span className="flex-shrink-0 bg-green-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg">{t.bibleStudy.readyCheck}</span>
                 )}
               </div>
               <div className="grid sm:grid-cols-2 gap-3">
