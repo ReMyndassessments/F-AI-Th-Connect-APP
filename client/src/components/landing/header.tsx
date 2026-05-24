@@ -219,7 +219,7 @@ export default function Header() {
                 </button>
 
                 <Button
-                  onClick={() => setLocation("/share")}
+                  onClick={() => { setLocation("/share"); setIsMobileMenuOpen(false); }}
                   variant="ghost"
                   className="w-full justify-start text-gray-600 hover:text-blue-500 py-3 touch-target mobile-tap"
                 >
