@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { trackPageView } from "@/hooks/useAnalytics";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
-import { Globe, MapPin, User, Church, ArrowRight, PlusCircle, Search, Home } from "lucide-react";
+import { Globe, MapPin, User, Church, ArrowRight, PlusCircle, Search, Home, Video, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -239,8 +239,62 @@ export default function MissionsDirectory() {
           </>
         )}
 
+        {/* Digital Missions — YouTube Ministry Section */}
+        <div className="mt-16 bg-gradient-to-br from-teal-600 to-cyan-700 rounded-2xl overflow-hidden">
+          <div className="px-6 sm:px-8 pt-8 pb-6">
+            <div className="flex items-center gap-2 mb-4">
+              <span className="bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
+                {(t.missions as any).ytMinistryBadge || 'Digital Missions'}
+              </span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 leading-tight">
+              {(t.missions as any).ytMinistryHeading || "Can't go overseas? You can still reach the unreached."}
+            </h2>
+            <p className="text-teal-100 text-sm sm:text-base max-w-2xl mb-8 leading-relaxed">
+              {(t.missions as any).ytMinistryBody || 'A Bible study recorded by your group and uploaded to YouTube can reach people in countries you\'ll never visit — including communities with no local church. YouTube is free, global, and permanent. This is digital missions.'}
+            </p>
+
+            {/* 3-step flow */}
+            <div className="grid sm:grid-cols-3 gap-4 mb-8">
+              {[
+                { step: '1', icon: '📖', text: (t.missions as any).ytMinistryStep1 || 'Generate your study guide using any of the 14 group types' },
+                { step: '2', icon: '🎥', text: (t.missions as any).ytMinistryStep2 || 'Record your group discussion — phone camera is fine' },
+                { step: '3', icon: '🌏', text: (t.missions as any).ytMinistryStep3 || 'Upload to YouTube — your study is now reaching the world' },
+              ].map(({ step, icon, text }) => (
+                <div key={step} className="bg-white/15 rounded-xl p-4 flex gap-3 items-start">
+                  <div className="w-7 h-7 rounded-full bg-white/25 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                    {step}
+                  </div>
+                  <div>
+                    <span className="text-lg leading-none">{icon}</span>
+                    <p className="text-white text-xs sm:text-sm mt-1 leading-snug">{text}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Button
+                onClick={() => setLocation("/bible")}
+                className="bg-white text-teal-700 hover:bg-teal-50 font-bold shadow-sm"
+              >
+                <Video className="w-4 h-4 mr-2" />
+                {(t.missions as any).ytMinistryBtn || 'Generate a Study Guide + YouTube Prep'}
+              </Button>
+              <Button
+                onClick={() => setLocation("/missions/register")}
+                variant="outline"
+                className="border-white text-white hover:bg-white/15 font-semibold"
+              >
+                <ChevronRight className="w-4 h-4 mr-1" />
+                {(t.missions as any).ytMinistrySecondaryBtn || 'Register as a Missions Partner'}
+              </Button>
+            </div>
+          </div>
+        </div>
+
         {/* Platform CTA */}
-        <div className="mt-16 bg-gradient-to-br from-blue-700 to-indigo-700 rounded-2xl p-8 text-white text-center">
+        <div className="mt-8 bg-gradient-to-br from-blue-700 to-indigo-700 rounded-2xl p-8 text-white text-center">
           <h2 className="text-2xl font-bold mb-3">{t.missions.platformTitle}</h2>
           <p className="text-blue-100 mb-6 max-w-xl mx-auto">
             {t.missions.platformDesc}

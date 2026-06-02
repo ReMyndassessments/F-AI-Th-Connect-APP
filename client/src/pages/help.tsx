@@ -25,7 +25,8 @@ import {
   Coffee,
   Zap,
   UserCheck,
-  Globe
+  Globe,
+  Video
 } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "wouter";
@@ -514,6 +515,76 @@ export default function Help() {
               </CardContent>
             </Card>
 
+            {/* YouTube Prep Feature */}
+            <Card className="mb-4 sm:mb-6 lg:mb-8 border-teal-100">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Video className="w-5 h-5 text-teal-500" />
+                  <span>{(t.help as any).ytPrepSection || '📹 YouTube Prep — Record Your Study for the World'}</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-gray-600 leading-relaxed">{(t.help as any).ytPrepDesc || 'After generating any Bible study, you can instantly create a YouTube Episode Prep Sheet — a ready-to-use document your group can follow when recording your session.'}</p>
+
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="space-y-3">
+                    <h4 className="font-semibold text-gray-800 text-sm sm:text-base">{(t.help as any).ytPrepWhatHeading || 'What your prep sheet includes'}</h4>
+                    <ul className="text-sm text-gray-600 space-y-2">
+                      <li className="flex items-start space-x-2">
+                        <span className="text-teal-500 font-bold flex-shrink-0">✓</span>
+                        <span>{(t.help as any).ytPrepWhatItem1 || 'Episode title, hook, and introduction script'}</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <span className="text-teal-500 font-bold flex-shrink-0">✓</span>
+                        <span>{(t.help as any).ytPrepWhatItem2 || 'On-camera discussion cues and timestamps'}</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <span className="text-teal-500 font-bold flex-shrink-0">✓</span>
+                        <span>{(t.help as any).ytPrepWhatItem3 || 'Scripture references to display on screen'}</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <span className="text-teal-500 font-bold flex-shrink-0">✓</span>
+                        <span>{(t.help as any).ytPrepWhatItem4 || 'Closing call-to-action and upload tips'}</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="space-y-3">
+                    <h4 className="font-semibold text-gray-800 text-sm sm:text-base">{(t.help as any).ytPrepHowHeading || 'How to use it'}</h4>
+                    <ol className="text-sm text-gray-600 space-y-2">
+                      <li className="flex items-start space-x-2">
+                        <span className="bg-teal-100 text-teal-800 text-xs font-medium px-1.5 py-0.5 rounded-full mt-0.5 flex-shrink-0">1</span>
+                        <span>{(t.help as any).ytPrepHowStep1 || 'Go to D-Groups (Bible Study page) and generate any study guide for your group type'}</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <span className="bg-teal-100 text-teal-800 text-xs font-medium px-1.5 py-0.5 rounded-full mt-0.5 flex-shrink-0">2</span>
+                        <span>{(t.help as any).ytPrepHowStep2 || 'Click the "📹 YouTube Prep" button — your prep sheet generates in about 30 seconds'}</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <span className="bg-teal-100 text-teal-800 text-xs font-medium px-1.5 py-0.5 rounded-full mt-0.5 flex-shrink-0">3</span>
+                        <span>{(t.help as any).ytPrepHowStep3 || 'Copy or download the sheet, record your session, upload to YouTube'}</span>
+                      </li>
+                    </ol>
+                  </div>
+                </div>
+
+                <div className="bg-teal-50 border border-teal-200 rounded-lg p-4">
+                  <div className="flex items-start space-x-2">
+                    <Globe className="w-4 h-4 text-teal-600 mt-0.5 flex-shrink-0" />
+                    <p className="text-sm text-teal-800">{(t.help as any).ytPrepMissionNote || 'YouTube is free, permanent, and global. A single recorded study can reach people in unreached communities long after your group meeting ends.'}</p>
+                  </div>
+                </div>
+
+                <Button
+                  onClick={() => setLocation("/bible")}
+                  className="bg-teal-600 hover:bg-teal-700 text-white flex items-center gap-2"
+                >
+                  <Video className="w-4 h-4" />
+                  {(t.help as any).ytPrepCta || 'Generate a Study + YouTube Prep'}
+                </Button>
+              </CardContent>
+            </Card>
+
             {/* FAQ Section - Mobile Optimized */}
             <Card>
               <CardHeader className="pb-3 sm:pb-4">
@@ -598,6 +669,14 @@ export default function Help() {
                 >
                   <Gamepad2 className="w-4 h-4 mr-2" />
                   {t.help.playGames}
+                </Button>
+                <Button
+                  onClick={() => setLocation("/bible")}
+                  variant="outline"
+                  className="w-full justify-center sm:justify-start text-sm sm:text-base py-2 sm:py-3 border-teal-200 text-teal-700 hover:bg-teal-50"
+                >
+                  <Video className="w-4 h-4 mr-2" />
+                  {(t.help as any).ytPrepSidebarBtn || '📹 YouTube Prep'}
                 </Button>
                 <Button
                   onClick={() => setLocation("/missions")}
