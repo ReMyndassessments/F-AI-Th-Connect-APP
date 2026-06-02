@@ -821,6 +821,8 @@ export default function BibleStudy() {
   const [inviteEmails, setInviteEmails] = useState('');
   const [roomLinkCopied, setRoomLinkCopied] = useState(false);
   const [leaderName, setLeaderName] = useState('');
+  const [ytPrepResult, setYtPrepResult] = useState('');
+  const [isGeneratingYtPrep, setIsGeneratingYtPrep] = useState(false);
 
   const stLabels = (t.bibleStudy as any).studyTypes as Record<string, { label: string; subtitle: string }>;
   const stLabel = (id: string, fb: string) => stLabels?.[id]?.label ?? fb;
@@ -1044,6 +1046,7 @@ Closing Prayer`;
     setIsGenerating(true);
     setActiveType(studyType.id);
     setResult('');
+    setYtPrepResult('');
     setStudySource(null);
     setMeetingRoom(null);
 
@@ -1067,6 +1070,85 @@ Closing Prayer`;
   const copyResult = () => {
     navigator.clipboard.writeText(result);
     toast({ title: "Copied!", description: "Study guide copied to clipboard." });
+  };
+
+  const generateYtPrep = async () => {
+    if (!result) return;
+    setIsGeneratingYtPrep(true);
+    setYtPrepResult('');
+    const studyType = STUDY_TYPES.find(s => s.id === activeType);
+    const studyLabel = studyType?.label || 'Bible Study Group';
+    const groupLabel = groupName.trim() || studyType?.defaultGroup || 'D-Group';
+
+    const toneMap: Record<string, string> = {
+      mens: 'direct and honest, man-to-man',
+      womens: 'warm and empathetic, woman-to-woman',
+      youth: 'conversational and energetic, relatable to teens',
+      couples: 'warm and open, inviting vulnerability',
+      sundayschool: 'engaging and accessible for families',
+      business: 'professional and practical',
+      seniors: 'respectful and reflective',
+      missions: 'bold and compelling, Great Commission urgency',
+      newbelievers: 'welcoming, simple and celebratory',
+      campus: 'relatable and intellectually honest for students',
+      prayer: 'reverent and intimate',
+      apologetics: 'thoughtful and reasoned',
+      leaders: 'practical and developmental',
+      general: 'warm and inclusive',
+    };
+    const tone = activeType ? (toneMap[activeType] || 'warm and inclusive') : 'warm and inclusive';
+
+    const prompt = `You are preparing a YouTube episode prep sheet for a Christian group that records their Bible study discussion. Based on the study guide below, create a complete "YouTube Episode Prep Sheet" — practical and ready to use on recording day.
+
+GROUP: ${groupLabel}
+STUDY TYPE: ${studyLabel}
+TONE FOR THIS GROUP: ${tone}
+
+BIBLE STUDY GUIDE:
+${result}
+
+---
+Produce the prep sheet with EXACTLY these sections in this order. Use the section headers as written.
+
+📺 YOUTUBE EPISODE PREP SHEET
+Group: ${groupLabel} | ${studyLabel}
+
+EPISODE TITLES — 3 OPTIONS
+Three punchy, clickable YouTube title options (max 60 characters each). Make them specific to the content of the study, not generic.
+
+YOUTUBE DESCRIPTION
+A ready-to-paste YouTube description (~150 words). Include: an opening hook sentence, what the episode covers, at least one Scripture reference from the study, a call-to-action (like & subscribe, share with someone who needs it). End with a [TIMESTAMPS] placeholder line.
+
+OPENING HOOK — Host 1 reads to camera (first 30 seconds)
+A short spoken opener that grabs attention before the group discussion starts. Match the tone for this group type (${tone}). Make it feel real and unscripted, not polished.
+
+SEGMENT TIMESTAMPS
+Chapter markers for YouTube based on the study structure. Start from [0:00] and build through the study sections. Use the actual section names from the study guide where possible.
+
+HOST TALKING-POINT CARDS
+One camera-ready talking point per major discussion question in the study. Write them as natural conversation prompts between the two hosts (e.g. "So [Host 2], when you read that verse, what hit you first?"). Write one card per major discussion question — no more than 6.
+
+GUEST INVITATION PROMPT
+One question a host can ask a guest that opens up the topic naturally. Should feel like an easy on-ramp.
+
+MISSIONS REACH NOTE
+One sentence the host can say on camera — natural, not preachy — that acknowledges this recording may reach someone far beyond the room: in another city, country, or community that has no access to a local church. Keep it warm and inviting, not performative.
+
+END CARD SCRIPT — Host reads to camera (~20 seconds)
+Subscribe nudge, a share prompt ("If this helped you, send it to someone who needs it"), and a [NEXT EPISODE TEASER] placeholder.
+
+Keep everything practical and ready to use on recording day. No filler.`;
+
+    try {
+      const session = await chatApi.createSession();
+      const response = await chatApi.sendMessage(session.sessionId, prompt);
+      setYtPrepResult(response.aiMessage.content);
+      toast({ title: (t.bibleStudy as any).ytPrepReady || 'YouTube prep sheet ready!', description: (t.bibleStudy as any).ytPrepToast || 'Your episode prep sheet is ready.' });
+    } catch {
+      toast({ title: "Generation failed", description: "Please try again.", variant: "destructive" });
+    } finally {
+      setIsGeneratingYtPrep(false);
+    }
   };
 
   const downloadResult = () => {
@@ -1735,7 +1817,12 @@ Closing Prayer`;
                   <Printer className="w-3.5 sm:w-4 h-3.5 sm:h-4"/>
                   <span className="hidden sm:inline">PDF</span>
                 </button>
-                <button onClick={() => { setResult(''); setStudySource(null); setMeetingRoom(null); }}
+                <button onClick={generateYtPrep} disabled={isGeneratingYtPrep}
+                  className="flex items-center gap-1 sm:gap-1.5 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white px-2.5 sm:px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-colors">
+                  {isGeneratingYtPrep ? <Loader2 className="w-3.5 sm:w-4 h-3.5 sm:h-4 animate-spin"/> : <Video className="w-3.5 sm:w-4 h-3.5 sm:h-4"/>}
+                  <span className="hidden sm:inline">{(t.bibleStudy as any).ytPrepButton || 'YouTube Prep'}</span>
+                </button>
+                <button onClick={() => { setResult(''); setYtPrepResult(''); setStudySource(null); setMeetingRoom(null); }}
                   className="flex items-center gap-1 sm:gap-1.5 bg-white bg-opacity-20 hover:bg-red-500 text-white px-2.5 sm:px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-colors"
                   title="Dismiss">
                   <X className="w-3.5 sm:w-4 h-3.5 sm:h-4"/>
@@ -1771,9 +1858,106 @@ Closing Prayer`;
               <button onClick={printAsPdf} className="flex items-center gap-1.5 px-4 py-2 bg-green-600 text-white rounded-xl text-sm font-semibold hover:bg-green-700">
                 <Printer className="w-4 h-4"/> {t.bibleStudy.savePrintPdf}
               </button>
-              <button onClick={() => { setResult(''); setStudySource(null); setMeetingRoom(null); }} className="flex items-center gap-1.5 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-200">
+              <button onClick={generateYtPrep} disabled={isGeneratingYtPrep}
+                className="flex items-center gap-1.5 px-4 py-2 bg-red-600 text-white rounded-xl text-sm font-semibold hover:bg-red-700 disabled:opacity-60">
+                {isGeneratingYtPrep ? <Loader2 className="w-4 h-4 animate-spin"/> : <Video className="w-4 h-4"/>}
+                {(t.bibleStudy as any).ytPrepButton || '📹 YouTube Prep'}
+              </button>
+              <button onClick={() => { setResult(''); setYtPrepResult(''); setStudySource(null); setMeetingRoom(null); }} className="flex items-center gap-1.5 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-200">
                 <X className="w-4 h-4"/> {t.bibleStudy.clear}
               </button>
+            </div>
+          </div>
+        )}
+
+        {/* YouTube Ministry as Missions — callout shown whenever a study guide is ready */}
+        {result && !isGeneratingYtPrep && !ytPrepResult && (
+          <div className="bg-gradient-to-r from-teal-600 to-cyan-700 rounded-2xl p-5 flex flex-col sm:flex-row gap-4 items-start">
+            <div className="text-4xl flex-shrink-0 mt-0.5">🌏</div>
+            <div className="flex-1 min-w-0">
+              <p className="text-white font-bold text-sm sm:text-base leading-snug">
+                {(t.bibleStudy as any).ytPrepMissionsHeading || 'Recording your study reaches further than your room'}
+              </p>
+              <p className="text-white text-opacity-90 text-xs sm:text-sm mt-1.5 leading-relaxed">
+                {(t.bibleStudy as any).ytPrepMissionsBody || 'A Bible study uploaded to YouTube can reach people in other cities, countries, and unreached communities — people who will never walk into a church. Recording your group is a form of missions.'}
+              </p>
+              <Link to="/missions"
+                className="inline-block mt-2 text-xs font-semibold text-white underline underline-offset-2 hover:no-underline opacity-90 hover:opacity-100">
+                {(t.bibleStudy as any).ytPrepMissionsLink || 'Register your group as a Missions Partner →'}
+              </Link>
+            </div>
+            <button onClick={generateYtPrep} disabled={isGeneratingYtPrep}
+              className="flex-shrink-0 w-full sm:w-auto flex items-center justify-center gap-2 bg-white text-teal-700 hover:bg-teal-50 font-bold text-sm px-5 py-2.5 rounded-xl transition-colors shadow-sm disabled:opacity-60">
+              <Video className="w-4 h-4"/>
+              {(t.bibleStudy as any).ytPrepButton || '📹 YouTube Prep'}
+            </button>
+          </div>
+        )}
+
+        {/* YouTube Episode Prep Sheet */}
+        {ytPrepResult && (
+          <div className="bg-white rounded-2xl shadow-sm border border-red-200 overflow-hidden">
+            <div className="bg-gradient-to-r from-red-600 to-rose-600 px-4 sm:px-5 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-0 sm:justify-between">
+              <div className="min-w-0">
+                <h2 className="text-white font-bold text-base sm:text-lg">
+                  {(t.bibleStudy as any).ytPrepTitle || '📹 YouTube Episode Prep Sheet'}
+                </h2>
+                <p className="text-white text-opacity-80 text-xs sm:text-sm">
+                  {(t.bibleStudy as any).ytPrepHint || 'Ready-to-use episode prep for your group recording'}
+                </p>
+              </div>
+              <div className="flex gap-1.5 sm:gap-2 flex-shrink-0">
+                <button onClick={() => { navigator.clipboard.writeText(ytPrepResult); toast({ title: "Copied!", description: "Prep sheet copied to clipboard." }); }}
+                  className="flex items-center gap-1 sm:gap-1.5 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-2.5 sm:px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-colors">
+                  <Copy className="w-3.5 sm:w-4 h-3.5 sm:h-4"/>
+                  <span className="hidden sm:inline">Copy</span>
+                </button>
+                <button onClick={() => { const blob = new Blob([ytPrepResult], { type: 'text/plain' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `YouTube-Prep-${groupName || 'Group'}.txt`; a.click(); URL.revokeObjectURL(url); }}
+                  className="flex items-center gap-1 sm:gap-1.5 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-2.5 sm:px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-colors">
+                  <Download className="w-3.5 sm:w-4 h-3.5 sm:h-4"/>
+                  <span className="hidden sm:inline">Save</span>
+                </button>
+                <button onClick={() => setYtPrepResult('')}
+                  className="flex items-center gap-1 sm:gap-1.5 bg-white bg-opacity-20 hover:bg-red-700 text-white px-2.5 sm:px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-colors">
+                  <X className="w-3.5 sm:w-4 h-3.5 sm:h-4"/>
+                  <span className="hidden sm:inline">{t.bibleStudy.dismiss}</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="p-5">
+              <textarea
+                value={ytPrepResult}
+                onChange={e => setYtPrepResult(e.target.value)}
+                className="w-full min-h-[380px] text-sm text-gray-800 font-sans leading-relaxed resize-y border border-gray-200 rounded-xl p-4 focus:outline-none focus:ring-2 focus:ring-red-400 bg-gray-50"
+                spellCheck={false}
+              />
+            </div>
+
+            <div className="border-t border-red-100 px-5 py-4 bg-red-50 flex gap-3 flex-wrap">
+              <button onClick={() => { navigator.clipboard.writeText(ytPrepResult); toast({ title: "Copied!", description: "Prep sheet copied to clipboard." }); }}
+                className="flex items-center gap-1.5 px-4 py-2 bg-red-600 text-white rounded-xl text-sm font-semibold hover:bg-red-700">
+                <Copy className="w-4 h-4"/> {(t.bibleStudy as any).ytPrepCopy || 'Copy Prep Sheet'}
+              </button>
+              <button onClick={() => { const blob = new Blob([ytPrepResult], { type: 'text/plain' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `YouTube-Prep-${groupName || 'Group'}.txt`; a.click(); URL.revokeObjectURL(url); }}
+                className="flex items-center gap-1.5 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-200">
+                <Download className="w-4 h-4"/> {(t.bibleStudy as any).ytPrepDownload || 'Download Prep Sheet'}
+              </button>
+              <button onClick={() => setYtPrepResult('')}
+                className="flex items-center gap-1.5 px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-sm font-semibold hover:bg-gray-200">
+                <X className="w-4 h-4"/> {t.bibleStudy.clear}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* YouTube Prep loading state */}
+        {isGeneratingYtPrep && !ytPrepResult && (
+          <div className="bg-red-50 border border-red-200 rounded-2xl px-5 py-6 flex items-center gap-4">
+            <Loader2 className="w-6 h-6 text-red-600 animate-spin flex-shrink-0"/>
+            <div>
+              <p className="text-red-800 font-semibold text-sm">{(t.bibleStudy as any).ytPrepGenerating || 'Generating YouTube prep sheet...'}</p>
+              <p className="text-red-600 text-xs mt-0.5">This takes about 30 seconds</p>
             </div>
           </div>
         )}
