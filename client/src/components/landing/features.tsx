@@ -1,9 +1,9 @@
-import { Upload, Video, Users, Gamepad2, FileText, MessageCircle, Globe } from "lucide-react";
+import { Upload, Video, Users, Gamepad2, FileText, MessageCircle, Globe, Clapperboard } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-const icons = [MessageCircle, FileText, Video, Upload, Users, Gamepad2, Globe];
-const bgColors = ["bg-blue-50", "bg-indigo-50", "bg-emerald-50", "bg-amber-50", "bg-purple-50", "bg-rose-50", "bg-teal-50"];
-const iconColors = ["text-blue-500", "text-indigo-500", "text-emerald-500", "text-amber-500", "text-purple-500", "text-rose-500", "text-teal-500"];
+const icons = [MessageCircle, FileText, Video, Upload, Users, Gamepad2, Globe, Clapperboard];
+const bgColors = ["bg-blue-50", "bg-indigo-50", "bg-emerald-50", "bg-amber-50", "bg-purple-50", "bg-rose-50", "bg-teal-50", "bg-cyan-50"];
+const iconColors = ["text-blue-500", "text-indigo-500", "text-emerald-500", "text-amber-500", "text-purple-500", "text-rose-500", "text-teal-500", "text-cyan-500"];
 
 export default function Features() {
   const { t } = useLanguage();

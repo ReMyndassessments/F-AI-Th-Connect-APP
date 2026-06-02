@@ -57,6 +57,7 @@ export const translations = {
         { title: "CCF 4 W's Integration", description: "Upload this week's CCF Weekly Guide PDF and share it instantly in your meeting room — or generate a fully themed study guide built on the 4 W's content.", badge: 'CCF Ready' },
         { title: 'Bible Games', description: 'Engage your group with 4 interactive game types — Scripture Scramble, Fill-in-the-Blank, Character Guessing, and Memory Challenge — across multiple difficulty levels.', badge: '4 Game Types' },
         { title: 'Missions Partner Program', description: 'Register your short-term or long-term mission group, get a public profile page, and connect with supporters who can give directly to your trip and pray for your work.', badge: 'Free to Join' },
+        { title: 'Digital Missions — YouTube Prep', description: "Can't go overseas? Record your group's Bible study and upload it to YouTube. Your session can reach people in unreached communities across the world — for free, permanently.", badge: 'Digital Outreach' },
       ],
     },
     howItWorks: {
@@ -1000,6 +1001,7 @@ export const translations = {
         { title: "CCF 4 W's Integration", description: "I-upload ang PDF ng CCF Weekly Guide ngayong linggo at ibahagi ito agad sa iyong meeting room — o gumawa ng ganap na themed study guide na nakabase sa nilalaman ng 4 W's.", badge: 'Handa para sa CCF' },
         { title: 'Mga Larong Biblikal', description: 'Engganyo ang iyong grupo sa 4 na uri ng interactive na laro — Scripture Scramble, Fill-in-the-Blank, Character Guessing, at Memory Challenge — sa maraming antas ng kahirapan.', badge: '4 Uri ng Laro' },
         { title: 'Missions Partner Program', description: 'Irehistro ang iyong short-term o long-term na mission group, kumuha ng pampublikong profile page, at kumonekta sa mga sumusuporta na maaaring tumulong nang direkta sa iyong biyahe at manalangin para sa iyong gawain.', badge: 'Libre Sumali' },
+        { title: 'Digital Missions — YouTube Prep', description: "Hindi makaalis ng bansa? I-record ang Bible study ng inyong grupo at i-upload sa YouTube. Ang inyong sesyon ay maaaring maabot ang mga tao sa hindi pa naaabot na komunidad sa buong mundo — nang libre, nang permanente.", badge: 'Digital Outreach' },
       ],
     },
     howItWorks: {
@@ -1943,6 +1945,7 @@ export const translations = {
         { title: 'CCF四W整合', description: '上传本周CCF每周指南PDF，立即在会议室中分享 — 或生成以四W内容为基础的完整主题学习指南。', badge: 'CCF就绪' },
         { title: '圣经游戏', description: '通过4种互动游戏类型激励您的小组 — 经文重排、填空、人物猜谜和记忆挑战 — 涵盖多种难度级别。', badge: '4种游戏类型' },
         { title: '宣教合作伙伴计划', description: '注册您的短期或长期宣教团队，获得公开资料页面，与可以直接为您的旅程奉献并为您工作祷告的支持者建立联系。', badge: '免费加入' },
+        { title: '数字宣教 — YouTube准备', description: '无法出国？录制您小组的圣经学习并上传到YouTube。您的课程可以永久免费地触及世界各地未得之民社区的人们。', badge: '数字外展' },
       ],
     },
     howItWorks: {
