@@ -28,7 +28,7 @@ import {
   Globe,
   Video
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import DailyVerseCard from "@/components/daily-verse/daily-verse-card";
@@ -45,6 +45,17 @@ export default function Help() {
     queryKey: ['/api/feature-flags/public'],
     retry: false,
   });
+
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      const id = hash.slice(1);
+      const el = document.getElementById(id);
+      if (el) {
+        setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+      }
+    }
+  }, []);
 
   const toggleFAQ = (index: number) => {
     setExpandedFAQ(expandedFAQ === index ? null : index);
@@ -516,7 +527,7 @@ export default function Help() {
             </Card>
 
             {/* YouTube Prep Feature */}
-            <Card className="mb-4 sm:mb-6 lg:mb-8 border-teal-100">
+            <Card id="youtube-prep" className="mb-4 sm:mb-6 lg:mb-8 border-teal-100">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <Video className="w-5 h-5 text-teal-500" />
