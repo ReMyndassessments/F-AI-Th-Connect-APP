@@ -544,7 +544,19 @@ export default function Help() {
                       </li>
                       <li className="flex items-start space-x-2">
                         <span className="text-teal-500 font-bold flex-shrink-0">✓</span>
-                        <span>{(t.help as any).ytPrepWhatItem4 || 'Closing call-to-action and upload tips'}</span>
+                        <span>{(t.help as any).ytPrepWhatItem4 || 'Talking-point cards for each teaching section'}</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <span className="text-teal-500 font-bold flex-shrink-0">✓</span>
+                        <span>{(t.help as any).ytPrepWhatItem5 || 'Co-host and guest speaker cue prompts'}</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <span className="text-teal-500 font-bold flex-shrink-0">✓</span>
+                        <span>{(t.help as any).ytPrepWhatItem6 || 'Audience engagement suggestions (subscribe, comment, share)'}</span>
+                      </li>
+                      <li className="flex items-start space-x-2">
+                        <span className="text-teal-500 font-bold flex-shrink-0">✓</span>
+                        <span>{(t.help as any).ytPrepWhatItem7 || 'Closing call-to-action and upload tips'}</span>
                       </li>
                     </ul>
                   </div>
@@ -566,6 +578,16 @@ export default function Help() {
                       </li>
                     </ol>
                   </div>
+                </div>
+
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                  <h5 className="font-semibold text-gray-800 mb-2 text-sm">{(t.help as any).ytPrepCoHostHeading || 'Using the talking-point cards with a co-host'}</h5>
+                  <p className="text-sm text-gray-600 mb-2">{(t.help as any).ytPrepCoHostDesc || 'The prep sheet includes a card for each section of your study. Each card has a talking point, a suggested question to ask your co-host, and a follow-up prompt to keep the conversation moving naturally on camera.'}</p>
+                  <ul className="text-xs text-gray-600 space-y-1">
+                    <li>• {(t.help as any).ytPrepCoHostTip1 || 'Each card covers one teaching section — read it aloud or refer to it before recording that segment'}</li>
+                    <li>• {(t.help as any).ytPrepCoHostTip2 || 'Use the suggested questions to prompt your co-host or group members naturally'}</li>
+                    <li>• {(t.help as any).ytPrepCoHostTip3 || 'The follow-up prompts help you transition smoothly between sections without losing momentum'}</li>
+                  </ul>
                 </div>
 
                 <div className="bg-teal-50 border border-teal-200 rounded-lg p-4">

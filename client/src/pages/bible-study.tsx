@@ -1904,6 +1904,10 @@ Keep everything practical and ready to use on recording day. No filler.`;
                 </h2>
                 <p className="text-white text-opacity-80 text-xs sm:text-sm">
                   {(t.bibleStudy as any).ytPrepHint || 'Ready-to-use episode prep for your group recording'}
+                  {' · '}
+                  <Link to="/help" className="underline underline-offset-2 opacity-80 hover:opacity-100">
+                    {(t.bibleStudy as any).ytPrepHelpLink || 'How to use this?'}
+                  </Link>
                 </p>
               </div>
               <div className="flex gap-1.5 sm:gap-2 flex-shrink-0">
